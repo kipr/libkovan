@@ -1,0 +1,6 @@
+#include <kovan.hpp>
+
+int main(int argc, char *argv[])
+{
+	
+}

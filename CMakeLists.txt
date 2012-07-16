@@ -1,0 +1,41 @@
+#################################
+#   libkovan CMake Build File   #
+#################################
+
+PROJECT(libkovan)
+
+CMAKE_MINIMUM_REQUIRED(VERSION 2.6.0)
+
+FIND_PACKAGE(Qt4 REQUIRED)
+
+SET(INCLUDE ${libkovan_SOURCE_DIR}/include)
+SET(SRC ${libkovan_SOURCE_DIR}/src)
+
+INCLUDE_DIRECTORIES(${INCLUDE})
+
+INCLUDE(${QT_USE_FILE})
+
+FILE(GLOB INCLUDES ${INCLUDE}/*.h ${INCLUDE}/*.hpp)
+FILE(GLOB SOURCES ${SRC}/*.cpp)
+
+SET(MOC_SRCS ${SRC}/draw_p.hpp)
+QT4_WRAP_CPP(SOURCES ${MOC_SRCS})
+
+SET(CMAKE_CXX_FLAGS "-Wall")
+
+IF(APPLE)
+	SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -arch x86_64 -g")
+ELSEIF(WIN32)
+	SET(CMAKE_CXX_FLAGS "-Wl,--enable-auto-import")
+ELSEIF(UNIX)
+	SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fPIC")
+ENDIF()
+
+SET(LIBRARY_OUTPUT_PATH ${libkovan_SOURCE_DIR}/lib )
+
+ADD_LIBRARY(kovan SHARED ${SOURCES})
+TARGET_LINK_LIBRARIES(kovan ${QT_LIBRARIES})
+
+install(FILES ${INCLUDES} DESTINATION include/kovan)
+
+add_subdirectory(test)
