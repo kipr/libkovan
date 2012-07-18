@@ -12,8 +12,9 @@ namespace Private
 		pthread_mutex_t mutex;
 		
 		bool motorDirty : 1;
-		bool servoDirty : 1;
 		
+		unsigned char servoDirty; // lower nibble used
+		unsigned short servoPositions[4];
 		
 		unsigned short rawBatteryVoltage;
 	};

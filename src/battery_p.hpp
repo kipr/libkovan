@@ -5,7 +5,7 @@
 
 namespace Private
 {
-	class Battery : private Dev
+	class Battery
 	{
 	public:
 		typedef unsigned short level_t;
@@ -14,7 +14,7 @@ namespace Private
 		static Battery *instance();
 		
 	private:
-		Battery(const char *dev);
+		Battery();
 	};
 }
 

@@ -1,3 +1,7 @@
+#include "build_options.h"
+
+#if BUILD_WITH_QT
+
 #include "draw_p.hpp"
 #include <QGraphicsScene>
 
@@ -48,3 +52,5 @@ void Private::Draw::close()
 {
 	hide();
 }
+
+#endif

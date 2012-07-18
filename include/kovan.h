@@ -2,7 +2,7 @@
 #define _KOVAN_H_
 
 #include "motors.h"
-#include "servos.h"
+#include "servo.h"
 #include "camera.h"
 #include "ir.h"
 #include "wifi.h"
