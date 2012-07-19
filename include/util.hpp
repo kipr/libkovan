@@ -1,6 +1,6 @@
-#ifndef _TIME_HPP_
-#define _TIME_HPP_
+#ifndef _UTIL_HPP_
+#define _UTIL_HPP_
 
-#include "time.h"
+#include "util.h"
 
 #endif
