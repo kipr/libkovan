@@ -9,7 +9,6 @@ Private::SharedMemory *SharedMemoryImpl::sharedMemory()
 	static SharedMemoryImpl impl;
 	return impl.m_shared;
 }
-	
 
 SharedMemoryImpl::SharedMemoryImpl()
 	: m_shared(0)
