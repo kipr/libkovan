@@ -11,7 +11,6 @@ namespace Private
 	// Server writes this data. Clients read.
 	struct SharedMemoryServer
 	{
-		pthread_mutex_t mutex;
 		timeval timestamp;
 		unsigned long updates;
 		unsigned short servoPositions[4];
@@ -21,7 +20,6 @@ namespace Private
 	// Clients write this data. Server reads.
 	struct SharedMemoryClient
 	{
-		pthread_mutex_t mutex;
 		bool motorDirty : 1;
 		unsigned char servoDirty : 4;
 		unsigned short servoPositions[4];
@@ -29,7 +27,10 @@ namespace Private
 	
 	struct SharedMemory
 	{
+		pthread_mutex_t serverMutex;
 		SharedMemoryServer server;
+		
+		pthread_mutex_t clientMutex;
 		SharedMemoryClient client;
 	};
 }
