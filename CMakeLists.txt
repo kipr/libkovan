@@ -37,5 +37,6 @@ ADD_LIBRARY(kovan SHARED ${SOURCES})
 TARGET_LINK_LIBRARIES(kovan ${QT_LIBRARIES})
 
 install(FILES ${INCLUDES} DESTINATION include/kovan)
+INSTALL(TARGETS kovan LIBRARY DESTINATION lib)
 
 add_subdirectory(test)
