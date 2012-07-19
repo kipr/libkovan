@@ -2,6 +2,7 @@
 #define _PRIVATE_HPP_
 
 #include <pthread.h>
+#include <sys/time.h>
 
 #define SHARED_MEMORY_KEY 8374
 
@@ -10,6 +11,9 @@ namespace Private
 	struct SharedMemory
 	{
 		pthread_mutex_t mutex;
+		
+		timeval timestamp;
+		unsigned long updates;
 		
 		bool motorDirty : 1;
 		
