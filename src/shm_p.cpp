@@ -38,7 +38,10 @@ SharedMemoryImpl::SharedMemoryImpl()
 	
 	// Attach to current shared memory segment.
 	void *shm = shmat(shmid, 0, 0);
-	if((void *) -1 == shm) return;
+	if((void *) -1 == shm){
+		printf("Could not connect to shared memory\n");
+		return;
+	}
 	
 	m_shared = reinterpret_cast<Private::SharedMemory *>(shm);
 }

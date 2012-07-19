@@ -16,3 +16,6 @@ lib
 deploy
 
 .DS_Store
+
+.cproject
+.project
