@@ -24,5 +24,6 @@ int main(int argc, char *argv[])
 		unsigned int ticks = sin(secs) * 400 + 512;
 		printf("\ttick: %u\n", ticks);
 		for(unsigned char i = 0; i < 4; ++i) servos[i].setPosition(ticks);
+		publish();
 	}
 }

@@ -2,10 +2,10 @@
 #include <iostream> // TMP
 
 Private::Motor Private::Motor::motors[4] = {
-	Private::Motor(DEV(motor0)),
-	Private::Motor(DEV(motor1)),
-	Private::Motor(DEV(motor2)),
-	Private::Motor(DEV(motor3))
+	Private::Motor(),
+	Private::Motor(),
+	Private::Motor(),
+	Private::Motor()
 };
 
 Private::Motor *Private::Motor::motorForPort(const port_t& port)
@@ -16,7 +16,7 @@ Private::Motor *Private::Motor::motorForPort(const port_t& port)
 void Private::Motor::setPid(const short& p, const short& i, const short& d, const short& pd, const short& id, const short& dd)
 {
 	std::cout << "Private::Motor::setPid(" << p << ", " << i << ", " << d << ", "
-		<< pd << ", " << id << ", " << dd << ") -> " << dev() << std::endl;
+		<< pd << ", " << id << ", " << dd << ") -> " << std::endl;
 }
 
 void Private::Motor::pid(short& p, short& i, short& d, short& pd, short& id, short& dd)
@@ -26,7 +26,7 @@ void Private::Motor::pid(short& p, short& i, short& d, short& pd, short& id, sho
 
 void Private::Motor::setPwm(int speed)
 {
-	std::cout << "Private::Motor::setPwm(" << speed << ") -> " << dev() << std::endl;
+	std::cout << "Private::Motor::setPwm(" << speed << ") -> " << std::endl;
 }
 
 int Private::Motor::pwm()
@@ -36,10 +36,9 @@ int Private::Motor::pwm()
 
 void Private::Motor::stop()
 {
-	std::cout << "Private::Motor::stop() -> " << dev() << std::endl;
+	std::cout << "Private::Motor::stop() -> " << std::endl;
 }
 
-Private::Motor::Motor(const char *dev) : Dev(dev)
+Private::Motor::Motor()
 {
-	open();
 }

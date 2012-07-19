@@ -1,8 +1,6 @@
 #ifndef _BATTERY_P_H_
 #define _BATTERY_P_H_
 
-#include "common_p.hpp"
-
 namespace Private
 {
 	class Battery

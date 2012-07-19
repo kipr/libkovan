@@ -2,11 +2,10 @@
 #define _MOTORS_P_HPP_
 
 #include "port.hpp"
-#include "common_p.hpp"
 
 namespace Private
 {
-	class Motor : private Dev
+	class Motor
 	{
 	public:
 		static Motor *motorForPort(const port_t& port);
@@ -17,7 +16,7 @@ namespace Private
 		int pwm();
 		void stop();
 	private:
-		Motor(const char *dev);
+		Motor();
 		
 		static Motor motors[4];
 	};

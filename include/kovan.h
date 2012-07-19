@@ -9,5 +9,6 @@
 #include "draw.h"
 #include "battery.h"
 #include "util.h"
+#include "general.h"
 
 #endif

@@ -4,26 +4,20 @@
 
 bool Private::Servo::setPosition(const port_t& port, const unsigned short& position)
 {
-	Private::SharedMemory *shm = SharedMemoryImpl::sharedMemory();
+	Private::SharedMemoryClient *shm = SharedMemoryImpl::instance()->sharedMemoryClient();
 	if(!shm) return false;
 	if(port < 1 || port > 4) return false;
-	pthread_mutex_t *mutex = reinterpret_cast<pthread_mutex_t *>(&shm->client); // First member of shm, so we can just cast it
-	pthread_mutex_lock(mutex);
-	shm->client.servoPositions[port - 1] = position & 0x3F;
-	shm->client.servoDirty |= 1 << (4 - port);
-	pthread_mutex_unlock(mutex);
+	shm->servoPositions[port - 1] = position & 0x3F;
+	shm->servoDirty |= 1 << (4 - port);
 	return true;
 }
 
 unsigned short Private::Servo::position(const port_t& port) const
 {
-	Private::SharedMemory *shm = SharedMemoryImpl::sharedMemory();
+	Private::SharedMemoryServer *shm = SharedMemoryImpl::instance()->sharedMemoryServer();
 	if(!shm) return false;
 	if(port < 1 || port > 4) return false;
-	pthread_mutex_t *mutex = reinterpret_cast<pthread_mutex_t *>(&shm->server);
-	pthread_mutex_lock(mutex);
-	unsigned short pos = shm->server.servoPositions[port - 1] & 0x3F;
-	pthread_mutex_unlock(mutex);
+	unsigned short pos = shm->servoPositions[port - 1] & 0x3F;
 	return pos;
 }
 
