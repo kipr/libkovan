@@ -2,6 +2,7 @@
 #include "private.hpp"
 #include <sys/shm.h>
 #include <cstring>
+#include <cstdio>
 
 using namespace Private;
 
@@ -38,8 +39,8 @@ SharedMemoryImpl::SharedMemoryImpl()
 	
 	// Attach to current shared memory segment.
 	void *shm = shmat(shmid, 0, 0);
-	if((void *) -1 == shm){
-		printf("Could not connect to shared memory\n");
+	if((void *) -1 == shm) {
+		printf("Could not attach to shared memory with key %u\n", SHARED_MEMORY_KEY);
 		return;
 	}
 	
@@ -49,6 +50,11 @@ SharedMemoryImpl::SharedMemoryImpl()
 SharedMemoryImpl::~SharedMemoryImpl()
 {
 	if(m_shared) shmdt(m_shared);
+}
+
+bool SharedMemoryImpl::isErrorState() const
+{
+	return !m_shared;
 }
 
 SharedMemoryImpl *SharedMemoryImpl::instance()

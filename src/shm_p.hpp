@@ -14,6 +14,8 @@ namespace Private
 		Private::SharedMemoryClient *sharedMemoryClient();
 		void publish();
 		
+		bool isErrorState() const;
+		
 		static SharedMemoryImpl *instance();
 	private:
 		
