@@ -1,27 +1,33 @@
 #include "draw.h"
 #include "draw.hpp"
 
+Draw *draw_instance()
+{
+	static Draw s_draw;
+	return &s_draw;
+}
+
 int draw_open()
 {
-	// return g_draw.open();
+	return draw_instance()->open();
 }
 
 void draw_point(int x, int y)
 {
-	// g_draw.point(x, y);
+	draw_instance()->point(x, y);
 }
 
 void draw_line(int sx, int sy, int ex, int ey)
 {
-	// g_draw.line(sx, sy, ex, ey);
+	draw_instance()->line(sx, sy, ex, ey);
 }
 
 void draw_clear()
 {
-	// g_draw.clear();
+	draw_instance()->clear();
 }
 
 void draw_close()
 {
-	// g_draw.close();
+	draw_instance()->close();
 }
