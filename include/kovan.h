@@ -3,6 +3,7 @@
 
 #include "motors.h"
 #include "servo.h"
+#include "button.h"
 #include "camera.h"
 #include "ir.h"
 #include "wifi.h"

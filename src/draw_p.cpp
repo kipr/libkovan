@@ -4,6 +4,10 @@
 
 #include "draw_p.hpp"
 #include <QGraphicsScene>
+#include <QCoreApplication>
+#include <QApplication>
+
+bool Private::Draw::s_inited = false;
 
 Private::Draw::Draw()
 	: m_scene(new QGraphicsScene(this))
@@ -51,6 +55,20 @@ void Private::Draw::raise()
 void Private::Draw::close()
 {
 	hide();
+}
+
+bool Private::Draw::isInited()
+{
+	return s_inited;
+}
+
+void Private::Draw::init()
+{
+	if(isInited()) return;
+	static char *argv[] = {"beta"};
+	static int argc = 1;
+	QApplication *app = new QApplication(argc, argv);
+	s_inited = true;
 }
 
 #endif

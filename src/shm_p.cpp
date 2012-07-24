@@ -13,12 +13,19 @@ Private::SharedMemory *SharedMemoryImpl::sharedMemory()
 
 Private::SharedMemoryServer *SharedMemoryImpl::sharedMemoryServer()
 {
-	return &sharedMemory()->server;
+	Private::SharedMemory *shared = sharedMemory();
+	return shared ? &shared->server : 0;
 }
 
 Private::SharedMemoryClient *SharedMemoryImpl::sharedMemoryClient()
 {
 	return &instance()->m_client;
+}
+
+Private::SharedMemoryInterClient *SharedMemoryImpl::sharedMemoryInterClient()
+{
+	Private::SharedMemory *shared = sharedMemory();
+	return shared ? &shared->interClient : 0;
 }
 
 void SharedMemoryImpl::publish()

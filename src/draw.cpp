@@ -2,9 +2,10 @@
 #include "draw_p.hpp"
 
 Draw::Draw()
-	: p_draw(new Private::Draw())
+	: p_draw(0)
 {
-	
+	if(!Private::Draw::isInited()) Private::Draw::init();
+	p_draw = new Private::Draw();
 }
 
 Draw::~Draw()

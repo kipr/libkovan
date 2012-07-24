@@ -25,6 +25,21 @@ namespace Private
 		unsigned short servoPositions[4];
 	};
 	
+	struct SharedButton
+	{
+		bool textDirty : 1;
+		char text[16];
+		bool pressed;
+	};
+	
+	// Clients read and write this data;
+	struct SharedMemoryInterClient
+	{
+		SharedButton a;
+		SharedButton b;
+		SharedButton z;
+	};
+	
 	struct SharedMemory
 	{
 		pthread_mutex_t serverMutex;
@@ -32,7 +47,12 @@ namespace Private
 		
 		pthread_mutex_t clientMutex;
 		SharedMemoryClient client;
+		
+		pthread_mutex_t interClientMutex;
+		SharedMemoryInterClient interClient;
 	};
+	
+	bool initSharedMemory(Private::SharedMemory *shm);
 }
 
 #endif

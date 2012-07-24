@@ -26,7 +26,10 @@ namespace Private
 		void raise();
 		void close();
 		
+		static bool isInited();
+		static void init();
 	private:
+		static bool s_inited;
 		QGraphicsScene *m_scene;
 	};
 }
@@ -48,6 +51,9 @@ namespace Private
 		void setSize(const unsigned int& width, const unsigned int& height) {}
 		void raise() {}
 		void close() {}
+		
+		static bool isInited() { return false; }
+		static void init() {}
 	};
 }
 
