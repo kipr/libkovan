@@ -3,6 +3,7 @@
 
 #include "motors.hpp"
 #include "servo.hpp"
+#include "analog.hpp"
 #include "button.hpp"
 #include "camera.hpp"
 #include "ir.hpp"
