@@ -10,7 +10,7 @@ using namespace Private;
 void Private::Button::setText(::Button::Type::Id id, const char *text)
 {
 	size_t len = text ? strlen(text) : 0;
-	len = len > 16 ? 16 : len;
+	len = len > MAX_BUTTON_TEXT_SIZE ? MAX_BUTTON_TEXT_SIZE : len;
 	
 	SharedMemory *shm = SharedMemoryImpl::instance()->sharedMemory();
 	SharedMemoryInterClient *interClient = SharedMemoryImpl::instance()->sharedMemoryInterClient();

@@ -6,6 +6,12 @@
 
 #define SHARED_MEMORY_KEY 8374
 
+#define NUM_DIGITALS 8
+#define NUM_ANALOGS 8
+#define NUM_MOTORS 4
+#define NUM_SERVOS 4
+#define MAX_BUTTON_TEXT_SIZE 16
+
 namespace Private
 {
 	// Server writes this data. Clients read.
@@ -13,7 +19,11 @@ namespace Private
 	{
 		timeval timestamp;
 		unsigned long updates;
-		unsigned short servoPositions[4];
+		unsigned short servoPositions[NUM_SERVOS];
+		
+		bool digitals[NUM_DIGITALS];
+		unsigned short analogs[NUM_ANALOGS];
+		
 		unsigned short rawBatteryVoltage;
 	};
 	
@@ -21,14 +31,17 @@ namespace Private
 	struct SharedMemoryClient
 	{
 		bool motorDirty : 1;
-		unsigned char servoDirty : 4;
-		unsigned short servoPositions[4];
+		unsigned char servoDirty : NUM_SERVOS;
+		unsigned short servoPositions[NUM_SERVOS];
+		
+		bool pullupDirty[NUM_ANALOGS];
+		bool pullup[NUM_ANALOGS];
 	};
 	
 	struct SharedButton
 	{
 		bool textDirty : 1;
-		char text[16];
+		char text[MAX_BUTTON_TEXT_SIZE];
 		bool pressed;
 	};
 	
