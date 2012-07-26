@@ -2,10 +2,7 @@
 
 int main(int argc, char *argv[])
 {
-	AButton a;
-	BButton b;
-	ZButton z;
-	a.setText("Left");
-	b.setText("Right");
-	z.setText("Enter");
+	Button::A.setText("Left");
+	Button::B.setText("Right");
+	Button::Z.setText("Enter");
 }

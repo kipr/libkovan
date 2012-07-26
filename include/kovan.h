@@ -11,5 +11,6 @@
 #include "battery.h"
 #include "util.h"
 #include "general.h"
+#include "console.h"
 
 #endif

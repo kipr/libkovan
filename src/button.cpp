@@ -1,80 +1,86 @@
 #include "button.hpp"
 #include "button_p.hpp"
+
 #include <cstring>
+#include <sched.h>
+
+IdButton Button::A(Button::Type::A, "A");
+IdButton Button::B(Button::Type::B, "B");
+IdButton Button::C(Button::Type::C, "C");
+
+IdButton Button::X(Button::Type::X, "X");
+IdButton Button::Y(Button::Type::Y, "Y");
+IdButton Button::Z(Button::Type::Z, "Z");
+
+IdButton * const Button::all[6] = {
+	&Button::A, &Button::B, &Button::C,
+	&Button::X, &Button::Y, &Button::Z
+};
 
 AbstractButton::~AbstractButton() {}
 
-void AButton::setText(const char *text)
+void AbstractButton::waitUntilReleased() const
 {
-	Private::Button::instance()->setText(Private::Button::A, text);
+	while(isPressed()) sched_yield();
 }
 
-const char *AButton::text() const
+AbstractTextButton::~AbstractTextButton() {}
+
+IdButton::IdButton(const Button::Type::Id& id, const char *defaultText)
+	: m_id(id)
 {
-	return Private::Button::instance()->text(Private::Button::A);
+	size_t len = strlen(defaultText);
+	m_defaultText = new char[len + 1];
+	memcpy(m_defaultText, defaultText, len);
+	m_defaultText[len] = 0;
 }
 
-bool AButton::isTextDirty() const
+IdButton::~IdButton()
 {
-	return Private::Button::instance()->isTextDirty(Private::Button::A);
+	if(m_defaultText) delete[] m_defaultText;
 }
 
-void AButton::setPressed(bool pressed)
+void IdButton::setText(const char *text)
 {
-	Private::Button::instance()->setPressed(Private::Button::A, pressed);
+	Private::Button::instance()->setText(m_id, text);
 }
 
-bool AButton::isPressed() const
+const char *IdButton::text() const
 {
-	return false;
+	return Private::Button::instance()->text(m_id);
 }
 
-void BButton::setText(const char *text)
+bool IdButton::isTextDirty() const
 {
-	Private::Button::instance()->setText(Private::Button::B, text);
+	return Private::Button::instance()->isTextDirty(m_id);
 }
 
-const char *BButton::text() const
+void IdButton::setPressed(bool pressed)
 {
-	return Private::Button::instance()->text(Private::Button::B);
+	Private::Button::instance()->setPressed(m_id, pressed);
 }
 
-bool BButton::isTextDirty() const
+bool IdButton::isPressed() const
 {
-	return Private::Button::instance()->isTextDirty(Private::Button::B);
+	return Private::Button::instance()->isPressed(m_id);
 }
 
-void BButton::setPressed(bool pressed)
+void IdButton::resetText()
 {
-	Private::Button::instance()->setPressed(Private::Button::B, pressed);
+	setText(m_defaultText);
 }
 
-bool BButton::isPressed() const
+void ExtraButtons::setShown(const bool& shown)
 {
-	return false;
+	Private::Button::instance()->setExtraShown(shown);
 }
 
-void ZButton::setText(const char *text)
+bool ExtraButtons::isShown()
 {
-	Private::Button::instance()->setText(Private::Button::Z, text);
+	return Private::Button::instance()->isExtraShown();
 }
 
-const char *ZButton::text() const
+bool ExtraButtons::isShownDirty()
 {
-	return Private::Button::instance()->text(Private::Button::Z);
-}
-
-bool ZButton::isTextDirty() const
-{
-	return Private::Button::instance()->isTextDirty(Private::Button::Z);
-}
-
-void ZButton::setPressed(bool pressed)
-{
-	Private::Button::instance()->setPressed(Private::Button::Z, pressed);
-}
-
-bool ZButton::isPressed() const
-{
-	return false;
+	return Private::Button::instance()->isExtraShownDirty();
 }

@@ -37,6 +37,13 @@ namespace Private
 	{
 		SharedButton a;
 		SharedButton b;
+		SharedButton c;
+		
+		bool isShowExtraButtonsDirty : 1;
+		bool showExtraButtons : 1;
+		
+		SharedButton x;
+		SharedButton y;
 		SharedButton z;
 	};
 	

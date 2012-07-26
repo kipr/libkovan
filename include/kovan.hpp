@@ -11,5 +11,6 @@
 #include "battery.hpp"
 #include "util.hpp"
 #include "general.h"
+#include "console.hpp"
 
 #endif
