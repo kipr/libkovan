@@ -131,7 +131,8 @@ Create::Mode Create::mode()
 {
 	write(OI_SENSORS);
 	write(35);
-	char state = read();
+	char state = 0;
+	while(!(state = read())) ;
         switch(state) {
 	case 0: return OffMode;
 	case 1: return PassiveMode;
