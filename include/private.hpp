@@ -24,8 +24,8 @@ namespace Private
 	};
 	
 	enum MotorControlMode {
-		PID = 0,
-		PWM
+		PIDMode = 0,
+		PWMMode
 	};
 	
 	// Server writes this data. Clients read.
