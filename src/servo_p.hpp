@@ -5,6 +5,8 @@
 
 namespace Private
 {
+	class PublishListener;
+	
 	class Servo
 	{
 	public:	
@@ -13,6 +15,10 @@ namespace Private
 		
 		static Servo *instance();
 	private:
+		Servo();
+		~Servo();
+		
+		PublishListener *m_listener;
 	};
 }
 

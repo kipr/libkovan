@@ -44,4 +44,4 @@ Analog::Analog()
 }
 
 Analog::Analog(const Analog& ) {}
-Analog& Analog::operator=(const Analog&) {}
+Analog& Analog::operator=(const Analog&) { return *this; }

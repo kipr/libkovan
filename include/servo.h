@@ -5,8 +5,8 @@
 extern "C" {
 #endif
 
-int get_servo_position();
-void set_servo_position(int position);
+int get_servo_position(int servo);
+void set_servo_position(int servo, int position);
 
 #ifdef __cplusplus
 }

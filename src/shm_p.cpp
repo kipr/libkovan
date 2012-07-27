@@ -6,6 +6,8 @@
 
 using namespace Private;
 
+PublishListener::~PublishListener() {}
+
 Private::SharedMemory *SharedMemoryImpl::sharedMemory()
 {
 	return instance()->m_shared;
@@ -28,6 +30,11 @@ Private::SharedMemoryInterClient *SharedMemoryImpl::sharedMemoryInterClient()
 	return shared ? &shared->interClient : 0;
 }
 
+void SharedMemoryImpl::addPublishListener(PublishListener *listener)
+{
+	m_listeners.push_back(listener);
+}
+
 void SharedMemoryImpl::publish()
 {
 	Private::SharedMemoryClient *client = &sharedMemory()->client;
@@ -35,6 +42,9 @@ void SharedMemoryImpl::publish()
 	pthread_mutex_lock(mutex);
 	memcpy(client, &m_client, sizeof(Private::SharedMemoryClient));
 	pthread_mutex_unlock(mutex);
+	
+	std::vector<PublishListener *>::const_iterator it = m_listeners.begin();
+	for(; it != m_listeners.end(); ++it) (*it)->published(&m_client);
 }
 
 SharedMemoryImpl::SharedMemoryImpl()

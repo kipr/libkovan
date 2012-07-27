@@ -25,5 +25,6 @@ int main(int argc, char *argv[])
 		printf("\ttick: %u\n", ticks);
 		for(unsigned char i = 0; i < 4; ++i) servos[i].setPosition(ticks);
 		publish();
+		printf("pos 0: %d\n", servos[0].position());
 	}
 }
