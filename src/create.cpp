@@ -74,11 +74,52 @@ Create::~Create()
 	disconnect();
 }
 
+int
+set_interface_attribs (int fd, int speed, int parity)
+{
+        struct termios tty;
+        memset (&tty, 0, sizeof tty);
+        if (tcgetattr (fd, &tty) != 0) {
+		perror("tcgetattr");
+                return -1;
+        }
+
+        cfsetospeed (&tty, speed);
+        cfsetispeed (&tty, speed);
+
+        tty.c_cflag = (tty.c_cflag & ~CSIZE) | CS8;     // 8-bit chars
+        // disable IGNBRK for mismatched speed tests; otherwise receive break
+        // as \000 chars
+        tty.c_iflag &= ~IGNBRK;         // ignore break signal
+        tty.c_lflag = 0;                // no signaling chars, no echo,
+                                        // no canonical processing
+        tty.c_oflag = 0;                // no remapping, no delays
+        tty.c_cc[VMIN]  = 0;            // read doesn't block
+        tty.c_cc[VTIME] = 5;            // 0.5 seconds read timeout
+
+        tty.c_iflag &= ~(IXON | IXOFF | IXANY); // shut off xon/xoff ctrl
+
+        tty.c_cflag |= (CLOCAL | CREAD);// ignore modem controls,
+                                        // enable reading
+        tty.c_cflag &= ~(PARENB | PARODD);      // shut off parity
+        tty.c_cflag |= parity;
+        tty.c_cflag &= ~CSTOPB;
+        tty.c_cflag &= ~CRTSCTS;
+
+        if (tcsetattr (fd, TCSANOW, &tty) != 0)
+        {
+		perror("tcsetattr");
+                return -1;
+        }
+        return 0;
+}
+
 bool Create::connect()
 {
 	if(!open()) return false;
+	if(!set_interface_attribs(m_tty, B57600, 0)) return false;
 	
-	setLocalBaudRate(baudCodeRate[10]); // This is the default rate
+	// setLocalBaudRate(baudCodeRate[10]); // This is the default rate
 	start();
 	
 	// Make the connection baud rate 115200
@@ -136,6 +177,7 @@ Create::Mode Create::mode()
 		state = read();
 		if(state < 0) return OffMode;
 	} while(state == 0);
+	printf("State = %d\n", state);
         switch(state) {
 	case 0: return OffMode;
 	case 1: return PassiveMode;
@@ -171,7 +213,9 @@ short Create::read()
 int Create::read(unsigned char *data, const size_t& len)
 {
 	if(!m_tty) return 0;
-	return ::read(m_tty, data, len);
+	int ret = ::read(m_tty, data, len);
+	if(ret < 0) perror("::read");
+	return ret;
 }
 
 bool Create::setBaudRate(const unsigned char& baudCode)
@@ -223,8 +267,9 @@ bool Create::start()
 bool Create::open()
 {
 	if(m_tty) return false;
-	m_tty = ::open("/dev/tty.KeySerial1", O_RDWR | O_NONBLOCK);
-	return m_tty;
+	m_tty = ::open("/dev/tty.USA19Hfa14P1.1", O_RDWR | O_NONBLOCK);
+	if(m_tty < 0) perror("Create::open");
+	return m_tty >= 0;
 }
 
 void Create::close()
