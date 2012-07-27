@@ -46,7 +46,7 @@ namespace Private
 	// Clients write this data. Server reads.
 	struct SharedMemoryClient
 	{
-		bool motorDirty : 1;
+		// Motors
 		
 		bool motorControlModeDirty : 1;
 		MotorControlMode motorControlMode;
@@ -57,8 +57,12 @@ namespace Private
 		unsigned char pidsDirty : NUM_MOTORS; // Lower 4 bits used
 		PID pids[NUM_MOTORS];
 		
+		// Servos
+		
 		unsigned char servoDirty : NUM_SERVOS;
 		unsigned short servoPositions[NUM_SERVOS];
+		
+		// Analog
 		
 		bool pullupDirty[NUM_ANALOGS];
 		bool pullup[NUM_ANALOGS];
