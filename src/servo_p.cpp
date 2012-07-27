@@ -31,6 +31,7 @@ bool Private::Servo::setPosition(const port_t& port, const unsigned short& posit
 	if(!shm) return false;
 	if(port < 1 || port > 4) return false;
 	shm->servoPositions[port - 1] = position & 0x3FF;
+	printf("wrote servo position %u on port %u", shm->servoPositions[port - 1], port);
 	shm->servoDirty |= 1 << (4 - port);
 	return true;
 }
