@@ -131,8 +131,11 @@ Create::Mode Create::mode()
 {
 	write(OI_SENSORS);
 	write(35);
-	char state = 0;
-	while(!(state = read())) ;
+	short state = 0;
+	do {
+		state = read();
+		if(state < 0) return OffMode;
+	} while(state == 0);
         switch(state) {
 	case 0: return OffMode;
 	case 1: return PassiveMode;
@@ -158,14 +161,14 @@ bool Create::write(const unsigned char *data, const size_t& len)
 	return ::write(m_tty, data, len) == len;
 }
 
-unsigned char Create::read()
+short Create::read()
 {
 	unsigned char ret = 0;
-	read(&ret, 1);
-	return ret;
+	;
+	return read(&ret, 1) == 1 ? ret : -1;
 }
 
-size_t Create::read(unsigned char *data, const size_t& len)
+int Create::read(unsigned char *data, const size_t& len)
 {
 	if(!m_tty) return 0;
 	return ::read(m_tty, data, len);

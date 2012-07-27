@@ -24,7 +24,7 @@ namespace Private
 		bool digitals[NUM_DIGITALS];
 		unsigned short analogs[NUM_ANALOGS];
 		
-		unsigned short backEMF[NUM_MOTORS];
+		unsigned short backEMFs[NUM_MOTORS * 2];
 
 		unsigned short rawBatteryVoltage;
 	};

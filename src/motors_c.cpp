@@ -55,7 +55,7 @@ void get_pid_gains(int motor, int *p, int *i, int *d, int *pd, int *id, int *dd)
 
 int freeze(int motor)
 {
-	
+	return -1;
 }
 
 int get_motor_done(int motor)
@@ -75,11 +75,7 @@ void bmd(int motor)
 
 int setpwm(int motor, int pwm)
 {
-	Private::Motor *p_motor = Private::Motor::motorForPort(motor);
-	if(!p_motor) {
-		std::cerr << "Invalid port" << std::endl;
-		return 0;
-	} else p_motor->setPwm(pwm);
+	Private::Motor::instance()->setPwm(motor, pwm);
 	return -1;
 }
 
@@ -100,19 +96,20 @@ void bk(int motor)
 
 void motor(int motor, int percent)
 {
-	Private::Motor *p_motor = Private::Motor::motorForPort(motor);
-	if(!p_motor) std::cerr << "Invalid port" << std::endl;
-	else p_motor->setPwm(percent);
+	Private::Motor::instance()->setPwm(motor, percent);
 }
 
 void off(int motor)
 {
-	Private::Motor *p_motor = Private::Motor::motorForPort(motor);
-	if(!p_motor) std::cerr << "Invalid port" << std::endl;
-	else p_motor->stop();
+	Private::Motor::instance()->stop(motor);
 }
 
 void ao()
 {
 	for(int i = 1; i <= 4; ++i) off(i);
+}
+
+int get_backemf(int port)
+{
+	return Private::Motor::instance()->backEMF(port);
 }

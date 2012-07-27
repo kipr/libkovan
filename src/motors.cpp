@@ -2,10 +2,9 @@
 #include "motors_p.hpp"
 
 Motor::Motor(const port_t& port) throw()
-	: m_port(port),
-	p_motor(Private::Motor::motorForPort(port))
+	: m_port(port)
 {
-	if(!p_motor) throw InvalidPort("Motor ports are through 1 and 4");
+	// if(!p_motor) throw InvalidPort("Motor ports are through 1 and 4");
 }
 
 void Motor::moveAtVelocity(const int& velocity)
@@ -25,12 +24,12 @@ void Motor::moveRelativePosition(const int& speed, const int& deltaPos)
 
 void Motor::setPidGains(const short& p, const short& i, const short& d, const short& pd, const short& id, const short& dd)
 {
-	p_motor->setPid(p, i, d, pd, id, dd);
+	Private::Motor::instance()->setPid(m_port, p, i, d, pd, id, dd);
 }
 
 void Motor::pidGains(short& p, short& i, short& d, short& pd, short& id, short& dd)
 {
-	p_motor->pid(p, i, d, pd, id, dd);
+	Private::Motor::instance()->pid(m_port, p, i, d, pd, id, dd);
 }
 
 void Motor::freeze()
@@ -60,15 +59,27 @@ void Motor::backward()
 
 void Motor::motor(int percent)
 {
-	p_motor->setPwm(percent);
+	Private::Motor::instance()->setPwm(m_port, percent);
 }
 
 void Motor::off()
 {
-	p_motor->stop();
+	Private::Motor::instance()->stop(m_port);
 }
 
 const port_t& Motor::port() const
+{
+	return m_port;
+}
+
+BackEMF::BackEMF(const unsigned char& port) : m_port(port) {}
+
+unsigned short BackEMF::value() const
+{
+	return Private::Motor::instance()->backEMF(m_port);
+}
+
+unsigned char BackEMF::port() const
 {
 	return m_port;
 }

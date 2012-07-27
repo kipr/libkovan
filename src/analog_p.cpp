@@ -32,6 +32,14 @@ unsigned short Analog::value(const unsigned char& port) const
 	return shm->analogs[port - 8];
 }
 
+unsigned short Analog::backEMF(const unsigned char& port) const
+{
+	if(port >= 8) return 0xFFFF;
+	
+	SharedMemoryServer *shm = SharedMemoryImpl::instance()->sharedMemoryServer();
+	return shm->backEMFs[port];
+}
+
 Analog *Analog::instance()
 {
 	static Analog s_analog;

@@ -10,6 +10,9 @@ namespace Private
 		bool pullup(const unsigned char& port) const;
 		unsigned short value(const unsigned char& port) const;
 		
+		// TEMPORARY
+		unsigned short backEMF(const unsigned char& port) const;
+	
 		static Analog *instance();
 	private:
 		Analog();

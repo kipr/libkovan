@@ -27,6 +27,8 @@ void motor (int motor, int percent);
 void off(int motor);
 void ao();
 
+int get_backemf(int port);
+
 #ifdef __cplusplus
 }
 #endif

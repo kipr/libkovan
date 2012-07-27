@@ -58,8 +58,8 @@ public:
 	bool write(const unsigned char& c);
 	bool write(const unsigned char *data, const size_t& len);
 	
-	unsigned char read();
-	size_t read(unsigned char *data, const size_t& len);
+	short read();
+	int read(unsigned char *data, const size_t& len);
 	
 	bool setBaudRate(const unsigned char& baudCode);
 	

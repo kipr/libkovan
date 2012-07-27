@@ -2,6 +2,7 @@
 #define _MOTORS_HPP_
 
 #include "port.hpp"
+#include "sensor.hpp"
 
 namespace Private
 {
@@ -33,7 +34,17 @@ public:
 	const port_t& port() const;
 private:
 	port_t m_port;
-	Private::Motor *p_motor;
+};
+
+class BackEMF : public Sensor<unsigned short>
+{
+public:
+	BackEMF(const unsigned char& port);
+	virtual unsigned short value() const;
+	unsigned char port() const;
+	
+private:
+	unsigned char m_port;
 };
 
 #endif

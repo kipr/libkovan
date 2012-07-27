@@ -20,3 +20,8 @@ int analog_get_pullup(int port)
 {
 	return Private::Analog::instance()->pullup(static_cast<unsigned char>(port));
 }
+
+unsigned short backemf(int port)
+{
+	return Private::Analog::instance()->backEMF(port);
+}
