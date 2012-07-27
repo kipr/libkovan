@@ -29,10 +29,34 @@ namespace Private
 		unsigned short rawBatteryVoltage;
 	};
 	
+	struct PID {
+		short p;
+		short i;
+		short d;
+		short pd;
+		short id;
+		short dd;
+	};
+	
+	enum MotorControlMode {
+		PID = 0,
+		PWM
+	};
+	
 	// Clients write this data. Server reads.
 	struct SharedMemoryClient
 	{
 		bool motorDirty : 1;
+		
+		bool motorControlModeDirty : 1;
+		MotorControlMode motorControlMode;
+		
+		unsigned char pwmsDirty : NUM_MOTORS; // Lower 4 bits used
+		unsigned char pwms[NUM_MOTORS];
+		
+		unsigned char pidsDirty : NUM_MOTORS; // Lower 4 bits used
+		PID pids[NUM_MOTORS];
+		
 		unsigned char servoDirty : NUM_SERVOS;
 		unsigned short servoPositions[NUM_SERVOS];
 		
@@ -44,7 +68,7 @@ namespace Private
 	{
 		bool textDirty : 1;
 		char text[MAX_BUTTON_TEXT_SIZE];
-		bool pressed;
+		bool pressed : 1;
 	};
 	
 	// Clients read and write this data;

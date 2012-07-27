@@ -10,6 +10,8 @@ namespace Private
 	public:
 		virtual void published(Private::SharedMemoryClient *client)
 		{
+			static unsigned char i = 0;
+			if(i++ == 0) printf("Cleared servo dirty bit");
 			client->servoDirty = 0;
 		}
 	};
