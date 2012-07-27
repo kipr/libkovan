@@ -5,6 +5,7 @@
 #include <unistd.h>
 
 #include <cstdio>
+#include <cstring>
 
 #define LOW_BYTE(x) ((x) & 0xFF)
 #define HIGH_BYTE(x) (((x) & 0xFF00) >> 8)
