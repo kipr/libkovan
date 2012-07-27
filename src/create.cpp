@@ -2,6 +2,7 @@
 #include "create_codes.h"
 
 #include <fcntl.h>
+#include <unistd.h>
 
 #include <cstdio>
 
