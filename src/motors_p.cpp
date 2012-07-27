@@ -4,8 +4,8 @@
 
 void Private::Motor::setPid(const port_t& port, const short& p, const short& i, const short& d, const short& pd, const short& id, const short& dd)
 {
-	std::cout << "Private::Motor::setPid(" << p << ", " << i << ", " << d << ", "
-		<< pd << ", " << id << ", " << dd << ") -> " << std::endl;
+	Private::SharedMemoryClient *shm = SharedMemoryImpl::instance()->sharedMemoryClient();
+	
 }
 
 void Private::Motor::pid(const port_t& port, short& p, short& i, short& d, short& pd, short& id, short& dd)

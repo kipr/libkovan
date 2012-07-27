@@ -14,21 +14,6 @@
 
 namespace Private
 {
-	// Server writes this data. Clients read.
-	struct SharedMemoryServer
-	{
-		timeval timestamp;
-		unsigned long updates;
-		unsigned short servoPositions[NUM_SERVOS];
-		
-		bool digitals[NUM_DIGITALS];
-		unsigned short analogs[NUM_ANALOGS];
-		
-		unsigned short backEMFs[NUM_MOTORS * 2];
-
-		unsigned short rawBatteryVoltage;
-	};
-	
 	struct PID {
 		short p;
 		short i;
@@ -41,6 +26,25 @@ namespace Private
 	enum MotorControlMode {
 		PID = 0,
 		PWM
+	};
+	
+	// Server writes this data. Clients read.
+	struct SharedMemoryServer
+	{
+		timeval timestamp;
+		unsigned long updates;
+		unsigned short servoPositions[NUM_SERVOS];
+		
+		bool digitals[NUM_DIGITALS];
+		unsigned short analogs[NUM_ANALOGS];
+		
+		MotorControlMode motorControlMode;
+		unsigned char pwms[NUM_MOTORS];
+		PID pids[NUM_MOTORS];
+		
+		unsigned short backEMFs[NUM_MOTORS * 2];
+
+		unsigned short rawBatteryVoltage;
 	};
 	
 	// Clients write this data. Server reads.
