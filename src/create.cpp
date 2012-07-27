@@ -202,12 +202,11 @@ void Create::setLocalBaudRate(const speed_t& baudRate)
 	speed_t out = cfgetospeed(&attribs);
 	printf("in = %lu, out = %lu (old)\n", in, out);
 	
-	const speed_t newBaud = baudCodeRate[baudCode];
-	cfsetispeed(&attribs, newBaud);
-	cfsetospeed(&attribs, newBaud);
-	printf("baud = %lu (new)\n", newBaud);
+	cfsetispeed(&attribs, baudRate);
+	cfsetospeed(&attribs, baudRate);
+	printf("baud = %lu (new)\n", baudRate);
 	
-	tcsetattr(m_tty, &attribs);
+	tcsetattr(m_tty, TCSADRAIN, &attribs);
 }
 
 bool Create::start()
@@ -218,8 +217,8 @@ bool Create::start()
 
 bool Create::open()
 {
-	if(m_tty) return;
-	m_tty = ::open("/dev/tty.KeySerial1");
+	if(m_tty) return false;
+	m_tty = ::open("/dev/tty.KeySerial1", O_RDWR | O_NONBLOCK);
 	return m_tty;
 }
 

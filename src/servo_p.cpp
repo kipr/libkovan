@@ -1,6 +1,7 @@
 #include "servo_p.hpp"
 #include "shm_p.hpp"
 #include "private.hpp"
+#include <cstdio>
 
 namespace Private
 {

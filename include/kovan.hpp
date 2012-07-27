@@ -10,6 +10,7 @@
 #include "wifi.hpp"
 #include "draw.hpp"
 #include "battery.hpp"
+#include "create.hpp"
 #include "util.hpp"
 #include "general.h"
 #include "console.hpp"
