@@ -1,8 +1,6 @@
 #include "create.hpp"
 #include "create_codes.h"
 
-#if 0
-
 #include <fcntl.h>
 
 #include <cstdio>
@@ -59,7 +57,7 @@ size_t CreateScript::size() const
 	return m_script.size();
 }
 
-unsigned char CreateScript::byte(const unsigned size_t& i)
+unsigned char CreateScript::byte(const size_t& i)
 {
 	return m_script[i];
 }
@@ -118,16 +116,17 @@ void Create::setFullMode()
 	write(OI_FULL);
 }
 
-void Create::setMode(const Mode& mode)
+void Create::setMode(const Create::Mode& mode)
 {
 	switch(mode) {
+	case OffMode: // NYI
 	case PassiveMode: setPassiveMode(); break;
 	case SafeMode: setSafeMode(); break;
 	case FullMode: setFullMode(); break;
 	}
 }
 
-Mode Create::mode()
+Create::Mode Create::mode()
 {
 	write(OI_SENSORS);
 	write(35);
@@ -143,31 +142,31 @@ Mode Create::mode()
 
 void Create::send(const CreateScript& script)
 {
-	m_script = rhs;
+	m_script = script;
 }
 
-bool Create::write(const char& c)
+bool Create::write(const unsigned char& c)
 {
 	return write(&c, 1);
 }
 
-bool Create::write(const char *data, const size_t& len)
+bool Create::write(const unsigned char *data, const size_t& len)
 {
 	if(!m_tty) return false;
-	return ::write(data, sizeof char, len, m_tty) == len;
+	return ::write(m_tty, data, len) == len;
 }
 
-char Create::read()
+unsigned char Create::read()
 {
-	char ret = 0;
+	unsigned char ret = 0;
 	read(&ret, 1);
 	return ret;
 }
 
-size_t Create::read(char *data, const size_t& len)
+size_t Create::read(unsigned char *data, const size_t& len)
 {
 	if(!m_tty) return 0;
-	return ::read(data, sizeof char, len, m_tty);
+	return ::read(m_tty, data, len);
 }
 
 bool Create::setBaudRate(const unsigned char& baudCode)
@@ -192,7 +191,7 @@ Create *Create::instance()
 
 Create::Create() {}
 Create::Create(const Create&) {}
-Create& Create::operator=(const Create&) {}
+Create& Create::operator=(const Create&) { return *this; }
 
 void Create::setLocalBaudRate(const speed_t& baudRate)
 {
@@ -230,5 +229,3 @@ void Create::close()
 	::close(m_tty);
 	m_tty = 0;
 }
-
-#endif

@@ -1,8 +1,6 @@
 #ifndef _CREATE_HPP_
 #define _CREATE_HPP_
 
-#if 0
-
 #include <cstdio>
 #include <cstdlib>
 #include <vector>
@@ -60,10 +58,10 @@ public:
 	bool write(const unsigned char& c);
 	bool write(const unsigned char *data, const size_t& len);
 	
-	char read();
+	unsigned char read();
 	size_t read(unsigned char *data, const size_t& len);
 	
-	void setBaudRate(const unsigned char& baudCode);
+	bool setBaudRate(const unsigned char& baudCode);
 	
 	static Create *instance();
 	
@@ -74,7 +72,7 @@ private:
 	
 	void setLocalBaudRate(const speed_t& baudRate);
 	
-	void start();
+	bool start();
 	
 	bool open();
 	void close();
@@ -84,6 +82,5 @@ private:
 	int m_tty;
 	
 };
-#endif
 
 #endif
