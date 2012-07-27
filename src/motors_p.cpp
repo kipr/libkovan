@@ -2,23 +2,65 @@
 #include "shm_p.hpp"
 #include <iostream> // TMP
 
-void Private::Motor::setPid(const port_t& port, const short& p, const short& i, const short& d, const short& pd, const short& id, const short& dd)
+void Private::Motor::setControlMode(const Motor::ControlMode& mode)
 {
 	Private::SharedMemoryClient *shm = SharedMemoryImpl::instance()->sharedMemoryClient();
+	if(!shm) return;
 	
+	switch(mode) {
+	case PID: shm->motorControlMode = Private::PIDMode; break;
+	case PWM: shm->motorControlMode = Private::PWMMode; break;
+	case Unknown: break;
+	}
+}
+
+Motor::ControlMode Private::Motor::controlMode() const
+{
+	Private::SharedMemoryServer *shm = SharedMemoryImpl::instance()->sharedMemoryServer();
+	if(!shm) return Unknown;
+	
+	switch(shm->motorControlMode) {
+	case Private::PIDMode: return PID;
+	case Private::PWMMode: return PWM;
+	}
+	return Private::Unknown;
+}
+
+void Private::Motor::setPid(const port_t& port, const short& p, const short& i, const short& d, const short& pd, const short& id, const short& dd)
+{
+	
+	Private::PID *pid = clientSharedPID(port);
+	if(!pid) return;
+	
+	pid->p = p;
+	pid->i = i;
+	pid->d = d;
+	pid->pd = pd;
+	pid->id = id;
+	pid->dd = dd;
 }
 
 void Private::Motor::pid(const port_t& port, short& p, short& i, short& d, short& pd, short& id, short& dd)
 {
-	p = i = d = pd = id = dd = 0;
+	Private::PID *pid = clientSharedPID(port);
+	if(!pid) return;
+	
+	p = pid->p;
+	i = pid->i;
+	d = pid->d;
+	pd = pid->pd;
+	id = pid->id;
+	dd = pid->dd;
 }
 
 void Private::Motor::setPwm(const port_t& port, int speed)
 {
-	std::cout << "Private::Motor::setPwm(" << speed << ") -> " << std::endl;
+	Private::SharedMemoryClient *shm = SharedMemoryImpl::instance()->sharedMemoryClient();
+	if(!shm || port > 3) return;
+	shm->pwms[port] = speed;
 }
 
-int Private::Motor::pwm(const port_t& port)
+char Private::Motor::pwm(const port_t& port)
 {
 	return -1;
 }
@@ -44,4 +86,18 @@ Private::Motor *Private::Motor::instance()
 
 Private::Motor::Motor()
 {
+}
+
+Private::PID *Private::Motor::clientSharedPID(const port_t& port) const
+{
+	Private::SharedMemoryClient *shm = SharedMemoryImpl::instance()->sharedMemoryClient();
+	if(!shm || port > 3) return 0;
+	return &shm->pids[port];
+}
+
+Private::PID *Private::Motor::serverSharedPID(const port_t& port) const
+{
+	Private::SharedMemoryServer *shm = SharedMemoryImpl::instance()->sharedMemoryServer();
+	if(!shm || port > 3) return 0;
+	return &shm->pids[port];
 }

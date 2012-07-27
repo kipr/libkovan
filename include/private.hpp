@@ -28,6 +28,11 @@ namespace Private
 		PWMMode
 	};
 	
+	enum PwmDirection {
+		ForwardDirection = 0,
+		BackwardDirection
+	}
+	
 	// Server writes this data. Clients read.
 	struct SharedMemoryServer
 	{
@@ -55,21 +60,23 @@ namespace Private
 		bool motorControlModeDirty : 1;
 		MotorControlMode motorControlMode;
 		
-		unsigned char pwmsDirty : NUM_MOTORS; // Lower 4 bits used
+		unsigned char pwmDirty : NUM_MOTORS; // Lower 4 bits used
 		unsigned char pwms[NUM_MOTORS];
+		
+		unsigned char pwmDirectionDirty : NUM_MOTORS; // Lower 4 bits used
+		PwmDirection pwmDirections[NUM_MOTORS] : 1;
 		
 		unsigned char pidsDirty : NUM_MOTORS; // Lower 4 bits used
 		PID pids[NUM_MOTORS];
 		
 		// Servos
-		
 		unsigned char servoDirty : NUM_SERVOS;
 		unsigned short servoPositions[NUM_SERVOS];
 		
 		// Analog
 		
-		bool pullupDirty[NUM_ANALOGS];
-		bool pullup[NUM_ANALOGS];
+		bool pullupDirty[NUM_ANALOGS] : 1;
+		bool pullup[NUM_ANALOGS] : 1;
 	};
 	
 	struct SharedButton
