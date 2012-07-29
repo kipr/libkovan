@@ -53,7 +53,6 @@ void SharedMemoryImpl::publish()
 	
 	std::vector<PublishListener *>::const_iterator it = m_listeners.begin();
 	for(; it != m_listeners.end(); ++it) {
-		printf("Calling listener: %p\n", *it);
 		(*it)->published(&m_client);
 	}
 }
