@@ -99,6 +99,7 @@ void Private::Motor::setPwmDirection(const port_t& port, const Motor::Direction&
 	case ActiveStop: shm->motorDirections |= Private::MotorDirection::ActiveStop << shift; break;
 	}
 	
+	shm->pwmDirty = 1 << (3 - port);
 	shm->motorDirectionsDirty = true;
 }
 
