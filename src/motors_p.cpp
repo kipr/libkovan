@@ -50,7 +50,7 @@ void Private::Motor::setPid(const port_t& port, const short& p, const short& i, 
 	
 	Private::SharedMemoryServer *shm = SharedMemoryImpl::instance()->sharedMemoryServer();
 	if(!shm || port > 4 || port < 1) return;
-	Private::PID *pid = &shm->pids[port];
+	Private::PID *pid = &shm->pids[port - 1];
 	
 	pid->p = p;
 	pid->i = i;
@@ -65,7 +65,7 @@ void Private::Motor::pid(const port_t& port, short& p, short& i, short& d, short
 	Private::SharedMemoryClient *shm = SharedMemoryImpl::instance()->sharedMemoryClient();
 	if(!shm || port > 3) return;
 	
-	Private::PID *pid = &shm->pids[port];
+	Private::PID *pid = &shm->pids[port - 1];
 	p = pid->p;
 	i = pid->i;
 	d = pid->d;
@@ -80,7 +80,7 @@ void Private::Motor::setPwm(const port_t& port, unsigned char speed)
 {
 	Private::SharedMemoryClient *shm = SharedMemoryImpl::instance()->sharedMemoryClient();
 	if(!shm || port > 4 || port < 1) return;
-	shm->pwms[port] = speed;
+	shm->pwms[port - 1] = speed;
 	shm->pwmDirty = 1 << (4 - port);
 }
 
