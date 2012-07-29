@@ -97,6 +97,10 @@ void bk(int motor)
 void motor(int motor, int percent)
 {
 	Private::Motor::instance()->setPwm(motor, percent);
+	
+	if(percent > 0) Private::Motor::instance()->setPwmDirection(motor, Private::Motor::Forward);
+	else if(percent < 0) Private::Motor::instance()->setPwmDirection(motor, Private::Motor::Reverse);
+	else Private::Motor::instance()->setPwmDirection(motor, Private::Motor::PassiveStop);
 }
 
 void off(int motor)

@@ -60,6 +60,9 @@ void Motor::backward()
 void Motor::motor(int percent)
 {
 	Private::Motor::instance()->setPwm(m_port, percent);
+	if(percent > 0) Private::Motor::instance()->setPwmDirection(m_port, Private::Motor::Forward);
+	else if(percent < 0) Private::Motor::instance()->setPwmDirection(m_port, Private::Motor::Reverse);
+	else Private::Motor::instance()->setPwmDirection(m_port, Private::Motor::PassiveStop);
 }
 
 void Motor::off()
