@@ -81,6 +81,7 @@ void Private::Motor::setPwm(const port_t& port, unsigned char speed)
 	Private::SharedMemoryClient *shm = SharedMemoryImpl::instance()->sharedMemoryClient();
 	if(!shm || port > 3) return;
 	shm->pwms[port] = speed;
+	shm->pwmDirty = 1 << (3 - port);
 }
 
 void Private::Motor::setPwmDirection(const port_t& port, const Motor::Direction& dir)
@@ -99,7 +100,6 @@ void Private::Motor::setPwmDirection(const port_t& port, const Motor::Direction&
 	case ActiveStop: shm->motorDirections |= Private::MotorDirection::ActiveStop << shift; break;
 	}
 	
-	shm->pwmDirty = 1 << (3 - port);
 	shm->motorDirectionsDirty = true;
 }
 
