@@ -110,7 +110,7 @@ void off(int motor)
 
 void ao()
 {
-	for(int i = 1; i <= 4; ++i) off(i);
+	for(int i = 0; i < 4; ++i) off(i);
 }
 
 int get_backemf(int port)
