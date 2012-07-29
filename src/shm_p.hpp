@@ -23,6 +23,7 @@ namespace Private
 		Private::SharedMemoryInterClient *sharedMemoryInterClient();
 		
 		void addPublishListener(PublishListener *listener);
+		void removePublishListener(PublishListener *listener);
 		
 		void publish();
 		bool isErrorState() const;

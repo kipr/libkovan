@@ -25,6 +25,7 @@ Private::Servo::Servo()
 
 Private::Servo::~Servo()
 {
+	SharedMemoryImpl::instance()->removePublishListener(m_listener);
 	delete m_listener;
 }
 
