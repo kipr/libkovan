@@ -49,7 +49,7 @@ void Private::Motor::setPid(const port_t& port, const short& p, const short& i, 
 {
 	
 	Private::SharedMemoryServer *shm = SharedMemoryImpl::instance()->sharedMemoryServer();
-	if(!shm || port > 3) return;
+	if(!shm || port > 4 || port < 1) return;
 	Private::PID *pid = &shm->pids[port];
 	
 	pid->p = p;
@@ -73,24 +73,24 @@ void Private::Motor::pid(const port_t& port, short& p, short& i, short& d, short
 	id = pid->id;
 	dd = pid->dd;
 	
-	shm->pidDirty |= 1 << (port - 3);
+	shm->pidDirty |= 1 << (4 - port);
 }
 
 void Private::Motor::setPwm(const port_t& port, unsigned char speed)
 {
 	Private::SharedMemoryClient *shm = SharedMemoryImpl::instance()->sharedMemoryClient();
-	if(!shm || port > 3) return;
+	if(!shm || port > 4 || port < 1) return;
 	shm->pwms[port] = speed;
-	shm->pwmDirty = 1 << (3 - port);
+	shm->pwmDirty = 1 << (4 - port);
 }
 
 void Private::Motor::setPwmDirection(const port_t& port, const Motor::Direction& dir)
 {
 	Private::SharedMemoryClient *shm = SharedMemoryImpl::instance()->sharedMemoryClient();
-	if(!shm || port > 3) return;
+	if(!shm || port > 4 || port < 1) return;
 
 	// Clear direction
-	const size_t shift = (3 - port) << 1;
+	const size_t shift = (4 - port) << 1;
 	shm->motorDirections &= ~(0x3 << shift);
 
 	switch(dir) {
