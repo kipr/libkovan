@@ -11,7 +11,7 @@ namespace Private
 		{
 			client->pidDirty = 0;
 			client->pwmDirty = 0;
-			client->pwmDirectionDirty = 0;
+			client->motorDirectionsDirty = 0;
 		}
 	};
 }
@@ -89,11 +89,15 @@ void Private::Motor::setPwmDirection(const port_t& port, const Motor::Direction&
 	Private::SharedMemoryClient *shm = SharedMemoryImpl::instance()->sharedMemoryClient();
 	if(!shm || port > 3) return;
 
+	// Clear direction
+	const size_t shift = (3 - port) << 1;
+	shm->motorDirections &= ~(0x3 << shift);
+
 	switch(dir) {
-	case Forward: shm->pwmDirections[port] = Private::MotorDirection::Forward; break;
-	case Reverse: shm->pwmDirections[port] = Private::MotorDirection::Reverse; break;
-	case PassiveStop: shm->pwmDirections[port] = Private::MotorDirection::PassiveStop; break;
-	case ActiveStop: shm->pwmDirections[port] = Private::MotorDirection::ActiveStop; break;
+	case Forward: shm->motorDirections |= Private::MotorDirection::Forward << shift; break;
+	case Reverse: shm->motorDirections |= Private::MotorDirection::Reverse << shift; break;
+	case PassiveStop: shm->motorDirections |= Private::MotorDirection::PassiveStop << shift; break;
+	case ActiveStop: shm->motorDirections |= Private::MotorDirection::ActiveStop << shift; break;
 	}
 }
 
