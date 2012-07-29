@@ -28,11 +28,14 @@ namespace Private
 		PWMMode
 	};
 	
-	enum PwmDirection {
-		ForwardDirection = 0,
-		BackwardDirection,
-		StopDirection
-	};
+	namespace MotorDirection{
+		enum MotorDirection {
+			PassiveStop = 0,
+			Reverse,
+			Forward,
+			ActiveStop
+		};
+	}
 	
 	// Server writes this data. Clients read.
 	struct SharedMemoryServer
@@ -65,8 +68,8 @@ namespace Private
 		unsigned char pwms[NUM_MOTORS];
 		
 		unsigned char pwmDirectionDirty : NUM_MOTORS; // Lower 4 bits used
-		PwmDirection pwmDirections[NUM_MOTORS];
-		
+		MotorDirection::MotorDirection pwmDirections[NUM_MOTORS];
+
 		unsigned char pidDirty : NUM_MOTORS; // Lower 4 bits used
 		PID pids[NUM_MOTORS];
 		
