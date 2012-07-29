@@ -1,6 +1,7 @@
 #include "motors_p.hpp"
 #include "shm_p.hpp"
 #include <iostream> // TMP
+#include <cstdio> // TMP
 
 namespace Private
 {
