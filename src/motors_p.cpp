@@ -93,6 +93,8 @@ void Private::Motor::setPwmDirection(const port_t& port, const Motor::Direction&
 	const size_t shift = (3 - port) << 1;
 	shm->motorDirections &= ~(0x3 << shift);
 
+	printf("motorDirection = %x (port = %u, direction = %u)\n", shm->motorDirections, port, dir);
+
 	switch(dir) {
 	case Forward: shm->motorDirections |= Private::MotorDirection::Forward << shift; break;
 	case Reverse: shm->motorDirections |= Private::MotorDirection::Reverse << shift; break;
