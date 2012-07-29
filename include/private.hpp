@@ -30,7 +30,8 @@ namespace Private
 	
 	enum PwmDirection {
 		ForwardDirection = 0,
-		BackwardDirection
+		BackwardDirection,
+		StopDirection
 	};
 	
 	// Server writes this data. Clients read.

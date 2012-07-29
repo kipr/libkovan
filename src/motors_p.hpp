@@ -19,7 +19,8 @@ namespace Private
 		
 		enum Direction {
 			Forward,
-			Backward
+			Backward,
+			Stop
 		};
 		
 		~Motor();
