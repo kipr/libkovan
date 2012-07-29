@@ -18,7 +18,6 @@ namespace Private
 
 Private::Motor::~Motor()
 {
-	SharedMemoryImpl::instance()->removePublishListener(m_listener);
 	delete m_listener;
 }
 
@@ -99,6 +98,8 @@ void Private::Motor::setPwmDirection(const port_t& port, const Motor::Direction&
 	case PassiveStop: shm->motorDirections |= Private::MotorDirection::PassiveStop << shift; break;
 	case ActiveStop: shm->motorDirections |= Private::MotorDirection::ActiveStop << shift; break;
 	}
+	
+	shm->motorDirectionsDirty = true;
 }
 
 unsigned char Private::Motor::pwm(const port_t& port)
