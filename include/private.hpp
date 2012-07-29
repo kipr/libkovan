@@ -68,7 +68,7 @@ namespace Private
 		unsigned char pwmDirty : NUM_MOTORS; // Lower 4 bits used
 		unsigned char pwms[NUM_MOTORS];
 		
-		unsigned char motorDirectionsDirty : NUM_MOTORS; // Lower 4 bits used
+		bool motorDirectionsDirty : 1;
 		unsigned char motorDirections;
 
 		unsigned char pidDirty : NUM_MOTORS; // Lower 4 bits used
