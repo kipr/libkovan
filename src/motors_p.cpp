@@ -90,9 +90,10 @@ void Private::Motor::setPwmDirection(const port_t& port, const Motor::Direction&
 	if(!shm || port > 3) return;
 
 	switch(dir) {
-	case Forward: shm->pwmDirections[port] = Private::ForwardDirection; break;
-	case Backward: shm->pwmDirections[port] = Private::BackwardDirection; break;
-	case Stop: shm->pwmDirections[port] = Private::StopDirection; break;
+	case Forward: shm->pwmDirections[port] = Private::MotorDirection::Forward; break;
+	case Reverse: shm->pwmDirections[port] = Private::MotorDirection::Reverse; break;
+	case PassiveStop: shm->pwmDirections[port] = Private::MotorDirection::PassiveStop; break;
+	case ActiveStop: shm->pwmDirections[port] = Private::MotorDirection::ActiveStop; break;
 	}
 }
 
@@ -103,7 +104,7 @@ unsigned char Private::Motor::pwm(const port_t& port)
 
 void Private::Motor::stop(const port_t& port)
 {
-	setPwmDirection(port, Stop);
+	setPwmDirection(port, PassiveStop);
 }
 
 unsigned short Private::Motor::backEMF(const unsigned char& port)

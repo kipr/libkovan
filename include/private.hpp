@@ -28,7 +28,8 @@ namespace Private
 		PWMMode
 	};
 	
-	namespace MotorDirection{
+	namespace MotorDirection
+	{
 		enum MotorDirection {
 			PassiveStop = 0,
 			Reverse,
