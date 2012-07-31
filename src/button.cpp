@@ -60,7 +60,7 @@ void IdButton::setPressed(bool pressed)
 	Private::Button::instance()->setPressed(m_id, pressed);
 }
 
-bool IdButton::isPressed() const
+bool IdButton::value() const
 {
 	return Private::Button::instance()->isPressed(m_id);
 }
