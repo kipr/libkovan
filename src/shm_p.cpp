@@ -43,6 +43,21 @@ void SharedMemoryImpl::removePublishListener(PublishListener *listener)
 	}
 }
 
+void SharedMemoryImpl::setAutoPublish(const bool& on)
+{
+	m_autoPublish = on;
+}
+
+bool SharedMemoryImpl::doesAutoPublish() const
+{
+	return m_autoPublish;
+}
+
+void SharedMemoryImpl::doAutoPublish()
+{
+	if(m_autoPublish) publish();
+}
+
 void SharedMemoryImpl::publish()
 {
 	Private::SharedMemoryClient *client = &sharedMemory()->client;
@@ -58,7 +73,8 @@ void SharedMemoryImpl::publish()
 }
 
 SharedMemoryImpl::SharedMemoryImpl()
-	: m_shared(0)
+	: m_shared(0),
+	m_autoPublish(true)
 {
 	static size_t size = sizeof(SharedMemory);
 	int shmid = shmget(SHARED_MEMORY_KEY, size, IPC_CREAT | 0x1b6);

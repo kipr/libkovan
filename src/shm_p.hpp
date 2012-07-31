@@ -25,6 +25,11 @@ namespace Private
 		void addPublishListener(PublishListener *listener);
 		void removePublishListener(PublishListener *listener);
 		
+		void setAutoPublish(const bool& on);
+		bool doesAutoPublish() const;
+		
+		void doAutoPublish();
+		
 		void publish();
 		bool isErrorState() const;
 		
@@ -36,6 +41,8 @@ namespace Private
 		
 		Private::SharedMemory *m_shared;
 		Private::SharedMemoryClient m_client;
+		
+		bool m_autoPublish;
 		
 		std::vector<PublishListener *> m_listeners;
 	};

@@ -7,13 +7,13 @@ void Analog::setPullup(const unsigned char& port, const bool& pullup)
 {
 	if(port < 8 || port > 15) return;
 	
-	SharedMemory *shm = SharedMemoryImpl::instance()->sharedMemory();
+	SharedMemoryClient *shm = SharedMemoryImpl::instance()->sharedMemoryClient();
 	if(!shm) return;
 	
-	pthread_mutex_lock(&shm->clientMutex);
-	shm->client.pullupDirty[port - 8] = true;
-	shm->client.pullup[port - 8] = pullup;
-	pthread_mutex_unlock(&shm->clientMutex);
+	shm->pullupDirty[port - 8] = true;
+	shm->pullup[port - 8] = pullup;
+	
+	SharedMemoryImpl::instance()->doAutoPublish();
 }
 
 bool Analog::pullup(const unsigned char& port) const
@@ -30,14 +30,6 @@ unsigned short Analog::value(const unsigned char& port) const
 	
 	SharedMemoryServer *shm = SharedMemoryImpl::instance()->sharedMemoryServer();
 	return shm->analogs[port - 8];
-}
-
-unsigned short Analog::backEMF(const unsigned char& port) const
-{
-	if(port >= 8) return 0xFFFF;
-	
-	SharedMemoryServer *shm = SharedMemoryImpl::instance()->sharedMemoryServer();
-	return shm->backEMFs[port];
 }
 
 Analog *Analog::instance()

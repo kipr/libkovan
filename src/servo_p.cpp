@@ -35,6 +35,7 @@ bool Private::Servo::setPosition(const port_t& port, const unsigned short& posit
 	if(port < 1 || port > 4) return false;
 	shm->servoPositions[port - 1] = position & 0x3FF;
 	shm->servoDirty |= 1 << (4 - port);
+	SharedMemoryImpl::instance()->doAutoPublish();
 	return true;
 }
 

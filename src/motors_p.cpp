@@ -32,6 +32,8 @@ void Private::Motor::setControlMode(const Motor::ControlMode& mode)
 	case PWM: shm->motorControlMode = Private::PWMMode; break;
 	case Unknown: break;
 	}
+	
+	SharedMemoryImpl::instance()->doAutoPublish();
 }
 
 Private::Motor::ControlMode Private::Motor::controlMode() const
@@ -59,6 +61,8 @@ void Private::Motor::setPid(const port_t& port, const short& p, const short& i, 
 	pid->pd = pd;
 	pid->id = id;
 	pid->dd = dd;
+	
+	SharedMemoryImpl::instance()->doAutoPublish();
 }
 
 void Private::Motor::pid(const port_t& port, short& p, short& i, short& d, short& pd, short& id, short& dd)
@@ -83,6 +87,8 @@ void Private::Motor::setPwm(const port_t& port, unsigned char speed)
 	if(!shm || port > 3) return;
 	shm->pwms[port] = speed;
 	shm->pwmDirty = 1 << (3 - port);
+	
+	SharedMemoryImpl::instance()->doAutoPublish();
 }
 
 void Private::Motor::setPwmDirection(const port_t& port, const Motor::Direction& dir)
@@ -104,6 +110,8 @@ void Private::Motor::setPwmDirection(const port_t& port, const Motor::Direction&
 	}
 	
 	shm->motorDirectionsDirty = true;
+	
+	SharedMemoryImpl::instance()->doAutoPublish();
 }
 
 unsigned char Private::Motor::pwm(const port_t& port)

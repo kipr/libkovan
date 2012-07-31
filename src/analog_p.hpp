@@ -9,9 +9,6 @@ namespace Private
 		void setPullup(const unsigned char& port, const bool& pullup);
 		bool pullup(const unsigned char& port) const;
 		unsigned short value(const unsigned char& port) const;
-		
-		// TEMPORARY
-		unsigned short backEMF(const unsigned char& port) const;
 	
 		static Analog *instance();
 	private:
