@@ -97,6 +97,10 @@ void bk(int motor)
 void motor(int motor, int percent)
 {
 	Private::Motor::instance()->setPwm(motor, percent);
+	
+	if(percent > 0) Private::Motor::instance()->setPwmDirection(motor, Private::Motor::Forward);
+	else if(percent < 0) Private::Motor::instance()->setPwmDirection(motor, Private::Motor::Reverse);
+	else Private::Motor::instance()->setPwmDirection(motor, Private::Motor::PassiveStop);
 }
 
 void off(int motor)
@@ -106,7 +110,7 @@ void off(int motor)
 
 void ao()
 {
-	for(int i = 1; i <= 4; ++i) off(i);
+	for(int i = 0; i < 4; ++i) off(i);
 }
 
 int get_backemf(int port)

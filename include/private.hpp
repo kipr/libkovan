@@ -14,6 +14,30 @@
 
 namespace Private
 {
+	struct PID {
+		short p;
+		short i;
+		short d;
+		short pd;
+		short id;
+		short dd;
+	};
+	
+	enum MotorControlMode {
+		PIDMode = 0,
+		PWMMode
+	};
+	
+	namespace MotorDirection
+	{
+		enum MotorDirection {
+			PassiveStop = 0,
+			Reverse,
+			Forward,
+			ActiveStop
+		};
+	}
+	
 	// Server writes this data. Clients read.
 	struct SharedMemoryServer
 	{
@@ -24,6 +48,10 @@ namespace Private
 		bool digitals[NUM_DIGITALS];
 		unsigned short analogs[NUM_ANALOGS];
 		
+		MotorControlMode motorControlMode;
+		unsigned char pwms[NUM_MOTORS];
+		PID pids[NUM_MOTORS];
+		
 		unsigned short backEMFs[NUM_MOTORS * 2];
 
 		unsigned short rawBatteryVoltage;
@@ -32,9 +60,25 @@ namespace Private
 	// Clients write this data. Server reads.
 	struct SharedMemoryClient
 	{
-		bool motorDirty : 1;
+		// Motors
+		
+		bool motorControlModeDirty : 1;
+		MotorControlMode motorControlMode;
+		
+		unsigned char pwmDirty : NUM_MOTORS; // Lower 4 bits used
+		unsigned char pwms[NUM_MOTORS];
+		
+		bool motorDirectionsDirty : 1;
+		unsigned char motorDirections;
+
+		unsigned char pidDirty : NUM_MOTORS; // Lower 4 bits used
+		PID pids[NUM_MOTORS];
+		
+		// Servos
 		unsigned char servoDirty : NUM_SERVOS;
 		unsigned short servoPositions[NUM_SERVOS];
+		
+		// Analog
 		
 		bool pullupDirty[NUM_ANALOGS];
 		bool pullup[NUM_ANALOGS];
@@ -44,7 +88,7 @@ namespace Private
 	{
 		bool textDirty : 1;
 		char text[MAX_BUTTON_TEXT_SIZE];
-		bool pressed;
+		bool pressed : 1;
 	};
 	
 	// Clients read and write this data;

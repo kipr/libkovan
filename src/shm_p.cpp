@@ -35,6 +35,14 @@ void SharedMemoryImpl::addPublishListener(PublishListener *listener)
 	m_listeners.push_back(listener);
 }
 
+void SharedMemoryImpl::removePublishListener(PublishListener *listener)
+{
+	std::vector<PublishListener *>::iterator it = m_listeners.begin();
+	for(; it != m_listeners.end(); ++it) {
+		if(*it == listener) it = m_listeners.erase(it);
+	}
+}
+
 void SharedMemoryImpl::publish()
 {
 	Private::SharedMemoryClient *client = &sharedMemory()->client;
@@ -44,7 +52,9 @@ void SharedMemoryImpl::publish()
 	pthread_mutex_unlock(mutex);
 	
 	std::vector<PublishListener *>::const_iterator it = m_listeners.begin();
-	for(; it != m_listeners.end(); ++it) (*it)->published(&m_client);
+	for(; it != m_listeners.end(); ++it) {
+		(*it)->published(&m_client);
+	}
 }
 
 SharedMemoryImpl::SharedMemoryImpl()

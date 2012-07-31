@@ -9,11 +9,13 @@ using namespace Private;
 
 void Private::Button::setText(::Button::Type::Id id, const char *text)
 {
+	SharedMemory *shm = SharedMemoryImpl::instance()->sharedMemory();
+	SharedMemoryInterClient *interClient = SharedMemoryImpl::instance()->sharedMemoryInterClient();
+	if(!shm || !interClient) return;
+	
 	size_t len = text ? strlen(text) : 0;
 	len = len > MAX_BUTTON_TEXT_SIZE ? MAX_BUTTON_TEXT_SIZE : len;
 	
-	SharedMemory *shm = SharedMemoryImpl::instance()->sharedMemory();
-	SharedMemoryInterClient *interClient = SharedMemoryImpl::instance()->sharedMemoryInterClient();
 	Private::SharedButton *button = lookup(id, interClient);
 	if(!button) return;
 	pthread_mutex_lock(&shm->interClientMutex);
@@ -27,6 +29,8 @@ bool Private::Button::isTextDirty(::Button::Type::Id id) const
 {
 	SharedMemory *shm = SharedMemoryImpl::instance()->sharedMemory();
 	SharedMemoryInterClient *interClient = SharedMemoryImpl::instance()->sharedMemoryInterClient();
+	if(!shm || !interClient) return false;
+	
 	Private::SharedButton *button = lookup(id, interClient);
 	if(!button) return false;
 	bool ret = true;
@@ -41,6 +45,8 @@ const char *Private::Button::text(::Button::Type::Id id) const
 {
 	SharedMemory *shm = SharedMemoryImpl::instance()->sharedMemory();
 	SharedMemoryInterClient *interClient = SharedMemoryImpl::instance()->sharedMemoryInterClient();
+	if(!shm || !interClient) return 0;
+	
 	Private::SharedButton *button = lookup(id, interClient);
 	if(!button) return 0;
 	char *ret = 0;
@@ -54,6 +60,8 @@ void Private::Button::setPressed(::Button::Type::Id id, bool pressed)
 {
 	SharedMemory *shm = SharedMemoryImpl::instance()->sharedMemory();
 	SharedMemoryInterClient *interClient = SharedMemoryImpl::instance()->sharedMemoryInterClient();
+	if(!shm || !interClient) return;
+	
 	Private::SharedButton *button = lookup(id, interClient);
 	if(!button) return;
 	pthread_mutex_lock(&shm->interClientMutex);
@@ -65,6 +73,7 @@ void Private::Button::setPressed(::Button::Type::Id id, bool pressed)
 bool Private::Button::isPressed(::Button::Type::Id id) const
 {
 	SharedMemoryInterClient *interClient = SharedMemoryImpl::instance()->sharedMemoryInterClient();
+	if(!interClient) return false;
 	Private::SharedButton *button = lookup(id, interClient);
 	// printf("Button %d is pressed? %d\n", id, button->pressed);
 	return button ? button->pressed : false;
@@ -74,6 +83,8 @@ void Private::Button::setExtraShown(const bool& shown)
 {
 	SharedMemory *shm = SharedMemoryImpl::instance()->sharedMemory();
 	SharedMemoryInterClient *interClient = SharedMemoryImpl::instance()->sharedMemoryInterClient();
+	if(!shm || !interClient) return;
+	
 	if(interClient->showExtraButtons == shown) return;
 	pthread_mutex_lock(&shm->interClientMutex);
 	interClient->showExtraButtons = shown;
@@ -91,6 +102,8 @@ bool Private::Button::isExtraShownDirty() const
 {
 	SharedMemoryInterClient *interClient = SharedMemoryImpl::instance()->sharedMemoryInterClient();
 	SharedMemory *shm = SharedMemoryImpl::instance()->sharedMemory();
+	if(!shm || !interClient) return false;
+	
 	pthread_mutex_lock(&shm->interClientMutex);
 	const bool ret = interClient->isShowExtraButtonsDirty;
 	interClient->isShowExtraButtonsDirty = false;
