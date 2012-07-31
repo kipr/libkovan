@@ -1,14 +1,15 @@
 #ifndef _BUTTON_HPP_
 #define _BUTTON_HPP_
 
+#include "sensor.hpp"
 #include "button_ids.hpp"
 
-class AbstractButton
+class AbstractButton : public Sensor<bool>
 {
 public:
 	virtual ~AbstractButton();
 	virtual void setPressed(bool pressed) = 0;
-	virtual bool isPressed() const = 0;
+	inline bool isPressed() const { return value(); };
 	inline bool isNotPressed() const { return !isPressed(); }
 	inline bool isClicked() const
 	{
@@ -39,7 +40,7 @@ public:
 	virtual const char *text() const;
 	virtual bool isTextDirty() const;
 	virtual void setPressed(bool pressed);
-	virtual bool isPressed() const;
+	virtual bool value() const;
 	virtual void resetText();
 	
 private:
