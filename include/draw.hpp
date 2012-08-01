@@ -1,3 +1,11 @@
+/*!
+ * \file draw.hpp
+ * \brief Classes for drawing to the screen
+ * \author Braden McDorman
+ * \copyright KISS Insitute for Practical Robotics
+ * \defgroup draw Drawing
+ */
+
 #ifndef _DRAW_HPP_
 #define _DRAW_HPP_
 

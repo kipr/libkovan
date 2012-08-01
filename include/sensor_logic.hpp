@@ -3,6 +3,10 @@
 
 #include "sensor.hpp"
 
+/*!
+ * Contains all logical sensors (sensors apply logical operations to other sensors.)
+ * \ingroup sensor
+ */
 namespace SensorLogic
 {
 	class Base : public Sensor<bool>

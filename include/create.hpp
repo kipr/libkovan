@@ -1,3 +1,10 @@
+/*!
+ * \file create.hpp
+ * \author Braden McDorman
+ * \copyright KISS Institute for Practical Robotics
+ * \defgroup create iRobot (R) Create (TM)
+ */
+
 #ifndef _CREATE_HPP_
 #define _CREATE_HPP_
 
@@ -12,6 +19,10 @@
 
 #define PI 3.14159f
 
+/*!
+ * \class CreateScript
+ * \ingroup create
+ */
 class CreateScript
 {
 public:
@@ -46,6 +57,9 @@ struct CreateState
 	short leftVelocity;
 };
 
+/*!
+ * See the create open interface documentation for more information about these structures
+ */
 namespace CreatePackets
 {
 	struct _1
@@ -135,9 +149,22 @@ namespace CreateSensors
 	class WheelDropCaster;
 }
 
+/*!
+ * \class Create
+ * \brief Facilitates communication with the iRobot (R) Create (TM)
+ * \details Provides high level bindings for a significant majority of the iRobot Open Interface specification.
+ * \author Braden McDorman
+ * \ingroup create
+ */
 class Create
 {
 public:
+	/*!
+	 * The "Mode" of the create.
+	 * - PassiveMode: No movement allowed.
+	 * - SafeMode: Movement is allowed, but the Create will stop if it's safety sensors are activated.
+	 * - FullMode: All movement is allowed, even if it is considered dangerous. This mode is recommended for Botball.
+	 */
 	enum Mode {
 		OffMode,
 		PassiveMode,
@@ -147,8 +174,27 @@ public:
 	
 	~Create();
 	
+	/*!
+	 * Attempts to establish a connection to the create
+	 * \return true if connection succeeded, false if connection failed
+	 * \see disconnect
+	 * \see isConnected
+	 */
 	bool connect();
+	
+	/*!
+	 * Cleans up connection to the create
+	 * \return true if disconnected, false otherwise
+	 * \see connect
+	 * \see isConnected
+	 */
 	bool disconnect();
+	
+	/*!
+	 * \return true if connected, false if not connected
+	 * \see connect
+	 * \see disconnect
+	 */
 	bool isConnected();
 	
 	void setPassiveMode();
@@ -163,9 +209,29 @@ public:
 	bool write(const unsigned char& c);
 	bool write(const unsigned char *data, const size_t& len);
 	
+	/*!
+	 * Reads one byte.
+	 * \return The read byte, or less than zero on error.
+	 */
 	short read();
+	
+	/*!
+	 * Reads a maximum of len bytes.
+	 * \param data Pointer to the buffer to read into.
+	 * \param len Maxiumum number of bytes to read. Should be less than or equal to the size of data.
+	 * \return The number of bytes actually read, or less than zero on error.
+	 */
 	int read(unsigned char *data, const size_t& len);
+	
+	/*!
+	 * Reads until the specified number of bytes have been read.
+	 * \param data Pointer to the buffer to read into
+	 * \param size Number of bytes to be read
+	 * \return true if reading succeeded, false if there was an error
+	 * \blocks
+	 */
 	bool blockingRead(unsigned char *data, const size_t& size);
+	
 	
 	template<typename T>
 	inline bool blockingRead(T& data)
@@ -179,12 +245,34 @@ public:
 	void driveDirect(const short& left, const short& right);
 	inline void driveStraight(const short& speed) { driveDirect(speed, speed); }
 	inline void stop() { driveStraight(0); }
-
+	
+	/*!
+	 * A very accurate turn method based on time rather than the create's own readings, which are often less than accurate.
+	 * \param angle The angle to turn, in degrees. Positive is counter-clockwise.
+	 * \param speed The speed each wheel should move at, in mm/s. The angular velocity will be double this value.
+	 * \blocks
+	 */
 	void turn(const short& angle, const unsigned short& speed);
+	
+	/*!
+	 * A very accurate move method based on time rather than the create's own readings, which are often less than accurate.
+	 * \param millimeters The amount to move, in millimeters.
+	 * \param speed The speed each wheel should move at, in mm/s.
+	 * \blocks
+	 */
 	void move(const short& millimeters, const unsigned short& speed);
 
+	/*!
+	 * Spin the create at a constant velocity.
+	 * \param speed The speed each motor should move at. Positive is counter-clockwise.
+	 */
 	void spin(const short& speed);
 
+	/*!
+	 * Returns the current angular velocity of the create. This value is positive for counter-clockwise velocity
+	 * and negative for clockwise velocity.
+	 * \return angular velocity of the create, between 0 and 1000 mm/s
+	 */
 	short angularVelocity();
 	
 	inline void spinClockwise(const short& speed) { spin(-speed); }
@@ -231,6 +319,11 @@ public:
 	void setRefreshRate(const unsigned short& refreshRate);
 	const unsigned short& refreshRate() const;
 
+	/*!
+	 * The Create class is a singleton, which means that you cannot instantiate it directly.
+	 * To get an instance of the create, you must use this method.
+	 * \return The global instance of the Create class
+	 */
 	static Create *instance();
 	
 	const CreateState *state();

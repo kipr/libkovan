@@ -12,6 +12,11 @@
 extern "C" {
 #endif
 
+/*!
+ * Sleeps for a given number of milliseconds.
+ * \param msecs The number of milliseconds to sleep.
+ * \blocks
+ */
 void msleep(long msecs);
 
 #ifdef __cplusplus
