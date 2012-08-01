@@ -3,6 +3,7 @@
  * \brief Classes for manipulating and using buttons
  * \author Braden McDorman
  * \copyright KISS Insitute for Practical Robotics
+ * \defgroup button Buttons
  */
 
 #ifndef _BUTTON_HPP_
@@ -15,6 +16,7 @@
  * \class AbstractButton
  * \brief The base class for all buttons
  * \details Provides several convenience methods for working with buttons
+ * \ingroup button
  */
 class AbstractButton : public Sensor<bool>
 {
@@ -41,6 +43,7 @@ public:
 	 * \note This function blocks until the button is no longer pressed.
 	 * \see isPressed
 	 * \see waitUntilReleased
+	 * \blocks
 	 */
 	inline bool isClicked() const
 	{
@@ -53,16 +56,19 @@ public:
 	
 	/*!
 	 * Blocks until the button is released. Returns immeadiately if the button is not pressed.
+	 * \blocks
 	 */
 	virtual void waitUntilReleased() const;
 	
 	/*!
 	 * Blocks until the button is pressed. Returns immeadiately if the button is pressed.
+	 * \blocks
 	 */
 	virtual void waitUntilPressed() const;
 	
 	/*!
 	 * Blocks until the button is clicked.
+	 * \blocks
 	 */
 	virtual void waitUntilClicked() const;
 };
@@ -71,6 +77,7 @@ public:
  * \class AbstractTextButton
  * \brief The base class for all buttons that have text
  * \details Provides methods to access and manipulate the button's text
+ * \ingroup button
  */
 class AbstractTextButton : public AbstractButton
 {
@@ -126,6 +133,7 @@ private:
 /*!
  * \class ExtraButtons
  * \brief Helper methods to manipulate and access the state of the X, Y, and Z buttons.
+ * \ingroup button
  */
 class ExtraButtons
 {
@@ -169,6 +177,7 @@ public:
 
 /*!
  * The global button instances
+ * \ingroup button
  */
 namespace Button
 {

@@ -3,6 +3,7 @@
  * \brief Base sensor classes
  * \author Braden McDorman
  * \copyright KISS Insitute for Practical Robotics
+ * \defgroup sensor Sensors
  */
 
 #ifndef _SENSORS_HPP_
@@ -13,6 +14,7 @@
  * \brief The base class for all sensors of any type
  * \tparam T The return type of this sensor.
  * For example, a sensor returning true or false should be of type bool.
+ * \ingroup sensor
  */
 template<typename T>
 class Sensor

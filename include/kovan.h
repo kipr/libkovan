@@ -1,3 +1,9 @@
+/*!
+ * \file kovan.h
+ * \author Braden McDorman
+ * \copyright KISS Institute for Practical Robotics
+ */
+
 #ifndef _KOVAN_H_
 #define _KOVAN_H_
 
