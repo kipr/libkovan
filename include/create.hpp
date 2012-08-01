@@ -59,8 +59,6 @@ namespace CreatePackets
 		unsigned char virtualWall;
 		unsigned char cargoBayDigitalInputs;
 		unsigned char lowSideDriverAndWheelOvercurrents;
-
-		timeval timestamp;
 	};
 
 	struct _2
@@ -69,8 +67,6 @@ namespace CreatePackets
 		unsigned char buttons;
 		unsigned char distance[2];
 		unsigned char angle[2];
-	
-		timeval timestamp;
 	};
 
 	struct _3
@@ -81,8 +77,6 @@ namespace CreatePackets
 		char batteryTemperature;
 		unsigned char batteryCharge[2];
 		unsigned char batteryCapacity[2];
-	
-		timeval timestamp;
 	};
 
 	struct _4
@@ -95,8 +89,6 @@ namespace CreatePackets
 		unsigned char userDigitalInputs;
 		unsigned char userAnalogInput[2];
 		unsigned char chargingSourcesAvailable;
-	
-		timeval timestamp;
 	};
 	
 	struct _5
@@ -109,8 +101,6 @@ namespace CreatePackets
 		char radius[2];
 		char rightVelocity[2];
 		char leftVelocity[2];
-	
-		timeval timestamp;
 	};
 }
 
@@ -306,14 +296,6 @@ private:
 
 	void updateState();
 	
-	template<typename T>
-	inline bool timestampedBlockingRead(T& data)
-	{
-		const bool ret = blockingRead(reinterpret_cast<unsigned char *>(&data), sizeof(T) - sizeof(timeval));
-		if(ret) data.timestamp = timeOfDay();
-		return ret;
-	}
-	
 	void updateSensorPacket1();
 	void updateSensorPacket2();
 	void updateSensorPacket3();
@@ -329,6 +311,7 @@ private:
 	CreatePackets::_3 m_3;
 	CreatePackets::_4 m_4;
 	CreatePackets::_5 m_5;
+	timeval timestamps[5];
 
 	CreateSensors::PlayButton *m_playButton;
 	CreateSensors::AdvanceButton *m_advanceButton;

@@ -645,6 +645,7 @@ bool Create::blockingRead(unsigned char *data, const size_t& size)
 	size_t total = 0;
 	while(total < size) {
 		int ret = read(data + total, size - total);
+
 		if(ret < 0) return false;
 		total += ret;
 	}
@@ -926,59 +927,68 @@ void printArray(const unsigned char *array, const size_t& size) {
 	printf("\n");
 }
 
+template<typename T>
+void printArray(const T& array) {
+	printArray(reinterpret_cast<const unsigned char *>(&array), sizeof(T));
+}
+
 void Create::updateSensorPacket1()
 {
-	if(!hasRequiredTimePassed(m_1.timestamp)) return;
+	if(!hasRequiredTimePassed(timestamps[0])) return;
 	
 	beginAtomicOperation();
 	write(OI_SENSORS);
 	write(1);
-	timestampedBlockingRead(m_1);
+	blockingRead(m_1);
+	timestamps[0] = timeOfDay();
 	endAtomicOperation();
 }
 
 void Create::updateSensorPacket2()
 {
-	if(!hasRequiredTimePassed(m_2.timestamp)) return;
-	
+	if(!hasRequiredTimePassed(timestamps[1])) return;
 	beginAtomicOperation();
 	write(OI_SENSORS);
 	write(2);
-	timestampedBlockingRead(m_2);
+	blockingRead(m_2);
 	m_state.distance += SHORT(m_2.distance);
 	m_state.angle += SHORT(m_2.angle);
+	timestamps[1] = timeOfDay();
 	endAtomicOperation();
 }
 
 void Create::updateSensorPacket3()
 {
-	if(!hasRequiredTimePassed(m_3.timestamp)) return;
+	if(!hasRequiredTimePassed(timestamps[2])) return;
 	
 	beginAtomicOperation();
 	write(OI_SENSORS);
 	write(3);
-	timestampedBlockingRead(m_3);
+	blockingRead(m_3);
+	timestamps[2] = timeOfDay();
 	endAtomicOperation();
 }
 
 void Create::updateSensorPacket4()
 {
-	if(!hasRequiredTimePassed(m_4.timestamp)) return;
+	if(!hasRequiredTimePassed(timestamps[3])) return;
 	
 	beginAtomicOperation();
 	write(OI_SENSORS);
 	write(4);
-	timestampedBlockingRead(m_4);
+	blockingRead(m_4);
+	timestamps[3] = timeOfDay();
 	endAtomicOperation();
 }
 
 void Create::updateSensorPacket5()
 {
-	if(!hasRequiredTimePassed(m_5.timestamp)) return;
+	if(!hasRequiredTimePassed(timestamps[4])) return;
 	
 	beginAtomicOperation();
 	write(OI_SENSORS);
 	write(5);
-	timestampedBlockingRead(m_5);
+	blockingRead(m_5);
+	timestamps[4] = timeOfDay();
 	endAtomicOperation();
 }

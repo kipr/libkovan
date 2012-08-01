@@ -8,12 +8,16 @@ void continueMessage(const std::string& message)
 {
 	cout << message << endl;
 	cout << "Press Play to continue..." << endl;
-	Create::instance()->playButton()->waitUntilClicked();
+	Create::instance()->advanceButton()->waitUntilClicked();
 }
 
 void stopWhen(const Sensor<bool> *sensor)
 {
-	while(!sensor->value());
+	while(!sensor->value()) {
+		cout << "Sensor output: " << sensor->value() << endl;
+		msleep(50);
+	}
+	cout << "Stopped!" << endl;
 	Create::instance()->stop();
 }
 
@@ -34,6 +38,14 @@ void bumpTest(Create *create)
 	continueMessage("Driving forward until bumped");
 	create->driveDirect(200, 200);
 	SensorLogic::Or sensor(create->bumpLeft(), create->bumpRight());
+	stopWhen(create->bumpLeft());
+}
+
+void cliffTest(Create *create)
+{
+	continueMessage("Driving forward until... cliffed?");
+	create->driveDirect(200, 200);
+	SensorLogic::Or sensor(create->cliffLeft(), create->cliffRight());
 	stopWhen(&sensor);
 }
 
@@ -44,6 +56,10 @@ int main(int argc, char *argv[])
 		cout << "Create connection failed" << endl;
 		return 1;
 	}
+
+	create->setFullMode();
+
+	create->setLeds(false, false, 255, 255);
 
 	continueMessage("iRobot (R) Create (TM) Test!");
 
