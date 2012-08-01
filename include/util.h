@@ -1,3 +1,10 @@
+/*!
+ * \file util.h
+ * \brief Utility methods
+ * \author Braden McDorman
+ * \copyright KISS Insitute for Practical Robotics
+ */
+
 #ifndef _UTIL_H_
 #define _UTIL_H_
 

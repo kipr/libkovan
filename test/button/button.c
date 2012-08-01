@@ -2,7 +2,7 @@
 
 int main(int argc, char *argv[])
 {
-	a_button_set_text("Up");
-	b_button_set_text("Down");
-	z_button_set_text("Hello");
+	set_a_button_text("Up");
+	set_b_button_text("Down");
+	set_z_button_text("Hello");
 }

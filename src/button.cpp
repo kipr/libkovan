@@ -24,6 +24,17 @@ void AbstractButton::waitUntilReleased() const
 	while(isPressed()) sched_yield();
 }
 
+void AbstractButton::waitUntilPressed() const
+{
+	while(isNotPressed()) sched_yield();
+}
+
+void AbstractButton::waitUntilClicked() const
+{
+	waitUntilPressed();
+	waitUntilReleased();
+}
+
 AbstractTextButton::~AbstractTextButton() {}
 
 IdButton::IdButton(const Button::Type::Id& id, const char *defaultText)

@@ -15,7 +15,20 @@
 #define LOW_BYTE(x) ((x) & 0xFF)
 #define HIGH_BYTE(x) (((x) & 0xFF00) >> 8)
 
-#define SHORT(low, high) ((high << 8) | low)
+#define SHORT_FROM_BYTES(high, low) (((high) << 8) | (low))
+#define SHORT(array) SHORT_FROM_BYTES(array[0], array[1])
+
+template<typename T>
+T *construct(T *dummy, const Create *parent)
+{
+	return new T(const_cast<Create *>(parent));
+}
+
+#define LAZY_RETURN(x) \
+{ \
+	if(!x) x = construct(x, this); \
+	return x; \
+}
 
 const static unsigned int baudCodeRate[12] = {
 	300, 600, 1200, 2400, 4800, 9600,
@@ -23,169 +36,373 @@ const static unsigned int baudCodeRate[12] = {
 	115200
 };
 
+using namespace CreatePackets;
+
 ////////////////////
 // CREATE SENSORS //
 ////////////////////
 
-class PlayButton : public AbstractButton
+namespace CreateSensors
 {
-public:
-	PlayButton(Create *create) : m_create(create) {}
-
-	virtual void setPressed(bool pressed) {}
-	virtual bool value() const
+	class PlayButton : public AbstractButton
 	{
-		return m_create->sensors()->buttons & 0x01;
-	}
+	public:
+		PlayButton(Create *create) : m_create(create) {}
+		
+		virtual void setPressed(bool pressed) {}
+		virtual bool value() const
+		{
+			return m_create->sensorPacket2()->buttons & 0x01;
+		}
 
-private:
-	Create *m_create;
-};
+	private:
+		Create *m_create;
+	};
 
-class AdvanceButton : public AbstractButton
-{
-public:
-	AdvanceButton(Create *create) : m_create(create) {}
-
-	virtual void setPressed(bool pressed) {}
-	virtual bool value() const
+	class AdvanceButton : public AbstractButton
 	{
-		return m_create->sensors()->buttons & 0x04;
-	}
+	public:
+		AdvanceButton(Create *create) : m_create(create) {}
 
-private:
-	Create *m_create;
-};
+		virtual void setPressed(bool pressed) {}
+		virtual bool value() const
+		{
+			return m_create->sensorPacket2()->buttons & 0x04;
+		}
 
-class WallSensor : public Sensor<bool>
-{
-public:
-	WallSensor(Create *create) : m_create(create) {}
+	private:
+		Create *m_create;
+	};
 
-	virtual bool value() const
+	class Wall : public Sensor<bool>
 	{
-		return m_create->sensors()->wall;
-	}
-private:
-	Create *m_create;
-};
+	public:
+		Wall(Create *create) : m_create(create) {}
 
-class CliffLeftSensor : public Sensor<bool>
-{
-public:
-	CliffLeftSensor(Create *create) : m_create(create) {}
+		virtual bool value() const
+		{
+			return m_create->sensorPacket1()->wall;
+		}
+	private:
+		Create *m_create;
+	};
 
-	virtual bool value() const
+	class CliffLeft : public Sensor<bool>
 	{
-		return m_create->sensors()->cliffLeft;
-	}
-private:
-	Create *m_create;
-};
+	public:
+		CliffLeft(Create *create) : m_create(create) {}
 
-class CliffFrontLeftSensor : public Sensor<bool>
-{
-public:
-	CliffFrontLeftSensor(Create *create) : m_create(create) {}
+		virtual bool value() const
+		{
+			return m_create->sensorPacket1()->cliffLeft;
+		}
+	private:
+		Create *m_create;
+	};
 
-	virtual bool value() const
+	class CliffFrontLeft : public Sensor<bool>
 	{
-		return m_create->sensors()->cliffFrontLeft;
-	}
-private:
-	Create *m_create;
-};
+	public:
+		CliffFrontLeft(Create *create) : m_create(create) {}
 
-class CliffFrontRightSensor : public Sensor<bool>
-{
-public:
-	CliffFrontRightSensor(Create *create) : m_create(create) {}
+		virtual bool value() const
+		{
+			return m_create->sensorPacket1()->cliffFrontLeft;
+		}
+	private:
+		Create *m_create;
+	};
 
-	virtual bool value() const
+	class CliffFrontRight : public Sensor<bool>
 	{
-		return m_create->sensors()->cliffFrontRight;
-	}
-private:
-	Create *m_create;
-};
+	public:
+		CliffFrontRight(Create *create) : m_create(create) {}
 
-class CliffRightSensor : public Sensor<bool>
-{
-public:
-	CliffRightSensor(Create *create) : m_create(create) {}
+		virtual bool value() const
+		{
+			return m_create->sensorPacket1()->cliffFrontRight;
+		}
+	private:
+		Create *m_create;
+	};
 
-	virtual bool value() const
+	class CliffRight : public Sensor<bool>
 	{
-		return m_create->sensors()->cliffRight;
-	}
-private:
-	Create *m_create;
-};
+	public:
+		CliffRight(Create *create) : m_create(create) {}
 
-class BumpLeftSensor : public Sensor<bool>
-{
-public:
-	BumpLeftSensor(Create *create) : m_create(create) {}
+		virtual bool value() const
+		{
+			return m_create->sensorPacket1()->cliffRight;
+		}
+	private:
+		Create *m_create;
+	};
 
-	virtual bool value() const
+
+
+	class VirtualWall : public Sensor<bool>
 	{
-		return m_create->sensors()->bumpsAndWheelDrops & 0x02;
-	}
-private:
-	Create *m_create;
-};
+	public:
+		VirtualWall(Create *create) : m_create(create) {}
 
-class BumpRightSensor : public Sensor<bool>
-{
-public:
-	BumpRightSensor(Create *create) : m_create(create) {}
+		virtual bool value() const
+		{
+			return m_create->sensorPacket1()->virtualWall;
+		}
+	private:
+		Create *m_create;
+	};
 
-	virtual bool value() const
+	class WallSignal : public Sensor<unsigned short>
 	{
-		return m_create->sensors()->bumpsAndWheelDrops & 0x01;
-	}
-private:
-	Create *m_create;
-};
+	public:
+		WallSignal(Create *create) : m_create(create) {}
 
-class WheelDropRightSensor : public Sensor<bool>
-{
-public:
-	WheelDropRightSensor(Create *create) : m_create(create) {}
+		virtual unsigned short value() const
+		{
+			return SHORT(m_create->sensorPacket4()->wallSignal);
+		}
+	private:
+		Create *m_create;
+	};
 
-	virtual bool value() const
+	class CliffLeftSignal : public Sensor<unsigned short>
 	{
-		return m_create->sensors()->bumpsAndWheelDrops & 0x04;
-	}
-private:
-	Create *m_create;
-};
+	public:
+		CliffLeftSignal(Create *create) : m_create(create) {}
 
-class WheelDropLeftSensor : public Sensor<bool>
-{
-public:
-	WheelDropLeftSensor(Create *create) : m_create(create) {}
+		virtual unsigned short value() const
+		{
+			return SHORT(m_create->sensorPacket4()->cliffLeftSignal);
+		}
+	private:
+		Create *m_create;
+	};
 
-	virtual bool value() const
+	class CliffFrontLeftSignal : public Sensor<unsigned short>
 	{
-		return m_create->sensors()->bumpsAndWheelDrops & 0x08;
-	}
-private:
-	Create *m_create;
-};
+	public:
+		CliffFrontLeftSignal(Create *create) : m_create(create) {}
 
-class WheelDropCasterSensor : public Sensor<bool>
-{
-public:
-	WheelDropCasterSensor(Create *create) : m_create(create) {}
+		virtual unsigned short value() const
+		{
+			return SHORT(m_create->sensorPacket4()->cliffFrontLeftSignal);
+		}
+	private:
+		Create *m_create;
+	};
 
-	virtual bool value() const
+	class CliffFrontRightSignal : public Sensor<unsigned short>
 	{
-		return m_create->sensors()->bumpsAndWheelDrops & 0x10;
-	}
-private:
-	Create *m_create;
-};
+	public:
+		CliffFrontRightSignal(Create *create) : m_create(create) {}
+
+		virtual unsigned short value() const
+		{
+			return SHORT(m_create->sensorPacket4()->cliffFrontRightSignal);
+		}
+	private:
+		Create *m_create;
+	};
+
+	class CliffRightSignal : public Sensor<unsigned short>
+	{
+	public:
+		CliffRightSignal(Create *create) : m_create(create) {}
+
+		virtual unsigned short value() const
+		{
+			return SHORT(m_create->sensorPacket4()->cliffRightSignal);
+		}
+	private:
+		Create *m_create;
+	};
+
+	class CargoBayAnalogSignal : public Sensor<unsigned short>
+	{
+	public:
+		CargoBayAnalogSignal(Create *create) : m_create(create) {}
+
+		virtual unsigned short value() const
+		{
+			return SHORT(m_create->sensorPacket4()->userAnalogInput);
+		}
+	private:
+		Create *m_create;
+	};
+	
+	class CargoBayDigitalInputs : public Sensor<unsigned char>
+	{
+	public:
+		CargoBayDigitalInputs(Create *create) : m_create(create) {}
+
+		virtual unsigned char value() const
+		{
+			return m_create->sensorPacket4()->userDigitalInputs;
+		}
+	private:
+		Create *m_create;
+	};
+
+	class IR : public Sensor<unsigned char>
+	{
+	public:
+		IR(Create *create) : m_create(create) {}
+
+		virtual unsigned char value() const
+		{
+			return m_create->sensorPacket2()->ir;
+		}
+	private:
+		Create *m_create;
+	};
+
+	class ChargingState : public Sensor<unsigned char>
+	{
+	public:
+		ChargingState(Create *create) : m_create(create) {}
+
+		virtual unsigned char value() const
+		{
+			return m_create->sensorPacket3()->chargingState;
+		}
+	private:
+		Create *m_create;
+	};
+
+	class BatteryTemperature : public Sensor<char>
+	{
+	public:
+		BatteryTemperature(Create *create) : m_create(create) {}
+
+		virtual char value() const
+		{
+			return m_create->sensorPacket3()->batteryTemperature;
+		}
+	private:
+		Create *m_create;
+	};
+
+	class BatteryCharge : public Sensor<unsigned short>
+	{
+	public:
+		BatteryCharge(Create *create) : m_create(create) {}
+
+		virtual unsigned short value() const
+		{
+			return SHORT(m_create->sensorPacket3()->batteryCharge);
+		}
+	private:
+		Create *m_create;
+	};
+
+	class BatteryCapacity : public Sensor<unsigned short>
+	{
+	public:
+		BatteryCapacity(Create *create) : m_create(create) {}
+
+		virtual unsigned short value() const
+		{
+			return SHORT(m_create->sensorPacket3()->batteryCapacity);
+		}
+	private:
+		Create *m_create;
+	};
+
+	class Angle : public Sensor<int>
+	{
+	public:
+		Angle(Create *create) : m_create(create) {}
+
+		virtual int value() const
+		{
+			return m_create->state()->angle;
+		}
+	private:
+		Create *m_create;
+	};
+
+	class Distance : public Sensor<int>
+	{
+	public:
+		Distance(Create *create) : m_create(create) {}
+
+		virtual int value() const
+		{
+			return m_create->state()->distance;
+		}
+	private:
+		Create *m_create;
+	};
+
+	class BumpLeft : public Sensor<bool>
+	{
+	public:
+		BumpLeft(Create *create) : m_create(create) {}
+
+		virtual bool value() const
+		{
+			return m_create->sensorPacket1()->bumpsAndWheelDrops & 0x02;
+		}
+	private:
+		Create *m_create;
+	};
+
+	class BumpRight : public Sensor<bool>
+	{
+	public:
+		BumpRight(Create *create) : m_create(create) {}
+
+		virtual bool value() const
+		{
+			return m_create->sensorPacket1()->bumpsAndWheelDrops & 0x01;
+		}
+	private:
+		Create *m_create;
+	};
+
+	class WheelDropRight : public Sensor<bool>
+	{
+	public:
+		WheelDropRight(Create *create) : m_create(create) {}
+
+		virtual bool value() const
+		{
+			return m_create->sensorPacket1()->bumpsAndWheelDrops & 0x04;
+		}
+	private:
+		Create *m_create;
+	};
+
+	class WheelDropLeft : public Sensor<bool>
+	{
+	public:
+		WheelDropLeft(Create *create) : m_create(create) {}
+
+		virtual bool value() const
+		{
+			return m_create->sensorPacket1()->bumpsAndWheelDrops & 0x08;
+		}
+	private:
+		Create *m_create;
+	};
+
+	class WheelDropCaster : public Sensor<bool>
+	{
+	public:
+		WheelDropCaster(Create *create) : m_create(create) {}
+
+		virtual bool value() const
+		{
+			return m_create->sensorPacket1()->bumpsAndWheelDrops & 0x10;
+		}
+	private:
+		Create *m_create;
+	};
+}
+
+using namespace CreateSensors;
 
 ////////////////////
 // CREATE SCRIPTS //
@@ -252,12 +469,39 @@ CreateScript& CreateScript::operator=(const CreateScript& rhs)
 Create::~Create()
 {
 	disconnect();
-	delete m_playButton;
-	delete m_advanceButton;
+
+	lazyDelete(m_playButton);
+	lazyDelete(m_advanceButton);
+	lazyDelete(m_wall);
+	lazyDelete(m_cliffLeft);
+	lazyDelete(m_cliffFrontLeft);
+	lazyDelete(m_cliffFrontRight);
+	lazyDelete(m_cliffRight);
+	lazyDelete(m_virtualWall);
+	lazyDelete(m_wallSignal);
+	lazyDelete(m_cliffLeftSignal);
+	lazyDelete(m_cliffFrontLeftSignal);
+	lazyDelete(m_cliffFrontRightSignal);
+	lazyDelete(m_cliffRightSignal);
+	lazyDelete(m_cargoBayAnalogSignal);
+	lazyDelete(m_ir);
+	lazyDelete(m_chargingState);
+	lazyDelete(m_batteryTemperature);
+	lazyDelete(m_batteryCharge);
+	lazyDelete(m_batteryCapacity);
+	lazyDelete(m_angle);
+	lazyDelete(m_distance);
+	lazyDelete(m_bumpLeft);
+	lazyDelete(m_bumpRight);
+	lazyDelete(m_wheelDropLeft);
+	lazyDelete(m_wheelDropRight);
+	lazyDelete(m_wheelDropCaster);
 
 	pthread_mutex_destroy(&m_mutex);
 }
 
+
+// TODO: Clean this up
 int
 set_interface_attribs (int fd, int speed, int parity)
 {
@@ -298,11 +542,8 @@ bool Create::connect()
 		close();
 		return false;
 	}
-	
-	updateSensors();
 
 	return true;
-	
 }
 
 bool Create::disconnect()
@@ -399,6 +640,17 @@ int Create::read(unsigned char *data, const size_t& len)
 	return ret;
 }
 
+bool Create::blockingRead(unsigned char *data, const size_t& size)
+{
+	size_t total = 0;
+	while(total < size) {
+		int ret = read(data + total, size - total);
+		if(ret < 0) return false;
+		total += ret;
+	}
+	return true;
+}
+
 void Create::setLeds(const bool& advance, const bool& play, const unsigned char& color, const unsigned char& brightness)
 {
 	beginAtomicOperation();
@@ -452,21 +704,20 @@ void Create::driveDirect(const short& left, const short& right)
 void Create::turn(const short& angle, const unsigned short& speed)
 {
 	spin(angle > 0 ? speed : -speed);
-	const short goalAngle = m_sensors.angle + angle;
+	const short goalAngle = m_state.angle + angle;
 	double timeToGoal = (deg2rad(angle + 360 / angle) * 258) / angularVelocity();
 	printf("Time to Goal: %f (rad = %f, av = %d)\n", timeToGoal, deg2rad(angle), angularVelocity());
 	double startTime = timevalToFloat(timeOfDay());
 	usleep(timeToGoal * 1000000L - 300);
 	double elapsed = timevalToFloat(timeOfDay());
 	printf("Diff: %lf\n", elapsed - startTime - timeToGoal);
-	m_sensors.angle = goalAngle;
 	spin(0);
 }
 
 void Create::move(const short& millimeters, const unsigned short& speed)
 {
 	driveDirect(speed, speed);
-	const short goalDistance = m_sensors.distance + millimeters;
+	const short goalDistance = m_state.distance + millimeters;
 	double timeToGoal = ((double)millimeters) / speed;
 	printf("Time to Goal: %f (milli = %d, s = %d)\n", timeToGoal, millimeters, speed);
 	double startTime = timevalToFloat(timeOfDay());
@@ -507,71 +758,68 @@ bool Create::setBaudRate(const unsigned char& baudCode)
 	return true;
 }
 
-const CreateSensors *Create::sensors()
+const CreateState *Create::state()
 {
-	updateSensors();
-	return &m_sensors;
+	return &m_state;
 }
 
-AbstractButton *Create::playButton() const
+const CreatePackets::_1 *Create::sensorPacket1()
 {
-	return m_playButton;
+	updateSensorPacket1();
+	return &m_1;
 }
 
-AbstractButton *Create::advanceButton() const
+const CreatePackets::_2 *Create::sensorPacket2()
 {
-	return m_advanceButton;
+	updateSensorPacket2();
+	return &m_2;
 }
 
-Sensor<bool> *Create::wall() const
+const CreatePackets::_3 *Create::sensorPacket3()
 {
-	return m_wall;
+	updateSensorPacket3();
+	return &m_3;
 }
 
-Sensor<bool> *Create::cliffLeft() const
+const CreatePackets::_4 *Create::sensorPacket4()
 {
-	return m_cliffLeft;
+	updateSensorPacket4();
+	return &m_4;
 }
 
-Sensor<bool> *Create::cliffFrontLeft() const
+const CreatePackets::_5 *Create::sensorPacket5()
 {
-	return m_cliffFrontLeft;
+	updateSensorPacket5();
+	return &m_5;
 }
 
-Sensor<bool> *Create::cliffFrontRight() const
-{
-	return m_cliffFrontRight;
-}
-
-Sensor<bool> *Create::cliffRight() const
-{
-	return m_cliffRight;
-}
-
-Sensor<bool> *Create::bumpLeft() const
-{
-	return m_bumpLeft;
-}
-
-Sensor<bool> *Create::bumpRight() const
-{
-	return m_bumpRight;
-}
-
-Sensor<bool> *Create::wheelDropLeft() const
-{
-	return m_wheelDropLeft;
-}
-
-Sensor<bool> *Create::wheelDropRight() const
-{
-	return m_wheelDropRight;
-}
-
-Sensor<bool> *Create::wheelDropCaster() const
-{
-	return m_wheelDropCaster;
-}
+AbstractButton *Create::playButton() LAZY_RETURN(m_playButton);
+AbstractButton *Create::advanceButton() LAZY_RETURN(m_advanceButton);
+Sensor<bool> *Create::wall() LAZY_RETURN(m_wall);
+Sensor<bool> *Create::cliffLeft() LAZY_RETURN(m_cliffLeft);
+Sensor<bool> *Create::cliffFrontLeft() LAZY_RETURN(m_cliffFrontLeft);
+Sensor<bool> *Create::cliffFrontRight() LAZY_RETURN(m_cliffFrontRight);
+Sensor<bool> *Create::cliffRight() LAZY_RETURN(m_cliffRight);
+Sensor<bool> *Create::virtualWall() LAZY_RETURN(m_virtualWall);
+Sensor<unsigned short> *Create::wallSignal() LAZY_RETURN(m_wallSignal);
+Sensor<unsigned short> *Create::cliffLeftSignal() LAZY_RETURN(m_cliffLeftSignal);
+Sensor<unsigned short> *Create::cliffFrontLeftSignal() LAZY_RETURN(m_cliffFrontLeftSignal);
+Sensor<unsigned short> *Create::cliffFrontRightSignal() LAZY_RETURN(m_cliffFrontRightSignal);
+Sensor<unsigned short> *Create::cliffRightSignal() LAZY_RETURN(m_cliffRightSignal);
+Sensor<unsigned short> *Create::cargoBayAnalogSignal() LAZY_RETURN(m_cargoBayAnalogSignal);
+Sensor<unsigned char> *Create::cargoBayDigitalInputs() LAZY_RETURN(m_cargoBayDigitalInputs);
+Sensor<unsigned char> *Create::ir() LAZY_RETURN(m_ir);
+Sensor<unsigned char> *Create::chargingState() LAZY_RETURN(m_chargingState);
+Sensor<char> *Create::batteryTemperature() LAZY_RETURN(m_batteryTemperature);
+Sensor<unsigned short> *Create::batteryCharge() LAZY_RETURN(m_batteryCharge);
+Sensor<unsigned short> *Create::batteryCapacity() LAZY_RETURN(m_batteryCapacity);
+Sensor<int> *Create::angle() LAZY_RETURN(m_angle);
+Sensor<int> *Create::distance() LAZY_RETURN(m_distance);
+Sensor<bool> *Create::bumpLeft() LAZY_RETURN(m_bumpLeft);
+Sensor<bool> *Create::bumpRight() LAZY_RETURN(m_bumpRight);
+Sensor<bool> *Create::wheelDropLeft() LAZY_RETURN(m_wheelDropLeft);
+Sensor<bool> *Create::wheelDropRight() LAZY_RETURN(m_wheelDropRight);
+Sensor<bool> *Create::wheelDropCaster() LAZY_RETURN(m_wheelDropCaster);
 
 void Create::setRefreshRate(const unsigned short& refreshRate)
 {
@@ -591,18 +839,33 @@ Create *Create::instance()
 
 Create::Create()
 	: m_refreshRate(150),
-	m_playButton(new PlayButton(this)),
-	m_advanceButton(new AdvanceButton(this)),
-	m_wall(new WallSensor(this)),
-	m_cliffLeft(new CliffLeftSensor(this)),
-	m_cliffFrontLeft(new CliffFrontLeftSensor(this)),
-	m_cliffFrontRight(new CliffFrontRightSensor(this)),
-	m_cliffRight(new CliffRightSensor(this)),
-	m_bumpLeft(new BumpLeftSensor(this)),
-	m_bumpRight(new BumpRightSensor(this)),
-	m_wheelDropLeft(new WheelDropLeftSensor(this)),
-	m_wheelDropRight(new WheelDropRightSensor(this)),
-	m_wheelDropCaster(new WheelDropCasterSensor(this))
+	m_playButton(0),
+	m_advanceButton(0),
+	m_wall(0),
+	m_cliffLeft(0),
+	m_cliffFrontLeft(0),
+	m_cliffFrontRight(0),
+	m_cliffRight(0),
+	m_virtualWall(0),
+	m_wallSignal(0),
+	m_cliffLeftSignal(0),
+	m_cliffFrontLeftSignal(0),
+	m_cliffFrontRightSignal(0),
+	m_cliffRightSignal(0),
+	m_cargoBayAnalogSignal(0),
+	m_cargoBayDigitalInputs(0),
+	m_ir(0),
+	m_chargingState(0),
+	m_batteryTemperature(0),
+	m_batteryCharge(0),
+	m_batteryCapacity(0),
+	m_angle(0),
+	m_distance(0),
+	m_bumpLeft(0),
+	m_bumpRight(0),
+	m_wheelDropLeft(0),
+	m_wheelDropRight(0),
+	m_wheelDropCaster(0)
 {
 	pthread_mutex_init(&m_mutex, 0);
 }
@@ -663,64 +926,59 @@ void printArray(const unsigned char *array, const size_t& size) {
 	printf("\n");
 }
 
-struct CreatePacket
+void Create::updateSensorPacket1()
 {
-	unsigned char bumpsAndWheelDrops;
-	unsigned char wall;
-	unsigned char cliffLeft;
-	unsigned char cliffFrontLeft;
-	unsigned char cliffFrontRight;
-	unsigned char cliffRight;
-	// unsigned char virtualWall;
-	// unsigned char lowSideDriverAndWheelOvercurrents;
-	unsigned char cargoBayDigitalInputs;
-	unsigned char buttons;
-
-	unsigned char distanceHigh;
-	unsigned char distanceLow;
-	unsigned char angleHigh;
-	unsigned char angleLow;
-};
-
-
-void Create::updateSensors()
-{
-	timeval difference = timeOfDay();
-	difference.tv_sec -= m_sensors.timestamp.tv_sec;
-	if(!difference.tv_sec) {
-		difference.tv_usec -= m_sensors.timestamp.tv_usec;
-		if(difference.tv_usec / 1000 < m_refreshRate) return;
-	}
-
-	beginAtomicOperation();
-
-	write(OI_QUERY_LIST);
-	static const unsigned char sensors[] = {
-		OI_BUMPS_AND_WHEEL_DROPS,
-		OI_WALL,
-		OI_CLIFF_LEFT,
-		OI_CLIFF_FRONT_LEFT,
-		OI_CLIFF_FRONT_RIGHT,
-		OI_CLIFF_RIGHT,
-		OI_BUTTONS,
-		OI_DISTANCE,
-		OI_ANGLE
-	};
-	static const unsigned char size = sizeof(sensors);
-	write(size);
-	write(sensors, size);
-
-	size_t total = 0;
-	static const size_t expectedSize = sizeof(CreatePacket);
-	CreatePacket packet;
-	while(total < expectedSize) total += read(reinterpret_cast<unsigned char *>(&packet) + total, expectedSize - total);
+	if(!hasRequiredTimePassed(m_1.timestamp)) return;
 	
-	memcpy(&m_sensors, &packet, sizeof(CreatePacket) - sizeof(short) * 2);
-	m_sensors.angle += SHORT(packet.angleLow, packet.angleHigh);
-	m_sensors.distance += SHORT(packet.distanceLow, packet.distanceHigh);
+	beginAtomicOperation();
+	write(OI_SENSORS);
+	write(1);
+	timestampedBlockingRead(m_1);
+	endAtomicOperation();
+}
 
-	printArray(reinterpret_cast<unsigned char *>(&packet), expectedSize);
-	m_sensors.timestamp = timeOfDay();
+void Create::updateSensorPacket2()
+{
+	if(!hasRequiredTimePassed(m_2.timestamp)) return;
+	
+	beginAtomicOperation();
+	write(OI_SENSORS);
+	write(2);
+	timestampedBlockingRead(m_2);
+	m_state.distance += SHORT(m_2.distance);
+	m_state.angle += SHORT(m_2.angle);
+	endAtomicOperation();
+}
 
+void Create::updateSensorPacket3()
+{
+	if(!hasRequiredTimePassed(m_3.timestamp)) return;
+	
+	beginAtomicOperation();
+	write(OI_SENSORS);
+	write(3);
+	timestampedBlockingRead(m_3);
+	endAtomicOperation();
+}
+
+void Create::updateSensorPacket4()
+{
+	if(!hasRequiredTimePassed(m_4.timestamp)) return;
+	
+	beginAtomicOperation();
+	write(OI_SENSORS);
+	write(4);
+	timestampedBlockingRead(m_4);
+	endAtomicOperation();
+}
+
+void Create::updateSensorPacket5()
+{
+	if(!hasRequiredTimePassed(m_5.timestamp)) return;
+	
+	beginAtomicOperation();
+	write(OI_SENSORS);
+	write(5);
+	timestampedBlockingRead(m_5);
 	endAtomicOperation();
 }

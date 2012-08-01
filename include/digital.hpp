@@ -1,3 +1,10 @@
+/*!
+ * \file digital.hpp
+ * \brief Classes for working with digital sensors
+ * \author Braden McDorman
+ * \copyright KISS Insitute for Practical Robotics
+ */
+
 #ifndef _DIGITAL_HPP_
 #define _DIGITAL_HPP_
 

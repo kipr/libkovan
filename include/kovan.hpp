@@ -4,6 +4,7 @@
 #include "motors.hpp"
 #include "servo.hpp"
 #include "analog.hpp"
+#include "sensor_logic.hpp"
 #include "button.hpp"
 #include "camera.hpp"
 #include "ir.hpp"

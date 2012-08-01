@@ -3,32 +3,32 @@
 
 using namespace Button;
 
-void a_button_set_text(const char *text)
+void set_a_button_text(const char *text)
 {
 	A.setText(text);
 }
 
-void b_button_set_text(const char *text)
+void set_b_button_text(const char *text)
 {
 	B.setText(text);
 }
 
-void c_button_set_text(const char *text)
+void set_c_button_text(const char *text)
 {
 	C.setText(text);
 }
 
-void x_button_set_text(const char *text)
+void set_x_button_text(const char *text)
 {
 	X.setText(text);
 }
 
-void y_button_set_text(const char *text)
+void set_y_button_text(const char *text)
 {
 	Y.setText(text);
 }
 
-void z_button_set_text(const char *text)
+void set_z_button_text(const char *text)
 {
 	Z.setText(text);
 }
@@ -111,20 +111,20 @@ int any_button()
 
 void extra_buttons_show()
 {
-	extra_buttons_set_visible(1);
+	set_extra_buttons_visible(1);
 }
 
 void extra_buttons_hide()
 {
-	extra_buttons_set_visible(0);
+	set_extra_buttons_visible(0);
 }
 
-int extra_buttons_get_visible()
+int get_extra_buttons_visible()
 {
 	return ExtraButtons::isShown() ? 1 : 0;
 }
 
-void extra_buttons_set_visible(int visible)
+void set_extra_buttons_visible(int visible)
 {
 	ExtraButtons::setShown(visible == 0 ? false : true);
 }
