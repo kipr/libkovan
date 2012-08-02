@@ -3,6 +3,7 @@
  * \brief Classes for working with Servos
  * \author Braden McDorman
  * \copyright KISS Insitute for Practical Robotics
+ * \defgroup servo Servos
  */
 
 #ifndef _SERVOS_HPP_
@@ -13,6 +14,7 @@
 /*!
  * \class Servo
  * \brief Encapsulates the concept of a servo motor
+ * \ingroup servo
  */
 class Servo
 {
@@ -28,7 +30,7 @@ public:
 	/*!
 	 * \param position The new servo position, between 0 and 1024
 	 *
-	 * \note Even though the servos have a _theoretical_ range between 0 and 1024,
+	 * \note Even though the servos have a _theoretical_ range between 0 and 1023,
 	 * the _actual_ range is often less. Setting the servo to a position that it cannot physically
 	 * reach will cause the servo to audibly strain and will consume battery very quickly.
 	 */

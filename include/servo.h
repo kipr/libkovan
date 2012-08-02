@@ -3,6 +3,7 @@
  * \brief Methods for working with Servos
  * \author Braden McDorman
  * \copyright KISS Insitute for Practical Robotics
+ * \defgroup servo Servos
  */
 
 #ifndef _SERVOS_H_
@@ -25,16 +26,18 @@ extern "C" {
  * 
  * \note get_servo_position(int) will return 700 rather than 300,
  * because 300 hasn't been sent to the servo yet.
+ * \ingroup servo
  */
 int get_servo_position(int servo);
 
 /*!
  * \param servo The port of the servo
- * \param position The new servo position, between 0 and 1024
+ * \param position The new servo position, between 0 and 1023
  *
  * \note Even though the servos have a _theoretical_ range between 0 and 1024,
  * the _actual_ range is often less. Setting the servo to a position that it cannot physically
  * reach will cause the servo to audibly strain and will consume battery very quickly.
+ * \ingroup servo
  */
 void set_servo_position(int servo, int position);
 

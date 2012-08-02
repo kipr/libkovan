@@ -5,6 +5,12 @@
  * \defgroup create iRobot (R) Create (TM)
  */
 
+/*!
+ * \name create
+ * The iRobot (R) Create (TM) is a programmable robot base developed by iRobot.
+ * iRobot
+ */
+
 #ifndef _CREATE_HPP_
 #define _CREATE_HPP_
 
@@ -46,6 +52,9 @@ private:
 	std::vector<unsigned char> m_script;
 };
 
+/*!
+ * Locally stored state information
+ */
 struct CreateState
 {
 	timeval timestamp;
@@ -62,6 +71,9 @@ struct CreateState
  */
 namespace CreatePackets
 {
+	/*!
+	 * Create OI Packet 1
+	 */
 	struct _1
 	{
 		unsigned char bumpsAndWheelDrops;
@@ -75,6 +87,9 @@ namespace CreatePackets
 		unsigned char lowSideDriverAndWheelOvercurrents;
 	};
 
+	/*!
+	 * Create OI Packet 2
+	 */
 	struct _2
 	{
 		unsigned char ir;
@@ -83,6 +98,9 @@ namespace CreatePackets
 		unsigned char angle[2];
 	};
 
+	/*!
+	 * Create OI Packet 3
+	 */
 	struct _3
 	{
 		unsigned char chargingState;
@@ -93,6 +111,9 @@ namespace CreatePackets
 		unsigned char batteryCapacity[2];
 	};
 
+	/*!
+	 * Create OI Packet 4
+	 */
 	struct _4
 	{
 		unsigned char wallSignal[2];
@@ -105,6 +126,9 @@ namespace CreatePackets
 		unsigned char chargingSourcesAvailable;
 	};
 	
+	/*!
+	 * Create OI Packet 5
+	 */
 	struct _5
 	{
 		unsigned char mode;

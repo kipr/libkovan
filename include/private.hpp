@@ -45,7 +45,10 @@ namespace Private
 		unsigned long updates;
 		unsigned short servoPositions[NUM_SERVOS];
 		
-		bool digitals[NUM_DIGITALS];
+		unsigned char digitals : NUM_DIGITALS;
+		unsigned char digitalDirections : NUM_DIGITALS;
+		unsigned char digitalPullups : NUM_DIGITALS;
+		
 		unsigned short analogs[NUM_ANALOGS];
 		
 		MotorControlMode motorControlMode;
@@ -80,8 +83,17 @@ namespace Private
 		
 		// Analog
 		
-		bool pullupDirty[NUM_ANALOGS];
-		bool pullup[NUM_ANALOGS];
+		unsigned char analogPullupsDirty : NUM_ANALOGS;
+		unsigned char analogPullups :NUM_ANALOGS;
+		
+		// Digital
+		
+		unsigned char digitalPullupsDirty : NUM_DIGITALS;
+		unsigned char digitalPullups : NUM_DIGITALS;
+		unsigned char digitalDirectionsDirty : NUM_DIGITALS;
+		unsigned char digitalDirections : NUM_DIGITALS;
+		unsigned char digitalsDirty : NUM_DIGITALS;
+		unsigned char digitals : NUM_DIGITALS;
 	};
 	
 	struct SharedButton

@@ -1,3 +1,11 @@
+/*!
+ * \file create.h
+ * \author Braden McDorman
+ * \copyright KISS Institute for Practical Robotics
+ * \defgroup create iRobot (R) Create (TM)
+ */
+
+
 #ifndef _CREATE_H_
 #define _CREATE_H_
 
@@ -5,7 +13,19 @@
 extern "C" {
 #endif
 
+/*!
+ * Attempts to establish a connection to the create.
+ * \return 1 if connection succeeded, 0 if connection failed
+ * \see create_disconnect
+ * \ingroup create
+ */
 int create_connect();
+
+/*!
+ * Cleans up connection to the create.
+ * \see create_connect
+ * \ingroup create
+ */
 void create_disconnect() ;
 void create_start();
 void create_passive();
