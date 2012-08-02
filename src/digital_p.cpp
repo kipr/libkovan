@@ -74,7 +74,8 @@ bool Digital::setDirection(const unsigned char& port, const Digital::Direction& 
 	if(!shm || port >= NUM_DIGITALS) return false;
 	
 	shm->digitalDirectionsDirty |= 1 << (NUM_DIGITALS - 1 - port);
-	shm->digitalDirections |= (direction == In ? 0 : 1) << (NUM_DIGITALS - 1 - port);
+	if(direction == Out) shm->digitalDirections |= 1 << (NUM_DIGITALS - 1 - port);
+	else shm->digitalDirections &= ~(1 << (NUM_DIGITALS - 1 - port));
 	SharedMemoryImpl::instance()->doAutoPublish();
 	
 	return true;
@@ -93,7 +94,8 @@ bool Digital::setPullup(const unsigned char& port, const bool& pullup)
 	if(!shm || port >= NUM_DIGITALS) return false;
 	
 	shm->digitalPullupsDirty |= 1 << (NUM_DIGITALS - 1 - port);
-	shm->digitalPullups |= pullup << (NUM_DIGITALS - 1 - port);
+	if(pullup) shm->digitalPullups |= 1 << (NUM_DIGITALS - 1 - port);
+	else shm->digitalPullups &= ~(1 << (NUM_DIGITALS - 1 - port));
 	SharedMemoryImpl::instance()->doAutoPublish();
 	return true;
 }
