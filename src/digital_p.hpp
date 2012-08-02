@@ -30,7 +30,8 @@ namespace Private
 	public:
 		enum Direction {
 			In,
-			Out
+			Out,
+			Unknown
 		};
 		
 		~Digital();
