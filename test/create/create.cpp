@@ -38,7 +38,7 @@ void bumpTest(Create *create)
 	continueMessage("Driving forward until bumped");
 	create->driveDirect(200, 200);
 	SensorLogic::Or sensor(create->bumpLeft(), create->bumpRight());
-	stopWhen(create->bumpLeft());
+	stopWhen(&sensor);
 }
 
 void cliffTest(Create *create)
@@ -66,6 +66,7 @@ int main(int argc, char *argv[])
 	moveTest(create);
 	turnTest(create);
 	bumpTest(create);
+	cliffTest(create);
 
 	create->disconnect();
 
