@@ -32,6 +32,6 @@ Xor::Xor(const Sensor<bool> *a, const Sensor<bool> *b) : Base(a, b) {}
 
 bool Xor::value() const
 {
-	const bool b =  Base::b()->value();
+	const bool b = Base::b()->value();
 	return a()->value() ? !b : b;
 }

@@ -839,7 +839,7 @@ Create *Create::instance()
 }
 
 Create::Create()
-	: m_refreshRate(150),
+	: m_refreshRate(10),
 	m_playButton(0),
 	m_advanceButton(0),
 	m_wall(0),
@@ -901,7 +901,7 @@ bool Create::open()
 	if(m_tty) return false;
 	
 	beginAtomicOperation();
-	m_tty = ::open("/dev/ttyUSB0", O_RDWR | O_NOCTTY | O_NDELAY | O_NONBLOCK);
+	m_tty = ::open("/dev/ttyS2", O_RDWR | O_NOCTTY | O_NDELAY | O_NONBLOCK);
 	if(m_tty < 0) perror("Create::open");
 	endAtomicOperation();
 
@@ -951,6 +951,7 @@ void Create::updateSensorPacket2()
 	write(OI_SENSORS);
 	write(2);
 	blockingRead(m_2);
+	printArray(m_2);
 	m_state.distance += SHORT(m_2.distance);
 	m_state.angle += SHORT(m_2.angle);
 	timestamps[1] = timeOfDay();
