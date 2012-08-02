@@ -23,35 +23,35 @@
 
 int digital(int port)
 {
-	return get_digital_value();
+	return get_digital_value(port);
 }
 
 void set_digital_value(int port, int value)
 {
-	Private::Digital::instance()->setValue(m_port, value);
+	Private::Digital::instance()->setValue(port, value);
 }
 
 int get_digital_value(int port)
 {
-	return Private::Digital::instance()->value(m_port);
+	return Private::Digital::instance()->value(port);
 }
 
 void set_digital_output(int port, int out)
 {
-	Private::Digital::instance()->setDirection(m_port, output ? Private::Digital::Out : Private::Digital::In);
+	Private::Digital::instance()->setDirection(port, out ? Private::Digital::Out : Private::Digital::In);
 }
 
 int get_digital_output(int port)
 {
-	return Private::Digital::instance()->direction(m_port) == Private::Digital::Out;
+	return Private::Digital::instance()->direction(port) == Private::Digital::Out;
 }
 
 int get_digital_pullup(int port)
 {
-	return Private::Digital::instance()->pullup(m_port);
+	return Private::Digital::instance()->pullup(port);
 }
 
 void set_digital_pullup(int port, int pullup)
 {
-	Private::Digital::instance()->setPullup(m_port, pullup);
+	Private::Digital::instance()->setPullup(port, pullup);
 }
