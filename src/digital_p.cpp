@@ -54,8 +54,8 @@ bool Digital::setValue(const unsigned char& port, const bool& value)
 	SharedMemoryClient *shm = SharedMemoryImpl::instance()->sharedMemoryClient();
 	if(!shm || port >= NUM_DIGITALS) return false;
 	
-	shm->digitalsDirty &= 1 << (NUM_DIGITALS - 1 - port);
-	shm->digitals &= value << (NUM_DIGITALS - 1 - port);
+	shm->digitalsDirty |= 1 << (NUM_DIGITALS - 1 - port);
+	shm->digitals |= value << (NUM_DIGITALS - 1 - port);
 	SharedMemoryImpl::instance()->doAutoPublish();
 	return true;
 }
@@ -72,8 +72,8 @@ bool Digital::setDirection(const unsigned char& port, const Digital::Direction& 
 	SharedMemoryClient *shm = SharedMemoryImpl::instance()->sharedMemoryClient();
 	if(!shm || port >= NUM_DIGITALS) return false;
 	
-	shm->digitalDirectionsDirty &= 1 << (NUM_DIGITALS - 1 - port);
-	shm->digitalDirections &= (direction == In ? 0 : 1) << (NUM_DIGITALS - 1 - port);
+	shm->digitalDirectionsDirty |= 1 << (NUM_DIGITALS - 1 - port);
+	shm->digitalDirections |= (direction == In ? 0 : 1) << (NUM_DIGITALS - 1 - port);
 	SharedMemoryImpl::instance()->doAutoPublish();
 	
 	return true;
