@@ -91,8 +91,8 @@ bool Digital::setPullup(const unsigned char& port, const bool& pullup)
 	SharedMemoryClient *shm = SharedMemoryImpl::instance()->sharedMemoryClient();
 	if(!shm || port >= NUM_DIGITALS) return false;
 	
-	shm->digitalPullupsDirty &= 1 << (NUM_DIGITALS - 1 - port);
-	shm->digitalPullups &= pullup << (NUM_DIGITALS - 1 - port);
+	shm->digitalPullupsDirty |= 1 << (NUM_DIGITALS - 1 - port);
+	shm->digitalPullups |= pullup << (NUM_DIGITALS - 1 - port);
 	SharedMemoryImpl::instance()->doAutoPublish();
 	return true;
 }
