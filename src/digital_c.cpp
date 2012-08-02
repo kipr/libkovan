@@ -18,44 +18,40 @@
  *  If not, see <http://www.gnu.org/licenses/>.                           *
  **************************************************************************/
 
-/*!
- * \file digital.hpp
- * \brief Classes for working with digital sensors
- * \author Braden McDorman
- * \copyright KISS Insitute for Practical Robotics
- * \ingroup sensor
- */
+#include "digital.h"
+#include "digital_p.hpp"
 
-#ifndef _DIGITAL_HPP_
-#define _DIGITAL_HPP_
-
-#include "sensor.hpp"
-
-/*!
- * \class Digital
- * \brief Facilitates access to a digital sensor
- * \author Braden McDorman
- * \ingroup sensor
- */
-class Digital : public Sensor<bool>
+int digital(int port)
 {
-public:
-	Digital(const unsigned char& port);
-	
-	virtual bool setValue(const bool& value);
-	
-	/*!
-	 * Gets the current value of the digital sensor
-	 */
-	virtual bool value() const;
-	
-	virtual void setOutput(const bool& output);
-	virtual bool isOutput() const;
-	
-	virtual void setPullup(const bool& pullup);
-	virtual bool pullup() const;
-private:
-	unsigned char m_port;
-};
+	return get_digital_value();
+}
 
-#endif
+void set_digital_value(int port, int value)
+{
+	Private::Digital::instance()->setValue(m_port, value);
+}
+
+int get_digital_value(int port)
+{
+	return Private::Digital::instance()->value(m_port);
+}
+
+void set_digital_output(int port, int out)
+{
+	Private::Digital::instance()->setDirection(m_port, output ? Private::Digital::Out : Private::Digital::In);
+}
+
+int get_digital_output(int port)
+{
+	return Private::Digital::instance()->direction(m_port) == Private::Digital::Out;
+}
+
+int get_digital_pullup(int port)
+{
+	return Private::Digital::instance()->pullup(m_port);
+}
+
+void set_digital_pullup(int port, int pullup)
+{
+	Private::Digital::instance()->setPullup(m_port, pullup);
+}

@@ -19,43 +19,51 @@
  **************************************************************************/
 
 /*!
- * \file digital.hpp
- * \brief Classes for working with digital sensors
+ * \file digital.h
+ * \brief Functions for working with digital sensors
  * \author Braden McDorman
  * \copyright KISS Insitute for Practical Robotics
  * \ingroup sensor
  */
 
-#ifndef _DIGITAL_HPP_
-#define _DIGITAL_HPP_
+#ifndef _DIGITAL_H_
+#define _DIGITAL_H_
 
-#include "sensor.hpp"
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 /*!
- * \class Digital
- * \brief Facilitates access to a digital sensor
- * \author Braden McDorman
- * \ingroup sensor
+ * \see get_digital_value
  */
-class Digital : public Sensor<bool>
-{
-public:
-	Digital(const unsigned char& port);
-	
-	virtual bool setValue(const bool& value);
-	
-	/*!
-	 * Gets the current value of the digital sensor
-	 */
-	virtual bool value() const;
-	
-	virtual void setOutput(const bool& output);
-	virtual bool isOutput() const;
-	
-	virtual void setPullup(const bool& pullup);
-	virtual bool pullup() const;
-private:
-	unsigned char m_port;
-};
+int digital(int port);
+
+/*!
+ * Sets the value of the digital port in output mode.
+ * \see get_digital_value
+ */
+void set_digital_value(int port, int value);
+
+/*!
+ * Gets the current value of the digital port.
+ * \return 1 if the switch is closed, 0 if the switch is open
+ * \see set_digital_value
+ */
+int get_digital_value(int port);
+
+/*!
+ * Sets the digital mode.
+ * \param port The port to modify.
+ * \param out 1 for output mode, 0 for input mode.
+ */
+void set_digital_output(int port, int out);
+int get_digital_output(int port);
+
+int get_digital_pullup(int port);
+void set_digital_pullup(int port, int pullup);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

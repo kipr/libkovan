@@ -78,7 +78,7 @@ bool Digital::setPullup(const unsigned char& port, const bool& pullup)
 	return true;
 }
 
-static Digital *Digital::instance()
+Digital *Digital::instance()
 {
 	static Digital s_digital;
 	return &s_digital;
