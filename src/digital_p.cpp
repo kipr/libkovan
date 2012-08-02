@@ -23,6 +23,25 @@
 
 using namespace Private;
 
+namespace Private
+{
+	class DigitalPublishListener : public PublishListener
+	{
+	public:
+		virtual void published(Private::SharedMemoryClient *client)
+		{
+			client->digitalPullupsDirty = 0;
+			client->digitalDirectionsDirty = 0;
+			client->digitalsDirty = 0;
+		}
+	};
+}
+
+Digital::~Digital()
+{
+	delete m_listener;
+}
+
 bool Digital::value(const unsigned char& port) const
 {
 	SharedMemoryServer *shm = SharedMemoryImpl::instance()->sharedMemoryServer();
@@ -84,6 +103,11 @@ Digital *Digital::instance()
 	return &s_digital;
 }
 
-Digital::Digital() {}
+Digital::Digital()
+	: m_listener(new DigitalPublishListener())
+{
+	SharedMemoryImpl::instance()->addPublishListener(m_listener);
+}
+
 Digital::Digital(const Digital&) {}
 Digital& Digital::operator=(const Digital&) { return *this; }

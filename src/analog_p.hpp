@@ -23,18 +23,25 @@
 
 namespace Private
 {
+	class PublishListener;
+	
 	class Analog
 	{
 	public:
+		~Analog();
+		
 		void setPullup(const unsigned char& port, const bool& pullup);
 		bool pullup(const unsigned char& port) const;
 		unsigned short value(const unsigned char& port) const;
 	
 		static Analog *instance();
+		
 	private:
 		Analog();
 		Analog(const Analog& rhs);
 		Analog& operator=(const Analog& rhs);
+		
+		PublishListener *m_listener;
 	};
 }
 

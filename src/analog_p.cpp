@@ -23,6 +23,24 @@
 
 using namespace Private;
 
+namespace Private
+{
+	class AnalogPublishListener : public PublishListener
+	{
+	public:
+		virtual void published(Private::SharedMemoryClient *client)
+		{
+			client->analogPullupsDirty = 0;
+		}
+	};
+}
+
+
+Analog::~Analog()
+{
+	delete m_listener;
+}
+
 void Analog::setPullup(const unsigned char& port, const bool& pullup)
 {
 	if(port < 8 || port > 15) return;
@@ -58,9 +76,9 @@ Analog *Analog::instance()
 	return &s_analog;
 }
 
-Analog::Analog()
+Analog::Analog() : m_listener(new AnalogPublishListener())
 {
-	
+	SharedMemoryImpl::instance()->addPublishListener(m_listener);
 }
 
 Analog::Analog(const Analog& ) {}

@@ -23,6 +23,8 @@
 
 namespace Private
 {
+	class PublishListener;
+	
 	class Digital
 	{
 	public:
@@ -30,6 +32,8 @@ namespace Private
 			In,
 			Out
 		};
+		
+		~Digital();
 		
 		bool value(const unsigned char& port) const;
 		bool setValue(const unsigned char& port, const bool& value);
@@ -45,6 +49,8 @@ namespace Private
 		Digital();
 		Digital(const Digital& rhs);
 		Digital& operator=(const Digital& rhs);
+		
+		PublishListener *m_listener;
 	};
 }
 
