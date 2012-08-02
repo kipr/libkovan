@@ -10,26 +10,26 @@ void Analog::setPullup(const unsigned char& port, const bool& pullup)
 	SharedMemoryClient *shm = SharedMemoryImpl::instance()->sharedMemoryClient();
 	if(!shm) return;
 	
-	shm->pullupDirty[port - 8] = true;
-	shm->pullup[port - 8] = pullup;
+	shm->analogPullupsDirty &= 1 << (NUM_ANALOGS - 1 - port);
+	shm->analogPullups &= pullup << (NUM_ANALOGS - 1 - port);
 	
 	SharedMemoryImpl::instance()->doAutoPublish();
 }
 
 bool Analog::pullup(const unsigned char& port) const
 {
-	if(port < 8 || port > 15) return false;
+	if(port >= NUM_ANALOGS) return false;
 	
 	SharedMemoryClient *shm = SharedMemoryImpl::instance()->sharedMemoryClient();
-	return shm->pullup[port - 8];
+	return shm->analogPullups & (NUM_ANALOGS - 1 - port);
 }
 
 unsigned short Analog::value(const unsigned char& port) const
 {
-	if(port < 8 || port > 15) return 0xFFFF;
+	if(port >= NUM_ANALOGS) return 0xFFFF;
 	
 	SharedMemoryServer *shm = SharedMemoryImpl::instance()->sharedMemoryServer();
-	return shm->analogs[port - 8];
+	return shm->analogs[port];
 }
 
 Analog *Analog::instance()

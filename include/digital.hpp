@@ -22,7 +22,18 @@ class Digital : public Sensor<bool>
 public:
 	Digital(const unsigned char& port);
 	
+	virtual bool setValue(const bool& value);
+	
+	/*!
+	 * Gets the current value of the digital sensor
+	 */
 	virtual bool value() const;
+	
+	virtual bool setOutput(const bool& output);
+	virtual bool isOutput() const;
+	
+	virtual void setPullup(const bool& pullup);
+	virtual bool pullup() const;
 private:
 	unsigned char m_port;
 };
