@@ -1,6 +1,6 @@
 #ifndef _REFLECTION_HPP_
 #define _REFLECTION_HPP_
-
+/*
 struct ReflectionVariant
 {
 	enum Type {
@@ -82,5 +82,5 @@ private:
 	
 	std::map<std::string, ReflectionVariant> m_variables;
 };
-
+*/
 #endif

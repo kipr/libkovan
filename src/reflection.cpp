@@ -1,5 +1,5 @@
 #include "reflection.hpp"
-
+/* 
 class Node
 {
 public:
@@ -50,4 +50,4 @@ ReflectionEngine::ReflectionEngine(const ReflectionEngine&)
 ReflectionEngine& ReflectionEngine::operator=(const ReflectionEngine&)
 {
 	return *this; // NOT IMPLEMENTED
-}
+} */
