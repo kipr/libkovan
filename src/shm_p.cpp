@@ -90,6 +90,8 @@ void SharedMemoryImpl::publish()
 	for(; it != m_listeners.end(); ++it) {
 		(*it)->published(&m_client);
 	}
+	static unsigned char i = 0;
+	if(i++ == 0) printf("publish\n");
 }
 
 SharedMemoryImpl::SharedMemoryImpl()
@@ -106,6 +108,8 @@ SharedMemoryImpl::SharedMemoryImpl()
 		printf("Could not attach to shared memory with key %u\n", SHARED_MEMORY_KEY);
 		return;
 	}
+	
+	printf("Connected to shared memory\n");
 	
 	m_shared = reinterpret_cast<Private::SharedMemory *>(shm);
 }
