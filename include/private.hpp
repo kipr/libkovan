@@ -61,6 +61,8 @@ namespace Private
 	// Server writes this data. Clients read.
 	struct SharedMemoryServer
 	{
+		bool testFlag;
+		
 		timeval timestamp;
 		unsigned long updates;
 		unsigned short servoPositions[NUM_SERVOS];
@@ -83,6 +85,8 @@ namespace Private
 	// Clients write this data. Server reads.
 	struct SharedMemoryClient
 	{
+		bool testFlag;
+		
 		// Motors
 		
 		bool motorControlModeDirty : 1;

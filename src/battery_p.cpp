@@ -22,9 +22,14 @@
 #include "shm_p.hpp"
 #include "private.hpp"
 
+#include <cstdio>
+
 Private::Battery::level_t Private::Battery::level()
 {
+	Private::SharedMemoryClient *clientShared = SharedMemoryImpl::instance()->sharedMemoryClient();
+	clientShared->testFlag = true;
 	Private::SharedMemoryServer *shared = SharedMemoryImpl::instance()->sharedMemoryServer();
+	if(shared->testFlag) printf("Test Flag!!!!\n");
 	return shared ? shared->rawBatteryVoltage : 0;
 }
 
