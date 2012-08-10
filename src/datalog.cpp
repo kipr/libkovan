@@ -1,6 +1,8 @@
 #include "datalog.hpp"
 #include <sstream>
 #include <iostream>
+#include <cstdio>
+#include <cstring>
 
 void Category::append(const std::string& data)
 {
