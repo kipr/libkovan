@@ -18,12 +18,28 @@
  *  If not, see <http://www.gnu.org/licenses/>.                           *
  **************************************************************************/
 
+/*!
+ * \file console.hpp
+ * \brief Classes for working with the console screen
+ * \author Braden McDorman
+ * \copyright KISS Insitute for Practical Robotics
+ * \defgroup console Console
+ */
+
 #ifndef _CONSOLE_HPP_
 #define _CONSOLE_HPP_
 
+/*!
+ * \class Console
+ * Methods for working with the console inside the UI
+ * \ingroup console
+ */
 class Console
 {
 public:
+	/*!
+	 * Clears the console.
+	 */
 	static void clear();
 };
 

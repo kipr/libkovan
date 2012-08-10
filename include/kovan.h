@@ -39,5 +39,6 @@
 #include "util.h"
 #include "general.h"
 #include "console.h"
+#include "datalog.h"
 
 #endif

@@ -18,6 +18,14 @@
  *  If not, see <http://www.gnu.org/licenses/>.                           *
  **************************************************************************/
 
+/*!
+ * \file console.h
+ * \brief Methods for working with the console screen
+ * \author Braden McDorman
+ * \copyright KISS Insitute for Practical Robotics
+ * \defgroup console Console
+ */
+
 #ifndef _CONSOLE_H_
 #define _CONSOLE_H_
 
@@ -25,6 +33,10 @@
 extern "C" {
 #endif
 
+/*!
+ * Clears the UI's console.
+ * \ingroup console
+ */
 void console_clear();
 
 #ifdef __cplusplus

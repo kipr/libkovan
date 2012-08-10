@@ -18,77 +18,53 @@
  *  If not, see <http://www.gnu.org/licenses/>.                           *
  **************************************************************************/
 
+#ifndef _DRAW_P_X11_HPP_
+#define _DRAW_P_X11_HPP_
+
 #include "build_options.h"
 
-#if BUILD_WITH_QT
+#if BUILD_WITH_X11
 
-#include "draw_p.hpp"
-#include <QGraphicsScene>
-#include <QCoreApplication>
-#include <QApplication>
+#include <cairo/cairo.h>
+#include <cairo/cairo-pdf.h>
+#include <cairo/cairo-ps.h>
+#include <cairo/cairo-xlib.h>
+#include <X11/Xlib.h>
 
-bool Private::Draw::s_inited = false;
-
-Private::Draw::Draw()
-	: m_scene(new QGraphicsScene(this))
+namespace Private
 {
-	setScene(m_scene);
+	class Draw 
+	{
+	public:
+		Draw();
+		~Draw();
+		
+		bool open();
+		void point(const int& x, const int& y);
+		void line(const int& sx, const int& sy, const int& ex, const int& ey);
+		void clear();
+		void setSize(const unsigned int& width, const unsigned int& height);
+		void raise();
+		void close();
+		
+		bool isInited();
+		void init();
+		
+		void update();
+	private:
+		bool m_inited;
+		void paint();
+		
+		Display *m_display;
+		Window m_rootWindow;
+		Window m_window;
+		Colormap m_colorMap;
+		GC m_gc;
+		int m_screen;
+		cairo_surface_t *m_surface;
+	};
 }
 
-Private::Draw::~Draw()
-{
-	delete m_scene;
-}
-
-bool Private::Draw::open()
-{
-	show();
-	raise();
-	return true;
-}
-
-void Private::Draw::point(const int& x, const int& y)
-{
-	line(x, y, x, y);
-}
-
-void Private::Draw::line(const int& sx, const int& sy, const int& ex, const int& ey)
-{
-	m_scene->addLine(sx, sy, ex, ey);
-}
-
-void Private::Draw::clear()
-{
-	m_scene->clear();
-}
-
-void Private::Draw::setSize(const unsigned int& width, const unsigned int& height)
-{
-	resize(width, height);
-}
-
-void Private::Draw::raise()
-{
-	QGraphicsView::raise();
-}
-
-void Private::Draw::close()
-{
-	hide();
-}
-
-bool Private::Draw::isInited()
-{
-	return s_inited;
-}
-
-void Private::Draw::init()
-{
-	if(isInited()) return;
-	static char *argv[] = {"beta"};
-	static int argc = 1;
-	QApplication *app = new QApplication(argc, argv);
-	s_inited = true;
-}
+#endif
 
 #endif

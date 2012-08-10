@@ -21,6 +21,13 @@
 #ifndef _WIFI_HPP_
 #define _WIFI_HPP_
 
-
+class Socket
+{
+public:
+	Socket();
+	~Socket();
+	
+	
+};
 
 #endif

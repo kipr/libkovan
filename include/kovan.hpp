@@ -54,5 +54,6 @@
 #include "util.hpp"
 #include "general.h"
 #include "console.hpp"
+#include "datalog.hpp"
 
 #endif

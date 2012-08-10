@@ -4,9 +4,9 @@
 int main(int argc, char *argv[])
 {
 	printf("Starting Motor\n");
-	motor(0, 50);
-	msleep(4000);
+	motor(0, 100);
+	motor(2, 100);
+	for(;;) {}
 	printf("All Off\n");
-	ao();
 	return 0;
 }

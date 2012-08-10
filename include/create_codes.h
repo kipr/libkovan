@@ -18,6 +18,13 @@
  *  If not, see <http://www.gnu.org/licenses/>.                           *
  **************************************************************************/
 
+/*!
+ * \file create_codes.h
+ * \author Braden McDorman
+ * \copyright KISS Institute for Practical Robotics
+ * \ingroup create
+ */
+
 #ifndef _CREATE_CODES_H_
 #define _CREATE_CODES_H_
 

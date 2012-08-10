@@ -22,5 +22,6 @@
 #define _BUILD_OPTIONS_H_
 
 #define BUILD_WITH_QT 0
+#define BUILD_WITH_X11 0
 
 #endif
