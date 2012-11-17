@@ -33,6 +33,7 @@ bool Kovan::flush()
 	if(!m_module->recv(m_currentState)) return false;
 	
 	std::cout << "Queue successfully sent with State response." << std::endl;
+	m_module->displayState(m_currentState);
 	
 	return true;
 }

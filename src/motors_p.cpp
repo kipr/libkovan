@@ -21,8 +21,8 @@
 #include "motors_p.hpp"
 #include "kovan_p.hpp"
 #include "kovan_regs_p.hpp"
-#include <iostream> // TMP
-#include <cstdio> // TMP
+#include <iostream> // FIXME: tmp
+#include <cstdio> // FIXME: tmp
 #include "nyi.h"
 
 static const short motorRegisters[4] = {
@@ -79,6 +79,8 @@ void Private::Motor::setPwmDirection(const port_t &port, const Motor::Direction 
 	
 	// Add new drive code
 	dcs |= dir << offset;
+	
+	std::cout << std::hex << dcs << std::endl;
 	
 	kovan->enqueueCommand(createWriteCommand(MOTOR_DRIVE_CODE_T, dcs));
 }
