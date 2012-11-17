@@ -52,7 +52,7 @@ unsigned short Analog::value(const unsigned char& port) const
 	Private::Kovan *kovan = Private::Kovan::instance();
 	
 	kovan->enqueueCommand(createWriteCommand(ADC_GO_T, 0));
-	kovan->enqueueCommand(createWriteCommand(ADC_CHAN_T, port - 8));
+	kovan->enqueueCommand(createWriteCommand(ADC_CHAN_T, port));
 	kovan->enqueueCommand(createWriteCommand(ADC_GO_T, 1));
 	kovan->enqueueCommand(createWriteCommand(ADC_GO_T, 0));
 	kovan->flush();
