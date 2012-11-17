@@ -18,7 +18,7 @@ namespace Private
 		
 		bool flush();
 		
-		const State &currentState() const;
+		State &currentState();
 		
 		static Kovan *instance();
 	private:

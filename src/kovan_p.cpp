@@ -38,7 +38,7 @@ bool Kovan::flush()
 	return true;
 }
 
-const State &Kovan::currentState() const
+State &Kovan::currentState()
 {
 	return m_currentState;
 }

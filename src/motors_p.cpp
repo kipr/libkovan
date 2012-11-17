@@ -72,7 +72,7 @@ void Private::Motor::setPwmDirection(const port_t &port, const Motor::Direction 
 	Private::Kovan *kovan = Private::Kovan::instance();
 	
 	const unsigned short offset = port << 1;
-	unsigned short dcs = kovan->currentState().t[MOTOR_DRIVE_CODE_T];
+	unsigned short &dcs = kovan->currentState().t[MOTOR_DRIVE_CODE_T];
 	
 	// Clear old drive code
 	dcs &= ~(0x3 << offset);
