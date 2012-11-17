@@ -60,7 +60,8 @@ void Private::Motor::pid(const port_t &port, short &p, short &i, short &d, short
 void Private::Motor::setPwm(const port_t &port, const unsigned char &speed)
 {
 	Private::Kovan *kovan = Private::Kovan::instance();
-	kovan->enqueueCommand(createWriteCommand(motorRegisters[port], speed));
+	const unsigned int adjustedSpeed = speed > 100 ? 100 : speed; 
+	kovan->enqueueCommand(createWriteCommand(motorRegisters[port], adjustedSpeed * 2600 / 100));
 }
 
 void Private::Motor::setPwmDirection(const port_t &port, const Motor::Direction &dir)
@@ -71,7 +72,7 @@ void Private::Motor::setPwmDirection(const port_t &port, const Motor::Direction 
 	
 	Private::Kovan *kovan = Private::Kovan::instance();
 	
-	const unsigned short offset = port << 1;
+	const unsigned short offset = (3 - port) << 1;
 	unsigned short &dcs = kovan->currentState().t[MOTOR_DRIVE_CODE_T];
 	
 	// Clear old drive code
