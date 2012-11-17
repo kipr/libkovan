@@ -17,9 +17,9 @@ void Kovan::enqueueCommand(const Command &command)
 bool Kovan::flush()
 {
 	// TODO: This is a temporary requirement.
-	enqueueCommand((Command) {
-		.type = StateCommandType
-	});
+	Command stateCommand;
+	stateCommand.type = StateCommandType;
+	enqueueCommand(stateCommand);
 	
 	if(!m_module->send(m_queue)) return false;
 	

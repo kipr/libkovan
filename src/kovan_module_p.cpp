@@ -4,6 +4,9 @@
 
 #include <iostream>
 
+#include <cstdio>
+#include <cstdlib>
+
 #define TIMEDIV (1.0 / 13000000) // 13 MHz clock
 #define PWM_PERIOD_RAW 0.02F
 #define SERVO_MAX_RAW 0.002f
