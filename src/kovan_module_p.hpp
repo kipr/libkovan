@@ -18,54 +18,69 @@
  *  If not, see <http://www.gnu.org/licenses/>.                           *
  **************************************************************************/
 
-#ifndef _MOTORS_P_HPP_
-#define _MOTORS_P_HPP_
+#ifndef _KOVAN_MODULE_P_HPP_
+#define _KOVAN_MODULE_P_HPP_
 
-#include "port.hpp"
+#include "kovan_command_p.hpp"
+
+#include <vector>
+
+#ifndef _WIN32
+#include <arpa/inet.h>
+#include <string.h>
+#include <sys/types.h>
+#include <sys/socket.h>
+#include <netinet/in.h>
+#else
+#error Need windows socket includes.
+#endif
 
 namespace Private
 {
-	class Motor
+	typedef std::vector<Command> CommandVector;
+	
+	class KovanModule
 	{
 	public:
-		enum ControlMode {
-			Unknown = 0,
-			PID,
-			PWM
-		};
-		
-		enum Direction {
-			PassiveStop = 0,
-			Forward,
-			Reverse,
-			ActiveStop
-		};
-		
-		~Motor();
-		
-		void setPid(const port_t &port, const short &p, const short &i, const short &d, const short &pd, const short &id, const short &dd);
-		
-		void setControlMode(const Motor::ControlMode &mode);
-		Motor::ControlMode controlMode() const;
-		
-		void pid(const port_t &port, short &p, short &i, short &d, short &pd, short &id, short &dd);
-		
-		void setPwm(const port_t &port, const unsigned char &speed);
-		void setPwmDirection(const port_t &port, const Motor::Direction &dir);
-		
-		unsigned char pwm(const port_t &port);
-		Motor::Direction pwmDirection(const port_t &port) const;
-		
-		void stop(const port_t &port);
-		
-		unsigned short backEMF(const unsigned char &port);
-		
-		static Motor *instance();
-		
+		KovanModule(const uint64_t& moduleAddress, const uint16_t& modulePort);
+		~KovanModule();
+
+		bool init();
+		bool bind(const uint64_t& address, const uint16_t& port);
+		void close();
+
+		uint64_t moduleAddress() const;
+		uint16_t modulePort() const;
+
+		bool send(const Command& command);
+		bool send(const CommandVector& commands);
+
+		bool recv(State& state);
+
+		int singleWrite(const unsigned short &address, const unsigned short &value);
+
+		unsigned char readDigitals();
+		void writeDigitals(const unsigned char &values, const unsigned char &pullups, const unsigned char &outputEnables);
+
+		void turnMotorsOn(const unsigned short &speedPercent);
+		void turnMotorsOff();
+
+		void moveServo(const char &servoNum, const unsigned short &position);
+
+		int getState(State &state);
+		void displayState(const State &state);
+
+		unsigned short getADC(const unsigned short &channel);
+		void setADCPullups(const unsigned char &pullups);
+
+		void speedTest();
+
 	private:
-		Motor();
+		int m_sock;
+		sockaddr_in m_out;
+
+		static Packet *createPacket(const uint16_t& num, uint32_t& packet_size);
 	};
 }
 
 #endif
-

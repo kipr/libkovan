@@ -25,20 +25,17 @@
 
 namespace Private
 {
-	class PublishListener;
-	
 	class Servo
 	{
-	public:	
+	public:
+		~Servo();
+		
 		bool setPosition(const port_t& port, const unsigned short& position);
 		unsigned short position(const port_t& port) const;
 		
 		static Servo *instance();
 	private:
 		Servo();
-		~Servo();
-		
-		PublishListener *m_listener;
 	};
 }
 
