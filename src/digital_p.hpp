@@ -50,8 +50,6 @@ namespace Private
 		Digital();
 		Digital(const Digital& rhs);
 		Digital& operator=(const Digital& rhs);
-		
-		PublishListener *m_listener;
 	};
 }
 

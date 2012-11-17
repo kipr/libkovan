@@ -25,7 +25,7 @@
 #include <cstdio> // FIXME: tmp
 #include "nyi.h"
 
-static const short motorRegisters[4] = {
+static const unsigned short motorRegisters[4] = {
 	MOTOR_PWM_0,
 	MOTOR_PWM_1,
 	MOTOR_PWM_2,

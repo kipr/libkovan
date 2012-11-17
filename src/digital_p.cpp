@@ -19,85 +19,50 @@
  **************************************************************************/
 
 #include "digital_p.hpp"
-#include "shm_p.hpp"
+#include "kovan_p.hpp"
+#include "kovan_regs_p.hpp"
+#include "nyi.h"
 
 using namespace Private;
 
-namespace Private
-{
-	class DigitalPublishListener : public PublishListener
-	{
-	public:
-		virtual void published(Private::SharedMemoryClient *client)
-		{
-			client->digitalPullupsDirty = 0;
-			client->digitalDirectionsDirty = 0;
-			client->digitalsDirty = 0;
-		}
-	};
-}
-
 Digital::~Digital()
 {
-	delete m_listener;
 }
 
 bool Digital::value(const unsigned char& port) const
 {
-	SharedMemoryServer *shm = SharedMemoryImpl::instance()->sharedMemoryServer();
-	if(!shm || port >= NUM_DIGITALS) return false;
-	return shm->digitals & (1 << (NUM_DIGITALS - 1 - port));
+	if(port > 7) return false;
+	return Private::Kovan::instance()->currentState().t[DIG_IN] & (0x1 << port);
 }
 
 bool Digital::setValue(const unsigned char& port, const bool& value)
 {
-	SharedMemoryClient *shm = SharedMemoryImpl::instance()->sharedMemoryClient();
-	if(!shm || port >= NUM_DIGITALS) return false;
-	
-	shm->digitalsDirty |= 1 << (NUM_DIGITALS - 1 - port);
-	if(value) shm->digitals |= 1 << (NUM_DIGITALS - 1 - port);
-	else shm->digitals &= ~(1 << (NUM_DIGITALS - 1 - port));
-	SharedMemoryImpl::instance()->doAutoPublish();
-	return true;
+	nyi("Private::Digital::setValue");
+	return false;
 }
 
 const Digital::Direction Digital::direction(const unsigned char& port) const
 {
-	SharedMemoryServer *shm = SharedMemoryImpl::instance()->sharedMemoryServer();
-	if(!shm || port >= NUM_DIGITALS) return Unknown;
-	return shm->digitalDirections & (1 << (NUM_DIGITALS - 1 - port)) ? Out : In;
+	nyi("Private::Digital::direction");
+	return Digital::Unknown;
 }
 
 bool Digital::setDirection(const unsigned char& port, const Digital::Direction& direction)
 {
-	SharedMemoryClient *shm = SharedMemoryImpl::instance()->sharedMemoryClient();
-	if(!shm || port >= NUM_DIGITALS) return false;
-	
-	shm->digitalDirectionsDirty |= 1 << (NUM_DIGITALS - 1 - port);
-	if(direction == Out) shm->digitalDirections |= 1 << (NUM_DIGITALS - 1 - port);
-	else shm->digitalDirections &= ~(1 << (NUM_DIGITALS - 1 - port));
-	SharedMemoryImpl::instance()->doAutoPublish();
-	
-	return true;
+	nyi("Private::Digital::setDirection");
+	return false;
 }
 
 bool Digital::pullup(const unsigned char& port) const
 {
-	SharedMemoryServer *shm = SharedMemoryImpl::instance()->sharedMemoryServer();
-	if(!shm || port > NUM_DIGITALS - 1) return false;
-	return shm->digitalPullups & (1 << (NUM_DIGITALS - 1 - port));
+	nyi("Private::Digital::pullup");
+	return false;
 }
 
 bool Digital::setPullup(const unsigned char& port, const bool& pullup)
 {
-	SharedMemoryClient *shm = SharedMemoryImpl::instance()->sharedMemoryClient();
-	if(!shm || port >= NUM_DIGITALS) return false;
-	
-	shm->digitalPullupsDirty |= 1 << (NUM_DIGITALS - 1 - port);
-	if(pullup) shm->digitalPullups |= 1 << (NUM_DIGITALS - 1 - port);
-	else shm->digitalPullups &= ~(1 << (NUM_DIGITALS - 1 - port));
-	SharedMemoryImpl::instance()->doAutoPublish();
-	return true;
+	nyi("Private::Digital::setPullup");
+	return false;
 }
 
 Digital *Digital::instance()
@@ -107,9 +72,7 @@ Digital *Digital::instance()
 }
 
 Digital::Digital()
-	: m_listener(new DigitalPublishListener())
 {
-	SharedMemoryImpl::instance()->addPublishListener(m_listener);
 }
 
 Digital::Digital(const Digital&) {}

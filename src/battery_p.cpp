@@ -19,18 +19,17 @@
  **************************************************************************/
 
 #include "battery_p.hpp"
-#include "shm_p.hpp"
+#include "kovan_p.hpp"
+#include "kovan_regs_p.hpp"
+#include "nyi.h"
 #include "private.hpp"
 
 #include <cstdio>
 
 Private::Battery::level_t Private::Battery::level()
 {
-	Private::SharedMemoryClient *clientShared = SharedMemoryImpl::instance()->sharedMemoryClient();
-	clientShared->testFlag = true;
-	Private::SharedMemoryServer *shared = SharedMemoryImpl::instance()->sharedMemoryServer();
-	if(shared->testFlag) printf("Test Flag!!!!\n");
-	return shared ? shared->rawBatteryVoltage : 0;
+	nyi("Private::Battery::level");
+	return 0;
 }
 
 Private::Battery *Private::Battery::instance()

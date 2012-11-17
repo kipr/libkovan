@@ -1,6 +1,7 @@
 #include "kovan_p.hpp"
 
 #include "kovan_module_p.hpp"
+#include "kovan_regs_p.hpp"
 
 #include <iostream> // FIXME: tmp
 

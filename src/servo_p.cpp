@@ -24,7 +24,7 @@
 #include "private.hpp"
 #include <cstdio>
 
-static const short servoRegisters[4] = {
+static const unsigned short servoRegisters[4] = {
 	SERVO_COMMAND_0,
 	SERVO_COMMAND_1,
 	SERVO_COMMAND_2,

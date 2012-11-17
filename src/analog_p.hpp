@@ -40,8 +40,6 @@ namespace Private
 		Analog();
 		Analog(const Analog& rhs);
 		Analog& operator=(const Analog& rhs);
-		
-		PublishListener *m_listener;
 	};
 }
 

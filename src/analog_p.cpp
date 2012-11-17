@@ -19,55 +19,55 @@
  **************************************************************************/
 
 #include "analog_p.hpp"
-#include "shm_p.hpp"
+#include "kovan_p.hpp"
+#include "kovan_regs_p.hpp"
+#include "nyi.h"
 
 using namespace Private;
 
-namespace Private
-{
-	class AnalogPublishListener : public PublishListener
-	{
-	public:
-		virtual void published(Private::SharedMemoryClient *client)
-		{
-			client->analogPullupsDirty = 0;
-		}
-	};
-}
-
-
 Analog::~Analog()
 {
-	delete m_listener;
 }
 
 void Analog::setPullup(const unsigned char& port, const bool& pullup)
 {
-	if(port < 8 || port > 15) return;
-	
-	SharedMemoryClient *shm = SharedMemoryImpl::instance()->sharedMemoryClient();
-	if(!shm) return;
-	
-	shm->analogPullupsDirty &= 1 << (NUM_ANALOGS - 1 - port);
-	shm->analogPullups &= pullup << (NUM_ANALOGS - 1 - port);
-	
-	SharedMemoryImpl::instance()->doAutoPublish();
+	nyi("Private::Analog::setPullup");
 }
 
 bool Analog::pullup(const unsigned char& port) const
 {
-	if(port >= NUM_ANALOGS) return false;
-	
-	SharedMemoryClient *shm = SharedMemoryImpl::instance()->sharedMemoryClient();
-	return shm->analogPullups & (NUM_ANALOGS - 1 - port);
+	nyi("Private::Analog::pullup");
+	return false;
 }
 
 unsigned short Analog::value(const unsigned char& port) const
 {
-	if(port >= NUM_ANALOGS) return 0xFFFF;
+	// FIXME: This is an abomination. We should never have to to flush internally.
+	// Will be corrected later.
 	
-	SharedMemoryServer *shm = SharedMemoryImpl::instance()->sharedMemoryServer();
-	return shm->analogs[port];
+	if(port < 8 || port > 15) return 0xFFFF;
+	
+	unsigned short adc_val = 0xFFFF;
+
+	Private::Kovan *kovan = Private::Kovan::instance();
+	
+	kovan->enqueueCommand(createWriteCommand(ADC_GO_T, 0));
+	kovan->enqueueCommand(createWriteCommand(ADC_CHAN_T, port - 8));
+	kovan->enqueueCommand(createWriteCommand(ADC_GO_T, 1));
+	kovan->enqueueCommand(createWriteCommand(ADC_GO_T, 0));
+	kovan->flush();
+	
+	for(unsigned char i = 0; i < 2; ++i) {
+		// Wait for ready
+		do{
+			kovan->flush();
+		} while(!kovan->currentState().t[ADC_VALID_T]);
+
+		// Read raw voltage
+		adc_val = kovan->currentState().t[ADC_IN_T];
+	}
+
+	return adc_val;
 }
 
 Analog *Analog::instance()
@@ -76,9 +76,8 @@ Analog *Analog::instance()
 	return &s_analog;
 }
 
-Analog::Analog() : m_listener(new AnalogPublishListener())
+Analog::Analog()
 {
-	SharedMemoryImpl::instance()->addPublishListener(m_listener);
 }
 
 Analog::Analog(const Analog& ) {}
