@@ -44,5 +44,16 @@ Kovan::Kovan()
 	// TODO: This needs to be exposed via API (remote libkovan connection)
 	: m_module(new KovanModule(inet_addr("127.0.0.1"), htons(5555)))
 {
+	// Create the socket descriptor for communication
+	if(!m_module->init()) {
+		// TODO: Error Reporting?
+		return;
+	}
+	
+	// Bind out client to an address
+	if(!m_module->bind(htonl(INADDR_ANY), htons(9999))) {
+		// TODO: Error Reporting?
+		return;
+	}
 }
 
