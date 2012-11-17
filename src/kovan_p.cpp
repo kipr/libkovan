@@ -16,13 +16,15 @@ void Kovan::enqueueCommand(const Command &command)
 
 bool Kovan::flush()
 {
+	std::vector<Command> sendQueue = m_queue;
+	m_queue.clear();
+	
 	// TODO: This is a temporary requirement.
 	Command stateCommand;
 	stateCommand.type = StateCommandType;
-	enqueueCommand(stateCommand);
+	sendQueue.push_back(stateCommand);
 	
-	if(!m_module->send(m_queue)) return false;
-	
+	if(!m_module->send(sendQueue)) return false;
 	// TODO: This needs to be removed eventually.
 	if(!m_module->recv(m_currentState)) return false;
 	

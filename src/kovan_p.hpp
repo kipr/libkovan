@@ -14,7 +14,7 @@ namespace Private
 	public:
 		~Kovan();
 		
-		inline void enqueueCommand(const Command &command);
+		void enqueueCommand(const Command &command);
 		
 		bool flush();
 		
