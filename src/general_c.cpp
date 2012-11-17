@@ -19,14 +19,15 @@
  **************************************************************************/
 
 #include "general.h"
-#include "shm_p.hpp"
+#include "kovan_p.hpp"
+#include "nyi.h"
 
 void set_auto_publish(int on)
 {
-	Private::SharedMemoryImpl::instance()->setAutoPublish(on == 0 ? false : true);
+	nyi("set_auto_publish");
 }
 
 void publish()
 {
-	Private::SharedMemoryImpl::instance()->publish();
+	Private::Kovan::instance()->flush();
 }
