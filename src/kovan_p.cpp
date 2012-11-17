@@ -2,6 +2,8 @@
 
 #include "kovan_module_p.hpp"
 
+#include <iostream> // FIXME: tmp
+
 using namespace Private;
 
 Kovan::~Kovan()
@@ -24,9 +26,13 @@ bool Kovan::flush()
 	stateCommand.type = StateCommandType;
 	sendQueue.push_back(stateCommand);
 	
+	std::cout << "Sending queue to kovan module." << std::endl;
+	
 	if(!m_module->send(sendQueue)) return false;
 	// TODO: This needs to be removed eventually.
 	if(!m_module->recv(m_currentState)) return false;
+	
+	std::cout << "Queue successfully sent with State response." << std::endl;
 	
 	return true;
 }

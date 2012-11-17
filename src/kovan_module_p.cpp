@@ -417,8 +417,7 @@ void KovanModule::speedTest()
 	commands.push_back(c1);
 
 	State state;
-	for (int i = 0; i < 1000; i++){
-
+	for (int i = 0; i < 1000; i++) {
 		send(commands);
 		if(!recv(state)) {
 			std::cout << "Error: didn't get state back!" << std::endl;
