@@ -47,6 +47,7 @@ bool Digital::setValue(const unsigned char& port, const bool& value)
 	else out &= ~(1 << (port - 8));
 	
 	kovan->enqueueCommand(createWriteCommand(DIG_OUT, out));
+	wiggle();
 	return true;
 }
 
@@ -69,6 +70,7 @@ bool Digital::setDirection(const unsigned char& port, const Digital::Direction& 
 	else pullups &= ~(1 << (port - 8));
 	
 	kovan->enqueueCommand(createWriteCommand(DIG_OUT_ENABLE, pullups));
+	wiggle();
 	return false;
 }
 
@@ -91,6 +93,7 @@ bool Digital::setPullup(const unsigned char& port, const bool& pullup)
 	else pullups &= ~(1 << (port - 8));
 	
 	kovan->enqueueCommand(createWriteCommand(DIG_PULLUPS, pullups));
+	wiggle();
 	return true;
 }
 
@@ -98,6 +101,21 @@ Digital *Digital::instance()
 {
 	static Digital s_digital;
 	return &s_digital;
+}
+
+void Digital::wiggle()
+{
+	// TODO: This will be removed in a future version
+	Private::Kovan *kovan = Private::Kovan::instance();
+	kovan->flush();
+	kovan->enqueueCommand(createWriteCommand(DIG_UPDATE_T, 1));
+	kovan->flush();
+	kovan->enqueueCommand(createWriteCommand(DIG_UPDATE_T, 0));
+	kovan->flush();
+	kovan->enqueueCommand(createWriteCommand(DIG_UPDATE_T, 0));
+	kovan->flush();
+	kovan->enqueueCommand(createWriteCommand(DIG_UPDATE_T, 1));
+	kovan->flush();
 }
 
 Digital::Digital()

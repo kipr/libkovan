@@ -47,6 +47,8 @@ namespace Private
 		
 		static Digital *instance();
 	private:
+		void wiggle();
+		
 		Digital();
 		Digital(const Digital& rhs);
 		Digital& operator=(const Digital& rhs);
