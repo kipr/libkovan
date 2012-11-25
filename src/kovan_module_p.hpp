@@ -57,23 +57,8 @@ namespace Private
 
 		bool recv(State& state);
 
-		int singleWrite(const unsigned short &address, const unsigned short &value);
-
-		unsigned char readDigitals();
-		void writeDigitals(const unsigned char &values, const unsigned char &pullups, const unsigned char &outputEnables);
-
-		void turnMotorsOn(const unsigned short &speedPercent);
-		void turnMotorsOff();
-
-		void moveServo(const char &servoNum, const unsigned short &position);
-
 		int getState(State &state);
 		void displayState(const State &state);
-
-		unsigned short getADC(const unsigned short &channel);
-		void setADCPullups(const unsigned char &pullups);
-
-		void speedTest();
 
 	private:
 		int m_sock;
