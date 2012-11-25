@@ -32,7 +32,7 @@ Analog::~Analog()
 void Analog::setPullup(const unsigned char& port, const bool& pullup)
 {
 	// FIXME: Untested
-	if(port >= 8) return false;
+	if(port >= 8) return;
 	Private::Kovan *kovan = Private::Kovan::instance();
 	unsigned short &pullups = kovan->currentState().t[AN_PULLUPS];
 	
@@ -46,6 +46,7 @@ bool Analog::pullup(const unsigned char& port) const
 {
 	// FIXME: Untested
 	if(port >= 8) return false;
+	Private::Kovan *kovan = Private::Kovan::instance();
 	return kovan->currentState().t[AN_PULLUPS] & (1 << port);
 }
 

@@ -54,6 +54,7 @@ const Digital::Direction Digital::direction(const unsigned char& port) const
 {
 	// FIXME: Untested
 	if(port < 8 || port > 15) return Digital::Unknown;
+	Private::Kovan *kovan = Private::Kovan::instance();
 	return kovan->currentState().t[DIG_OUT_ENABLE] & (1 << (port - 8)) ? Digital::Out : Digital::In;
 }
 
@@ -75,8 +76,8 @@ bool Digital::pullup(const unsigned char& port) const
 {
 	// FIXME: Untested
 	if(port < 8 || port > 15) return false;
+	Private::Kovan *kovan = Private::Kovan::instance();
 	return kovan->currentState().t[DIG_PULLUPS] & (1 << (port - 8));
-	return false;
 }
 
 bool Digital::setPullup(const unsigned char& port, const bool& pullup)
