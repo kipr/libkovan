@@ -31,6 +31,14 @@ static const unsigned short servoRegisters[4] = {
 	SERVO_COMMAND_3
 };
 
+#define TIMEDIV (1.0 / 13000000) // 13 MHz clock
+#define PWM_PERIOD_RAW 0.02F
+#define SERVO_MAX_RAW 0.002f
+#define SERVO_MIN_RAW 0.001f
+#define PWM_PERIOD ((unsigned int)(PWM_PERIOD_RAW / TIMEDIV))
+#define SERVO_MAX (SERVO_MAX_RAW / TIMEDIV)
+#define SERVO_MIN (SERVO_MIN_RAW / TIMEDIV)
+
 Private::Servo::Servo()
 {
 }
@@ -41,14 +49,15 @@ Private::Servo::~Servo()
 
 bool Private::Servo::setPosition(const port_t& port, const unsigned short& position)
 {
-	Private::Kovan::instance()->enqueueCommand(createWriteCommand(servoRegisters[port], position));
-	
+	const unsigned short val = (unsigned int)(((SERVO_MAX - SERVO_MIN) * (position / 1024.0)) + SERVO_MIN) >> 8;
+	Private::Kovan::instance()->enqueueCommand(createWriteCommand(servoRegisters[port], val));
 	return true; // TODO: Remove return value?
 }
 
 unsigned short Private::Servo::position(const port_t& port) const
 {
-	return Private::Kovan::instance()->currentState().t[servoRegisters[port]];
+	const unsigned int val = Private::Kovan::instance()->currentState().t[servoRegisters[port]];
+	return (1024.0 * ((val << 8) - SERVO_MIN)) / (SERVO_MAX - SERVO_MIN);
 }
 
 Private::Servo *Private::Servo::instance()

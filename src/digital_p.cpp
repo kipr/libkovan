@@ -31,38 +31,66 @@ Digital::~Digital()
 
 bool Digital::value(const unsigned char& port) const
 {
-	if(port > 7) return false;
-	return Private::Kovan::instance()->currentState().t[DIG_IN] & (0x1 << port);
+	// FIXME: Untested
+	if(port < 8 || port > 15) return false;
+	return Private::Kovan::instance()->currentState().t[DIG_IN] & (1 << (port - 8));
 }
 
 bool Digital::setValue(const unsigned char& port, const bool& value)
 {
-	nyi("Private::Digital::setValue");
-	return false;
+	// FIXME: Untested
+	if(port < 8 || port > 15) return false;
+	Private::Kovan *kovan = Private::Kovan::instance();
+	unsigned short &out = kovan->currentState().t[DIG_OUT];
+	
+	if(value) out |= (1 << (port - 8));
+	else out &= ~(1 << (port - 8));
+	
+	kovan->enqueueCommand(createWriteCommand(DIG_OUT, out));
+	return true;
 }
 
 const Digital::Direction Digital::direction(const unsigned char& port) const
 {
-	nyi("Private::Digital::direction");
-	return Digital::Unknown;
+	// FIXME: Untested
+	if(port < 8 || port > 15) return Digital::Unknown;
+	return kovan->currentState().t[DIG_OUT_ENABLE] & (1 << (port - 8)) ? Digital::Out : Digital::In;
 }
 
 bool Digital::setDirection(const unsigned char& port, const Digital::Direction& direction)
 {
-	nyi("Private::Digital::setDirection");
+	// FIXME: Untested
+	if(port < 8 || port > 15) return false;
+	Private::Kovan *kovan = Private::Kovan::instance();
+	unsigned short &pullups = kovan->currentState().t[DIG_OUT_ENABLE];
+	
+	if(direction == Digital::Out) pullups |= (1 << (port - 8));
+	else pullups &= ~(1 << (port - 8));
+	
+	kovan->enqueueCommand(createWriteCommand(DIG_OUT_ENABLE, pullups));
 	return false;
 }
 
 bool Digital::pullup(const unsigned char& port) const
 {
-	nyi("Private::Digital::pullup");
+	// FIXME: Untested
+	if(port < 8 || port > 15) return false;
+	return kovan->currentState().t[DIG_PULLUPS] & (1 << (port - 8));
 	return false;
 }
 
 bool Digital::setPullup(const unsigned char& port, const bool& pullup)
 {
-	nyi("Private::Digital::setPullup");
-	return false;
+	// FIXME: Untested
+	if(port < 8 || port > 15) return false;
+	Private::Kovan *kovan = Private::Kovan::instance();
+	unsigned short &pullups = kovan->currentState().t[DIG_PULLUPS];
+	
+	if(pullup) pullups |= (1 << (port - 8));
+	else pullups &= ~(1 << (port - 8));
+	
+	kovan->enqueueCommand(createWriteCommand(DIG_PULLUPS, pullups));
+	return true;
 }
 
 Digital *Digital::instance()

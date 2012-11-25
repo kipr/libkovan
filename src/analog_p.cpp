@@ -31,43 +31,29 @@ Analog::~Analog()
 
 void Analog::setPullup(const unsigned char& port, const bool& pullup)
 {
-	nyi("Private::Analog::setPullup");
+	// FIXME: Untested
+	if(port >= 8) return false;
+	Private::Kovan *kovan = Private::Kovan::instance();
+	unsigned short &pullups = kovan->currentState().t[AN_PULLUPS];
+	
+	if(pullup) pullups |= (1 << port);
+	else pullups &= ~(1 << port);
+	
+	kovan->enqueueCommand(createWriteCommand(AN_PULLUPS, pullups));
 }
 
 bool Analog::pullup(const unsigned char& port) const
 {
-	nyi("Private::Analog::pullup");
-	return false;
+	// FIXME: Untested
+	if(port >= 8) return false;
+	return kovan->currentState().t[AN_PULLUPS] & (1 << port);
 }
 
 unsigned short Analog::value(const unsigned char& port) const
 {
-	// FIXME: This is an abomination. We should never have to to flush internally.
-	// Will be corrected later.
-	
-	if(port < 8 || port > 15) return 0xFFFF;
-	
-	unsigned short adc_val = 0xFFFF;
-
+	if(port >= 16) return 0xFFFF;
 	Private::Kovan *kovan = Private::Kovan::instance();
-	
-	kovan->enqueueCommand(createWriteCommand(ADC_GO_T, 0));
-	kovan->enqueueCommand(createWriteCommand(ADC_CHAN_T, port));
-	kovan->enqueueCommand(createWriteCommand(ADC_GO_T, 1));
-	kovan->enqueueCommand(createWriteCommand(ADC_GO_T, 0));
-	kovan->flush();
-	
-	for(unsigned char i = 0; i < 2; ++i) {
-		// Wait for ready
-		do{
-			kovan->flush();
-		} while(!kovan->currentState().t[ADC_VALID_T]);
-
-		// Read raw voltage
-		adc_val = kovan->currentState().t[ADC_IN_T];
-	}
-
-	return adc_val;
+	return kovan->currentState().t[AN_IN_0 + port];
 }
 
 Analog *Analog::instance()
