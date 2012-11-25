@@ -19,10 +19,10 @@
  **************************************************************************/
 
 #include "battery.hpp"
-#include "battery_p.hpp"
+
+#define BATTERY_ADC_CHAN 16
 
 float Battery::powerLevel()
 {
-	Private::Battery::level_t level = Private::Battery::instance()->level();
-	return level;
+	return Private::Analog::instance()->value(BATTERY_ADC_CHAN);
 }

@@ -75,7 +75,9 @@ void get_pid_gains(int motor, int *p, int *i, int *d, int *pd, int *id, int *dd)
 
 int freeze(int motor)
 {
-	return -1;
+	Private::Motor::instance()->setPwm(m_port, 100);
+	Private::Motor::instance()->setPwmDirection(m_port, Private::Motor::ActiveStop);
+	return 0;
 }
 
 int get_motor_done(int motor)

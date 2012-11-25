@@ -52,7 +52,7 @@ bool Analog::pullup(const unsigned char& port) const
 
 unsigned short Analog::value(const unsigned char& port) const
 {
-	if(port >= 16) return 0xFFFF;
+	if(port > 16) return 0xFFFF;
 	Private::Kovan *kovan = Private::Kovan::instance();
 	return kovan->currentState().t[AN_IN_0 + port];
 }

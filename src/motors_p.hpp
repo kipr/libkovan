@@ -37,7 +37,7 @@ namespace Private
 		enum Direction {
 			PassiveStop = 0,
 			Reverse,
-			Forward, 
+			Forward,
 			ActiveStop
 		};
 		

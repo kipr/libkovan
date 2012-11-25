@@ -54,7 +54,8 @@ void Motor::pidGains(short& p, short& i, short& d, short& pd, short& id, short& 
 
 void Motor::freeze()
 {
-	
+	Private::Motor::instance()->setPwm(m_port, 100);
+	Private::Motor::instance()->setPwmDirection(m_port, Private::Motor::ActiveStop);
 }
 
 bool Motor::getMotorDone() const
