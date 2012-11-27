@@ -81,7 +81,9 @@ void Private::Motor::setPwmDirection(const port_t &port, const Motor::Direction 
 	// Add new drive code
 	dcs |= dir << offset;
 	
-	std::cout << std::hex << dcs << std::endl;
+#ifdef LIBKOVAN_DEBUG
+	std::cout << "PWM Directions: " << std::hex << dcs << std::endl;
+#endif
 	
 	kovan->enqueueCommand(createWriteCommand(MOTOR_DRIVE_CODE_T, dcs));
 }

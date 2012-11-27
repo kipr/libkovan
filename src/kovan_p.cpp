@@ -40,14 +40,18 @@ bool Kovan::flush()
 	stateCommand.type = StateCommandType;
 	sendQueue.push_back(stateCommand);
 	
+#ifdef LIBKOVAN_DEBUG
 	std::cout << "Sending queue to kovan module." << std::endl;
-	
+#endif
+
 	if(!m_module->send(sendQueue)) return false;
 	// TODO: This needs to be removed eventually.
 	if(!m_module->recv(m_currentState)) return false;
-	
+
+#ifdef LIBKOVAN_DEBUG	
 	std::cout << "Queue successfully sent with State response." << std::endl;
 	m_module->displayState(m_currentState);
+#endif
 	
 	return true;
 }
