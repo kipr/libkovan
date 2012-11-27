@@ -114,22 +114,6 @@ bool KovanModule::recv(State& state)
 {
 	memset(&state, 0, sizeof(State));
 	
-	fd_set readfds, masterfds;
-	timeval t;
-	t.tv_sec = 1;
-	t.tv_usec = 0;
-	
-	FD_ZERO(&masterfds);
-	FD_SET(m_sock, &masterfds);
-	memcpy(&readfds, &masterfds, sizeof(fd_set));
-	
-	if(select(m_sock + 1, &readfds, NULL, NULL, &t)) {
-		perror("select");
-		return false;
-	}
-	
-	if(!FD_ISSET(m_sock, &readfds)) return false;
-	
 	if(recvfrom(m_sock, &state, sizeof(State), 0, NULL, NULL) != sizeof(State)) {
 		perror("recvfrom");
 		return false;
