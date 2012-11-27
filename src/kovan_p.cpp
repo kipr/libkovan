@@ -15,6 +15,19 @@ Kovan::~Kovan()
 void Kovan::enqueueCommand(const Command &command)
 {
 	m_queue.push_back(command);
+	
+	// FIXME: This logic needs to be improved eventually
+	if(m_autoFlush) flush();
+}
+
+void Kovan::setAutoFlush(const bool &autoFlush)
+{
+	m_autoFlush = autoFlush;
+}
+
+const bool &Kovan::autoFlush() const
+{
+	return m_autoFlush;
 }
 
 bool Kovan::flush()
@@ -52,7 +65,8 @@ Kovan *Kovan::instance()
 
 Kovan::Kovan()
 	// TODO: This needs to be exposed via API (remote libkovan connection)
-	: m_module(new KovanModule(inet_addr("127.0.0.1"), htons(5555)))
+	: m_module(new KovanModule(inet_addr("127.0.0.1"), htons(5555))),
+	m_autoFlush(true)
 {
 	// Create the socket descriptor for communication
 	if(!m_module->init()) {

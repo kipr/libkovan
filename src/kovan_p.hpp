@@ -16,6 +16,8 @@ namespace Private
 		
 		void enqueueCommand(const Command &command);
 		
+		void setAutoFlush(const bool &autoFlush);
+		const bool &autoFlush() const;
 		bool flush();
 		
 		State &currentState();
@@ -27,6 +29,7 @@ namespace Private
 		KovanModule *m_module;
 		State m_currentState;
 		
+		bool m_autoFlush;
 		std::vector<Command> m_queue;
 	};
 }

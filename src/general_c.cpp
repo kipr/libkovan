@@ -20,11 +20,10 @@
 
 #include "general.h"
 #include "kovan_p.hpp"
-#include "nyi.h"
 
 void set_auto_publish(int on)
 {
-	nyi("set_auto_publish");
+	Private::Kovan::instance()->setAutoFlush(on);
 }
 
 void publish()
