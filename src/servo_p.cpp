@@ -21,7 +21,6 @@
 #include "servo_p.hpp"
 #include "kovan_p.hpp"
 #include "kovan_regs_p.hpp"
-#include "private.hpp"
 #include <cstdio>
 
 static const unsigned short servoRegisters[4] = {

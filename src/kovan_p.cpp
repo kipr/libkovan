@@ -61,7 +61,7 @@ Kovan::Kovan()
 	}
 	
 	// Bind out client to an address
-	if(!m_module->bind(htonl(INADDR_ANY), htons(9999))) {
+	if(!m_module->bind(htonl(INADDR_ANY), htons(8374))) {
 		// TODO: Error Reporting?
 		return;
 	}

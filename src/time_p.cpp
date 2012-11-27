@@ -19,9 +19,18 @@
  **************************************************************************/
 
 #include "time_p.hpp"
+
 #include <unistd.h>
+#include <sys/time.h>
 
 void Private::Time::microsleep(const long& microsecs)
 {
 	usleep(microsecs);
+}
+
+unsigned long Private::Time::systime()
+{
+	timeval t;
+	gettimeofday(&t, 0);
+	return ((unsigned long)t.tv_sec) + t.tv_usec / 1000L;
 }

@@ -22,20 +22,19 @@
 #define _BUTTON_P_HPP_
 
 #include "button_ids.hpp"
-#include "private.hpp"
 
 namespace Private
 {
+	struct SharedButton;
+	
 	class Button
 	{
 	public:
-		
-		
-		void setText(::Button::Type::Id id, const char *text);
-		bool isTextDirty(::Button::Type::Id id) const;
-		const char *text(::Button::Type::Id id) const;
-		void setPressed(::Button::Type::Id id, bool pressed);
-		bool isPressed(::Button::Type::Id id) const;
+		void setText(const ::Button::Type::Id &id, const char *text);
+		bool isTextDirty(const ::Button::Type::Id &id) const;
+		const char *text(const ::Button::Type::Id &id) const;
+		void setPressed(const ::Button::Type::Id &id, bool pressed);
+		bool isPressed(const ::Button::Type::Id &id) const;
 		
 		void setExtraShown(const bool& shown);
 		bool isExtraShown() const;
@@ -43,7 +42,7 @@ namespace Private
 		
 		static Button *instance();
 	private:
-		Private::SharedButton *lookup(const ::Button::Type::Id& id, Private::SharedMemoryInterClient *shm) const;
+		SharedButton *selectButton(const ::Button::Type::Id &id) const;
 		
 		Button();
 		Button(const Button& rhs);

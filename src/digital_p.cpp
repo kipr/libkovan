@@ -64,12 +64,12 @@ bool Digital::setDirection(const unsigned char& port, const Digital::Direction& 
 	// FIXME: Untested
 	if(port < 8 || port > 15) return false;
 	Private::Kovan *kovan = Private::Kovan::instance();
-	unsigned short &pullups = kovan->currentState().t[DIG_OUT_ENABLE];
+	unsigned short &dir = kovan->currentState().t[DIG_OUT_ENABLE];
 	
-	if(direction == Digital::Out) pullups |= (1 << (port - 8));
-	else pullups &= ~(1 << (port - 8));
+	if(direction == Digital::Out) dir |= (1 << (port - 8));
+	else dir &= ~(1 << (port - 8));
 	
-	kovan->enqueueCommand(createWriteCommand(DIG_OUT_ENABLE, pullups));
+	kovan->enqueueCommand(createWriteCommand(DIG_OUT_ENABLE, dir));
 	wiggle();
 	return false;
 }

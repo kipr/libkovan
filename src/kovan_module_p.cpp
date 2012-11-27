@@ -6,6 +6,7 @@
 
 #include <cstdio>
 #include <cstdlib>
+#include <errno.h>
 
 #define TIMEDIV (1.0 / 13000000) // 13 MHz clock
 #define PWM_PERIOD_RAW 0.02F
@@ -37,6 +38,8 @@ bool KovanModule::init()
 	if(m_sock >= 0) return true;
 	
 	m_sock = socket(PF_INET, SOCK_DGRAM, IPPROTO_UDP);
+	bool on = true;
+	setsockopt(m_sock, SOL_SOCKET, SO_REUSEADDR, &on, sizeof(bool));
 	if(m_sock < 0) {
 		perror("socket");
 		return false;
@@ -55,7 +58,13 @@ bool KovanModule::bind(const uint64_t& address, const uint16_t& port)
 	sa.sin_addr.s_addr = address;
 	sa.sin_port = port;
 
-	if(::bind(m_sock, (sockaddr *)&sa, sizeof(sa)) < 0) {
+	while(::bind(m_sock, (sockaddr *)&sa, sizeof(sa)) < 0) {
+		// Keep trying to bind until we find an open port
+		if(errno == EADDRINUSE) {
+			++sa.sin_port;
+			continue;
+		}
+		
 		perror("bind");
 		return false;
 	}
@@ -104,10 +113,28 @@ bool KovanModule::send(const CommandVector& commands)
 bool KovanModule::recv(State& state)
 {
 	memset(&state, 0, sizeof(State));
+	
+	fd_set readfds, masterfds;
+	timeval t;
+	t.tv_sec = 1;
+	t.tv_usec = 0;
+	
+	FD_ZERO(&masterfds);
+	FD_SET(m_sock, &masterfds);
+	memcpy(&readfds, &masterfds, sizeof(fd_set));
+	
+	if(select(m_sock + 1, &readfds, NULL, NULL, &t)) {
+		perror("select");
+		return false;
+	}
+	
+	if(!FD_ISSET(m_sock, &readfds)) return false;
+	
 	if(recvfrom(m_sock, &state, sizeof(State), 0, NULL, NULL) != sizeof(State)) {
 		perror("recvfrom");
 		return false;
 	}
+	
 	return true;
 }
 

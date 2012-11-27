@@ -26,6 +26,7 @@ namespace Private
 	namespace Time
 	{
 		void microsleep(const long& microsecs);
+		unsigned long systime();
 	}
 }
 

@@ -39,6 +39,8 @@ extern "C" {
  */
 void msleep(long msecs);
 
+unsigned long systime();
+
 #ifdef __cplusplus
 }
 #endif

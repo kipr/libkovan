@@ -25,3 +25,8 @@ void msleep(long msecs)
 {
 	Private::Time::microsleep(msecs * 1000);
 }
+
+unsigned long systime()
+{
+	return Private::Time::systime();
+}
