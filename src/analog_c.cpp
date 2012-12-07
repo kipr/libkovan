@@ -18,7 +18,7 @@
  *  If not, see <http://www.gnu.org/licenses/>.                           *
  **************************************************************************/
 
-#include "analog.h"
+#include "kovan/analog.h"
 #include "analog_p.hpp"
 
 int analog10(int port)

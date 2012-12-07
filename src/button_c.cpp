@@ -18,8 +18,8 @@
  *  If not, see <http://www.gnu.org/licenses/>.                           *
  **************************************************************************/
 
-#include "button.h"
-#include "button.hpp"
+#include "kovan/button.h"
+#include "kovan/button.hpp"
 
 using namespace Button;
 

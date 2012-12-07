@@ -21,7 +21,7 @@
 #ifndef _MOTORS_P_HPP_
 #define _MOTORS_P_HPP_
 
-#include "port.hpp"
+#include "kovan/port.hpp"
 
 namespace Private
 {

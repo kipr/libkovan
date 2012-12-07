@@ -18,7 +18,7 @@
  *  If not, see <http://www.gnu.org/licenses/>.                           *
  **************************************************************************/
 
-#include "digital.h"
+#include "kovan/digital.h"
 #include "digital_p.hpp"
 
 int digital(int port)

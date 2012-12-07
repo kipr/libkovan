@@ -19,51 +19,42 @@
  **************************************************************************/
 
 /*!
- * \file servo.h
- * \brief Methods for working with Servos
+ * \file kovan.hpp
  * \author Braden McDorman
- * \copyright KISS Insitute for Practical Robotics
- * \defgroup servo Servos
+ * \copyright KISS Institute for Practical Robotics
  */
 
-#ifndef _SERVOS_H_
-#define _SERVOS_H_
-
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 /*!
- * \param servo The port of the servo
- * \return The servo's position as a 10 bit integer (which is an integer between 0 and 1024)
- * \note Thie method will return the last _sent_ position, not the currently _set_ position.
- * 
- * \note For example, imagine the following:
- * -# set_servo_position(0, 700);
- * -# ... Some time passes ...
- * -# set_servo_position(0, 300);
- * -# get_servo_position(0);
- * 
- * \note get_servo_position(int) will return 700 rather than 300,
- * because 300 hasn't been sent to the servo yet.
- * \ingroup servo
- */
-int get_servo_position(int servo);
-
-/*!
- * \param servo The port of the servo
- * \param position The new servo position, between 0 and 1023
+ * \mainpage libkovan Manual
  *
- * \note Even though the servos have a _theoretical_ range between 0 and 1024,
- * the _actual_ range is often less. Setting the servo to a position that it cannot physically
- * reach will cause the servo to audibly strain and will consume battery very quickly.
- * \ingroup servo
+ * \section Introduction
+ * libkovan is a set of classes and functions for use with the Kovan robot controller.
+ * libkovan was designed to be used with the C and C++ programming languages. This document
+ * is aimed towards the C++ programmer.
+ * 
+ * \section start Getting Started
+ * This manual is separated into "Modules". Modules are logical divisions between the features of libkovan.
+ * To begin browsing through modules, click on the "Modules" item on the left.
  */
-void set_servo_position(int servo, int position);
 
-#ifdef __cplusplus
-}
-#endif
+#ifndef _KOVAN_HPP_
+#define _KOVAN_HPP_
 
+#include "motors.hpp"
+#include "servo.hpp"
+#include "analog.hpp"
+#include "sensor_logic.hpp"
+#include "button.hpp"
+#include "camera.hpp"
+#include "ir.hpp"
+#include "wifi.hpp"
+#include "draw.hpp"
+#include "battery.hpp"
+#include "create.hpp"
+#include "util.hpp"
+#include "general.h"
+#include "console.hpp"
+#include "datalog.hpp"
+#include "config.hpp"
 
 #endif

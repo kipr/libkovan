@@ -18,8 +18,28 @@
  *  If not, see <http://www.gnu.org/licenses/>.                           *
  **************************************************************************/
 
-#include "servo.h"
+#include "kovan/servo.h"
 #include "servo_p.hpp"
+
+void enable_servo(int servo)
+{
+	set_servo_enabled(servo, 1);
+}
+
+void disable_servo(int servo)
+{
+	set_servo_enabled(servo, 0);
+}
+
+void set_servo_enabled(int servo, int enabled)
+{
+	Private::Servo::instance()->setEnabled(servo, enabled);
+}
+
+int get_servo_enabled(int servo)
+{
+	return Private::Servo::instance()->isEnabled(servo) ? 1 : 0;
+}
 
 int get_servo_position(int servo)
 {

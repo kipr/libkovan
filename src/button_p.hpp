@@ -21,7 +21,7 @@
 #ifndef _BUTTON_P_HPP_
 #define _BUTTON_P_HPP_
 
-#include "button_ids.hpp"
+#include "kovan/button_ids.hpp"
 
 namespace Private
 {

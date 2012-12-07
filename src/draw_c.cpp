@@ -18,8 +18,8 @@
  *  If not, see <http://www.gnu.org/licenses/>.                           *
  **************************************************************************/
 
-#include "draw.h"
-#include "draw.hpp"
+#include "kovan/draw.h"
+#include "kovan/draw.hpp"
 
 Draw *draw_instance()
 {

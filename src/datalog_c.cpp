@@ -1,5 +1,5 @@
-#include "datalog.h"
-#include "datalog.hpp"
+#include "kovan/datalog.h"
+#include "kovan/datalog.hpp"
 
 DataLog g_dataLog;
 

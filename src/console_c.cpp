@@ -18,8 +18,8 @@
  *  If not, see <http://www.gnu.org/licenses/>.                           *
  **************************************************************************/
 
-#include "console.h"
-#include "console.hpp"
+#include "kovan/console.h"
+#include "kovan/console.hpp"
 
 void console_clear()
 {

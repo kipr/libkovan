@@ -21,7 +21,7 @@
 #ifndef _SERVO_P_HPP_
 #define _SERVO_P_HPP_
 
-#include "port.hpp"
+#include "kovan/port.hpp"
 
 namespace Private
 {
@@ -29,6 +29,9 @@ namespace Private
 	{
 	public:
 		~Servo();
+		
+		void setEnabled(const port_t &port, const bool &enabled);
+		bool isEnabled(const port_t &port);
 		
 		bool setPosition(const port_t& port, const unsigned short& position);
 		unsigned short position(const port_t& port) const;

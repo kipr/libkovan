@@ -18,13 +18,12 @@
  *  If not, see <http://www.gnu.org/licenses/>.                           *
  **************************************************************************/
 
-#include "servo.hpp"
+#include "kovan/servo.hpp"
 #include "servo_p.hpp"
 
 Servo::Servo(port_t port)
 	: m_port(port)
 {
-	
 }
 
 void Servo::setPosition(Servo::ticks_t position)
@@ -35,4 +34,24 @@ void Servo::setPosition(Servo::ticks_t position)
 Servo::ticks_t Servo::position() const
 {
 	return Private::Servo::instance()->position(m_port);
+}
+
+void Servo::disable()
+{
+	setEnabled(false);
+}
+
+void Servo::enable()
+{
+	setEnabled(true);
+}
+
+void Servo::setEnabled(const bool &enabled)
+{
+	Private::Servo::instance()->setEnabled(m_port, enabled);
+}
+
+bool Servo::isEnabled() const
+{
+	return Private::Servo::instance()->isEnabled(m_port);
 }

@@ -18,7 +18,7 @@
  *  If not, see <http://www.gnu.org/licenses/>.                           *
  **************************************************************************/
 
-#include "util.h"
+#include "kovan/util.h"
 #include "time_p.hpp"
 
 void msleep(long msecs)

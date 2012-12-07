@@ -18,7 +18,7 @@
  *  If not, see <http://www.gnu.org/licenses/>.                           *
  **************************************************************************/
 
-#include "button.hpp"
+#include "kovan/button.hpp"
 #include "button_p.hpp"
 
 #include <cstring>

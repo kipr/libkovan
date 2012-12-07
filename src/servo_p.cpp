@@ -46,6 +46,24 @@ Private::Servo::~Servo()
 {
 }
 
+void Private::Servo::setEnabled(const port_t &port, const bool &enabled)
+{
+	if(port > 3) return;
+	unsigned short &allStop = Private::Kovan::instance()->currentState().t[MOTOR_ALL_STOP];
+	const unsigned short val = 1 << (port + 1);
+	if(enabled) allStop |= val;
+	else allStop &= ~val;
+	Private::Kovan::instance()->enqueueCommand(createWriteCommand(MOTOR_ALL_STOP, allStop));
+}
+
+bool Private::Servo::isEnabled(const port_t &port)
+{
+	if(port > 3) return false;
+	unsigned short &allStop = Private::Kovan::instance()->currentState().t[MOTOR_ALL_STOP];
+	const unsigned short val = 1 << (port + 1);
+	return allStop & val;
+}
+
 bool Private::Servo::setPosition(const port_t& port, const unsigned short& position)
 {
 	const unsigned short val = (unsigned int)(((SERVO_MAX - SERVO_MIN) * (position / 1024.0)) + SERVO_MIN) >> 8;

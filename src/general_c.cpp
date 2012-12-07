@@ -18,7 +18,7 @@
  *  If not, see <http://www.gnu.org/licenses/>.                           *
  **************************************************************************/
 
-#include "general.h"
+#include "kovan/general.h"
 #include "kovan_p.hpp"
 
 void set_auto_publish(int on)

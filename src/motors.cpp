@@ -18,7 +18,7 @@
  *  If not, see <http://www.gnu.org/licenses/>.                           *
  **************************************************************************/
 
-#include "motors.hpp"
+#include "kovan/motors.hpp"
 #include "motors_p.hpp"
 
 Motor::Motor(const port_t& port) throw()

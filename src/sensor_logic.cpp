@@ -18,7 +18,7 @@
  *  If not, see <http://www.gnu.org/licenses/>.                           *
  **************************************************************************/
 
-#include "sensor_logic.hpp"
+#include "kovan/sensor_logic.hpp"
 
 using namespace SensorLogic;
 

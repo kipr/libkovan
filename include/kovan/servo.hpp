@@ -70,6 +70,11 @@ public:
 	 * because 300 hasn't been sent to the servo yet.
 	 */
 	ticks_t position() const;
+	
+	void disable();
+	void enable();
+	void setEnabled(const bool &enabled);
+	bool isEnabled() const;
 private:
 	port_t m_port;
 };

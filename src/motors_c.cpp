@@ -18,7 +18,7 @@
  *  If not, see <http://www.gnu.org/licenses/>.                           *
  **************************************************************************/
 
-#include "motors.h"
+#include "kovan/motors.h"
 #include "motors_p.hpp"
 
 #include <iostream>

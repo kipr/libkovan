@@ -1,4 +1,4 @@
-#include <kovan.h>
+#include <kovan/kovan.h>
 
 int main(int argc, char* argv[])
 {

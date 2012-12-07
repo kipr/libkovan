@@ -54,6 +54,7 @@
 #define MOTOR_PWM_1 		34
 #define MOTOR_PWM_2 		35
 #define MOTOR_PWM_3 		36
+#define MOTOR_ALL_STOP 		40
 
 // Temporary Ready Only
 #define DIG_VALID_T 		19
@@ -63,6 +64,5 @@
 #define DIG_SAMPLE_T 		37
 #define DIG_UPDATE_T 		38
 #define MOTOR_DRIVE_CODE_T 	39
-#define MOTOR_ALL_STOP_T 	40
 
 #endif

@@ -18,8 +18,8 @@
  *  If not, see <http://www.gnu.org/licenses/>.                           *
  **************************************************************************/
 
-#include "battery.h"
-#include "battery.hpp"
+#include "kovan/battery.h"
+#include "kovan/battery.hpp"
 
 float power_level()
 {
