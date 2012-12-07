@@ -32,8 +32,8 @@ static const unsigned short servoRegisters[4] = {
 
 #define TIMEDIV (1.0 / 13000000) // 13 MHz clock
 #define PWM_PERIOD_RAW 0.02F
-#define SERVO_MAX_RAW 0.002f
-#define SERVO_MIN_RAW 0.001f
+#define SERVO_MAX_RAW 0.0025f
+#define SERVO_MIN_RAW 0.0005f
 #define PWM_PERIOD ((unsigned int)(PWM_PERIOD_RAW / TIMEDIV))
 #define SERVO_MAX (SERVO_MAX_RAW / TIMEDIV)
 #define SERVO_MIN (SERVO_MIN_RAW / TIMEDIV)
