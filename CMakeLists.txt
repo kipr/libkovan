@@ -24,9 +24,12 @@ ELSEIF(UNIX)
 	SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fPIC")
 ENDIF()
 
-INCLUDE_DIRECTORIES(/usr/local/Cellar/cairo/1.12.2/include)
 ADD_LIBRARY(kovan SHARED ${SOURCES})
 TARGET_LINK_LIBRARIES(kovan pthread opencv_core opencv_highgui opencv_imgproc)
+IF(KOVAN)
+	TARGET_LINK_LIBRARIES(kovan i2c_wrapper)
+	ADD_DEFINITIONS(-DKOVAN)
+ENDIF(KOVAN)
 
 install(FILES ${INCLUDES} DESTINATION include/kovan)
 INSTALL(TARGETS kovan LIBRARY DESTINATION lib)
