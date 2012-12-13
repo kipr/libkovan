@@ -63,7 +63,7 @@ Private::I2C::I2C()
 	m_fd = i2c_open_device(DEVICE_NAME, dummy, sizeof(dummy), 0);
 #endif
 	if(m_fd < 0) {
-		WARN("i2c_open_device failed. File handle is bad.");
+		PWARN("i2c_open_device failed. File handle is bad.");
 	}
 }
 
