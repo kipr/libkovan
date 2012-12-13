@@ -60,7 +60,7 @@ Private::I2C::I2C()
 {
 	char dummy[20];
 #ifdef KOVAN
-	m_fd = i2c_open_device(DEVICE_NAME, dummy, sizeof(dummy), 0);
+	m_fd = i2c_open_device(DEVICE_NAME, dummy, sizeof(dummy), 1);
 #endif
 	if(m_fd < 0) {
 		PWARN("i2c_open_device failed. File handle is bad.");
