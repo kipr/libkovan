@@ -9,6 +9,7 @@ public:
 	static short z();
 private:
 	static void setupI2C();
+	static bool s_setup;
 };
 
 #endif

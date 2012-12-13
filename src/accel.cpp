@@ -6,6 +6,8 @@
 
 #define READ_OFFSET 6
 
+bool Acceleration::s_setup = false;
+
 short Acceleration::x()
 {
 	setupI2C(); // TODO: This doesn't need to be called every time
@@ -29,5 +31,6 @@ short Acceleration::z()
 
 void Acceleration::setupI2C()
 {
-	Private::I2C::instance()->pickSlave("0x1d");
+	if(s_setup) return;
+	s_setup = Private::I2C::instance()->pickSlave("0x1d");
 }
