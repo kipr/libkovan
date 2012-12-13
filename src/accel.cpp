@@ -10,21 +10,21 @@ bool Acceleration::s_setup = false;
 
 short Acceleration::x()
 {
-	setupI2C(); // TODO: This doesn't need to be called every time
+	setupI2C();
 	if(!Private::I2C::instance()->write(DATA_ADDR, DATA_VAL, true)) return 0xFFFF;
 	return static_cast<char>(Private::I2C::instance()->read(READ_OFFSET + 0));
 }
 
 short Acceleration::y()
 {
-	setupI2C(); // TODO: This doesn't need to be called every time
+	setupI2C();
 	if(!Private::I2C::instance()->write(DATA_ADDR, DATA_VAL, true)) return 0xFFFF;
 	return static_cast<char>(Private::I2C::instance()->read(READ_OFFSET + 1));
 }
 
 short Acceleration::z()
 {
-	setupI2C(); // TODO: This doesn't need to be called every time
+	setupI2C();
 	if(!Private::I2C::instance()->write(DATA_ADDR, DATA_VAL, true)) return 0xFFFF;
 	return static_cast<char>(Private::I2C::instance()->read(READ_OFFSET + 2));
 }
