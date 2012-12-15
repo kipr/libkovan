@@ -3,6 +3,7 @@
 #include <iostream>
 #include <cstdio>
 #include <cstring>
+#include <unistd.h>
 
 void Category::append(const std::string& data)
 {
@@ -69,6 +70,7 @@ bool CsvWriter::write(const DataLog *dataLog)
 	}
 	
 	fclose(file);
+	sync();
 	return true;
 }
 
@@ -122,6 +124,7 @@ bool PlainWriter::write(const DataLog *dataLog)
 		fprintf(file, "\n");
 	}
 	fclose(file);
+	sync();
 	return true;
 }
 
