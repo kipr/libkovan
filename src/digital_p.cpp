@@ -33,7 +33,7 @@ Digital::~Digital()
 
 bool Digital::value(const unsigned char& port) const
 {
-	const unsigned char actualPort = port - 8;
+	const unsigned char actualPort = 7 - (port - 8);
 	if(actualPort > 7) return false;
 	std::cout << "Digitals: " << std::hex << Private::Kovan::instance()->currentState().t[DIG_IN] << std::endl;
 	return Private::Kovan::instance()->currentState().t[DIG_IN] & (1 << actualPort);
@@ -41,7 +41,7 @@ bool Digital::value(const unsigned char& port) const
 
 bool Digital::setValue(const unsigned char& port, const bool& value)
 {
-	const unsigned char actualPort = port - 8;
+	const unsigned char actualPort = 7 - (port - 8);
 	if(actualPort > 7) return false;
 	Private::Kovan *kovan = Private::Kovan::instance();
 	unsigned short &out = kovan->currentState().t[DIG_OUT];
@@ -56,7 +56,7 @@ bool Digital::setValue(const unsigned char& port, const bool& value)
 
 const Digital::Direction Digital::direction(const unsigned char& port) const
 {
-	const unsigned char actualPort = port - 8;
+	const unsigned char actualPort = 7 - (port - 8);
 	if(actualPort > 7) return Digital::Unknown;
 	Private::Kovan *kovan = Private::Kovan::instance();
 	return kovan->currentState().t[DIG_OUT_ENABLE] & (1 << actualPort) ? Digital::Out : Digital::In;
@@ -64,7 +64,7 @@ const Digital::Direction Digital::direction(const unsigned char& port) const
 
 bool Digital::setDirection(const unsigned char& port, const Digital::Direction& direction)
 {
-	const unsigned char actualPort = port - 8;
+	const unsigned char actualPort = 7 - (port - 8);
 	if(actualPort > 7) return false;
 	Private::Kovan *kovan = Private::Kovan::instance();
 	unsigned short &dir = kovan->currentState().t[DIG_OUT_ENABLE];
@@ -79,14 +79,14 @@ bool Digital::setDirection(const unsigned char& port, const Digital::Direction& 
 
 bool Digital::pullup(const unsigned char& port) const
 {
-	const unsigned char actualPort = port - 8;
+	const unsigned char actualPort = 7 - (port - 8);
 	if(actualPort > 15) return false;
 	return Private::Kovan::instance()->currentState().t[DIG_PULLUPS] & (1 << actualPort);
 }
 
 bool Digital::setPullup(const unsigned char& port, const bool& pullup)
 {
-	const unsigned char actualPort = port - 8;
+	const unsigned char actualPort = 7 - (port - 8);
 	if(actualPort > 7) return false;
 	Private::Kovan *kovan = Private::Kovan::instance();
 	unsigned short &pullups = kovan->currentState().t[DIG_PULLUPS];
