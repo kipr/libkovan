@@ -111,7 +111,7 @@ Digital *Digital::instance()
 	return &s_digital;
 }
 
-void Digital::wiggle()
+void Digital::wiggle() const
 {
 	// TODO: This will be removed in a future version
 	Private::Kovan *kovan = Private::Kovan::instance();
