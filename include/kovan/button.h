@@ -77,8 +77,7 @@ void set_z_button_text(const char *text);
 /*!
  * Gets the A button's state (pressed or not pressed.)
  * \return 1 for pressed, 0 for not pressed
- * \blocksuntil the button is no longer pressed.
- * \see a_button_pressed
+ * \see a_button_clicked
  * \ingroup button
  */
 int a_button();
@@ -86,8 +85,7 @@ int a_button();
 /*!
  * Gets the B button's state (pressed or not pressed.)
  * \return 1 for pressed, 0 for not pressed
- * \blocksuntil the button is no longer pressed.
- * \see b_button_pressed
+ * \see b_button_clicked
  * \ingroup button
  */
 int b_button();
@@ -95,8 +93,7 @@ int b_button();
 /*!
  * Gets the C button's state (pressed or not pressed.)
  * \return 1 for pressed, 0 for not pressed
- * \blocksuntil the button is no longer pressed.
- * \see c_button_pressed
+ * \see c_button_clicked
  * \ingroup button
  */
 int c_button();
@@ -104,9 +101,8 @@ int c_button();
 /*!
  * Gets the X button's state (pressed or not pressed.)
  * \return 1 for pressed, 0 for not pressed
- * \blocksuntil the button is no longer pressed.
  * \attention This button is an extra button. Use set_extra_buttons_visible(int) to show this button.
- * \see x_button_pressed
+ * \see x_button_clicked
  * \ingroup button
  */
 int x_button();
@@ -114,9 +110,8 @@ int x_button();
 /*!
  * Gets the Y button's state (pressed or not pressed.)
  * \return 1 for pressed, 0 for not pressed
- * \blocksuntil the button is no longer pressed.
  * \attention This button is an extra button. Use set_extra_buttons_visible(int) to show this button.
- * \see y_button_pressed
+ * \see y_button_clicked
  * \ingroup button
  */
 int y_button();
@@ -124,9 +119,8 @@ int y_button();
 /*!
  * Gets the Z button's state (pressed or not pressed.)
  * \return 1 for pressed, 0 for not pressed
- * \blocksuntil the button is no longer pressed.
  * \attention This button is an extra button. Use set_extra_buttons_visible(int) to show this button.
- * \see z_button_pressed
+ * \see z_button_clicked
  * \ingroup button
  */
 int z_button();
@@ -137,50 +131,55 @@ int z_button();
  * \see a_button
  * \ingroup button
  */
-int a_button_pressed();
+int a_button_clicked();
 
 /*!
  * Gets the B button's state (pressed or not pressed.)
+ * \blocksuntil the button is no longer pressed.
  * \return 1 for pressed, 0 for not pressed
  * \see b_button
  * \ingroup button
  */
-int b_button_pressed();
+int b_button_clicked();
 
 /*!
  * Gets the C button's state (pressed or not pressed.)
+ * \blocksuntil the button is no longer pressed.
  * \return 1 for pressed, 0 for not pressed
  * \see c_button
  * \ingroup button
  */
-int c_button_pressed();
+int c_button_clicked();
 
 /*!
  * Gets the X button's state (pressed or not pressed.)
+ * \blocksuntil the button is no longer pressed.
  * \return 1 for pressed, 0 for not pressed
  * \attention This button is an extra button. Use set_extra_buttons_visible(int) to show this button.
  * \see x_button
  * \ingroup button
  */
-int x_button_pressed();
+int x_button_clicked();
 
 /*!
  * Gets the Y button's state (pressed or not pressed.)
+ * \blocksuntil the button is no longer pressed.
  * \return 1 for pressed, 0 for not pressed
  * \attention This button is an extra button. Use set_extra_buttons_visible(int) to show this button.
  * \see y_button
  * \ingroup button
  */
-int y_button_pressed();
+int y_button_clicked();
 
 /*!
  * Gets the Z button's state (pressed or not pressed.)
+ * \blocksuntil the button is no longer pressed.
  * \return 1 for pressed, 0 for not pressed
  * \attention This button is an extra button. Use set_extra_buttons_visible(int) to show this button.
  * \see z_button
  * \ingroup button
  */
-int z_button_pressed();
+int z_button_clicked();
 
 int any_button();
 

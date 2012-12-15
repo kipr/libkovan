@@ -55,7 +55,7 @@ void set_z_button_text(const char *text)
 
 int button(AbstractButton *button)
 {
-	return button->isClicked() ? 1 : 0;
+	return button->isPressed() ? 1 : 0;
 }
 
 int a_button()
@@ -88,39 +88,39 @@ int z_button()
 	return button(&Z);
 }
 
-int button_pressed(AbstractButton *button)
+int button_clicked(AbstractButton *button)
 {
-	return button->isPressed() ? 1 : 0;
+	return button->isClicked() ? 1 : 0;
 }
 
-int a_button_pressed()
+int a_button_clicked()
 {
-	return button_pressed(&A);
+	return button_clicked(&A);
 }
 
-int b_button_pressed()
+int b_button_clicked()
 {
-	return button_pressed(&B);
+	return button_clicked(&B);
 }
 
-int c_button_pressed()
+int c_button_clicked()
 {
-	return button_pressed(&C);
+	return button_clicked(&C);
 }
 
-int x_button_pressed()
+int x_button_clicked()
 {
-	return button_pressed(&X);
+	return button_clicked(&X);
 }
 
-int y_button_pressed()
+int y_button_clicked()
 {
-	return button_pressed(&Y);
+	return button_clicked(&Y);
 }
 
-int z_button_pressed()
+int z_button_clicked()
 {
-	return button_pressed(&Z);
+	return button_clicked(&Z);
 }
 
 int any_button()
