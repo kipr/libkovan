@@ -22,6 +22,7 @@
 #include "motors_p.hpp"
 
 #include <iostream>
+#include <cstdlib>
 
 int get_motor_position_counter(int motor)
 {

@@ -20,6 +20,7 @@
 
 #include "kovan/motors.hpp"
 #include "motors_p.hpp"
+#include <cstdlib>
 
 Motor::Motor(const port_t& port) throw()
 	: m_port(port)
