@@ -23,6 +23,8 @@
 #include "kovan_regs_p.hpp"
 #include "nyi.h"
 
+#include <iostream>
+
 using namespace Private;
 
 Digital::~Digital()
@@ -31,20 +33,21 @@ Digital::~Digital()
 
 bool Digital::value(const unsigned char& port) const
 {
-	// FIXME: Untested
-	if(port < 8 || port > 15) return false;
-	return Private::Kovan::instance()->currentState().t[DIG_IN] & (1 << (port - 8));
+	const unsigned char actualPort = port - 8;
+	if(actualPort > 7) return false;
+	std::cout << "Digitals: " << std::hex << Private::Kovan::instance()->currentState().t[DIG_IN] << std::endl;
+	return Private::Kovan::instance()->currentState().t[DIG_IN] & (1 << actualPort);
 }
 
 bool Digital::setValue(const unsigned char& port, const bool& value)
 {
-	// FIXME: Untested
-	if(port < 8 || port > 15) return false;
+	const unsigned char actualPort = port - 8;
+	if(actualPort > 7) return false;
 	Private::Kovan *kovan = Private::Kovan::instance();
 	unsigned short &out = kovan->currentState().t[DIG_OUT];
 	
-	if(value) out |= (1 << (port - 8));
-	else out &= ~(1 << (port - 8));
+	if(value) out |= (1 << actualPort);
+	else out &= ~(1 << actualPort);
 	
 	kovan->enqueueCommand(createWriteCommand(DIG_OUT, out));
 	wiggle();
@@ -53,21 +56,21 @@ bool Digital::setValue(const unsigned char& port, const bool& value)
 
 const Digital::Direction Digital::direction(const unsigned char& port) const
 {
-	// FIXME: Untested
-	if(port < 8 || port > 15) return Digital::Unknown;
+	const unsigned char actualPort = port - 8;
+	if(actualPort > 7) return Digital::Unknown;
 	Private::Kovan *kovan = Private::Kovan::instance();
-	return kovan->currentState().t[DIG_OUT_ENABLE] & (1 << (port - 8)) ? Digital::Out : Digital::In;
+	return kovan->currentState().t[DIG_OUT_ENABLE] & (1 << actualPort) ? Digital::Out : Digital::In;
 }
 
 bool Digital::setDirection(const unsigned char& port, const Digital::Direction& direction)
 {
-	// FIXME: Untested
-	if(port < 8 || port > 15) return false;
+	const unsigned char actualPort = port - 8;
+	if(actualPort > 7) return false;
 	Private::Kovan *kovan = Private::Kovan::instance();
 	unsigned short &dir = kovan->currentState().t[DIG_OUT_ENABLE];
 	
-	if(direction == Digital::Out) dir |= (1 << (port - 8));
-	else dir &= ~(1 << (port - 8));
+	if(direction == Digital::Out) dir |= (1 << actualPort);
+	else dir &= ~(1 << actualPort);
 	
 	kovan->enqueueCommand(createWriteCommand(DIG_OUT_ENABLE, dir));
 	wiggle();
@@ -76,21 +79,20 @@ bool Digital::setDirection(const unsigned char& port, const Digital::Direction& 
 
 bool Digital::pullup(const unsigned char& port) const
 {
-	// FIXME: Untested
-	if(port < 8 || port > 15) return false;
-	Private::Kovan *kovan = Private::Kovan::instance();
-	return kovan->currentState().t[DIG_PULLUPS] & (1 << (port - 8));
+	const unsigned char actualPort = port - 8;
+	if(actualPort > 15) return false;
+	return Private::Kovan::instance()->currentState().t[DIG_PULLUPS] & (1 << actualPort);
 }
 
 bool Digital::setPullup(const unsigned char& port, const bool& pullup)
 {
-	// FIXME: Untested
-	if(port < 8 || port > 15) return false;
+	const unsigned char actualPort = port - 8;
+	if(actualPort > 7) return false;
 	Private::Kovan *kovan = Private::Kovan::instance();
 	unsigned short &pullups = kovan->currentState().t[DIG_PULLUPS];
 	
-	if(pullup) pullups |= (1 << (port - 8));
-	else pullups &= ~(1 << (port - 8));
+	if(pullup) pullups |= (1 << actualPort);
+	else pullups &= ~(1 << actualPort);
 	
 	kovan->enqueueCommand(createWriteCommand(DIG_PULLUPS, pullups));
 	wiggle();
