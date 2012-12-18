@@ -3,8 +3,12 @@
 #include <opencv2/imgproc/imgproc.hpp>
 #include <vector>
 #include <iostream>
+#include <sstream>
 
 #include <kovan/kovan.hpp>
+
+#include <time.h>
+#include <stdio.h>
 
 int main(int argc, char *argv[])
 {
@@ -32,6 +36,12 @@ int main(int argc, char *argv[])
 	
 	device.setConfig(config);
 
+	time_t start, end;
+	unsigned long counter = 0;
+	double sec;
+
+	time(&start);
+
 	cv::Mat image;
 	while(cv::waitKey(1) == -1) {
 		device.update();
@@ -43,6 +53,17 @@ int main(int argc, char *argv[])
 			cv::rectangle(image, cv::Rect(object.boundingBox().x(), object.boundingBox().y(),
 				object.boundingBox().width(), object.boundingBox().height()), cv::Scalar(0, 255, 0));
 		}
+		
+		time(&end);
+
+		++counter;
+		sec = difftime(end, start);      
+
+		double fps = counter / sec;
+		
+		char buffer[12];
+		sprintf(buffer, "%2.f", fps);
+		cv::putText(image, buffer, cv::Point(5, 15), cv::FONT_HERSHEY_PLAIN, 1, cv::Scalar(0, 255, 0));
 		
 		cv::imshow("Blobs", image);
 	}
