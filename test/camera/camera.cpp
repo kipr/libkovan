@@ -38,7 +38,6 @@ int main(int argc, char *argv[])
 	while(cv::waitKey(1) == -1) {
 		device.update();
 		device.videoCapture()->retrieve(image);
-		cv::cvtColor(image, just, CV_BGR2HSV);
 		const Camera::ObjectVector &objects = device.channels()[1]->objects();
 		Camera::ObjectVector::const_iterator it = objects.begin();
 		for(; it != objects.end(); ++it) {
