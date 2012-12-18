@@ -64,8 +64,6 @@ Camera::ObjectVector HsvChannelImpl::findObjects(const Config &config)
 			Rectangle<unsigned>(rect.x, rect.y, rect.width, rect.height), 1.0));
 	}
 	
-	std::cout << "Blah: " << std::endl;
-	
 	return ret;
 }
 
