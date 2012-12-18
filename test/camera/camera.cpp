@@ -32,8 +32,6 @@ int main(int argc, char *argv[])
 	
 	device.setConfig(config);
 
-	cv::setMouseCallback("Blobs", onMouse);
-
 	cv::Mat image;
 	while(cv::waitKey(1) == -1) {
 		device.update();
