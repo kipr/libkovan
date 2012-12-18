@@ -27,16 +27,18 @@
 #include <cstring>
 #include <string>
 #include <vector>
+#include <map>
 #include <iostream>
 
 // These keys are used in the config files loaded by
 // Camera::Device
 #define CAMERA_GROUP ("camera")
-#define CAMERA_NUM_CHANNELS_KEY ("numChannels")
+#define CAMERA_NUM_CHANNELS_KEY ("num_channels")
 #define CAMERA_CHANNEL_GROUP_PREFIX ("channel_")
 
 namespace cv
 {
+	class Mat;
 	class VideoCapture;
 }
 
@@ -51,6 +53,7 @@ namespace Camera
 			const Rectangle<unsigned> &boundingBox,
 			const double &confidence, const char *data = 0,
 			const size_t &dataLength = 0);
+		Object(const Object &rhs);
 		~Object();
 		
 		const Point2<unsigned> &centroid() const;
@@ -69,39 +72,68 @@ namespace Camera
 	
 	typedef std::vector<Object> ObjectVector;
 	
+	class ChannelImpl
+	{
+	public:
+		virtual ~ChannelImpl();
+		
+		virtual void update(const cv::Mat *image) = 0;
+		
+		// TODO: Config isn't really meant for this high-speed read.
+		// Maybe change later.
+		virtual ObjectVector objects(const Config &config) = 0;
+	};
+	
+	class ChannelImplManager
+	{
+	public:
+		virtual ~ChannelImplManager();
+		virtual void update(const cv::Mat *image) = 0;
+		virtual ChannelImpl *channelImpl(const std::string &name) = 0;
+	};
+	
+	class DefaultChannelImplManager : public ChannelImplManager
+	{
+	public:
+		DefaultChannelImplManager();
+		~DefaultChannelImplManager();
+		
+		virtual void update(const cv::Mat *image);
+		virtual ChannelImpl *channelImpl(const std::string &name);
+		
+	private:
+		std::map<std::string, ChannelImpl *> m_channelImpls;
+	};
+	
 	class Channel
 	{
 	public:
+		friend class Device;
+		
 		Channel(Device *device, const Config &config);
 		virtual ~Channel();
 		
 		const ObjectVector &objects() const;
 		
-		virtual void update() = 0;
 		Device *device() const;
-	protected:
-		void setObjects(const ObjectVector &objects);
 		
 	private:
+		void update();
+		
 		Device *m_device;
+		Config m_config;
 		ObjectVector m_objects;
+		ChannelImpl *m_impl;
 	};
 	
-	struct ChannelType
-	{
-		enum {
-			Unknown = 0,
-			Color,
-			Face,
-			QR
-		};
-	};
+	typedef std::vector<Channel *> ChannelPtrVector;
 	
 	class ConfigPath
 	{
 	public:
 		static void setBasePath(const std::string &path);
 		static std::string path(const std::string &name);
+		
 	private:
 		static std::string s_path;
 	};
@@ -114,18 +146,27 @@ namespace Camera
 		
 		bool open(const int &number = 0);
 		void close();
+		void update();
 		
-		void setConfig(const Config& config);
+		const ChannelPtrVector &channels() const;
+		
+		cv::VideoCapture *videoCapture() const;
+		
+		void setConfig(const Config &config);
 		const Config &config() const;
 		
-	protected:
-		virtual Channel *createChannel(const unsigned &type);
+		void setChannelImplManager(ChannelImplManager *channelImplManager);
+		ChannelImplManager *channelImplManager() const;
 		
 	private:
 		void updateConfig();
 		
 		Config m_config;
 		cv::VideoCapture *m_capture;
+		ChannelPtrVector m_channels;
+		ChannelImplManager *m_channelImplManager;
+		
+		timeval m_lastUpdate;
 	};
 }
 

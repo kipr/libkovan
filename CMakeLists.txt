@@ -25,7 +25,7 @@ ELSEIF(UNIX)
 ENDIF()
 
 ADD_LIBRARY(kovan SHARED ${SOURCES})
-TARGET_LINK_LIBRARIES(kovan pthread opencv_core opencv_highgui opencv_imgproc)
+TARGET_LINK_LIBRARIES(kovan pthread opencv_core opencv_highgui opencv_imgproc zbar)
 IF(KOVAN)
 	TARGET_LINK_LIBRARIES(kovan i2c_wrapper)
 	ADD_DEFINITIONS(-DKOVAN)

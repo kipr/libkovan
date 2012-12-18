@@ -1,29 +1,37 @@
-#ifndef _CHANNEL_COLOR_P_HPP_
-#define _CHANNEL_COLOR_P_HPP_
+#ifndef _CHANNEL_P_HPP_
+#define _CHANNEL_P_HPP_
 
 #include "kovan/camera.hpp"
 #include <opencv2/core/core.hpp>
+#include <zbar.h>
+#include <map>
 
 namespace Private
 {
 	namespace Camera
 	{
-		class UnknownChannel : public ::Camera::Channel
+		class HsvChannelImpl : public ::Camera::ChannelImpl
 		{
 		public:
-			UnknownChannel(::Camera::Device *device, const Config &config);
-			virtual void update();
-		};
-		
-		class ColorChannel : public ::Camera::Channel
-		{
-		public:
-			ColorChannel(::Camera::Device *device, const Config &config);
-			virtual void update();
+			HsvChannelImpl();
+			virtual void update(const cv::Mat *image);
+			virtual ::Camera::ObjectVector objects(const Config &config);
 			
 		private:
-			cv::Scalar m_bottom;
-			cv::Scalar m_top;
+			cv::Mat m_image;
+		};
+		
+		class BarcodeChannelImpl : public ::Camera::ChannelImpl
+		{
+		public:
+			BarcodeChannelImpl();
+			virtual void update(const cv::Mat *image);
+			virtual ::Camera::ObjectVector objects(const Config &config);
+
+		private:
+			cv::Mat m_gray;
+			zbar::Image m_image;
+			zbar::ImageScanner m_scanner;
 		};
 	}
 }

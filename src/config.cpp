@@ -50,12 +50,14 @@ bool Config::save(const std::string &path)
 void Config::beginGroup(const std::string &group)
 {
 	m_groups.push_back(safeKey(group));
+	m_cachedGroup = "";
 }
 
 void Config::endGroup()
 {
 	if(m_groups.empty()) return;
 	m_groups.pop_back();
+	m_cachedGroup = "";
 }
 
 void Config::clearGroup()
@@ -141,8 +143,8 @@ std::string Config::safeKey(std::string key) const
 
 std::string Config::group() const
 {
+	if(!m_cachedGroup.empty()) return m_cachedGroup;
 	std::vector<std::string>::const_iterator it = m_groups.begin();
-	std::string ret = "";
-	for(; it != m_groups.end(); ++it) ret += (*it) + SEP;
-	return ret;
+	for(; it != m_groups.end(); ++it) m_cachedGroup += (*it) + SEP;
+	return m_cachedGroup;
 }

@@ -37,6 +37,7 @@ private:
 	
 	std::map<std::string, std::string> m_config;
 	std::vector<std::string> m_groups;
+	mutable std::string m_cachedGroup;
 };
 
 #endif

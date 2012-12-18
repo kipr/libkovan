@@ -24,6 +24,19 @@ Camera::Object::Object(const Point2<unsigned> &centroid,
 	memcpy(m_data, data, m_dataLength);
 }
 
+Camera::Object::Object(const Object &rhs)
+	: m_centroid(rhs.m_centroid),
+	m_boundingBox(rhs.m_boundingBox),
+	m_confidence(rhs.m_confidence),
+	m_data(0),
+	m_dataLength(rhs.m_dataLength)
+{
+	if(!rhs.m_data) return;
+	
+	m_data = new char[m_dataLength];
+	memcpy(m_data, rhs.m_data, m_dataLength);
+}
+
 Camera::Object::~Object()
 {
 	delete[] m_data;
@@ -54,17 +67,60 @@ const size_t &Camera::Object::dataLength() const
 	return m_dataLength;
 }
 
+ChannelImpl::~ChannelImpl()
+{
+}
+
+ChannelImplManager::~ChannelImplManager()
+{
+}
+
+DefaultChannelImplManager::DefaultChannelImplManager()
+{
+	m_channelImpls["hsv"] = new Private::Camera::HsvChannelImpl();
+	m_channelImpls["barcode"] = new Private::Camera::BarcodeChannelImpl();
+}
+
+DefaultChannelImplManager::~DefaultChannelImplManager()
+{
+	std::map<std::string, ChannelImpl *>::iterator it = m_channelImpls.begin();
+	for(; it != m_channelImpls.end(); ++it) delete it->second;
+}
+
+void DefaultChannelImplManager::update(const cv::Mat *image)
+{
+	std::map<std::string, ChannelImpl *>::iterator it = m_channelImpls.begin();
+	for(; it != m_channelImpls.end(); ++it) it->second->update(image);
+}
+
+ChannelImpl *DefaultChannelImplManager::channelImpl(const std::string &name)
+{
+	std::map<std::string, ChannelImpl *>::iterator it = m_channelImpls.find(name);
+	return (it == m_channelImpls.end()) ? 0 : it->second;
+}
+
 // Channel //
 
 Camera::Channel::Channel(Device *device, const Config &config)
-	: m_device(device)
+	: m_device(device),
+	m_config(config),
+	m_impl(0)
 {
+	const std::string type = config.stringValue("type");
+	if(type.empty()) {
+		WARN("No type specified in config.");
+		return;
+	}
 	
+	m_impl = device->channelImplManager()->channelImpl(type);
+	if(!m_impl) {
+		WARN("Type %s not found", type.c_str());
+		return;
+	}
 }
 
 Camera::Channel::~Channel()
 {
-	
 }
 
 const ObjectVector &Camera::Channel::objects() const
@@ -72,14 +128,16 @@ const ObjectVector &Camera::Channel::objects() const
 	return m_objects;
 }
 
+void Camera::Channel::update()
+{
+	if(!m_impl) return;
+	m_objects.clear();
+	m_objects = m_impl->objects(m_config);
+}
+
 Device *Camera::Channel::device() const
 {
 	return m_device;
-}
-
-void Camera::Channel::setObjects(const ObjectVector &objects)
-{
-	m_objects = objects;
 }
 
 // ConfigPath //
@@ -101,19 +159,22 @@ std::string Camera::ConfigPath::path(const std::string &name)
 // Device //
 
 Camera::Device::Device()
-	: m_capture(new cv::VideoCapture)
+	: m_capture(new cv::VideoCapture),
+	m_channelImplManager(new DefaultChannelImplManager)
 {
 }
 
 Camera::Device::~Device()
 {
+	ChannelPtrVector::iterator it = m_channels.begin();
+	for(; it != m_channels.end(); ++it) delete *it;
 	delete m_capture;
 }
 
 bool Camera::Device::open(const int &number)
 {
 	if(m_capture->isOpened()) return true;
-	return false;
+	return m_capture->open(number);
 }
 
 void Camera::Device::close()
@@ -122,7 +183,34 @@ void Camera::Device::close()
 	m_capture->release();
 }
 
-void Camera::Device::setConfig(const Config& config)
+void Camera::Device::update()
+{
+	// timeval current;
+	// gettimeofday(&current, NULL);
+	// if(current.tv_sec > m_lastUp)
+	// m_lastUpdate;
+	
+	m_capture->grab();
+	cv::Mat image;
+	m_capture->retrieve(image);
+	
+	m_channelImplManager->update(&image);
+	
+	ChannelPtrVector::iterator it = m_channels.begin();
+	for(; it != m_channels.end(); ++it) (*it)->update();
+}
+
+const ChannelPtrVector &Camera::Device::channels() const
+{
+	return m_channels;
+}
+
+cv::VideoCapture *Camera::Device::videoCapture() const
+{
+	return m_capture;
+}
+
+void Camera::Device::setConfig(const Config &config)
 {
 	m_config = config;
 	updateConfig();
@@ -133,8 +221,22 @@ const Config &Camera::Device::config() const
 	return m_config;
 }
 
+void Camera::Device::setChannelImplManager(ChannelImplManager *channelImplManager)
+{
+	delete m_channelImplManager;
+	m_channelImplManager = channelImplManager;
+}
+
+ChannelImplManager *Camera::Device::channelImplManager() const
+{
+	return m_channelImplManager;
+}
+
 void Camera::Device::updateConfig()
 {
+	ChannelPtrVector::iterator it = m_channels.begin();
+	for(; it != m_channels.end(); ++it) delete *it;
+	
 	m_config.clearGroup();
 	m_config.beginGroup(CAMERA_GROUP);
 	int numChannels = m_config.intValue(CAMERA_NUM_CHANNELS_KEY);
@@ -144,24 +246,8 @@ void Camera::Device::updateConfig()
 		stream << CAMERA_CHANNEL_GROUP_PREFIX;
 		stream << i;
 		m_config.beginGroup(stream.str());
-		delete createChannel(m_config.intValue("type"));
+		m_channels.push_back(new Channel(this, m_config));
 		m_config.endGroup();
 	}
 	m_config.endGroup();
-}
-
-Channel *Camera::Device::createChannel(const unsigned &type)
-{
-	switch(type) {
-		case ChannelType::Unknown: return new Private::Camera::UnknownChannel(this, m_config);
-		case ChannelType::Color: return new Private::Camera::ColorChannel(this, m_config);;
-		case ChannelType::Face: return 0;
-		case ChannelType::QR: return 0;
-	}
-	
-	char warn[128];
-	sprintf(warn, "Undefined channel type %u", type);
-	WARN(warn);
-	
-	return 0;
 }
