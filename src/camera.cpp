@@ -202,6 +202,16 @@ bool Camera::Device::open(const int &number)
 	return m_capture->open(number);
 }
 
+void Camera::Device::setWidth(const unsigned &width)
+{
+	m_capture->set(CV_CAP_PROP_FRAME_WIDTH, width);
+}
+
+void Camera::Device::setHeight(const unsigned &height)
+{
+	m_capture->set(CV_CAP_PROP_FRAME_HEIGHT, height);
+}
+
 void Camera::Device::close()
 {
 	if(!m_capture->isOpened()) return;

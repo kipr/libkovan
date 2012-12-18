@@ -155,6 +155,9 @@ namespace Camera
 		void close();
 		void update();
 		
+		void setWidth(const unsigned &width);
+		void setHeight(const unsigned &height);
+		
 		const ChannelPtrVector &channels() const;
 		
 		cv::VideoCapture *videoCapture() const;

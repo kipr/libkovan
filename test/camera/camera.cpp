@@ -21,6 +21,8 @@ void onMouse(int event, int x, int y, int, void*)
 int main(int argc, char *argv[])
 {
 	Camera::Device device;
+	device.setWidth(320);
+	device.setHeight(240);
 	if(!device.open(0)) {
 		return 1;
 	}
