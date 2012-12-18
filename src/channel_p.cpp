@@ -26,7 +26,7 @@ Camera::ObjectVector HsvChannelImpl::objects(const Config &config)
 	cv::Vec3b bottom(config.intValue("bh"),
 		config.intValue("bs"), config.intValue("bv"));
 	
-	cv::Mat fixed;
+	cv::Mat fixed = m_image;
 	if(bottom[0] > top[0]) {
 		// Modulo 180
 		// TODO: Optimize for ARM?
@@ -42,7 +42,7 @@ Camera::ObjectVector HsvChannelImpl::objects(const Config &config)
 		cv::Vec3b adj(adjH, 0, 0);
 		bottom = cv::Vec3b(0, bottom[1], bottom[2]);
 		cv::add(adj, top, top);
-	} else fixed = m_image;
+	}
 	
 	cv::Mat only;
 	cv::inRange(fixed, bottom, top, only);
