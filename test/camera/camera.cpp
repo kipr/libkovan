@@ -6,26 +6,14 @@
 
 #include <kovan/kovan.hpp>
 
-cv::Mat just;
-
-void onMouse(int event, int x, int y, int, void*)
-{
-	if(event != CV_EVENT_LBUTTONDOWN) return;
-	std::cout << just.cols << std::endl;
-	std::cout << y << std::endl;
-	std::cout << x << std::endl;
-	cv::Vec3b s = just.at<cv::Vec3b>(y, x);
-	std::cout << (int)s[0] << ", " << (int)s[1] << ", " << (int)s[2] << std::endl;
-}
-
 int main(int argc, char *argv[])
 {
 	Camera::Device device;
-	device.setWidth(320);
-	device.setHeight(240);
 	if(!device.open(0)) {
 		return 1;
 	}
+	device.setWidth(320);
+	device.setHeight(240);
 	cv::namedWindow("Blobs");
 
 	Config config;
