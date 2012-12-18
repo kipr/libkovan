@@ -28,19 +28,18 @@ Camera::ObjectVector HsvChannelImpl::objects(const Config &config)
 	
 	cv::Mat fixed;
 	if(bottom[0] > top[0]) {
-		cv::Vec3b adj(180 - bottom[0], 0, 0);
-		// Offset by bottom overflow
-		cv::add(adj, m_image, fixed);
-		
 		// Modulo 180
 		// TODO: Optimize for ARM?
+		const uchar adjH = 180 - bottom[0];
 		for(int i = 0; i < fixed.rows; ++i) {
 			uchar *row = fixed.ptr<uchar>(i);
 			for(int j = 0; j < fixed.cols; ++j) {
+				row[j * fixed.elemSize()] += adjH;
 				row[j * fixed.elemSize()] %= 180;
 			}
 		}
 		
+		cv::Vec3b adj(adjH, 0, 0);
 		bottom = cv::Vec3b(0, bottom[1], bottom[2]);
 		cv::add(adj, top, top);
 	} else fixed = m_image;
