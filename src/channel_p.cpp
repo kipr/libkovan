@@ -37,9 +37,9 @@ Camera::ObjectVector HsvChannelImpl::objects(const Config &config)
 		
 		// Modulo 180
 		// TODO: Optimize for ARM?
-		for(unsigned i = 0; i < fixed.rows; ++i) {
+		for(int i = 0; i < fixed.rows; ++i) {
 			uchar *row = fixed.ptr<uchar>(i);
-			for(unsigned j = 0; j < fixed.cols; ++j) {
+			for(int j = 0; j < fixed.cols; ++j) {
 				row[j * fixed.elemSize()] %= 180;
 			}
 		}
@@ -57,12 +57,12 @@ Camera::ObjectVector HsvChannelImpl::objects(const Config &config)
 	cv::findContours(only, c, CV_RETR_EXTERNAL, CV_CHAIN_APPROX_TC89_L1);
 	
 	std::vector<cv::Moments> m(c.size());
-	for(int i = 0; i < c.size(); ++i) {
+	for(std::vector<cv::Moments>::size_type i = 0; i < c.size(); ++i) {
 		m[i] = moments(c[i], false);
 	}
 	
 	::Camera::ObjectVector ret;
-	for(int i = 0; i < c.size(); ++i) {
+	for(::Camera::ObjectVector::size_type i = 0; i < c.size(); ++i) {
 		const cv::Rect rect = cv::boundingRect(c[i]);
 		if(rect.width < 3 && rect.height < 3) continue;
 		
@@ -104,13 +104,13 @@ void BarcodeChannelImpl::update(const cv::Mat *image)
 		zbar::Symbol symbol = *it;
 		
 		// Determine bounding box and centroid
-		unsigned left = m_image.get_width();
-		unsigned right = 0;
-		unsigned bottom = m_image.get_height();
-		unsigned top = 0;
+		int left = m_image.get_width();
+		int right = 0;
+		int bottom = m_image.get_height();
+		int top = 0;
 		
 		zbar::Symbol::Symbol::PointIterator pit = symbol.point_begin();
-		for(unsigned i = 0; i < symbol.get_location_size(); ++i) {
+		for(int i = 0; i < symbol.get_location_size(); ++i) {
 			const int &x = symbol.get_location_x(i);
 			if(x > right) right = x;
 			if(x < left) left = x;

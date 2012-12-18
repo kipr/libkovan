@@ -29,6 +29,7 @@
 #include <vector>
 #include <map>
 #include <iostream>
+#include <sys/time.h>
 
 // These keys are used in the config files loaded by
 // Camera::Device
