@@ -10,14 +10,11 @@ using namespace Private::Camera;
 
 HsvChannelImpl::HsvChannelImpl()
 {
-	cv::namedWindow("Hsv Channel");
-	cv::namedWindow("Sub");
 }
 
 void HsvChannelImpl::update(const cv::Mat *image)
 {
 	cv::cvtColor(*image, m_image, CV_BGR2HSV);
-	cv::imshow("Hsv Channel", m_image);
 }
 
 Camera::ObjectVector HsvChannelImpl::objects(const Config &config)
@@ -51,8 +48,6 @@ Camera::ObjectVector HsvChannelImpl::objects(const Config &config)
 	cv::Mat only;
 	cv::inRange(fixed, bottom, top, only);
 	
-	cv::imshow("Sub", only);
-	
 	std::vector<std::vector<cv::Point> > c;
 	cv::findContours(only, c, CV_RETR_EXTERNAL, CV_CHAIN_APPROX_TC89_L1);
 	
@@ -76,16 +71,13 @@ Camera::ObjectVector HsvChannelImpl::objects(const Config &config)
 BarcodeChannelImpl::BarcodeChannelImpl()
 {
 	m_image.set_format("Y800");
-	
 	m_scanner.set_config(zbar::ZBAR_NONE, zbar::ZBAR_CFG_ENABLE, 0);
 	m_scanner.set_config(zbar::ZBAR_QRCODE, zbar::ZBAR_CFG_ENABLE, 1);
-	cv::namedWindow("Gray");
 }
 
 void BarcodeChannelImpl::update(const cv::Mat *image)
 {
 	cv::cvtColor(*image, m_gray, CV_BGR2GRAY);
-	cv::imshow("Gray", m_gray);
 	m_image.set_data(m_gray.data, m_gray.cols * m_gray.rows);
 	m_image.set_size(m_gray.cols, m_gray.rows);
 }
@@ -94,10 +86,8 @@ void BarcodeChannelImpl::update(const cv::Mat *image)
 {
 	double coherence = 15.0;
 	if(config.containsKey("coherence")) coherence = config.doubleValue("coherence");
-	std::cout << "ret = " << m_scanner.scan(m_image) << std::endl;
 	
 	zbar::SymbolSet symbols = m_scanner.get_results();
-	std::cout << "Number of symbols: " << symbols.get_size() << std::endl;
 	::Camera::ObjectVector ret;
 	zbar::SymbolIterator it = symbols.symbol_begin();
 	for(; it != symbols.symbol_end(); ++it) {
