@@ -67,8 +67,28 @@ const size_t &Camera::Object::dataLength() const
 	return m_dataLength;
 }
 
+ChannelImpl::ChannelImpl()
+	: m_dirty(true)
+{
+}
+
 ChannelImpl::~ChannelImpl()
 {
+}
+
+void ChannelImpl::setImage(const cv::Mat &image)
+{
+	m_image = image;
+	m_dirty = true;
+}
+
+ObjectVector ChannelImpl::objects(const Config &config)
+{
+	if(m_dirty) {
+		update(m_image);
+		m_dirty = false;
+	}
+	return findObjects(config);
 }
 
 ChannelImplManager::~ChannelImplManager()
@@ -87,10 +107,10 @@ DefaultChannelImplManager::~DefaultChannelImplManager()
 	for(; it != m_channelImpls.end(); ++it) delete it->second;
 }
 
-void DefaultChannelImplManager::update(const cv::Mat *image)
+void DefaultChannelImplManager::setImage(const cv::Mat &image)
 {
 	std::map<std::string, ChannelImpl *>::iterator it = m_channelImpls.begin();
-	for(; it != m_channelImpls.end(); ++it) it->second->update(image);
+	for(; it != m_channelImpls.end(); ++it) it->second->setImage(image);
 }
 
 ChannelImpl *DefaultChannelImplManager::channelImpl(const std::string &name)
@@ -104,7 +124,8 @@ ChannelImpl *DefaultChannelImplManager::channelImpl(const std::string &name)
 Camera::Channel::Channel(Device *device, const Config &config)
 	: m_device(device),
 	m_config(config),
-	m_impl(0)
+	m_impl(0),
+	m_valid(false)
 {
 	const std::string type = config.stringValue("type");
 	if(type.empty()) {
@@ -123,16 +144,20 @@ Camera::Channel::~Channel()
 {
 }
 
-const ObjectVector &Camera::Channel::objects() const
+void Camera::Channel::invalidate()
 {
-	return m_objects;
+	m_valid = false;
 }
 
-void Camera::Channel::update()
+const ObjectVector &Camera::Channel::objects() const
 {
-	if(!m_impl) return;
-	m_objects.clear();
-	m_objects = m_impl->objects(m_config);
+	if(!m_impl) return m_objects;
+	if(!m_valid) {
+		m_objects.clear();
+		m_objects = m_impl->objects(m_config);
+		m_valid = true;
+	}
+	return m_objects;
 }
 
 Device *Camera::Channel::device() const
@@ -185,19 +210,16 @@ void Camera::Device::close()
 
 void Camera::Device::update()
 {
-	// timeval current;
-	// gettimeofday(&current, NULL);
-	// if(current.tv_sec > m_lastUp)
-	// m_lastUpdate;
-	
+	// Get new image
 	m_capture->grab();
-	cv::Mat image;
-	m_capture->retrieve(image);
+	m_capture->retrieve(m_image);
 	
-	m_channelImplManager->update(&image);
+	// Dirty all channel impls
+	m_channelImplManager->setImage(m_image);
 	
+	// Invalidate all channels
 	ChannelPtrVector::iterator it = m_channels.begin();
-	for(; it != m_channels.end(); ++it) (*it)->update();
+	for(; it != m_channels.end(); ++it) (*it)->invalidate();
 }
 
 const ChannelPtrVector &Camera::Device::channels() const

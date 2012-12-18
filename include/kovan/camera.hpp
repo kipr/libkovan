@@ -31,6 +31,8 @@
 #include <iostream>
 #include <sys/time.h>
 
+#include <opencv2/core/core.hpp>
+
 // These keys are used in the config files loaded by
 // Camera::Device
 #define CAMERA_GROUP ("camera")
@@ -39,7 +41,6 @@
 
 namespace cv
 {
-	class Mat;
 	class VideoCapture;
 }
 
@@ -76,20 +77,26 @@ namespace Camera
 	class ChannelImpl
 	{
 	public:
+		ChannelImpl();
 		virtual ~ChannelImpl();
 		
-		virtual void update(const cv::Mat *image) = 0;
+		void setImage(const cv::Mat &image);
+		ObjectVector objects(const Config &config);
 		
-		// TODO: Config isn't really meant for this high-speed read.
-		// Maybe change later.
-		virtual ObjectVector objects(const Config &config) = 0;
+	protected:
+		virtual void update(const cv::Mat &image) = 0;
+		virtual ObjectVector findObjects(const Config &config) = 0;
+		
+	private:
+		bool m_dirty;
+		cv::Mat m_image;
 	};
 	
 	class ChannelImplManager
 	{
 	public:
 		virtual ~ChannelImplManager();
-		virtual void update(const cv::Mat *image) = 0;
+		virtual void setImage(const cv::Mat &image) = 0;
 		virtual ChannelImpl *channelImpl(const std::string &name) = 0;
 	};
 	
@@ -99,7 +106,7 @@ namespace Camera
 		DefaultChannelImplManager();
 		~DefaultChannelImplManager();
 		
-		virtual void update(const cv::Mat *image);
+		virtual void setImage(const cv::Mat &image);
 		virtual ChannelImpl *channelImpl(const std::string &name);
 		
 	private:
@@ -109,22 +116,21 @@ namespace Camera
 	class Channel
 	{
 	public:
-		friend class Device;
-		
 		Channel(Device *device, const Config &config);
-		virtual ~Channel();
+		~Channel();
+		
+		void invalidate();
 		
 		const ObjectVector &objects() const;
 		
 		Device *device() const;
 		
 	private:
-		void update();
-		
 		Device *m_device;
 		Config m_config;
-		ObjectVector m_objects;
+		mutable ObjectVector m_objects;
 		ChannelImpl *m_impl;
+		mutable bool m_valid;
 	};
 	
 	typedef std::vector<Channel *> ChannelPtrVector;
@@ -166,7 +172,7 @@ namespace Camera
 		cv::VideoCapture *m_capture;
 		ChannelPtrVector m_channels;
 		ChannelImplManager *m_channelImplManager;
-		
+		cv::Mat m_image;
 		timeval m_lastUpdate;
 	};
 }

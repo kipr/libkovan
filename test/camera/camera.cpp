@@ -21,7 +21,9 @@ void onMouse(int event, int x, int y, int, void*)
 int main(int argc, char *argv[])
 {
 	Camera::Device device;
-	device.open(1);
+	if(!device.open(0)) {
+		return 1;
+	}
 	cv::namedWindow("Blobs");
 
 	Config config;

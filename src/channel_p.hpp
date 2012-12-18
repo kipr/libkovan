@@ -14,8 +14,8 @@ namespace Private
 		{
 		public:
 			HsvChannelImpl();
-			virtual void update(const cv::Mat *image);
-			virtual ::Camera::ObjectVector objects(const Config &config);
+			virtual void update(const cv::Mat &image);
+			virtual ::Camera::ObjectVector findObjects(const Config &config);
 			
 		private:
 			cv::Mat m_image;
@@ -25,8 +25,8 @@ namespace Private
 		{
 		public:
 			BarcodeChannelImpl();
-			virtual void update(const cv::Mat *image);
-			virtual ::Camera::ObjectVector objects(const Config &config);
+			virtual void update(const cv::Mat &image);
+			virtual ::Camera::ObjectVector findObjects(const Config &config);
 
 		private:
 			cv::Mat m_gray;
