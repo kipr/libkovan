@@ -12,7 +12,7 @@ public:
 	Config(const std::map<std::string, std::string> &config);
 	
 	static Config *load(const std::string &path);
-	bool save(const std::string &path);
+	bool save(const std::string &path) const;
 	
 	void beginGroup(const std::string &group);
 	void endGroup();

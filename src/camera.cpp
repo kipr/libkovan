@@ -2,6 +2,7 @@
 #include "channel_p.hpp"
 #include "warn.hpp"
 
+#include <fstream>
 #include <opencv2/highgui/highgui.hpp>
 
 using namespace Camera;
@@ -193,12 +194,42 @@ std::string Camera::ConfigPath::path(const std::string &name)
 	return s_path + name + "." + extension();
 }
 
+std::string Camera::ConfigPath::defaultPath()
+{
+	return s_path + "default";
+}
+
+std::string Camera::ConfigPath::defaultConfigPath()
+{
+	std::ifstream file;
+	file.open(defaultPath().c_str());
+	if(!file.is_open()) return std::string();
+	std::string ret;
+	std::getline(file, ret);
+	file.close();
+	return ret;
+}
+
+void Camera::ConfigPath::setDefaultConfigPath(const std::string &name)
+{
+	std::ofstream file;
+	file.open(defaultPath().c_str());
+	if(!file.is_open()) return;
+	const std::string path = ConfigPath::path(name);
+	file.write(path.c_str(), path.size());
+	file.close();	
+}
+
 // Device //
 
 Camera::Device::Device()
 	: m_capture(new cv::VideoCapture),
 	m_channelImplManager(new DefaultChannelImplManager)
 {
+	Config *config = Config::load(Camera::ConfigPath::defaultConfigPath());
+	if(!config) return;
+	setConfig(*config);
+	delete config;
 }
 
 Camera::Device::~Device()

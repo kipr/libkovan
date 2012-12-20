@@ -35,7 +35,7 @@ Config *Config::load(const std::string &path)
 	return new Config(ret);
 }
 
-bool Config::save(const std::string &path)
+bool Config::save(const std::string &path) const
 {
 	std::ofstream file(path.c_str());
 	if(!file.is_open()) return false;

@@ -151,6 +151,9 @@ namespace Camera
 		
 		static void setBasePath(const std::string &path);
 		static std::string path(const std::string &name = std::string());
+		static std::string defaultPath();
+		static std::string defaultConfigPath();
+		static void setDefaultConfigPath(const std::string &name);
 		
 	private:
 		static std::string s_path;
