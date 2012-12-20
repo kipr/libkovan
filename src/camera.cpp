@@ -165,9 +165,20 @@ Device *Camera::Channel::device() const
 	return m_device;
 }
 
+void Camera::Channel::setConfig(const Config &config)
+{
+	m_config = config;
+	invalidate();
+}
+
 // ConfigPath //
 
 std::string Camera::ConfigPath::s_path = "/etc/botui/channels/";
+
+std::string Camera::ConfigPath::extension()
+{
+	return "conf";
+}
 
 void Camera::ConfigPath::setBasePath(const std::string &path)
 {
@@ -178,7 +189,8 @@ void Camera::ConfigPath::setBasePath(const std::string &path)
 
 std::string Camera::ConfigPath::path(const std::string &name)
 {
-	return s_path + name;
+	if(name.empty()) return s_path;
+	return s_path + name + "." + extension();
 }
 
 // Device //
@@ -202,6 +214,11 @@ bool Camera::Device::open(const int &number)
 	return m_capture->open(number);
 }
 
+bool Camera::Device::isOpen() const
+{
+	return m_capture->isOpened();
+}
+
 void Camera::Device::setWidth(const unsigned &width)
 {
 	m_capture->set(CV_CAP_PROP_FRAME_WIDTH, width);
@@ -218,11 +235,14 @@ void Camera::Device::close()
 	m_capture->release();
 }
 
-void Camera::Device::update()
+bool Camera::Device::update()
 {
 	// Get new image
-	m_capture->grab();
-	m_capture->retrieve(m_image);
+	bool success = true;
+	success &= m_capture->grab();
+	success &= m_capture->retrieve(m_image);
+	
+	if(!success) return false;
 	
 	// Dirty all channel impls
 	m_channelImplManager->setImage(m_image);
@@ -230,6 +250,7 @@ void Camera::Device::update()
 	// Invalidate all channels
 	ChannelPtrVector::iterator it = m_channels.begin();
 	for(; it != m_channels.end(); ++it) (*it)->invalidate();
+	return true;
 }
 
 const ChannelPtrVector &Camera::Device::channels() const
@@ -240,6 +261,11 @@ const ChannelPtrVector &Camera::Device::channels() const
 cv::VideoCapture *Camera::Device::videoCapture() const
 {
 	return m_capture;
+}
+
+const cv::Mat &Camera::Device::rawImage() const
+{
+	return m_image;
 }
 
 void Camera::Device::setConfig(const Config &config)

@@ -38,6 +38,10 @@
 #define CAMERA_GROUP ("camera")
 #define CAMERA_NUM_CHANNELS_KEY ("num_channels")
 #define CAMERA_CHANNEL_GROUP_PREFIX ("channel_")
+#define CAMERA_CHANNEL_TYPE_KEY ("type")
+
+#define CAMERA_CHANNEL_TYPE_HSV_KEY ("hsv")
+#define CAMERA_CHANNEL_TYPE_QR_KEY ("qr")
 
 namespace cv
 {
@@ -125,6 +129,11 @@ namespace Camera
 		
 		Device *device() const;
 		
+		/**
+		 * Do not call this method unless you know what you are doing!
+		 */ 
+		void setConfig(const Config &config);
+		
 	private:
 		Device *m_device;
 		Config m_config;
@@ -138,8 +147,10 @@ namespace Camera
 	class ConfigPath
 	{
 	public:
+		static std::string extension();
+		
 		static void setBasePath(const std::string &path);
-		static std::string path(const std::string &name);
+		static std::string path(const std::string &name = std::string());
 		
 	private:
 		static std::string s_path;
@@ -152,8 +163,9 @@ namespace Camera
 		~Device();
 		
 		bool open(const int &number = 0);
+		bool isOpen() const;
 		void close();
-		void update();
+		bool update();
 		
 		void setWidth(const unsigned &width);
 		void setHeight(const unsigned &height);
@@ -161,6 +173,7 @@ namespace Camera
 		const ChannelPtrVector &channels() const;
 		
 		cv::VideoCapture *videoCapture() const;
+		const cv::Mat &rawImage() const;
 		
 		void setConfig(const Config &config);
 		const Config &config() const;

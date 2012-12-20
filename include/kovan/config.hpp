@@ -18,6 +18,8 @@ public:
 	void endGroup();
 	void clearGroup();
 	
+	void clear();
+	
 	bool containsKey(const std::string &key) const;
 	
 	bool boolValue(const std::string &key) const;
@@ -30,6 +32,9 @@ public:
 	void setValue(const std::string &key, const double &value);
 	void setValue(const std::string &key, const char *value);
 	void setValue(const std::string &key, const std::string &value);
+	
+	Config values() const;
+	void addValues(const Config &config);
 	
 private:
 	std::string safeKey(std::string key) const;

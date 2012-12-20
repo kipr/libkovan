@@ -26,6 +26,8 @@ Camera::ObjectVector HsvChannelImpl::findObjects(const Config &config)
 	cv::Vec3b bottom(config.intValue("bh"),
 		config.intValue("bs"), config.intValue("bv"));
 	
+	// std::cout << "top: <" << top[0] << ", " << top[1] << ", " << top[2] << ">" << std::endl;
+	
 	cv::Mat fixed = m_image;
 	if(bottom[0] > top[0]) {
 		// Modulo 180

@@ -65,6 +65,12 @@ void Config::clearGroup()
 	m_groups.clear();
 }
 
+void Config::clear()
+{
+	m_groups.clear();
+	m_config.clear();
+}
+
 bool Config::containsKey(const std::string &key) const
 {
 	return m_config.find(group() + safeKey(key)) != m_config.end();
@@ -127,6 +133,27 @@ void Config::setValue(const std::string &key, const char *value)
 void Config::setValue(const std::string &key, const std::string &value)
 {
 	m_config[group() + safeKey(key)] = value;
+}
+
+Config Config::values() const
+{
+	Config ret;
+	const std::string group = Config::group();
+	std::map<std::string, std::string>::const_iterator it = m_config.begin();
+	for(; it != m_config.end(); ++it) {
+		const std::string &key = it->first;
+		if(key.substr(0, group.size()).compare(group)) continue;
+		ret.setValue(key.substr(group.size()), it->second);
+	}
+	return ret;
+}
+
+void Config::addValues(const Config &config)
+{
+	const std::string group = Config::group();
+	Config values = config.values();
+	std::map<std::string, std::string>::const_iterator it = values.m_config.begin();
+	for(; it != values.m_config.end(); ++it) setValue(it->first, it->second);
 }
 
 std::string Config::safeKey(std::string key) const
