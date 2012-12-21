@@ -42,6 +42,11 @@
 #define AN_IN_16 		18
 #define AC_CONNECTED		19
 
+#define BEMF_0			20
+#define BEMF_1			21
+#define BEMF_2			22
+#define BEMF_3			23
+
 // Permanent Read/Write
 #define SERVO_COMMAND_0 	25
 #define SERVO_COMMAND_1 	26

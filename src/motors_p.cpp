@@ -32,6 +32,13 @@ static const unsigned short motorRegisters[4] = {
 	MOTOR_PWM_3,
 };
 
+static const unsigned short bemfRegisters[4] = {
+	BEMF_0,
+	BEMF_1,
+	BEMF_2,
+	BEMF_3,
+};
+
 Private::Motor::~Motor()
 {
 }
@@ -100,8 +107,8 @@ void Private::Motor::stop(const port_t &port)
 
 unsigned short Private::Motor::backEMF(const unsigned char &port)
 {
-	nyi("Private::Motor::backEMF");
-	return 0xFFFF;
+	if(port > 3) return 0xFFFF;
+	return Private::Kovan::instance()->currentState().t[bemfRegisters[port]];
 }
 
 Private::Motor *Private::Motor::instance()
