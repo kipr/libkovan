@@ -105,7 +105,7 @@ void Private::Motor::stop(const port_t &port)
 	setPwmDirection(port, PassiveStop);
 }
 
-unsigned short Private::Motor::backEMF(const unsigned char &port)
+short Private::Motor::backEMF(const unsigned char &port)
 {
 	if(port > 3) return 0xFFFF;
 	return Private::Kovan::instance()->currentState().t[bemfRegisters[port]];

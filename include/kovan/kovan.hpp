@@ -56,5 +56,6 @@
 #include "console.hpp"
 #include "datalog.hpp"
 #include "config.hpp"
+#include "accel.hpp"
 
 #endif

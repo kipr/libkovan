@@ -40,5 +40,6 @@
 #include "general.h"
 #include "console.h"
 #include "datalog.h"
+#include "accel.h"
 
 #endif
