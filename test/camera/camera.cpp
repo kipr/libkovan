@@ -46,9 +46,10 @@ int main(int argc, char *argv[])
 	while(cv::waitKey(1) == -1) {
 		device.update();
 		device.videoCapture()->retrieve(image);
-		const Camera::ObjectVector &objects = device.channels()[1]->objects();
-		Camera::ObjectVector::const_iterator it = objects.begin();
-		for(; it != objects.end(); ++it) {
+		const Camera::ObjectVector *objects = device.channels()[1]->objects();
+		if(!objects) continue;
+		Camera::ObjectVector::const_iterator it = objects->begin();
+		for(; it != objects->end(); ++it) {
 			const Camera::Object &object = *it;
 			cv::rectangle(image, cv::Rect(object.boundingBox().x(), object.boundingBox().y(),
 				object.boundingBox().width(), object.boundingBox().height()), cv::Scalar(0, 255, 0));

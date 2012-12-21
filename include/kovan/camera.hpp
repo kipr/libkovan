@@ -125,7 +125,7 @@ namespace Camera
 		
 		void invalidate();
 		
-		const ObjectVector &objects() const;
+		const ObjectVector *objects() const;
 		
 		Device *device() const;
 		

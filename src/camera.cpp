@@ -99,7 +99,7 @@ ChannelImplManager::~ChannelImplManager()
 DefaultChannelImplManager::DefaultChannelImplManager()
 {
 	m_channelImpls["hsv"] = new Private::Camera::HsvChannelImpl();
-	m_channelImpls["barcode"] = new Private::Camera::BarcodeChannelImpl();
+	m_channelImpls["qr"] = new Private::Camera::BarcodeChannelImpl();
 }
 
 DefaultChannelImplManager::~DefaultChannelImplManager()
@@ -128,6 +128,7 @@ Camera::Channel::Channel(Device *device, const Config &config)
 	m_impl(0),
 	m_valid(false)
 {
+	m_objects.clear();
 	const std::string type = config.stringValue("type");
 	if(type.empty()) {
 		WARN("No type specified in config.");
@@ -150,15 +151,15 @@ void Camera::Channel::invalidate()
 	m_valid = false;
 }
 
-const ObjectVector &Camera::Channel::objects() const
+const ObjectVector *Camera::Channel::objects() const
 {
-	if(!m_impl) return m_objects;
+	if(!m_impl) return 0;
 	if(!m_valid) {
 		m_objects.clear();
 		m_objects = m_impl->objects(m_config);
 		m_valid = true;
 	}
-	return m_objects;
+	return &m_objects;
 }
 
 Device *Camera::Channel::device() const
