@@ -35,6 +35,7 @@
 class Battery
 {
 public:
+	static bool isCharging();
 	static float powerLevel();
 };
 

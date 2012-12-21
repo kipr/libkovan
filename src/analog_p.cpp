@@ -57,6 +57,11 @@ unsigned short Analog::value(const unsigned char& port) const
 	return kovan->currentState().t[AN_IN_0 + port];
 }
 
+bool Analog::isCharging() const
+{
+	return Private::Kovan::instance()->currentState().t[AC_CONNECTED];
+}
+
 Analog *Analog::instance()
 {
 	static Analog s_analog;

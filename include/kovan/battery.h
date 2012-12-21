@@ -32,6 +32,8 @@
 extern "C" {
 #endif
 
+int battery_charging();
+
 /*!
  * The device's power level
  * \return The device's current voltage

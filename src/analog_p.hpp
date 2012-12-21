@@ -33,7 +33,8 @@ namespace Private
 		void setPullup(const unsigned char& port, const bool& pullup);
 		bool pullup(const unsigned char& port) const;
 		unsigned short value(const unsigned char& port) const;
-	
+		// TODO: Move?
+		bool isCharging() const;
 		static Analog *instance();
 		
 	private:

@@ -23,6 +23,11 @@
 
 #define BATTERY_ADC_CHAN 16
 
+bool Battery::isCharging()
+{
+	return Private::Analog::instance()->isCharging();
+}
+
 float Battery::powerLevel()
 {
 	return Private::Analog::instance()->value(BATTERY_ADC_CHAN);

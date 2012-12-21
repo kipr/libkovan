@@ -40,6 +40,7 @@
 #define AN_IN_14 		16
 #define AN_IN_15 		17
 #define AN_IN_16 		18
+#define AC_CONNECTED		19
 
 // Permanent Read/Write
 #define SERVO_COMMAND_0 	25

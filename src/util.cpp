@@ -30,3 +30,8 @@ unsigned long systime()
 {
 	return Private::Time::systime();
 }
+
+double seconds()
+{
+	return systime() / 1000.0f;
+}

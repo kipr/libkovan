@@ -21,6 +21,11 @@
 #include "kovan/battery.h"
 #include "kovan/battery.hpp"
 
+int battery_charging()
+{
+	return Battery::isCharging();
+}
+
 float power_level()
 {
 	return Battery::powerLevel();
