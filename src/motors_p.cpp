@@ -72,6 +72,7 @@ void Private::Motor::setPidVelocity(const port_t &port, const short &pwm, const 
 	const unsigned short cmd = hasPos ? 0xC000 : 0xA000;
 	const unsigned short sign = pwm < 0 ? 0x1000 : 0x0000;
 	kovan->enqueueCommand(createWriteCommand(motorRegisters[port], cmd | sign | (pwm & 0x0FFF)));
+	std::cout << "Wrote " << std::hex << (cmd | sign | (pwm & 0x0FFF)) << " for pid vel on port " << port << std::endl;
 }
 
 short Private::Motor::pidVelocity(const port_t &port) const
