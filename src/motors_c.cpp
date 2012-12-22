@@ -36,7 +36,8 @@ int clear_motor_position_counter(int motor)
 
 int move_at_velocity(int motor, int velocity)
 {
-	return -1;
+	Private::Motor::instance()->setPidVelocity(motor, velocity, false);
+	return 0;
 }
 
 int mav(int motor, int velocity)
@@ -46,7 +47,9 @@ int mav(int motor, int velocity)
 
 int move_to_position(int motor, int speed, int goal_pos)
 {
-	return -1;
+	Private::Motor::instance()->setPidGoalPos(motor, goal_pos);
+	Private::Motor::instance()->setPidVelocity(motor, speed, true);
+	return 0;
 }
 
 int mtp(int motor, int speed, int goal_pos)
