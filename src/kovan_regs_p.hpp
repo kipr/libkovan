@@ -62,6 +62,12 @@
 #define MOTOR_PWM_3 		36
 #define MOTOR_ALL_STOP 		40
 
+#define PID_GOAL_POS_0 		41
+#define PID_GOAL_POS_1 		42
+#define PID_GOAL_POS_2 		43
+#define PID_GOAL_POS_3 		44
+#define PID_AT_GOAL 		45
+
 // Temporary Ready Only
 #define DIG_VALID_T 		19
 #define DIG_BUSY_T 		20

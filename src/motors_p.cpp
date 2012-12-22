@@ -32,6 +32,13 @@ static const unsigned short motorRegisters[4] = {
 	MOTOR_PWM_3,
 };
 
+static const unsigned short goalRegisters[4] = {
+	PID_GOAL_POS_0,
+	PID_GOAL_POS_1,
+	PID_GOAL_POS_2,
+	PID_GOAL_POS_3,
+};
+
 static const unsigned short bemfRegisters[4] = {
 	BEMF_0,
 	BEMF_1,
@@ -57,6 +64,29 @@ Private::Motor::ControlMode Private::Motor::controlMode() const
 void Private::Motor::setPid(const port_t &port, const short &p, const short &i, const short &d, const short &pd, const short &id, const short &dd)
 {
 	nyi("Private::Motor::setPid");
+}
+
+void Private::Motor::setPidVelocity(const port_t &port, const short &pwm, const bool &hasPos)
+{
+	Private::Kovan *kovan = Private::Kovan::instance();
+	const unsigned short cmd = hasPos ? 0xC000 : 0xA000;
+	const unsigned short sign = pwm < 0 ? 0x1000 : 0x0000;
+	kovan->enqueueCommand(createWriteCommand(motorRegisters[port], cmd | sign | (pwm & 0x0FFF)));
+}
+
+short Private::Motor::pidVelocity(const port_t &port) const
+{
+	return Private::Kovan::instance()->currentState().t[motorRegisters[port]] & 0xFFFF;
+}
+
+void Private::Motor::setPidGoalPos(const port_t &port, const short &pos)
+{
+	Private::Kovan::instance()->enqueueCommand(createWriteCommand(goalRegisters[port], pos));
+}
+
+short Private::Motor::pidGoalPos(const port_t &port) const
+{
+	return Private::Kovan::instance()->currentState().t[goalRegisters[port]];
 }
 
 void Private::Motor::pid(const port_t &port, short &p, short &i, short &d, short &pd, short &id, short &dd)

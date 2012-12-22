@@ -28,19 +28,19 @@ Motor::Motor(const port_t& port) throw()
 	// if(!p_motor) throw InvalidPort("Motor ports are through 1 and 4");
 }
 
-void Motor::moveAtVelocity(const int& velocity)
+void Motor::moveAtVelocity(const short& velocity)
 {
-	
+	Private::Motor::instance()->setPidVelocity(m_port, velocity, false);
 }
 
-void Motor::moveToPosition(const int& speed, const int& goalPos)
+void Motor::moveToPosition(const short& speed, const short& goalPos)
 {
-	
+	Private::Motor::instance()->setPidGoalPos(m_port, goalPos);
+	Private::Motor::instance()->setPidVelocity(m_port, speed, true);
 }
 
-void Motor::moveRelativePosition(const int& speed, const int& deltaPos)
+void Motor::moveRelativePosition(const short& speed, const short& deltaPos)
 {
-	
 }
 
 void Motor::setPidGains(const short& p, const short& i, const short& d, const short& pd, const short& id, const short& dd)
