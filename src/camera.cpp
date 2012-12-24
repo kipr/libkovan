@@ -276,6 +276,9 @@ bool Camera::Device::update()
 	
 	if(!success) return false;
 	
+	// No need to update channels if there are none.
+	if(m_channels.empty()) return true;
+	
 	// Dirty all channel impls
 	m_channelImplManager->setImage(m_image);
 	
@@ -326,6 +329,7 @@ void Camera::Device::updateConfig()
 {
 	ChannelPtrVector::iterator it = m_channels.begin();
 	for(; it != m_channels.end(); ++it) delete *it;
+	m_channels.clear();
 	
 	m_config.clearGroup();
 	m_config.beginGroup(CAMERA_GROUP);
