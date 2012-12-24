@@ -79,7 +79,7 @@ bool check_channel_and_object(int i, int j)
 {
 	const Camera::ChannelPtrVector &channels = DeviceSingleton::instance()->channels();
 	if(i < 0 || i >= channels.size()) {
-		if(channels.empty()) std::cout << "Active configuration doesn't have any channels.";
+		if(channels.size() < 1) std::cout << "Active configuration doesn't have any channels.";
 		else std::cout << "Channel must be in the range 0 .. " << (channels.size() - 1);
 		std::cout << std::endl;
 		return false;
@@ -103,6 +103,21 @@ double get_object_confidence(int channel, int object)
 	if(!check_channel_and_object(channel, object)) return 0.0;
 	const Camera::Object &o = (*DeviceSingleton::instance()->channels()[channel]->objects())[object];
 	return o.confidence();
+}
+
+
+const char *get_object_data(int channel, int object)
+{
+	if(!check_channel_and_object(channel, object)) return 0;
+	const Camera::Object &o = (*DeviceSingleton::instance()->channels()[channel]->objects())[object];
+	return o.data();
+}
+
+int get_object_data_length(int channel, int object)
+{
+	if(!check_channel_and_object(channel, object)) return 0;
+	const Camera::Object &o = (*DeviceSingleton::instance()->channels()[channel]->objects())[object];
+	return o.dataLength();
 }
 
 int get_object_area(int channel, int object)
