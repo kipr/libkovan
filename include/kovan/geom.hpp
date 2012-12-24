@@ -1,6 +1,8 @@
 #ifndef _GEOM_HPP_
 #define _GEOM_HPP_
 
+#include "geom.h"
+
 template<typename T>
 class Point2
 {
@@ -29,6 +31,11 @@ public:
 	void setY(const T &y)
 	{
 		m_y = y;
+	}
+	
+	point2 toCPoint2() const
+	{
+		return create_point2(m_x, m_y);
 	}
 	
 private:
@@ -86,6 +93,16 @@ public:
 	void setHeight(const T &height)
 	{
 		m_x = height;
+	}
+	
+	T area() const
+	{
+		return m_width * m_height;
+	}
+	
+	rectangle toCRectangle() const
+	{
+		return create_rectangle(m_x, m_y, m_width, m_height);
 	}
 	
 private:
