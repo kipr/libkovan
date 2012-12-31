@@ -97,9 +97,11 @@ const port_t& Motor::port() const
 	return m_port;
 }
 
-BackEMF::BackEMF(const unsigned char& port) : m_port(port) {}
+BackEMF::BackEMF(const unsigned char& port)
+	: m_port(port)
+{}
 
-unsigned short BackEMF::value() const
+int BackEMF::value() const
 {
 	return Private::Motor::instance()->backEMF(m_port);
 }

@@ -42,10 +42,10 @@
 #define AN_IN_16 		18
 #define AC_CONNECTED		19
 
-#define BEMF_0			20
-#define BEMF_1			21
-#define BEMF_2			22
-#define BEMF_3			23
+#define BEMF_0_LOW		20
+#define BEMF_1_LOW		21
+#define BEMF_2_LOW		22
+#define BEMF_3_LOW		23
 
 // Permanent Read/Write
 #define SERVO_COMMAND_0 	25
@@ -62,10 +62,10 @@
 #define MOTOR_PWM_3 		36
 #define MOTOR_ALL_STOP 		40
 
-#define PID_GOAL_POS_0 		41
-#define PID_GOAL_POS_1 		42
-#define PID_GOAL_POS_2 		43
-#define PID_GOAL_POS_3 		44
+#define BEMF_0_HIGH 		41
+#define BEMF_1_HIGH 		42
+#define BEMF_2_HIGH 		43
+#define BEMF_3_HIGH 		44
 #define PID_AT_GOAL 		45
 
 // Temporary Ready Only

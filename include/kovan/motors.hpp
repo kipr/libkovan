@@ -109,11 +109,11 @@ private:
  * \brief Allows the reading of the back emf values for each motor.
  * \ingroup motor
  */
-class BackEMF : public Sensor<unsigned short>
+class BackEMF : public Sensor<int>
 {
 public:
 	BackEMF(const unsigned char& port);
-	virtual unsigned short value() const;
+	virtual int value() const;
 	unsigned char port() const;
 	
 private:

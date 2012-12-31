@@ -32,18 +32,22 @@ static const unsigned short motorRegisters[4] = {
 	MOTOR_PWM_3,
 };
 
-static const unsigned short goalRegisters[4] = {
+/* static const unsigned short goalRegisters[4] = {
 	PID_GOAL_POS_0,
 	PID_GOAL_POS_1,
 	PID_GOAL_POS_2,
 	PID_GOAL_POS_3,
-};
+}; */
 
-static const unsigned short bemfRegisters[4] = {
-	BEMF_0,
-	BEMF_1,
-	BEMF_2,
-	BEMF_3,
+static const unsigned short bemfRegisters[8] = {
+	BEMF_0_HIGH,
+	BEMF_0_LOW,
+	BEMF_1_HIGH,
+	BEMF_1_LOW,
+	BEMF_2_HIGH,
+	BEMF_2_LOW,
+	BEMF_3_HIGH,
+	BEMF_3_LOW
 };
 
 Private::Motor::~Motor()
@@ -82,12 +86,12 @@ short Private::Motor::pidVelocity(const port_t &port) const
 
 void Private::Motor::setPidGoalPos(const port_t &port, const short &pos)
 {
-	Private::Kovan::instance()->enqueueCommand(createWriteCommand(goalRegisters[port], pos));
+	// Private::Kovan::instance()->enqueueCommand(createWriteCommand(goalRegisters[port], pos));
 }
 
 short Private::Motor::pidGoalPos(const port_t &port) const
 {
-	return Private::Kovan::instance()->currentState().t[goalRegisters[port]];
+	// return Private::Kovan::instance()->currentState().t[goalRegisters[port]];
 }
 
 void Private::Motor::pid(const port_t &port, short &p, short &i, short &d, short &pd, short &id, short &dd)
@@ -136,10 +140,11 @@ void Private::Motor::stop(const port_t &port)
 	setPwmDirection(port, PassiveStop);
 }
 
-short Private::Motor::backEMF(const unsigned char &port)
+int Private::Motor::backEMF(const unsigned char &port)
 {
 	if(port > 3) return 0xFFFF;
-	return Private::Kovan::instance()->currentState().t[bemfRegisters[port]];
+	const Private::State &s = Private::Kovan::instance()->currentState();
+	return s.t[bemfRegisters[port << 1 + 1]] << 16 | s.t[bemfRegisters[port << 1]];
 }
 
 Private::Motor *Private::Motor::instance()

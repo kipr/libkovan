@@ -65,7 +65,7 @@ namespace Private
 		
 		void stop(const port_t &port);
 		
-		short backEMF(const unsigned char &port);
+		int backEMF(const unsigned char &port);
 		
 		static Motor *instance();
 		
