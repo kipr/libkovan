@@ -144,7 +144,7 @@ int Private::Motor::backEMF(const unsigned char &port)
 {
 	if(port > 3) return 0xFFFF;
 	const Private::State &s = Private::Kovan::instance()->currentState();
-	return s.t[bemfRegisters[port << 1 + 1]] << 16 | s.t[bemfRegisters[port << 1]];
+	return s.t[bemfRegisters[port << 1]] << 16 | s.t[bemfRegisters[port << 1 + 1]];
 }
 
 Private::Motor *Private::Motor::instance()
