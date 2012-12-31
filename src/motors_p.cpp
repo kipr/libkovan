@@ -39,15 +39,18 @@ static const unsigned short motorRegisters[4] = {
 	PID_GOAL_POS_3,
 }; */
 
-static const unsigned short bemfRegisters[8] = {
-	BEMF_0_HIGH,
+static const unsigned short bemfLowRegisters[8] = {
 	BEMF_0_LOW,
-	BEMF_1_HIGH,
 	BEMF_1_LOW,
-	BEMF_2_HIGH,
 	BEMF_2_LOW,
-	BEMF_3_HIGH,
 	BEMF_3_LOW
+};
+
+static const unsigned short bemfHighRegisters[8] = {
+	BEMF_0_HIGH,
+	BEMF_1_HIGH,
+	BEMF_2_HIGH,
+	BEMF_3_HIGH,
 };
 
 Private::Motor::~Motor()
@@ -144,9 +147,9 @@ int Private::Motor::backEMF(const unsigned char &port)
 {
 	if(port > 3) return 0xFFFF;
 	const Private::State &s = Private::Kovan::instance()->currentState();
-	std::cout << "high " << (int)port << std::hex << (int)s.t[bemfRegisters[port << 1]] << std::endl;
-	std::cout << "low " << (int)port << std::hex << (int)s.t[bemfRegisters[port << 1 + 1]] << std::endl;
-	return ((int)s.t[bemfRegisters[port << 1]]) << 16 | s.t[bemfRegisters[port << 1 + 1]];
+	std::cout << "high " << (int)port << " "  << std::hex << (int)s.t[bemfHighRegisters[port]] << std::endl;
+	std::cout << "low " << (int)port << " " << std::hex << (int)s.t[bemfLowRegisters[port]] << std::endl;
+	return ((int)s.t[bemfHighRegisters[port]]) << 16 | s.t[bemfLowRegisters[port]];
 }
 
 Private::Motor *Private::Motor::instance()
