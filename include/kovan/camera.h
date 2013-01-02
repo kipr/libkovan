@@ -51,6 +51,10 @@ int camera_open();
  */
 int camera_open_device(int number);
 
+void set_camera_grab_count(int grabs);
+
+int get_camera_grab_count();
+
 /**
  * Loads the config file specified by name.
  * \param name The configuration to load. Configuration file names are case sensitive.

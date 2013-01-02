@@ -172,6 +172,8 @@ namespace Camera
 		
 		void setWidth(const unsigned &width);
 		void setHeight(const unsigned &height);
+		void setGrabCount(unsigned char grabs);
+		unsigned char grabCount() const;
 		
 		const ChannelPtrVector &channels() const;
 		
@@ -191,6 +193,7 @@ namespace Camera
 		cv::VideoCapture *m_capture;
 		ChannelPtrVector m_channels;
 		ChannelImplManager *m_channelImplManager;
+		unsigned char m_grabCount;
 		cv::Mat m_image;
 		timeval m_lastUpdate;
 	};

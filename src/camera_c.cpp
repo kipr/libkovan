@@ -23,6 +23,16 @@ int camera_open_device(int number)
 	return DeviceSingleton::instance()->open(number) ? 1 : 0;
 }
 
+void set_camera_grab_count(int grabs)
+{
+	DeviceSingleton::instance()->setGrabCount(grabs);
+}
+
+int get_camera_grab_count()
+{
+	return DeviceSingleton::instance()->grabCount();
+}
+
 int camera_load_config(const char *name)
 {
 	Config *config = Config::load(Camera::ConfigPath::path(name));

@@ -261,6 +261,18 @@ void Camera::Device::setHeight(const unsigned &height)
 	m_capture->set(CV_CAP_PROP_FRAME_HEIGHT, height);
 }
 
+void Camera::Device::setGrabCount(unsigned char grabs)
+{
+	if(grabs < 1) grabs = 1;
+	else if(grabs > 5) grabs = 5;
+	m_grabCount = grabs;
+}
+
+unsigned char Camera::Device::grabCount() const
+{
+	return m_grabCount;
+}
+
 void Camera::Device::close()
 {
 	if(!m_capture->isOpened()) return;
@@ -271,9 +283,9 @@ bool Camera::Device::update()
 {
 	// Get new image
 	bool success = true;
-	success &= m_capture->grab();
-	success &= m_capture->grab();
-	success &= m_capture->grab();
+	for(unsigned char i = 0; i < m_grabCount; ++i) {
+		success &= m_capture->grab();
+	}
 	success &= m_capture->retrieve(m_image);
 	
 	if(!success) return false;
