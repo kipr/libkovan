@@ -69,7 +69,7 @@ const char *Private::Button::text(const ::Button::Type::Id &id) const
 
 void Private::Button::setPressed(const ::Button::Type::Id &id, bool pressed)
 {
-	if(!Private::SharedMemory::instance()->isConnected() || id ) return;
+	if(!Private::SharedMemory::instance()->isConnected()) return;
 	
 	SharedButton *button = selectButton(id);
 	if(!button) return;
