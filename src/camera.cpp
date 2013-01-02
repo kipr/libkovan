@@ -271,7 +271,7 @@ bool Camera::Device::update()
 {
 	// Get new image
 	bool success = true;
-	success &= m_capture->grab();
+	while(m_capture->grab());
 	success &= m_capture->retrieve(m_image);
 	
 	if(!success) return false;
