@@ -66,15 +66,8 @@
 #define BEMF_1_HIGH 		42
 #define BEMF_2_HIGH 		43
 #define BEMF_3_HIGH 		44
-#define PID_AT_GOAL 		45
+#define SIDE_BUTTON 		45
 
-// Temporary Ready Only
-#define DIG_VALID_T 		19
-#define DIG_BUSY_T 		20
-
-// Temporary Read/Write
-#define DIG_SAMPLE_T 		37
-#define DIG_UPDATE_T 		38
 #define MOTOR_DRIVE_CODE_T 	39
 
 #endif

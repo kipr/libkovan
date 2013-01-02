@@ -139,6 +139,13 @@ void off(int motor);
 
 /*!
  * Turns all motors off.
+ * \see ao
+ * \ingroup motor
+ */
+void alloff();
+
+/*!
+ * Turns all motors off.
  * \ingroup motor
  */
 void ao();

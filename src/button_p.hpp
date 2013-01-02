@@ -35,6 +35,7 @@ namespace Private
 		const char *text(const ::Button::Type::Id &id) const;
 		void setPressed(const ::Button::Type::Id &id, bool pressed);
 		bool isPressed(const ::Button::Type::Id &id) const;
+
 		
 		void setExtraShown(const bool& shown);
 		bool isExtraShown() const;

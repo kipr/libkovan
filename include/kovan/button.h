@@ -126,6 +126,23 @@ int y_button();
 int z_button();
 
 /*!
+ * Gets the side button's state (pressed or not pressed.)
+ * \return 1 for pressed, 0 for not pressed
+ * \see side_button_clicked
+ * \ingroup button
+ */
+int side_button();
+
+/*!
+ * Gets the side button's state (pressed or not pressed.)
+ * \deprecated Use side_button() instead.
+ * \return 1 for pressed, 0 for not pressed
+ * \see side_button
+ * \ingroup button
+ */
+int black_button();
+
+/*!
  * Gets the A button's state (pressed or not pressed.)
  * \return 1 for pressed, 0 for not pressed
  * \see a_button
@@ -180,6 +197,15 @@ int y_button_clicked();
  * \ingroup button
  */
 int z_button_clicked();
+
+/*!
+ * Gets the side button's state (pressed or not pressed.)
+ * \blocksuntil the button is no longer pressed.
+ * \return 1 for pressed, 0 for not pressed
+ * \see side_button
+ * \ingroup button
+ */
+int side_button_clicked();
 
 int any_button();
 

@@ -134,6 +134,11 @@ void off(int motor)
 	Private::Motor::instance()->stop(motor);
 }
 
+void alloff()
+{
+	ao();
+}
+
 void ao()
 {
 	for(unsigned char i = 0; i < 4; ++i) off(i);

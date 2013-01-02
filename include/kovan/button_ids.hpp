@@ -31,7 +31,8 @@ namespace Button
 			C,
 			X,
 			Y,
-			Z
+			Z,
+			Side
 		};
 	}
 }

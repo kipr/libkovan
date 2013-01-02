@@ -20,6 +20,8 @@
 
 #include "button_p.hpp"
 #include "shared_mem_p.hpp"
+#include "kovan_p.hpp"
+#include "kovan_regs_p.hpp"
 
 #include <cstring>
 #include <pthread.h>
@@ -67,7 +69,7 @@ const char *Private::Button::text(const ::Button::Type::Id &id) const
 
 void Private::Button::setPressed(const ::Button::Type::Id &id, bool pressed)
 {
-	if(!Private::SharedMemory::instance()->isConnected()) return;
+	if(!Private::SharedMemory::instance()->isConnected() || id ) return;
 	
 	SharedButton *button = selectButton(id);
 	if(!button) return;
@@ -79,6 +81,10 @@ void Private::Button::setPressed(const ::Button::Type::Id &id, bool pressed)
 
 bool Private::Button::isPressed(const ::Button::Type::Id &id) const
 {
+	if(id == ::Button::Type::Side) {
+		return Private::Kovan::instance()->currentState().t[SIDE_BUTTON];
+	}
+	
 	if(!Private::SharedMemory::instance()->isConnected()) return false;
 	SharedButton *button = selectButton(id);
 	if(!button) return false;

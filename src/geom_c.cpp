@@ -15,4 +15,5 @@ rectangle create_rectangle(int x, int y, int width, int height)
 	ret.y = y;
 	ret.width = width;
 	ret.height = height;
+	return ret;
 }

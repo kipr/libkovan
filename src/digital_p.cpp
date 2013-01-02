@@ -35,9 +35,7 @@ bool Digital::value(const unsigned char& port) const
 {
 	const unsigned char actualPort = 7 - (port - 8);
 	if(actualPort > 7) return false;
-	std::cout << "Digitals: " << std::hex << Private::Kovan::instance()->currentState().t[DIG_IN] << std::endl;
 	bool ret = Private::Kovan::instance()->currentState().t[DIG_IN] & (1 << actualPort);
-	wiggle();
 	return ret;
 }
 
@@ -52,7 +50,6 @@ bool Digital::setValue(const unsigned char& port, const bool& value)
 	else out &= ~(1 << actualPort);
 	
 	kovan->enqueueCommand(createWriteCommand(DIG_OUT, out));
-	wiggle();
 	return true;
 }
 
@@ -62,7 +59,6 @@ const Digital::Direction Digital::direction(const unsigned char& port) const
 	if(actualPort > 7) return Digital::Unknown;
 	Private::Kovan *kovan = Private::Kovan::instance();
 	Digital::Direction ret = kovan->currentState().t[DIG_OUT_ENABLE] & (1 << actualPort) ? Digital::Out : Digital::In;
-	wiggle();
 	return ret;
 }
 
@@ -77,7 +73,6 @@ bool Digital::setDirection(const unsigned char& port, const Digital::Direction& 
 	else dir &= ~(1 << actualPort);
 	
 	kovan->enqueueCommand(createWriteCommand(DIG_OUT_ENABLE, dir));
-	wiggle();
 	return false;
 }
 
@@ -86,7 +81,6 @@ bool Digital::pullup(const unsigned char& port) const
 	const unsigned char actualPort = 7 - (port - 8);
 	if(actualPort > 15) return false;
 	bool ret = Private::Kovan::instance()->currentState().t[DIG_PULLUPS] & (1 << actualPort);
-	wiggle();
 	return ret;
 }
 
@@ -101,7 +95,6 @@ bool Digital::setPullup(const unsigned char& port, const bool& pullup)
 	else pullups &= ~(1 << actualPort);
 	
 	kovan->enqueueCommand(createWriteCommand(DIG_PULLUPS, pullups));
-	wiggle();
 	return true;
 }
 
@@ -109,21 +102,6 @@ Digital *Digital::instance()
 {
 	static Digital s_digital;
 	return &s_digital;
-}
-
-void Digital::wiggle() const
-{
-	// TODO: This will be removed in a future version
-	Private::Kovan *kovan = Private::Kovan::instance();
-	kovan->flush();
-	kovan->enqueueCommand(createWriteCommand(DIG_UPDATE_T, 1));
-	kovan->flush();
-	kovan->enqueueCommand(createWriteCommand(DIG_UPDATE_T, 0));
-	kovan->flush();
-	kovan->enqueueCommand(createWriteCommand(DIG_UPDATE_T, 0));
-	kovan->flush();
-	kovan->enqueueCommand(createWriteCommand(DIG_UPDATE_T, 1));
-	kovan->flush();
 }
 
 Digital::Digital()
