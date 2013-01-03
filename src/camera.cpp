@@ -225,7 +225,8 @@ void Camera::ConfigPath::setDefaultConfigPath(const std::string &name)
 
 Camera::Device::Device()
 	: m_capture(new cv::VideoCapture),
-	m_channelImplManager(new DefaultChannelImplManager)
+	m_channelImplManager(new DefaultChannelImplManager),
+	m_grabCount(1)
 {
 	Config *config = Config::load(Camera::ConfigPath::defaultConfigPath());
 	if(!config) return;
