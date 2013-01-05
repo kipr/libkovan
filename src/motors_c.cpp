@@ -61,7 +61,9 @@ int mtp(int motor, int speed, int goal_pos)
 
 int move_relative_position(int motor, int speed, int delta_pos)
 {
-	return -1;
+	if(motor < 0 || motor > 3) return -1;
+	move_to_position(motor, speed, Private::Motor::instance()->backEMF(motor) + delta_pos);
+	return 0;
 }
 
 int mrp(int motor, int speed, int delta_pos)
@@ -88,12 +90,13 @@ int freeze(int motor)
 
 int get_motor_done(int motor)
 {
-	return -1;
+	if(motor < 0 || motor > 3) return -1;
+	return Private::Motor::instance()->isPidActive(motor) ? 0 : 1;
 }
 
 void block_motor_done(int motor)
 {
-	
+	while(!get_motor_done(motor)); // TODO: Yield in the future
 }
 
 void bmd(int motor)

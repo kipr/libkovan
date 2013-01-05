@@ -48,6 +48,7 @@ void Motor::moveToPosition(const short& speed, const int& goalPos)
 
 void Motor::moveRelativePosition(const short& speed, const int& deltaPos)
 {
+	moveToPosition(speed, Private::Motor::instance()->backEMF(m_port) + deltaPos);
 }
 
 void Motor::setPidGains(const short& p, const short& i, const short& d, const short& pd, const short& id, const short& dd)
