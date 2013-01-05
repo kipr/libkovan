@@ -70,21 +70,21 @@
 #define MOT_BEMF_CLEAR 		46
 
 #define GOAL_POS_0_LOW 		48
-#define GOAL_POS_0_HIGH 	49
-#define GOAL_POS_1_LOW 		50
-#define GOAL_POS_1_HIGH 	51
-#define GOAL_POS_2_LOW 		52
-#define GOAL_POS_2_HIGH 	53
-#define GOAL_POS_3_LOW 		54
+#define GOAL_POS_1_LOW 		49
+#define GOAL_POS_2_LOW 		50
+#define GOAL_POS_3_LOW 		51
+#define GOAL_POS_0_HIGH 	52
+#define GOAL_POS_1_HIGH 	53
+#define GOAL_POS_2_HIGH 	54
 #define GOAL_POS_3_HIGH		55
 
 #define GOAL_SPEED_0_LOW 	56
-#define GOAL_SPEED_0_HIGH 	57
-#define GOAL_SPEED_1_LOW 	58
-#define GOAL_SPEED_1_HIGH 	59
-#define GOAL_SPEED_2_LOW 	60
-#define GOAL_SPEED_2_HIGH 	61
-#define GOAL_SPEED_3_LOW 	62
+#define GOAL_SPEED_1_LOW 	57
+#define GOAL_SPEED_2_LOW 	58
+#define GOAL_SPEED_3_LOW 	59
+#define GOAL_SPEED_0_HIGH 	60
+#define GOAL_SPEED_1_HIGH 	61
+#define GOAL_SPEED_2_HIGH 	62
 #define GOAL_SPEED_3_HIGH 	63
 
 #define PID_MODES 		64
