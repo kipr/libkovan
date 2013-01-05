@@ -29,9 +29,10 @@ namespace Private
 	{
 	public:
 		enum ControlMode {
-			Unknown = 0,
-			PID,
-			PWM
+			PidInactive = 0,
+			Position = 1,
+			Speed = 2,
+			SpeedPosition = 3
 		};
 		
 		enum Direction {
@@ -48,11 +49,14 @@ namespace Private
 		
 		void clearBemf(unsigned char port);
 		
-		void setPidVelocity(const port_t &port, const short &pwm, const bool &hasPos);
-		short pidVelocity(const port_t &port) const;
+		void setControlMode(Motor::ControlMode mode);
+		Motor::ControlMode controlMode() const;
 		
-		void setPidGoalPos(const port_t &port, const short &pos);
-		short pidGoalPos(const port_t &port) const;
+		void setPidVelocity(const port_t &port, const int &ticks);
+		int pidVelocity(const port_t &port) const;
+		
+		void setPidGoalPos(const port_t &port, const int &pos);
+		int pidGoalPos(const port_t &port) const;
 		
 		void setControlMode(const Motor::ControlMode &mode);
 		Motor::ControlMode controlMode() const;

@@ -32,12 +32,33 @@ static const unsigned short motorRegisters[4] = {
 	MOTOR_PWM_3,
 };
 
-/* static const unsigned short goalRegisters[4] = {
-	PID_GOAL_POS_0,
-	PID_GOAL_POS_1,
-	PID_GOAL_POS_2,
-	PID_GOAL_POS_3,
-}; */
+static const unsigned short goalPosLowRegisters[4] = {
+	GOAL_POS_0_LOW,
+	GOAL_POS_1_LOW,
+	GOAL_POS_2_LOW,
+	GOAL_POS_3_LOW
+};
+
+static const unsigned short goalPosHighRegisters[4] = {
+	GOAL_POS_0_HIGH,
+	GOAL_POS_1_HIGH,
+	GOAL_POS_2_HIGH,
+	GOAL_POS_3_HIGH
+};
+
+static const unsigned short goalSpeedLowRegisters[4] = {
+	GOAL_SPEED_0_LOW,
+	GOAL_SPEED_1_LOW,
+	GOAL_SPEED_2_LOW,
+	GOAL_SPEED_3_LOW
+};
+
+static const unsigned short goalSpeedHighRegisters[4] = {
+	GOAL_SPEED_0_HIGH,
+	GOAL_SPEED_1_HIGH,
+	GOAL_SPEED_2_HIGH,
+	GOAL_SPEED_3_HIGH
+};
 
 static const unsigned short bemfLowRegisters[8] = {
 	BEMF_0_LOW,
@@ -57,16 +78,6 @@ Private::Motor::~Motor()
 {
 }
 
-void Private::Motor::setControlMode(const Motor::ControlMode &mode)
-{
-	nyi("Private::Motor::setControlMode");
-}
-
-Private::Motor::ControlMode Private::Motor::controlMode() const
-{
-	nyi("Private::Motor::controlMode");
-	return PWM;
-}
 
 void Private::Motor::setPid(const port_t &port, const short &p, const short &i, const short &d, const short &pd, const short &id, const short &dd)
 {
@@ -79,28 +90,51 @@ void Private::Motor::clearBemf(unsigned char port)
 	Private::Kovan::instance()->enqueueCommand(createWriteCommand(MOT_BEMF_CLEAR, 1 << port));
 }
 
-void Private::Motor::setPidVelocity(const port_t &port, const short &pwm, const bool &hasPos)
+void Private::Motor::setControlMode(port_t port, Motor::ControlMode controlMode)
 {
 	Private::Kovan *kovan = Private::Kovan::instance();
-	const unsigned short cmd = hasPos ? 0xC000 : 0xA000;
-	const unsigned short sign = pwm < 0 ? 0x1000 : 0x0000;
-	kovan->enqueueCommand(createWriteCommand(motorRegisters[port], cmd | sign | (pwm & 0x0FFF)));
-	std::cout << "Wrote " << std::hex << (cmd | sign | (pwm & 0x0FFF)) << " for pid vel on port " << port << std::endl;
+	
+	const unsigned short offset = (3 - port) << 1;
+	unsigned short &modes = kovan->currentState().t[PID_MODES];
+	
+	// Clear old drive code
+	modes &= ~(0x3 << offset);
+	
+	// Add new drive code
+	modes |= dir << offset;
+	
+	kovan->enqueueCommand(createWriteCommand(PID_MODES, controlMode controlMode | (3 - port));
 }
 
-short Private::Motor::pidVelocity(const port_t &port) const
+Motor::ControlMode Private::Motor::controlMode(port_t port) const
 {
-	return Private::Kovan::instance()->currentState().t[motorRegisters[port]] & 0xFFFF;
+	
 }
 
-void Private::Motor::setPidGoalPos(const port_t &port, const short &pos)
+void Private::Motor::setPidVelocity(const port_t &port, const int &ticks)
 {
-	// Private::Kovan::instance()->enqueueCommand(createWriteCommand(goalRegisters[port], pos));
+	Private::Kovan *kovan = Private::Kovan::instance();
+	kovan->enqueueCommand(createWriteCommand(goalSpeedLowRegisters[port], ticks & 0x0000FFFF));
+	kovan->enqueueCommand(createWriteCommand(goalSpeedHighRegisters[port], (ticks & 0xFFFF0000) >> 16));
 }
 
-short Private::Motor::pidGoalPos(const port_t &port) const
+int Private::Motor::pidVelocity(const port_t &port) const
 {
-	// return Private::Kovan::instance()->currentState().t[goalRegisters[port]];
+	const State &state = Private::Kovan::instance()->currentState();
+	return state.t[goalSpeedHighRegisters[port]] << 16 || state.t[goalSpeedLowRegisters[port]];
+}
+
+void Private::Motor::setPidGoalPos(const port_t &port, const int &pos)
+{
+	Private::Kovan *kovan = Private::Kovan::instance();
+	kovan->enqueueCommand(createWriteCommand(goalPosLowRegisters[port], pos & 0x0000FFFF));
+	kovan->enqueueCommand(createWriteCommand(goalPosHighRegisters[port], (pos & 0xFFFF0000) >> 16));
+}
+
+int Private::Motor::pidGoalPos(const port_t &port) const
+{
+	const State &state = Private::Kovan::instance()->currentState();
+	return state.t[goalPosHighRegisters[port]] << 16 || state.t[goalPosLowRegisters[port]];
 }
 
 void Private::Motor::pid(const port_t &port, short &p, short &i, short &d, short &pd, short &id, short &dd)

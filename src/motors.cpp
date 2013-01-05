@@ -35,13 +35,13 @@ void Motor::clearPositionCounter()
 
 void Motor::moveAtVelocity(const short& velocity)
 {
-	Private::Motor::instance()->setPidVelocity(m_port, velocity, false);
+	Private::Motor::instance()->setPidVelocity(m_port, velocity);
 }
 
 void Motor::moveToPosition(const short& speed, const short& goalPos)
 {
 	Private::Motor::instance()->setPidGoalPos(m_port, goalPos);
-	Private::Motor::instance()->setPidVelocity(m_port, speed, true);
+	Private::Motor::instance()->setPidVelocity(m_port, speed);
 }
 
 void Motor::moveRelativePosition(const short& speed, const short& deltaPos)

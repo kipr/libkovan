@@ -1,7 +1,9 @@
 #include "kovan/camera.h"
 #include "kovan/camera.hpp"
 #include "nyi.h"
+
 #include <iostream>
+#include <cstdlib>
 
 class DeviceSingleton
 {
@@ -121,6 +123,14 @@ const char *get_object_data(int channel, int object)
 	if(!check_channel_and_object(channel, object)) return 0;
 	const Camera::Object &o = (*DeviceSingleton::instance()->channels()[channel]->objects())[object];
 	return o.data();
+}
+
+int get_code_num(int channel, int object)
+{
+	if(!check_channel_and_object(channel, object)) return -1;
+	const char *data = get_object_data(channel, object);
+	if(!data) return 0;
+	return atoi(data);
 }
 
 int get_object_data_length(int channel, int object)
