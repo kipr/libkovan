@@ -34,8 +34,9 @@ Camera::Object::Object(const Object &rhs)
 {
 	if(!rhs.m_data) return;
 	
-	m_data = new char[m_dataLength];
+	m_data = new char[m_dataLength + 1];
 	memcpy(m_data, rhs.m_data, m_dataLength);
+	m_data[m_dataLength] = 0;
 }
 
 Camera::Object::~Object()

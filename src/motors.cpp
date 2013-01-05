@@ -28,6 +28,11 @@ Motor::Motor(const port_t& port) throw()
 	// if(!p_motor) throw InvalidPort("Motor ports are through 1 and 4");
 }
 
+void Motor::clearPositionCounter()
+{
+	Private::Motor::instance()->clearBemf(m_port);
+}
+
 void Motor::moveAtVelocity(const short& velocity)
 {
 	Private::Motor::instance()->setPidVelocity(m_port, velocity, false);

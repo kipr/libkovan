@@ -33,14 +33,14 @@ typedef struct point2
 
 typedef struct rectangle
 {
-	int x;
-	int y;
+	int ulx;
+	int uly;
 	int width;
 	int height;
 } rectangle;
 
 point2 create_point2(int x, int y);
-rectangle create_rectangle(int x, int y, int width, int height);
+rectangle create_rectangle(int ulx, int uly, int width, int height);
 
 #ifdef __cplusplus
 }

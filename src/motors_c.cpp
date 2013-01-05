@@ -26,12 +26,12 @@
 
 int get_motor_position_counter(int motor)
 {
-	return -1;
+	return Private::Motor::instance()->backEMF(motor);
 }
 
-int clear_motor_position_counter(int motor)
+void clear_motor_position_counter(int motor)
 {
-	return -1;
+	Private::Motor::instance()->clearBemf(motor);
 }
 
 int move_at_velocity(int motor, int velocity)
@@ -142,9 +142,4 @@ void alloff()
 void ao()
 {
 	for(unsigned char i = 0; i < 4; ++i) off(i);
-}
-
-int get_backemf(int port)
-{
-	return Private::Motor::instance()->backEMF(port);
 }

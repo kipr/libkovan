@@ -47,6 +47,8 @@ public:
 	 */
 	Motor(const port_t& port) throw();
 	
+	void clearPositionCounter();
+	
 	void moveAtVelocity(const short& velocity);
 	void moveToPosition(const short& speed, const short& goalPos);
 	void moveRelativePosition(const short& speed, const short& deltaPos);

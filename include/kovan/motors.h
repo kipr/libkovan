@@ -41,7 +41,7 @@ int get_motor_position_counter(int motor);
 /*!
  * \ingroup motor
  */
-int clear_motor_position_counter(int motor);
+void clear_motor_position_counter(int motor);
 
 /*!
  * \ingroup motor
@@ -128,7 +128,7 @@ void bk(int motor);
 /*!
  * \ingroup motor
  */
-void motor (int motor, int percent);
+void motor(int motor, int percent);
 
 /*!
  * Turns the specified motor off.

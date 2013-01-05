@@ -46,6 +46,8 @@ namespace Private
 		void setPid(const port_t &port, const short &p, const short &i, const short &d,
 			const short &pd, const short &id, const short &dd);
 		
+		void clearBemf(unsigned char port);
+		
 		void setPidVelocity(const port_t &port, const short &pwm, const bool &hasPos);
 		short pidVelocity(const port_t &port) const;
 		

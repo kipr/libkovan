@@ -67,6 +67,7 @@
 #define BEMF_2_HIGH 		43
 #define BEMF_3_HIGH 		44
 #define SIDE_BUTTON 		45
+#define MOT_BEMF_CLEAR 		46
 
 #define MOTOR_DRIVE_CODE_T 	39
 

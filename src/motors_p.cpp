@@ -73,6 +73,12 @@ void Private::Motor::setPid(const port_t &port, const short &p, const short &i, 
 	nyi("Private::Motor::setPid");
 }
 
+void Private::Motor::clearBemf(unsigned char port)
+{
+	if(port > 3) return;
+	Private::Kovan::instance()->enqueueCommand(createWriteCommand(MOT_BEMF_CLEAR, 1 << port));
+}
+
 void Private::Motor::setPidVelocity(const port_t &port, const short &pwm, const bool &hasPos)
 {
 	Private::Kovan *kovan = Private::Kovan::instance();

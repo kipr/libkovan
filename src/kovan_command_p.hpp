@@ -2,7 +2,8 @@
 #define _KOVAN_COMMAND_P_HPP_
 
 #define MAX_COMMAND_DATA_SIZE 16
-#define NUM_FPGA_REGS 43
+#define NUM_FPGA_REGS 48
+#define TOTAL_REGS 128
 
 namespace Private
 {
@@ -33,7 +34,7 @@ namespace Private
 
 	struct State
 	{
-		unsigned short t[NUM_FPGA_REGS];
+		unsigned short t[TOTAL_REGS];
 	};
 	
 	Command createWriteCommand(const unsigned short &address, const unsigned short &value);

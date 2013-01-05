@@ -112,6 +112,12 @@ int get_object_count(int channel);
 const char *get_object_data(int channel, int object);
 
 /**
+ * \return The data associated with the given channel and object as an integer. If the given channel or object doesn't exist, -1 is returned.
+ * \see get_object_data
+ */
+int get_code_num(int channel, int object);
+
+/**
  * \return The length of the string data associated with a given object on a given channel.
  * If there is no data associated, 0 is returned. If the channel or object is invalid, 0 is returned.
  * \see get_object_data
