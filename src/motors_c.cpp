@@ -36,7 +36,8 @@ void clear_motor_position_counter(int motor)
 
 int move_at_velocity(int motor, int velocity)
 {
-	Private::Motor::instance()->setPidVelocity(motor, velocity, false);
+	Private::Motor::instance()->setControlMode(motor, Private::Motor::Speed);
+	Private::Motor::instance()->setPidVelocity(motor, velocity);
 	return 0;
 }
 
@@ -47,8 +48,9 @@ int mav(int motor, int velocity)
 
 int move_to_position(int motor, int speed, int goal_pos)
 {
+	Private::Motor::instance()->setControlMode(motor, Private::Motor::SpeedPosition);
 	Private::Motor::instance()->setPidGoalPos(motor, goal_pos);
-	Private::Motor::instance()->setPidVelocity(motor, speed, true);
+	Private::Motor::instance()->setPidVelocity(motor, speed);
 	return 0;
 }
 
@@ -67,14 +69,14 @@ int mrp(int motor, int speed, int delta_pos)
 	return move_relative_position(motor, speed, delta_pos);
 }
 
-void set_pid_gains(int motor, int p, int i, int d, int pd, int id, int dd)
+void set_pid_gains(short p, short i, short d, short pd, short id, short dd)
 {
-	
+	Private::Motor::instance()->setPidGains(p, i, d, pd, id, dd);
 }
 
-void get_pid_gains(int motor, int *p, int *i, int *d, int *pd, int *id, int *dd)
+void get_pid_gains(short *p, short *i, short *d, short *pd, short *id, short *dd)
 {
-	
+	Private::Motor::instance()->pidGains(*p, *i, *d, *pd, *id, *dd);
 }
 
 int freeze(int motor)

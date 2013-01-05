@@ -35,27 +35,29 @@ void Motor::clearPositionCounter()
 
 void Motor::moveAtVelocity(const short& velocity)
 {
+	Private::Motor::instance()->setControlMode(m_port, Private::Motor::Speed);
 	Private::Motor::instance()->setPidVelocity(m_port, velocity);
 }
 
-void Motor::moveToPosition(const short& speed, const short& goalPos)
+void Motor::moveToPosition(const short& speed, const int& goalPos)
 {
+	Private::Motor::instance()->setControlMode(m_port, Private::Motor::SpeedPosition);
 	Private::Motor::instance()->setPidGoalPos(m_port, goalPos);
 	Private::Motor::instance()->setPidVelocity(m_port, speed);
 }
 
-void Motor::moveRelativePosition(const short& speed, const short& deltaPos)
+void Motor::moveRelativePosition(const short& speed, const int& deltaPos)
 {
 }
 
 void Motor::setPidGains(const short& p, const short& i, const short& d, const short& pd, const short& id, const short& dd)
 {
-	Private::Motor::instance()->setPid(m_port, p, i, d, pd, id, dd);
+	Private::Motor::instance()->setPidGains(p, i, d, pd, id, dd);
 }
 
 void Motor::pidGains(short& p, short& i, short& d, short& pd, short& id, short& dd)
 {
-	Private::Motor::instance()->pid(m_port, p, i, d, pd, id, dd);
+	Private::Motor::instance()->pidGains(p, i, d, pd, id, dd);
 }
 
 void Motor::freeze()
@@ -64,14 +66,14 @@ void Motor::freeze()
 	Private::Motor::instance()->setPwmDirection(m_port, Private::Motor::ActiveStop);
 }
 
-bool Motor::getMotorDone() const
+bool Motor::isMotorDone() const
 {
-	return false;
+	return Private::Motor::instance()->isPidActive(m_port);
 }
 
 void Motor::blockMotorDone() const
 {
-	
+	while(isMotorDone()); // TODO: Yield in the future
 }
 
 void Motor::forward()
@@ -86,6 +88,7 @@ void Motor::backward()
 
 void Motor::motor(int percent)
 {
+	Private::Motor::instance()->setControlMode(m_port, Private::Motor::Inactive);
 	Private::Motor::instance()->setPwm(m_port, std::abs(percent));
 	if(percent > 0) Private::Motor::instance()->setPwmDirection(m_port, Private::Motor::Forward);
 	else if(percent < 0) Private::Motor::instance()->setPwmDirection(m_port, Private::Motor::Reverse);

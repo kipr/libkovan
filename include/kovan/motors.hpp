@@ -50,8 +50,8 @@ public:
 	void clearPositionCounter();
 	
 	void moveAtVelocity(const short& velocity);
-	void moveToPosition(const short& speed, const short& goalPos);
-	void moveRelativePosition(const short& speed, const short& deltaPos);
+	void moveToPosition(const short& speed, const int& goalPos);
+	void moveRelativePosition(const short& speed, const int& deltaPos);
 	
 	void setPidGains(const short& p, const short& i, const short& d, const short& pd, const short& id, const short& dd);
 	void pidGains(short& p, short& i, short& d, short& pd, short& id, short& dd);
@@ -62,7 +62,7 @@ public:
 	 * \return true if the motor has reached its target position, false otherwise
 	 * \see blockMotorDone
 	 */
-	bool getMotorDone() const;
+	bool isMotorDone() const;
 	
 	/*!
 	 * Waits until the motor has reached its target position.

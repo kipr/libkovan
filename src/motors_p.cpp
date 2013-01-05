@@ -79,9 +79,14 @@ Private::Motor::~Motor()
 }
 
 
-void Private::Motor::setPid(const port_t &port, const short &p, const short &i, const short &d, const short &pd, const short &id, const short &dd)
+void Private::Motor::setPidGains(const short &p, const short &i, const short &d, const short &pd, const short &id, const short &dd)
 {
-	nyi("Private::Motor::setPid");
+	Private::Kovan::instance()->enqueueCommand(createWriteCommand(PID_P, p));
+	Private::Kovan::instance()->enqueueCommand(createWriteCommand(PID_I, i));
+	Private::Kovan::instance()->enqueueCommand(createWriteCommand(PID_D, d));
+	Private::Kovan::instance()->enqueueCommand(createWriteCommand(PID_PD, pd));
+	Private::Kovan::instance()->enqueueCommand(createWriteCommand(PID_ID, id));
+	Private::Kovan::instance()->enqueueCommand(createWriteCommand(PID_DD, dd));
 }
 
 void Private::Motor::clearBemf(unsigned char port)
@@ -90,7 +95,22 @@ void Private::Motor::clearBemf(unsigned char port)
 	Private::Kovan::instance()->enqueueCommand(createWriteCommand(MOT_BEMF_CLEAR, 1 << port));
 }
 
-void Private::Motor::setControlMode(port_t port, Motor::ControlMode controlMode)
+void Private::Motor::setControlMode(port_t port, Private::Motor::ControlMode controlMode)
+{
+	Private::Kovan *kovan = Private::Kovan::instance();
+	
+	const unsigned short offset = (3 - port) << 1;
+	unsigned short &modes = kovan->currentState().t[PID_MODES];
+	
+	// Clear old drive code
+	modes &= ~(0x3 << offset);
+	// Add new drive code
+	modes |= ((int)(controlMode)) << offset;
+	
+	kovan->enqueueCommand(createWriteCommand(PID_MODES, modes));
+}
+
+Private::Motor::ControlMode Private::Motor::controlMode(port_t port) const
 {
 	Private::Kovan *kovan = Private::Kovan::instance();
 	
@@ -100,15 +120,13 @@ void Private::Motor::setControlMode(port_t port, Motor::ControlMode controlMode)
 	// Clear old drive code
 	modes &= ~(0x3 << offset);
 	
-	// Add new drive code
-	modes |= dir << offset;
-	
-	kovan->enqueueCommand(createWriteCommand(PID_MODES, controlMode controlMode | (3 - port));
+	return (Private::Motor::ControlMode)((modes >> offset) & 0x3);
 }
 
-Motor::ControlMode Private::Motor::controlMode(port_t port) const
+bool Private::Motor::isPidActive(port_t port) const
 {
-	
+	Private::Kovan *kovan = Private::Kovan::instance();
+	return kovan->currentState().t[PID_STATUS];
 }
 
 void Private::Motor::setPidVelocity(const port_t &port, const int &ticks)
@@ -137,9 +155,15 @@ int Private::Motor::pidGoalPos(const port_t &port) const
 	return state.t[goalPosHighRegisters[port]] << 16 || state.t[goalPosLowRegisters[port]];
 }
 
-void Private::Motor::pid(const port_t &port, short &p, short &i, short &d, short &pd, short &id, short &dd)
+void Private::Motor::pidGains(short &p, short &i, short &d, short &pd, short &id, short &dd)
 {
-	nyi("Private::Motor::pid");
+	const State &state = Private::Kovan::instance()->currentState();
+	p = state.t[PID_P];
+	i = state.t[PID_I];
+	d = state.t[PID_D];
+	pd = state.t[PID_PD];
+	id = state.t[PID_ID];
+	dd = state.t[PID_DD];
 }
 
 void Private::Motor::setPwm(const port_t &port, const unsigned char &speed)

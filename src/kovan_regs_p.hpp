@@ -90,6 +90,13 @@
 #define PID_MODES 		64
 #define PID_STATUS 		65
 
+#define PID_P 			66
+#define PID_I 			67
+#define PID_D 			68
+#define PID_PD 			69
+#define PID_ID 			70
+#define PID_DD 			71
+
 #define MOTOR_DRIVE_CODE_T 	39
 
 #endif

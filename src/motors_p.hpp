@@ -29,7 +29,7 @@ namespace Private
 	{
 	public:
 		enum ControlMode {
-			PidInactive = 0,
+			Inactive = 0,
 			Position = 1,
 			Speed = 2,
 			SpeedPosition = 3
@@ -44,13 +44,15 @@ namespace Private
 		
 		~Motor();
 		
-		void setPid(const port_t &port, const short &p, const short &i, const short &d,
+		void setPidGains(const short &p, const short &i, const short &d,
 			const short &pd, const short &id, const short &dd);
 		
 		void clearBemf(unsigned char port);
 		
-		void setControlMode(Motor::ControlMode mode);
-		Motor::ControlMode controlMode() const;
+		void setControlMode(port_t port, Motor::ControlMode mode);
+		Motor::ControlMode controlMode(port_t port) const;
+		
+		bool isPidActive(port_t port) const;
 		
 		void setPidVelocity(const port_t &port, const int &ticks);
 		int pidVelocity(const port_t &port) const;
@@ -61,7 +63,7 @@ namespace Private
 		void setControlMode(const Motor::ControlMode &mode);
 		Motor::ControlMode controlMode() const;
 		
-		void pid(const port_t &port, short &p, short &i, short &d, short &pd, short &id, short &dd);
+		void pidGains(short &p, short &i, short &d, short &pd, short &id, short &dd);
 		
 		void setPwm(const port_t &port, const unsigned char &speed);
 		void setPwmDirection(const port_t &port, const Motor::Direction &dir);
