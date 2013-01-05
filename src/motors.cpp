@@ -52,12 +52,12 @@ void Motor::moveRelativePosition(const short& speed, const int& deltaPos)
 
 void Motor::setPidGains(const short& p, const short& i, const short& d, const short& pd, const short& id, const short& dd)
 {
-	Private::Motor::instance()->setPidGains(p, i, d, pd, id, dd);
+	Private::Motor::instance()->setPidGains(m_port, p, i, d, pd, id, dd);
 }
 
 void Motor::pidGains(short& p, short& i, short& d, short& pd, short& id, short& dd)
 {
-	Private::Motor::instance()->pidGains(p, i, d, pd, id, dd);
+	Private::Motor::instance()->pidGains(m_port,p, i, d, pd, id, dd);
 }
 
 void Motor::freeze()

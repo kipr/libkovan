@@ -79,14 +79,15 @@ Private::Motor::~Motor()
 }
 
 
-void Private::Motor::setPidGains(const short &p, const short &i, const short &d, const short &pd, const short &id, const short &dd)
+void Private::Motor::setPidGains(port_t port, const short &p, const short &i, const short &d, const short &pd, const short &id, const short &dd)
 {
-	Private::Kovan::instance()->enqueueCommand(createWriteCommand(PID_P, p));
-	Private::Kovan::instance()->enqueueCommand(createWriteCommand(PID_I, i));
-	Private::Kovan::instance()->enqueueCommand(createWriteCommand(PID_D, d));
-	Private::Kovan::instance()->enqueueCommand(createWriteCommand(PID_PD, pd));
-	Private::Kovan::instance()->enqueueCommand(createWriteCommand(PID_ID, id));
-	Private::Kovan::instance()->enqueueCommand(createWriteCommand(PID_DD, dd));
+	Private::Kovan *kovan = Private::Kovan::instance();
+	kovan->enqueueCommand(createWriteCommand(PID_P_0 + port, p));
+	kovan->enqueueCommand(createWriteCommand(PID_I_0 + port, i));
+	kovan->enqueueCommand(createWriteCommand(PID_D_0 + port, d));
+	kovan->enqueueCommand(createWriteCommand(PID_PD_0 + port, pd));
+	kovan->enqueueCommand(createWriteCommand(PID_ID_0 + port, id));
+	kovan->enqueueCommand(createWriteCommand(PID_DD_0 + port, dd));
 }
 
 void Private::Motor::clearBemf(unsigned char port)
@@ -155,15 +156,16 @@ int Private::Motor::pidGoalPos(const port_t &port) const
 	return state.t[goalPosHighRegisters[port]] << 16 || state.t[goalPosLowRegisters[port]];
 }
 
-void Private::Motor::pidGains(short &p, short &i, short &d, short &pd, short &id, short &dd)
+void Private::Motor::pidGains(port_t port, short &p, short &i, short &d, short &pd, short &id, short &dd)
 {
+	if(port > 3) return;
 	const State &state = Private::Kovan::instance()->currentState();
-	p = state.t[PID_P];
-	i = state.t[PID_I];
-	d = state.t[PID_D];
-	pd = state.t[PID_PD];
-	id = state.t[PID_ID];
-	dd = state.t[PID_DD];
+	p = state.t[PID_P_0 + port];
+	i = state.t[PID_I_0 + port];
+	d = state.t[PID_D_0 + port];
+	pd = state.t[PID_PD_0 + port];
+	id = state.t[PID_ID_0 + port];
+	dd = state.t[PID_DD_0 + port];
 }
 
 void Private::Motor::setPwm(const port_t &port, const unsigned char &speed)

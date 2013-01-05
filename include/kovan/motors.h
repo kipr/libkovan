@@ -73,12 +73,12 @@ int mrp(int motor, int speed, int delta_pos);
 /*!
  * \ingroup motor
  */
-void set_pid_gains(int p, int i, int d, int pd, int id, int dd);
+void set_pid_gains(int motor, short p, short i, short d, short pd, short id, short dd);
 
 /*!
  * \ingroup motor
  */
-void get_pid_gains(int *p, int *i, int *d, int *pd, int *id, int *dd);
+void get_pid_gains(int motor, short *p, short *i, short *d, short *pd, short *id, short *dd);
 
 /*!
  * \ingroup motor

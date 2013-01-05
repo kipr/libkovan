@@ -44,7 +44,7 @@ namespace Private
 		
 		~Motor();
 		
-		void setPidGains(const short &p, const short &i, const short &d,
+		void setPidGains(port_t port, const short &p, const short &i, const short &d,
 			const short &pd, const short &id, const short &dd);
 		
 		void clearBemf(unsigned char port);
@@ -63,7 +63,7 @@ namespace Private
 		void setControlMode(const Motor::ControlMode &mode);
 		Motor::ControlMode controlMode() const;
 		
-		void pidGains(short &p, short &i, short &d, short &pd, short &id, short &dd);
+		void pidGains(port_t port, short &p, short &i, short &d, short &pd, short &id, short &dd);
 		
 		void setPwm(const port_t &port, const unsigned char &speed);
 		void setPwmDirection(const port_t &port, const Motor::Direction &dir);

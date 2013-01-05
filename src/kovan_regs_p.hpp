@@ -90,12 +90,30 @@
 #define PID_MODES 		64
 #define PID_STATUS 		65
 
-#define PID_P 			66
-#define PID_I 			67
-#define PID_D 			68
-#define PID_PD 			69
-#define PID_ID 			70
-#define PID_DD 			71
+#define PID_P_0 		66
+#define PID_P_1 		67
+#define PID_P_2 		68
+#define PID_P_3 		69
+#define PID_I_0 		70
+#define PID_I_1 		71
+#define PID_I_2 		72
+#define PID_I_3 		73
+#define PID_D_0 		74
+#define PID_D_1 		75
+#define PID_D_2 		76
+#define PID_D_3 		77
+#define PID_PD_0 		78
+#define PID_PD_1 		79
+#define PID_PD_2 		80
+#define PID_PD_3 		81
+#define PID_ID_0 		82
+#define PID_ID_1 		83
+#define PID_ID_2 		84
+#define PID_ID_3 		85
+#define PID_DD_0 		86
+#define PID_DD_1 		87
+#define PID_DD_2 		88
+#define PID_DD_3 		89
 
 #define MOTOR_DRIVE_CODE_T 	39
 
