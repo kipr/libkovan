@@ -81,10 +81,11 @@ Private::Motor::~Motor()
 
 void Private::Motor::setPidGains(port_t port, const short &p, const short &i, const short &d, const short &pd, const short &id, const short &dd)
 {
+	if(port > 3) return;
 	Private::Kovan *kovan = Private::Kovan::instance();
-	kovan->enqueueCommand(createWriteCommand(PID_P_0 + port, p));
-	kovan->enqueueCommand(createWriteCommand(PID_I_0 + port, i));
-	kovan->enqueueCommand(createWriteCommand(PID_D_0 + port, d));
+	kovan->enqueueCommand(createWriteCommand(PID_PN_0 + port, p));
+	kovan->enqueueCommand(createWriteCommand(PID_IN_0 + port, i));
+	kovan->enqueueCommand(createWriteCommand(PID_DN_0 + port, d));
 	kovan->enqueueCommand(createWriteCommand(PID_PD_0 + port, pd));
 	kovan->enqueueCommand(createWriteCommand(PID_ID_0 + port, id));
 	kovan->enqueueCommand(createWriteCommand(PID_DD_0 + port, dd));
@@ -160,9 +161,9 @@ void Private::Motor::pidGains(port_t port, short &p, short &i, short &d, short &
 {
 	if(port > 3) return;
 	const State &state = Private::Kovan::instance()->currentState();
-	p = state.t[PID_P_0 + port];
-	i = state.t[PID_I_0 + port];
-	d = state.t[PID_D_0 + port];
+	p = state.t[PID_PN_0 + port];
+	i = state.t[PID_IN_0 + port];
+	d = state.t[PID_DN_0 + port];
 	pd = state.t[PID_PD_0 + port];
 	id = state.t[PID_ID_0 + port];
 	dd = state.t[PID_DD_0 + port];
