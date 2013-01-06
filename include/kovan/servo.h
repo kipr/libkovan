@@ -37,6 +37,10 @@ void enable_servo(int port);
 
 void disable_servo(int port);
 
+void enable_servos();
+
+void disable_servos();
+
 void set_servo_enabled(int port, int enabled);
 
 int get_servo_enabled(int port);

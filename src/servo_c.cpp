@@ -31,6 +31,16 @@ void disable_servo(int servo)
 	set_servo_enabled(servo, 0);
 }
 
+void enable_servos()
+{
+	for(int i = 0; i < 4; ++i) enable_servo(i);
+}
+
+void disable_servos()
+{
+	for(int i = 0; i < 4; ++i) disable_servo(i);
+}
+
 void set_servo_enabled(int servo, int enabled)
 {
 	Private::Servo::instance()->setEnabled(servo, enabled);

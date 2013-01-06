@@ -21,6 +21,11 @@
 #include "kovan/general.h"
 #include "kovan_p.hpp"
 
+#include "kovan/motors.h"
+#include "kovan/servo.h"
+#include "kovan/analog.h"
+#include "kovan/digital.h"
+
 void set_auto_publish(int on)
 {
 	Private::Kovan::instance()->setAutoFlush(on);
@@ -29,4 +34,17 @@ void set_auto_publish(int on)
 void publish()
 {
 	Private::Kovan::instance()->flush();
+}
+
+void halt()
+{
+	ao();
+	disable_servos();
+	for(int i = 0; i < 8; ++i) {
+		set_analog_pullup(i, 0);
+	}
+	for(int i = 8; i < 16; ++i) {
+		set_digital_output(i, 0);
+		set_digital_pullup(i, 0);
+	}
 }

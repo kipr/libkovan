@@ -43,8 +43,8 @@ int analog10(int port);
  */
 int analog(int port);
 
-void analog_set_pullup(int port, int pullup);
-int analog_get_pullup(int port);
+void set_analog_pullup(int port, int pullup);
+int get_analog_pullup(int port);
 
 #ifdef __cplusplus
 }

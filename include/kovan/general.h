@@ -51,6 +51,8 @@ void set_auto_publish(int on);
  */
 void publish();
 
+void halt();
+
 #ifdef __cplusplus
 }
 #endif
