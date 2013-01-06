@@ -54,31 +54,33 @@ namespace Private
 		
 		bool isPidActive(port_t port) const;
 		
-		void setPidVelocity(const port_t &port, const int &ticks);
-		int pidVelocity(const port_t &port) const;
+		void setPidVelocity(port_t port, const int &ticks);
+		int pidVelocity(port_t port) const;
 		
-		void setPidGoalPos(const port_t &port, const int &pos);
-		int pidGoalPos(const port_t &port) const;
+		void setPidGoalPos(port_t port, const int &pos);
+		int pidGoalPos(port_t port) const;
 		
 		void setControlMode(const Motor::ControlMode &mode);
 		Motor::ControlMode controlMode() const;
 		
 		void pidGains(port_t port, short &p, short &i, short &d, short &pd, short &id, short &dd);
 		
-		void setPwm(const port_t &port, const unsigned char &speed);
-		void setPwmDirection(const port_t &port, const Motor::Direction &dir);
+		void setPwm(const port_t port, const unsigned char &speed);
+		void setPwmDirection(port_t port, const Motor::Direction &dir);
 		
-		unsigned char pwm(const port_t &port);
-		Motor::Direction pwmDirection(const port_t &port) const;
+		unsigned char pwm(port_t port);
+		Motor::Direction pwmDirection(port_t port) const;
 		
-		void stop(const port_t &port);
+		void stop(port_t port);
 		
-		int backEMF(const unsigned char &port);
+		int backEMF(port_t port);
 		
 		static Motor *instance();
 		
 	private:
 		Motor();
+		
+		port_t fixPort(port_t port) const;
 	};
 }
 

@@ -46,8 +46,9 @@ Private::Servo::~Servo()
 {
 }
 
-void Private::Servo::setEnabled(const port_t &port, const bool &enabled)
+void Private::Servo::setEnabled(port_t port, const bool &enabled)
 {
+	port = fixPort(port);
 	if(port > 3) return;
 	unsigned short &allStop = Private::Kovan::instance()->currentState().t[MOTOR_ALL_STOP];
 	const unsigned short val = 1 << (port + 1);
@@ -56,24 +57,29 @@ void Private::Servo::setEnabled(const port_t &port, const bool &enabled)
 	Private::Kovan::instance()->enqueueCommand(createWriteCommand(MOTOR_ALL_STOP, allStop));
 }
 
-bool Private::Servo::isEnabled(const port_t &port)
+bool Private::Servo::isEnabled(port_t port)
 {
+	port = fixPort(port);
 	if(port > 3) return false;
 	unsigned short &allStop = Private::Kovan::instance()->currentState().t[MOTOR_ALL_STOP];
 	const unsigned short val = 1 << (port + 1);
 	return allStop & val;
 }
 
-bool Private::Servo::setPosition(const port_t& port, const unsigned short& position)
+bool Private::Servo::setPosition(port_t port, const unsigned short& position)
 {
+	port = fixPort(port);
+	if(port > 3) return false;
 	unsigned short cappedPosition = position & 0x03FF;
 	const unsigned short val = (unsigned int)(((SERVO_MAX - SERVO_MIN) * (cappedPosition / 1024.0)) + SERVO_MIN) >> 8;
 	Private::Kovan::instance()->enqueueCommand(createWriteCommand(servoRegisters[port], val));
 	return true; // TODO: Remove return value?
 }
 
-unsigned short Private::Servo::position(const port_t& port) const
+unsigned short Private::Servo::position(port_t port) const
 {
+	port = fixPort(port);
+	if(port > 3) return 0xFFFF;
 	const unsigned int val = Private::Kovan::instance()->currentState().t[servoRegisters[port]];
 	return (1024.0 * ((val << 8) - SERVO_MIN)) / (SERVO_MAX - SERVO_MIN);
 }
@@ -82,4 +88,15 @@ Private::Servo *Private::Servo::instance()
 {
 	static Servo instance;
 	return &instance;
+}
+
+port_t Private::Servo::fixPort(port_t port) const
+{
+	switch(port) {
+		case 0: return 1;
+		case 1: return 0;
+		case 2: return 3;
+		case 3: return 2;
+	}
+	return port;
 }

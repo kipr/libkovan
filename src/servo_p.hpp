@@ -30,15 +30,17 @@ namespace Private
 	public:
 		~Servo();
 		
-		void setEnabled(const port_t &port, const bool &enabled);
-		bool isEnabled(const port_t &port);
+		void setEnabled(port_t port, const bool &enabled);
+		bool isEnabled(port_t port);
 		
-		bool setPosition(const port_t& port, const unsigned short& position);
-		unsigned short position(const port_t& port) const;
+		bool setPosition(port_t port, const unsigned short& position);
+		unsigned short position(port_t port) const;
 		
 		static Servo *instance();
 	private:
 		Servo();
+		
+		port_t fixPort(port_t port) const;
 	};
 }
 
