@@ -156,6 +156,7 @@ void Private::Motor::setPidGoalPos(port_t port, const int &pos)
 	port = fixPort(port);
 	kovan->enqueueCommand(createWriteCommand(goalPosLowRegisters[port], pos & 0x0000FFFF));
 	kovan->enqueueCommand(createWriteCommand(goalPosHighRegisters[port], (pos & 0xFFFF0000) >> 16));
+	std::cout << "Wrote goal pos of " << pos << std::endl;
 }
 
 int Private::Motor::pidGoalPos(port_t port) const
