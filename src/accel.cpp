@@ -4,14 +4,14 @@
 #define DATA_ADDR 0x16
 #define DATA_VAL 0x05
 
-#define R_XOUTL = 0x0
-#define R_XOUTH = 0x1
+#define R_XOUTL 0x0
+#define R_XOUTH 0x1
 
-#define R_YOUTL = 0x2
-#define R_YOUTH = 0x3
+#define R_YOUTL 0x2
+#define R_YOUTH 0x3
 
-#define R_ZOUTL = 0x4
-#define R_ZOUTH = 0x5
+#define R_ZOUTL 0x4
+#define R_ZOUTH 0x5
 
 bool Acceleration::s_setup = false;
 
