@@ -156,7 +156,6 @@ void Private::Motor::setPidGoalPos(port_t port, const int &pos)
 	port = fixPort(port);
 	kovan->enqueueCommand(createWriteCommand(goalPosLowRegisters[port], pos & 0x0000FFFF));
 	kovan->enqueueCommand(createWriteCommand(goalPosHighRegisters[port], (pos & 0xFFFF0000) >> 16));
-	std::cout << "Wrote goal pos of " << pos << std::endl;
 }
 
 int Private::Motor::pidGoalPos(port_t port) const
@@ -181,6 +180,7 @@ void Private::Motor::pidGains(port_t port, short &p, short &i, short &d, short &
 
 void Private::Motor::setPwm(port_t port, const unsigned char &speed)
 {
+	setControlMode(port, Private::Motor::Inactive);
 	port = fixPort(port);
 	Private::Kovan *kovan = Private::Kovan::instance();
 	const unsigned int adjustedSpeed = speed > 100 ? 100 : speed; 
@@ -192,7 +192,7 @@ void Private::Motor::setPwmDirection(port_t port, const Motor::Direction &dir)
 	// FIXME: This assumes that our current state is the latest.
 	// If somebody has altered the motor drive codes in the mean time,
 	// this will undo their work.
-	
+	setControlMode(port, Private::Motor::Inactive);
 	Private::Kovan *kovan = Private::Kovan::instance();
 	
 	port = fixPort(port);
