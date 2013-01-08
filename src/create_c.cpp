@@ -168,7 +168,7 @@ void set_create_total_angle(int angle)
 
 int get_create_distance()
 {
-	
+	return Create::instance()->distance()->value();
 }
 
 void set_create_distance(int dist)
@@ -301,7 +301,7 @@ void create_spin_CCW(int speed)
 	Create::instance()->spinCounterClockwise(speed);
 }
 
-void create_drive_direct(int r_speed, int l_speed)
+void create_drive_direct(int l_speed, int r_speed)
 {
 	Create::instance()->driveDirect(r_speed, l_speed);
 }

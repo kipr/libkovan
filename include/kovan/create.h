@@ -102,7 +102,7 @@ void create_drive (int speed, int radius);
 void create_drive_straight (int speed);
 void create_spin_CW (int speed);
 void create_spin_CCW (int speed);
-void create_drive_direct(int r_speed, int l_speed);
+void create_drive_direct(int l_speed, int r_speed);
 int create_spin_block(int speed, int angle);
 int _create_get_raw_encoders(long *lenc, long *renc);
 void create_advance_led(int on) ;

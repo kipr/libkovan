@@ -20,6 +20,8 @@ namespace Private
 		const bool &autoFlush() const;
 		bool flush();
 		
+		void autoUpdate();
+		
 		State &currentState();
 		
 		static Kovan *instance();

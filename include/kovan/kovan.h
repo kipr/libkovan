@@ -31,6 +31,7 @@
 #include "servo.h"
 #include "button.h"
 #include "camera.h"
+#include "create.h"
 #include "analog.h"
 #include "ir.h"
 #include "wifi.h"

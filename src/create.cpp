@@ -600,7 +600,6 @@ Create::Mode Create::mode()
 	} while(state == 0);
 	endAtomicOperation();
 
-	printf("State = %d\n", state);
         switch(state) {
 	case 0: return OffMode;
 	case 1: return PassiveMode;

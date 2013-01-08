@@ -46,7 +46,9 @@ bool Analog::pullup(const unsigned char& port) const
 {
 	// FIXME: Untested
 	if(port >= 8) return false;
+	
 	Private::Kovan *kovan = Private::Kovan::instance();
+	kovan->autoUpdate();
 	return kovan->currentState().t[AN_PULLUPS] & (1 << port);
 }
 
@@ -54,6 +56,7 @@ unsigned short Analog::value(const unsigned char& port) const
 {
 	if(port > 16) return 0xFFFF;
 	Private::Kovan *kovan = Private::Kovan::instance();
+	kovan->autoUpdate();
 	return kovan->currentState().t[AN_IN_0 + port];
 }
 

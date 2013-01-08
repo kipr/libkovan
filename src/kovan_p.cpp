@@ -17,7 +17,7 @@ void Kovan::enqueueCommand(const Command &command)
 	m_queue.push_back(command);
 	
 	// FIXME: This logic needs to be improved eventually
-	if(m_autoFlush) flush();
+	autoUpdate();
 }
 
 void Kovan::setAutoFlush(const bool &autoFlush)
@@ -54,6 +54,11 @@ bool Kovan::flush()
 #endif
 	
 	return true;
+}
+
+void Kovan::autoUpdate()
+{
+	if(m_autoFlush) flush();
 }
 
 State &Kovan::currentState()

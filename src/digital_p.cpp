@@ -35,6 +35,7 @@ bool Digital::value(const unsigned char& port) const
 {
 	const unsigned char actualPort = 7 - (port - 8);
 	if(actualPort > 7) return false;
+	Private::Kovan::instance()->autoUpdate();
 	bool ret = Private::Kovan::instance()->currentState().t[DIG_IN] & (1 << actualPort);
 	return ret;
 }
@@ -58,6 +59,7 @@ const Digital::Direction Digital::direction(const unsigned char& port) const
 	const unsigned char actualPort = 7 - (port - 8);
 	if(actualPort > 7) return Digital::Unknown;
 	Private::Kovan *kovan = Private::Kovan::instance();
+	kovan->autoUpdate();
 	Digital::Direction ret = kovan->currentState().t[DIG_OUT_ENABLE] & (1 << actualPort) ? Digital::Out : Digital::In;
 	return ret;
 }
@@ -80,6 +82,7 @@ bool Digital::pullup(const unsigned char& port) const
 {
 	const unsigned char actualPort = 7 - (port - 8);
 	if(actualPort > 15) return false;
+	Private::Kovan::instance()->autoUpdate();
 	bool ret = Private::Kovan::instance()->currentState().t[DIG_PULLUPS] & (1 << actualPort);
 	return ret;
 }
