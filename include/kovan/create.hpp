@@ -37,9 +37,15 @@
 #include <cstdio>
 #include <cstdlib>
 #include <vector>
-#include <termios.h>
 #include <sys/time.h>
+
+#ifndef WIN32
+#include <termios.h>
 #include <pthread.h>
+#else
+typedef unsigned int speed_t;
+#endif
+
 #include "sensor.hpp"
 #include "button.hpp"
 
@@ -379,12 +385,16 @@ public:
 	
 	inline void beginAtomicOperation()
 	{
+	#ifndef WIN32
 		pthread_mutex_lock(&m_mutex);
+	#endif
 	}
 
 	inline void endAtomicOperation()
 	{
+	#ifndef WIN32
 		pthread_mutex_unlock(&m_mutex);
+	#endif
 	}
 	
 private:
@@ -414,11 +424,15 @@ private:
 	
 	inline bool hasRequiredTimePassed(const timeval& timestamp) const
 	{
+	#ifndef WIN32
 		timeval current = timeOfDay();
 		timeval result;
 		timersub(&current, &timestamp, &result);
 		const long msecs = result.tv_sec * 1000 + result.tv_usec / 1000;
 		return msecs > m_refreshRate;
+	#else
+		#warning Create library not yet implemented for Windows
+	#endif
 	}
 
 	inline double timevalToFloat(const timeval& tv)
@@ -488,8 +502,9 @@ private:
 	size_t m_i;
 	CreateScript m_script;
 	int m_tty;
-
+#ifndef WIN32
 	pthread_mutex_t m_mutex;
+#endif
 };
 
 #endif

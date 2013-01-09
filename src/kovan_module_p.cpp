@@ -39,7 +39,7 @@ bool KovanModule::init()
 	
 	m_sock = socket(PF_INET, SOCK_DGRAM, IPPROTO_UDP);
 	bool on = true;
-	setsockopt(m_sock, SOL_SOCKET, SO_REUSEADDR, &on, sizeof(bool));
+	setsockopt(m_sock, SOL_SOCKET, SO_REUSEADDR, reinterpret_cast<const char *>(&on), sizeof(bool));
 	if(m_sock < 0) {
 		perror("socket");
 		return false;
@@ -60,7 +60,11 @@ bool KovanModule::bind(const uint64_t& address, const uint16_t& port)
 
 	while(::bind(m_sock, (sockaddr *)&sa, sizeof(sa)) < 0) {
 		// Keep trying to bind until we find an open port
+#ifndef WIN32
 		if(errno == EADDRINUSE) {
+#else
+		if(errno == WSAEADDRINUSE) {
+#endif
 			++sa.sin_port;
 			continue;
 		}
@@ -75,8 +79,11 @@ bool KovanModule::bind(const uint64_t& address, const uint16_t& port)
 void KovanModule::close()
 {
 	if(m_sock < 0) return;
-	
+#ifndef WIN32
 	::close(m_sock);
+#else
+	closesocket(m_sock);
+#endif
 }
 
 uint64_t KovanModule::moduleAddress() const
@@ -101,7 +108,7 @@ bool KovanModule::send(const CommandVector& commands)
 	memcpy(packet->commands, &commands[0], commands.size() * sizeof(Command));
 	
 	bool ret = true;
-	if(sendto(m_sock, packet, packetSize, 0, (sockaddr *)&m_out, sizeof(m_out)) != packetSize) {
+	if(sendto(m_sock, reinterpret_cast<const char *>(packet), packetSize, 0, (sockaddr *)&m_out, sizeof(m_out)) != packetSize) {
 		perror("sendto");
 		ret = false;
 	}
@@ -114,7 +121,7 @@ bool KovanModule::recv(State& state)
 {
 	memset(&state, 0, sizeof(State));
 	
-	if(recvfrom(m_sock, &state, sizeof(State), 0, NULL, NULL) != sizeof(State)) {
+	if(recvfrom(m_sock, reinterpret_cast<char *>(&state), sizeof(State), 0, NULL, NULL) != sizeof(State)) {
 		perror("recvfrom");
 		return false;
 	}

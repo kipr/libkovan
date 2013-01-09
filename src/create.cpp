@@ -2,13 +2,17 @@
 #include "kovan/create_codes.h"
 #include "kovan/util.hpp"
 
+#ifndef WIN32
 #include <fcntl.h>
+#include <pthread.h>
+#endif
+
 #include <unistd.h>
 #include <cstring>
 
 #include <cstdio>
 #include <cmath>
-#include <pthread.h>
+
 #include <iostream>
 #include <cstring>
 
@@ -496,8 +500,9 @@ Create::~Create()
 	lazyDelete(m_wheelDropLeft);
 	lazyDelete(m_wheelDropRight);
 	lazyDelete(m_wheelDropCaster);
-
+#ifndef WIN32
 	pthread_mutex_destroy(&m_mutex);
+#endif
 }
 
 
@@ -505,6 +510,7 @@ Create::~Create()
 int
 set_interface_attribs (int fd, int speed, int parity)
 {
+#ifndef WIN32
     struct termios options;   
 
     fcntl (fd, F_SETFL, 0);
@@ -519,17 +525,19 @@ set_interface_attribs (int fd, int speed, int parity)
     cfsetospeed (&options, B57600);
     //send options back to fd
     tcsetattr (fd, TCSANOW, &options);
-
+#endif
     return 0;
 }
 
 bool Create::connect()
 {
 	if(!open()) return false;
+#ifndef WIN32
 	if(set_interface_attribs(m_tty, B57600, 0) != 0) {
 		close();
 		return false;
 	}
+#endif
 	
 	// setLocalBaudRate(baudCodeRate[10]); // This is the default rate
 	start();
@@ -622,7 +630,11 @@ bool Create::write(const unsigned char& c)
 bool Create::write(const unsigned char *data, const size_t& len)
 {
 	if(!m_tty) return false;
+#ifndef WIN32
 	return ::write(m_tty, data, len) == len;
+#else
+	#warning Create library not yet implemented for Windows
+#endif
 }
 
 short Create::read()
@@ -634,7 +646,12 @@ short Create::read()
 int Create::read(unsigned char *data, const size_t& len)
 {
 	if(!m_tty) return 0;
-	int ret = ::read(m_tty, data, len);
+	int ret = 0;
+#ifndef WIN32
+	ret = ::read(m_tty, data, len);
+#else
+	#warning Create library not yet implemented for Windows
+#endif
 	if(ret < 0) perror("::read");
 	return ret;
 }
@@ -867,7 +884,9 @@ Create::Create()
 	m_wheelDropRight(0),
 	m_wheelDropCaster(0)
 {
+#ifndef WIN32
 	pthread_mutex_init(&m_mutex, 0);
+#endif
 }
 
 Create::Create(const Create&) {}
@@ -875,6 +894,7 @@ Create& Create::operator=(const Create&) { return *this; }
 
 void Create::setLocalBaudRate(const speed_t& baudRate)
 {
+#ifndef WIN32
 	struct termios attribs;
 	tcgetattr(m_tty, &attribs);
 	
@@ -882,6 +902,7 @@ void Create::setLocalBaudRate(const speed_t& baudRate)
 	cfsetospeed(&attribs, baudRate);
 	
 	tcsetattr(m_tty, TCSADRAIN, &attribs);
+#endif
 }
 
 bool Create::start()
@@ -900,7 +921,11 @@ bool Create::open()
 	if(m_tty) return false;
 	
 	beginAtomicOperation();
+#ifndef WIN32
 	m_tty = ::open("/dev/ttyS2", O_RDWR | O_NOCTTY | O_NDELAY | O_NONBLOCK);
+#else
+	#warning Create library not yet implemented for Windows
+#endif
 	if(m_tty < 0) perror("Create::open");
 	endAtomicOperation();
 
@@ -911,7 +936,9 @@ void Create::close()
 {
 	if(!m_tty) return;
 	beginAtomicOperation();
+#ifndef WIN32
 	::close(m_tty);
+#endif
 	m_tty = 0;
 	endAtomicOperation();
 }

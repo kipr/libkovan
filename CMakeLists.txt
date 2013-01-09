@@ -18,6 +18,15 @@ SET(CMAKE_CXX_FLAGS "-Wall")
 
 set(LIBRARY_OUTPUT_PATH ${CMAKE_SOURCE_DIR}/lib)
 
+IF(WIN32)
+	INCLUDE_DIRECTORIES(${CMAKE_SOURCE_DIR}/../prefix/include)
+	INCLUDE_DIRECTORIES(${CMAKE_SOURCE_DIR}/../opencv/kiss-prefix/include)
+	INCLUDE_DIRECTORIES(${CMAKE_SOURCE_DIR}/../zbar-0.10/prefix/include)
+	LINK_DIRECTORIES(${CMAKE_SOURCE_DIR}/../opencv/kiss-prefix/lib)
+	LINK_DIRECTORIES(${CMAKE_SOURCE_DIR}/../lib)
+	LINK_DIRECTORIES(${CMAKE_SOURCE_DIR}/../zbar-0.10/prefix/lib)
+ENDIF(WIN32)
+
 IF(APPLE)
 	SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -arch x86_64 -g")
 ELSEIF(WIN32)
@@ -27,7 +36,13 @@ ELSEIF(UNIX)
 ENDIF()
 
 ADD_LIBRARY(kovan SHARED ${SOURCES})
+IF(NOT WIN32)
 TARGET_LINK_LIBRARIES(kovan pthread opencv_core opencv_highgui opencv_imgproc zbar)
+ELSE(NOT WIN32)
+# TODO: Make sure these are current
+TARGET_LINK_LIBRARIES(kovan pthread opencv_core249 opencv_highgui249 opencv_imgproc249 zbar)
+ENDIF(NOT WIN32)
+
 IF(KOVAN)
 	TARGET_LINK_LIBRARIES(kovan i2c_wrapper)
 	ADD_DEFINITIONS(-DKOVAN)

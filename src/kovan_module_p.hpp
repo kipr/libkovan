@@ -32,8 +32,13 @@
 #include <sys/socket.h>
 #include <netinet/in.h>
 #else
-#error Need windows socket includes.
+#define _WIN32_WINNT 0x0501
+#include <winsock2.h>
+#include <winsock.h>
+#include <ws2tcpip.h>
+#include <windows.h>
 #endif
+#include <stdint.h>
 
 namespace Private
 {

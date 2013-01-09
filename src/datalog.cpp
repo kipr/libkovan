@@ -70,7 +70,9 @@ bool CsvWriter::write(const DataLog *dataLog)
 	}
 	
 	fclose(file);
+#ifndef WIN32
 	sync();
+#endif
 	return true;
 }
 
@@ -124,7 +126,9 @@ bool PlainWriter::write(const DataLog *dataLog)
 		fprintf(file, "\n");
 	}
 	fclose(file);
+#ifndef WIN32
 	sync();
+#endif
 	return true;
 }
 
