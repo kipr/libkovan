@@ -121,8 +121,10 @@ bool KovanModule::recv(State& state)
 {
 	memset(&state, 0, sizeof(State));
 	
-	if(recvfrom(m_sock, reinterpret_cast<char *>(&state), sizeof(State), 0, NULL, NULL) != sizeof(State)) {
+	ssize_t i = 0;
+	if((i = recvfrom(m_sock, reinterpret_cast<char *>(&state), sizeof(State), 0, NULL, NULL)) != sizeof(State)) {
 		perror("recvfrom");
+		printf("Got %ld\n", i);
 		return false;
 	}
 	
