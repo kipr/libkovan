@@ -208,10 +208,13 @@ namespace Button
 	//! The Z button instance
 	extern IdButton Z;
 	
+	//! The Side button instance
+	extern IdButton Side;
+	
 	// extern AbstractButton side;
 	
 	//! Pointers to all 6 system buttons
-	extern IdButton *const all[6];
+	extern IdButton *const all[7];
 }
 
 #endif

@@ -32,11 +32,14 @@ IdButton Button::X(Button::Type::X, "X");
 IdButton Button::Y(Button::Type::Y, "Y");
 IdButton Button::Z(Button::Type::Z, "Z");
 
+IdButton Button::Side(Button::Type::Side, "");
+
 // AbstractButton Button::side(Button::Type::Z, "Z");
 
-IdButton * const Button::all[6] = {
+IdButton * const Button::all[7] = {
 	&Button::A, &Button::B, &Button::C,
-	&Button::X, &Button::Y, &Button::Z
+	&Button::X, &Button::Y, &Button::Z,
+	&Button::Side
 };
 
 AbstractButton::~AbstractButton() {}

@@ -88,6 +88,16 @@ int z_button()
 	return button(&Z);
 }
 
+int side_button()
+{
+	return button(&Side);
+}
+
+int black_button()
+{
+	return side_button();
+}
+
 int button_clicked(AbstractButton *button)
 {
 	return button->isClicked() ? 1 : 0;
@@ -121,6 +131,11 @@ int y_button_clicked()
 int z_button_clicked()
 {
 	return button_clicked(&Z);
+}
+
+int side_button_clicked()
+{
+	return button_clicked(&Side);
 }
 
 int any_button()
