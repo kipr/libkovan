@@ -112,8 +112,3 @@ bool ExtraButtons::isShown()
 {
 	return Private::Button::instance()->isExtraShown();
 }
-
-bool ExtraButtons::isShownDirty()
-{
-	return Private::Button::instance()->isExtraShownDirty();
-}

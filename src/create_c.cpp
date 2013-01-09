@@ -68,7 +68,7 @@ void create_cover_dock()
 
 int get_create_mode()
 {
-
+	return Create::instance()->mode();
 }
 
 int get_create_lbump()

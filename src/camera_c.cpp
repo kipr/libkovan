@@ -161,6 +161,13 @@ point2 get_object_centroid(int channel, int object)
 	return o.centroid().toCPoint2();
 }
 
+point2 get_object_center(int channel, int object)
+{
+	if(!check_channel_and_object(channel, object)) return create_point2(-1, -1);
+	const Camera::Object &o = (*DeviceSingleton::instance()->channels()[channel]->objects())[object];
+	return o.boundingBox().center().toCPoint2();
+}
+
 void camera_close()
 {
 	DeviceSingleton::instance()->close();

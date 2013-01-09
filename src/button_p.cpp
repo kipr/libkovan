@@ -19,103 +19,116 @@
  **************************************************************************/
 
 #include "button_p.hpp"
-#include "shared_mem_p.hpp"
 #include "kovan_p.hpp"
 #include "kovan_regs_p.hpp"
 
 #include <cstring>
-#include <pthread.h>
 #include <cstdio>
+#include <iostream>
 
 using namespace Private;
 
 void Private::Button::setText(const ::Button::Type::Id &id, const char *text)
 {
-	if(!Private::SharedMemory::instance()->isConnected()) return;
+	const unsigned char offset = buttonOffset(id);
+	if(offset > 5) return;
 	
-	SharedButton *button = selectButton(id);
-	if(!button) return;
+	strncpy(m_text[offset], text, MAX_BUTTON_TEXT_SIZE);
+	m_text[offset][MAX_BUTTON_TEXT_SIZE - 1] = 0;
 	
-	Private::SharedMemory::instance()->lock();
-	memcpy(button->text, text, MAX_BUTTON_TEXT_SIZE);
-	button->text[MAX_BUTTON_TEXT_SIZE - 1] = 0;
-	button->textDirty = 1;
-	Private::SharedMemory::instance()->unlock();
+	unsigned short start = 0;
+	unsigned short end = 0;
+	if(!buttonRegs(start, end, id)) return;
+	
+	for(int j = 0; j < MAX_BUTTON_TEXT_SIZE; j += 2) {
+		Private::Kovan::instance()->enqueueCommand(createWriteCommand(start + j / 2,
+			m_text[offset][j] << 8 | m_text[offset][j + 1]), false);
+	}
+	
+	unsigned short &dirty = Private::Kovan::instance()->currentState().t[BUTTON_TEXT_DIRTY];
+	dirty |= 1 << offset;
+	Private::Kovan::instance()->enqueueCommand(createWriteCommand(BUTTON_TEXT_DIRTY, dirty));
 }
 
 bool Private::Button::isTextDirty(const ::Button::Type::Id &id) const
 {
-	if(!Private::SharedMemory::instance()->isConnected()) return false;
-	SharedButton *button = selectButton(id);
-	if(!button) return false;
-	const bool value = button->textDirty;
-	if(value) {
-		Private::SharedMemory::instance()->lock();
-		button->textDirty = 0;
-		Private::SharedMemory::instance()->unlock();
-	}
-	return value;
+	Private::Kovan::instance()->autoUpdate();
+	const unsigned char offset = buttonOffset(id);
+	if(offset > 5) return false;
+	unsigned short &dirty = Private::Kovan::instance()->currentState().t[BUTTON_TEXT_DIRTY];
+	if(!((dirty >> offset) & 1)) return false;
+	dirty &= ~(1 << offset);
+	Private::Kovan::instance()->enqueueCommand(createWriteCommand(BUTTON_TEXT_DIRTY, dirty));
+	return true;
 }
 
 const char *Private::Button::text(const ::Button::Type::Id &id) const
 {
-	if(!Private::SharedMemory::instance()->isConnected()) return 0;
+	const unsigned char offset = buttonOffset(id);
+	if(!isTextDirty(id) || offset < 6) return m_text[offset];
 	
-	SharedButton *button = selectButton(id);
-	if(!button) return 0;
+	unsigned short start = 0;
+	unsigned short end = 0;
+	if(!buttonRegs(start, end, id)) return 0;
 	
-	return button->text;
+	unsigned short *registers = Private::Kovan::instance()->currentState().t;
+	unsigned char j = 0;
+	for(unsigned short i = start; j < MAX_BUTTON_TEXT_SIZE && i <= end; ++i) {
+		m_text[offset][j++] = (registers[i] >> 8) & 0x00FF;
+		m_text[offset][j++] = registers[i] & 0x00FF;
+	}
+	m_text[offset][MAX_BUTTON_TEXT_SIZE - 1] = 0;
+	return m_text[offset];
 }
 
 void Private::Button::setPressed(const ::Button::Type::Id &id, bool pressed)
 {
-	if(!Private::SharedMemory::instance()->isConnected()) return;
-	
-	SharedButton *button = selectButton(id);
-	if(!button) return;
-	
-	Private::SharedMemory::instance()->lock();
-	button->pressed = pressed ? 1 : 0;
-	Private::SharedMemory::instance()->unlock();
+	const unsigned char offset = buttonOffset(id);
+	if(offset > 5) return;
+	unsigned short &states = Private::Kovan::instance()->currentState().t[BUTTON_TEXT_DIRTY];
+	if(pressed) states |= (1 << offset);
+	else states &= ~(1 << offset);
+	Private::Kovan::instance()->enqueueCommand(createWriteCommand(BUTTON_STATES, states));
 }
 
 bool Private::Button::isPressed(const ::Button::Type::Id &id) const
 {
+	Private::Kovan::instance()->autoUpdate();
 	if(id == ::Button::Type::Side) {
 		return Private::Kovan::instance()->currentState().t[SIDE_BUTTON];
 	}
 	
-	if(!Private::SharedMemory::instance()->isConnected()) return false;
-	SharedButton *button = selectButton(id);
-	if(!button) return false;
-	return button->pressed;
+	const unsigned char offset = buttonOffset(id);
+	if(offset > 5) return false;
+	unsigned short &states = Private::Kovan::instance()->currentState().t[BUTTON_STATES];
+	// std::cout << "states: " << std::hex << states << std::endl;
+	return (states >> offset) & 1;
 }
 
 void Private::Button::setExtraShown(const bool& shown)
 {
-	if(!Private::SharedMemory::instance()->isConnected()) return;
-	
-	Private::SharedMemory::instance()->lock();
-	Private::SharedMemory::instance()->data()->extrasShown = shown ? 1 : 0;
-	Private::SharedMemory::instance()->data()->extrasShownDirty = 1;
-	Private::SharedMemory::instance()->unlock();
+	unsigned short &states = Private::Kovan::instance()->currentState().t[BUTTON_STATES];
+	unsigned short oldStates = states;
+	if(shown) states |= 0x8000;
+	else states &= 0x7FFF;
+	if(oldStates == states) return;
+	Private::Kovan::instance()->enqueueCommand(createWriteCommand(BUTTON_STATES, states));
 }
 
 bool Private::Button::isExtraShown() const
 {
-	return Private::SharedMemory::instance()->data()->extrasShown;
+	Private::Kovan::instance()->autoUpdate();
+	return Private::Kovan::instance()->currentState().t[BUTTON_STATES] & 0x8000;
 }
 
-bool Private::Button::isExtraShownDirty() const
+void Private::Button::resetButtons()
 {
-	if(!Private::SharedMemory::instance()->isConnected()) return false;
-	const bool value = Private::SharedMemory::instance()->data()->extrasShownDirty;
-	if(value) {
-		Private::SharedMemory::instance()->lock();
-		Private::SharedMemory::instance()->data()->extrasShownDirty = 0;
-		Private::SharedMemory::instance()->unlock();
-	}
-	return value;
+	strncpy(m_text[0], "A", MAX_BUTTON_TEXT_SIZE);
+	strncpy(m_text[1], "B", MAX_BUTTON_TEXT_SIZE);
+	strncpy(m_text[2], "C", MAX_BUTTON_TEXT_SIZE);
+	strncpy(m_text[3], "X", MAX_BUTTON_TEXT_SIZE);
+	strncpy(m_text[4], "Y", MAX_BUTTON_TEXT_SIZE);
+	strncpy(m_text[5], "Z", MAX_BUTTON_TEXT_SIZE);
 }
 
 Private::Button *Private::Button::instance()
@@ -124,27 +137,46 @@ Private::Button *Private::Button::instance()
 	return &s_button;
 }
 
-Private::SharedButton *Private::Button::selectButton(const ::Button::Type::Id &id) const
+unsigned char Private::Button::buttonOffset(const ::Button::Type::Id &id) const
+{
+	return (unsigned char)id;
+}
+
+bool Private::Button::buttonRegs(unsigned short &start, unsigned short &end, ::Button::Type::Id id) const
 {
 	switch(id) {
 	case ::Button::Type::A:
-		return &Private::SharedMemory::instance()->data()->a;
+		start = BUTTON_A_TEXT_START;
+		end = BUTTON_A_TEXT_END;
+		break;
 	case ::Button::Type::B:
-		return &Private::SharedMemory::instance()->data()->b;
+		start = BUTTON_B_TEXT_START;
+		end = BUTTON_B_TEXT_END;
+		break;
 	case ::Button::Type::C:
-		return &Private::SharedMemory::instance()->data()->c;
+		start = BUTTON_C_TEXT_START;
+		end = BUTTON_C_TEXT_END;
+		break;
 	case ::Button::Type::X:
-		return &Private::SharedMemory::instance()->data()->x;
+		start = BUTTON_X_TEXT_START;
+		end = BUTTON_X_TEXT_END;
+		break;
 	case ::Button::Type::Y:
-		return &Private::SharedMemory::instance()->data()->y;
+		start = BUTTON_Y_TEXT_START;
+		end = BUTTON_Y_TEXT_END;
+		break;
 	case ::Button::Type::Z:
-		return &Private::SharedMemory::instance()->data()->z;
+		start = BUTTON_Z_TEXT_START;
+		end = BUTTON_Z_TEXT_END;
+		break;
+	default: return false;
 	}
-	return 0;
+	return true;
 }
 
 Private::Button::Button()
 {
+	resetButtons();
 }
 
 Private::Button::Button(const Button& rhs)

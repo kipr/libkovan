@@ -186,13 +186,6 @@ public:
 	 * \note This method may not reflect the actual state of the GUI.
 	 */
 	static bool isShown();
-	
-	/*!
-	 * Determines whether or not the shown property has been recently changed.
-	 * \note This function will only return dirty once per change
-	 * \attention User code should not call this method.
-	 */
-	static bool isShownDirty();
 };
 
 /*!
