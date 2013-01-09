@@ -157,7 +157,7 @@ struct AreaComparator
 public:
 	bool operator()(const Camera::Object &left, const Camera::Object &right)
 	{
-		return left.boundingBox().area() < right.boundingBox().area();
+		return left.boundingBox().area() > right.boundingBox().area();
 	}
 } LargestAreaFirst;
 
