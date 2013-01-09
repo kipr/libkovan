@@ -34,13 +34,24 @@ typedef struct pixel
 	int b;
 } pixel;
 
+enum Resolution
+{
+	LOW_RES,
+	MED_RES,
+	HIGH_RES
+};
+
 /**
  * Opens the default system camera for use.
+ * \param res The resolution the camera should operate at. This can be:
+ *   - LOW_RES (160x120)
+ *   - MED_RES (320x240)
+ *   - HIGH_RES (640x480)
  * \return 1 on success, 0 on failure
  * \see camera_open_device
  * \see camera_close
  */
-int camera_open();
+int camera_open(enum Resolution res);
 
 /**
  * Opens a camera for use.

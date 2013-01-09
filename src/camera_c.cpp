@@ -15,9 +15,29 @@ public:
 	}
 };
 
-int camera_open()
+int camera_open(enum Resolution res)
 {
-	return DeviceSingleton::instance()->open() ? 1 : 0;
+	bool ret = DeviceSingleton::instance()->open();
+	if(!ret) return 0;
+	int width = 0;
+	int height = 0;
+	switch(res) {
+	case LOW_RES:
+		width = 160;
+		height = 120;
+		break;
+	case MED_RES:
+		width = 320;
+		height = 240;
+		break;
+	case HIGH_RES:
+		width = 640;
+		height = 480;
+		break;
+	}
+	DeviceSingleton::instance()->setWidth(width);
+	DeviceSingleton::instance()->setHeight(height);
+	return 1;
 }
 
 int camera_open_device(int number)
