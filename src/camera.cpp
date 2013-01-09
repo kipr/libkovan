@@ -152,12 +152,22 @@ void Camera::Channel::invalidate()
 	m_valid = false;
 }
 
+struct AreaComparator
+{
+public:
+	bool operator()(const Camera::Object &left, const Camera::Object &right)
+	{
+		return left.boundingBox().area() < right.boundingBox().area();
+	}
+} LargestAreaFirst;
+
 const ObjectVector *Camera::Channel::objects() const
 {
 	if(!m_impl) return 0;
 	if(!m_valid) {
 		m_objects.clear();
 		m_objects = m_impl->objects(m_config);
+		std::sort(m_objects.begin(), m_objects.end(), LargestAreaFirst);
 		m_valid = true;
 	}
 	return &m_objects;
