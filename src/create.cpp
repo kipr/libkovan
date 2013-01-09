@@ -143,8 +143,6 @@ namespace CreateSensors
 		Create *m_create;
 	};
 
-
-
 	class VirtualWall : public Sensor<bool>
 	{
 	public:
@@ -550,12 +548,15 @@ bool Create::connect()
 		close();
 		return false;
 	}
+	
+	setLeds(true, true, 255, 255);
 
 	return true;
 }
 
 bool Create::disconnect()
 {
+	setLeds(true, false, 0, 255);
 	close();
 	return true;
 }
@@ -631,7 +632,10 @@ bool Create::write(const unsigned char *data, const size_t& len)
 {
 	if(!m_tty) return false;
 #ifndef WIN32
-	return ::write(m_tty, data, len) == len;
+	bool ret = ::write(m_tty, data, len) == len;
+	// TODO: This needs to be tested
+	tcflush(m_tty, TCIOFLUSH);
+	return ret;
 #else
 	#warning Create library not yet implemented for Windows
 #endif
