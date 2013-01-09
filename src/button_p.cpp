@@ -85,7 +85,7 @@ void Private::Button::setPressed(const ::Button::Type::Id &id, bool pressed)
 {
 	const unsigned char offset = buttonOffset(id);
 	if(offset > 5) return;
-	unsigned short &states = Private::Kovan::instance()->currentState().t[BUTTON_TEXT_DIRTY];
+	unsigned short &states = Private::Kovan::instance()->currentState().t[BUTTON_STATES];
 	if(pressed) states |= (1 << offset);
 	else states &= ~(1 << offset);
 	Private::Kovan::instance()->enqueueCommand(createWriteCommand(BUTTON_STATES, states));
