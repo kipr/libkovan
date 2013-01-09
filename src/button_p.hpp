@@ -23,6 +23,8 @@
 
 #include "kovan/button_ids.hpp"
 
+#define MAX_BUTTON_TEXT_SIZE 16
+
 namespace Private
 {
 	struct SharedButton;
@@ -35,18 +37,20 @@ namespace Private
 		const char *text(const ::Button::Type::Id &id) const;
 		void setPressed(const ::Button::Type::Id &id, bool pressed);
 		bool isPressed(const ::Button::Type::Id &id) const;
-
+		void resetButtons();
 		
 		void setExtraShown(const bool& shown);
 		bool isExtraShown() const;
-		bool isExtraShownDirty() const;
 		
 		static Button *instance();
 	private:
-		SharedButton *selectButton(const ::Button::Type::Id &id) const;
+		unsigned char buttonOffset(const ::Button::Type::Id &id) const;
+		bool buttonRegs(unsigned short &start, unsigned short &end, ::Button::Type::Id id) const;
 		
 		Button();
 		Button(const Button& rhs);
+		
+		mutable char m_text[6][MAX_BUTTON_TEXT_SIZE];
 	};
 }
 

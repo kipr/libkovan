@@ -141,9 +141,14 @@ int get_object_area(int channel, int object);
 rectangle get_object_bbox(int channel, int object);
 
 /**
- * \return The (x, y) center of the given object on the given channel.
+ * \return The (x, y) centroid of the given object on the given channel.
  */
 point2 get_object_centroid(int channel, int object);
+
+/**
+ * \return The (x, y) center of the given object on the given channel.
+ */
+point2 get_object_center(int channel, int object);
 
 /**
  * Cleanup the current camera instance.

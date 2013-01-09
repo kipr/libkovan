@@ -75,6 +75,11 @@ public:
 		return m_height;
 	}
 	
+	Point2<T> center() const
+	{
+		return Point2<T>(m_x + m_width / 2, m_y + m_height / 2);
+	}
+	
 	void setX(const T &x)
 	{
 		m_x = x;

@@ -14,7 +14,7 @@ namespace Private
 	public:
 		~Kovan();
 		
-		void enqueueCommand(const Command &command);
+		void enqueueCommand(const Command &command, bool autoFlush = true);
 		
 		void setAutoFlush(const bool &autoFlush);
 		const bool &autoFlush() const;

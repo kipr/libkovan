@@ -60,6 +60,7 @@
 #define MOTOR_PWM_1 		34
 #define MOTOR_PWM_2 		35
 #define MOTOR_PWM_3 		36
+#define MOTOR_DRIVE_CODE_T 	39
 #define MOTOR_ALL_STOP 		40
 
 #define BEMF_0_HIGH 		41
@@ -115,6 +116,19 @@
 #define PID_DD_2 		88
 #define PID_DD_3 		89
 
-#define MOTOR_DRIVE_CODE_T 	39
+#define BUTTON_STATES 		90
+#define BUTTON_TEXT_DIRTY 	91
+#define BUTTON_A_TEXT_START 	92
+#define BUTTON_A_TEXT_END 	100
+#define BUTTON_B_TEXT_START 	101
+#define BUTTON_B_TEXT_END 	109
+#define BUTTON_C_TEXT_START 	110
+#define BUTTON_C_TEXT_END 	118
+#define BUTTON_X_TEXT_START 	119
+#define BUTTON_X_TEXT_END 	127
+#define BUTTON_Y_TEXT_START 	128
+#define BUTTON_Y_TEXT_END 	136
+#define BUTTON_Z_TEXT_START 	137
+#define BUTTON_Z_TEXT_END 	145
 
 #endif

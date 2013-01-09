@@ -12,12 +12,12 @@ Kovan::~Kovan()
 	delete m_module;
 }
 
-void Kovan::enqueueCommand(const Command &command)
+void Kovan::enqueueCommand(const Command &command, bool autoFlush)
 {
 	m_queue.push_back(command);
 	
 	// FIXME: This logic needs to be improved eventually
-	autoUpdate();
+	if(autoFlush) autoUpdate();
 }
 
 void Kovan::setAutoFlush(const bool &autoFlush)
