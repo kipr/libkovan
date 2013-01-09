@@ -33,7 +33,15 @@ IF(KOVAN)
 	ADD_DEFINITIONS(-DKOVAN)
 ENDIF(KOVAN)
 
+IF(WIN32)
+target_link_libraries(kovan ws2_32)
+install(FILES ${INCLUDES} DESTINATION ${CMAKE_SOURCE_DIR}/../prefix/include/kovan)
+INSTALL(TARGETS kovan
+	ARCHIVE DESTINATION ${CMAKE_SOURCE_DIR}/../prefix/lib
+	RUNTIME DESTINATION ${CMAKE_SOURCE_DIR}/../prefix/lib)
+ELSE(WIN32)
 install(FILES ${INCLUDES} DESTINATION include/kovan)
-INSTALL(TARGETS kovan LIBRARY DESTINATION lib)
+install(TARGETS kovan LIBRARY DESTINATION lib)
+ENDIF(WIN32)
 
 add_subdirectory(test)
