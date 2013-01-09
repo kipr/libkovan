@@ -88,6 +88,7 @@ void Private::Button::setPressed(const ::Button::Type::Id &id, bool pressed)
 	unsigned short &states = Private::Kovan::instance()->currentState().t[BUTTON_STATES];
 	if(pressed) states |= (1 << offset);
 	else states &= ~(1 << offset);
+	std::cout << "States: " << std::hex << states << std::endl;
 	Private::Kovan::instance()->enqueueCommand(createWriteCommand(BUTTON_STATES, states));
 }
 
