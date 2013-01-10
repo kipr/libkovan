@@ -644,7 +644,7 @@ bool Create::write(const unsigned char *data, const size_t& len)
 void Create::flush()
 {
 #ifndef WIN32
-	tcflush(m_tty, TCIFLUSH);
+	tcflush(m_tty, TCIOFLUSH);
 #endif
 }
 
@@ -986,7 +986,8 @@ void Create::updateSensorPacket1()
 	beginAtomicOperation();
 	write(OI_SENSORS);
 	write(1);
-	if(blockingRead(m_1)) timestamps[0] = timeOfDay();
+	blockingRead(m_1);
+	timestamps[0] = timeOfDay();
 	endAtomicOperation();
 }
 
@@ -997,11 +998,10 @@ void Create::updateSensorPacket2()
 	beginAtomicOperation();
 	write(OI_SENSORS);
 	write(2);
-	if(blockingRead(m_3)) {
-		timestamps[1] = timeOfDay();
-		m_state.distance += SHORT(m_2.distance);
-		m_state.angle += SHORT(m_2.angle);
-	}
+	blockingRead(m_3);
+	timestamps[1] = timeOfDay();
+	m_state.distance += SHORT(m_2.distance);
+	m_state.angle += SHORT(m_2.angle);
 	endAtomicOperation();
 }
 
@@ -1012,7 +1012,8 @@ void Create::updateSensorPacket3()
 	beginAtomicOperation();
 	write(OI_SENSORS);
 	write(3);
-	if(blockingRead(m_3)) timestamps[2] = timeOfDay();
+	blockingRead(m_3);
+	timestamps[2] = timeOfDay();
 	endAtomicOperation();
 }
 
@@ -1023,7 +1024,8 @@ void Create::updateSensorPacket4()
 	beginAtomicOperation();
 	write(OI_SENSORS);
 	write(4);
-	if(blockingRead(m_4)) timestamps[3] = timeOfDay();
+	blockingRead(m_4);
+	timestamps[3] = timeOfDay();
 	endAtomicOperation();
 }
 
@@ -1034,6 +1036,7 @@ void Create::updateSensorPacket5()
 	beginAtomicOperation();
 	write(OI_SENSORS);
 	write(5);
-	if(blockingRead(m_5)) timestamps[4] = timeOfDay();
+	blockingRead(m_5);
+	timestamps[4] = timeOfDay();
 	endAtomicOperation();
 }
