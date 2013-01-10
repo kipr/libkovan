@@ -633,11 +633,16 @@ bool Create::write(const unsigned char *data, const size_t& len)
 	if(!m_tty) return false;
 #ifndef WIN32
 	bool ret = ::write(m_tty, data, len) == len;
-	// TODO: This needs to be tested
-	// tcflush(m_tty, TCIOFLUSH);
 	return ret;
 #else
 	#warning Create library not yet implemented for Windows
+#endif
+}
+
+void Create::flush()
+{
+#ifndef WIN32
+	tcflush(m_tty, TCIOFLUSH);
 #endif
 }
 
@@ -682,6 +687,7 @@ void Create::setLeds(const bool& advance, const bool& play, const unsigned char&
 	write(packed);
 	write(color);
 	write(brightness);
+	flush();
 	endAtomicOperation();
 }
 
@@ -694,6 +700,8 @@ void Create::drive(const short& velocity, const short& radius)
 	write(LOW_BYTE(velocity));
 	write(HIGH_BYTE(radius));
 	write(LOW_BYTE(radius));
+
+	flush();
 
 	m_state.radius = radius;
 	m_state.leftVelocity = -velocity;
@@ -712,6 +720,8 @@ void Create::driveDirect(const short& left, const short& right)
 	write(LOW_BYTE(right));
 	write(HIGH_BYTE(left));
 	write(LOW_BYTE(left));
+	
+	flush();
 
 	m_state.radius = 0xFFFF;
 	m_state.leftVelocity = left;

@@ -259,6 +259,8 @@ public:
 	bool write(const unsigned char& c);
 	bool write(const unsigned char *data, const size_t& len);
 	
+	void flush();
+	
 	/*!
 	 * Reads one byte.
 	 * \return The read byte, or less than zero on error.
