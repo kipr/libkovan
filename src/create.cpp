@@ -511,7 +511,7 @@ set_interface_attribs (int fd, int speed, int parity)
 #ifndef WIN32
     struct termios options;   
 
-    fcntl (fd, F_SETFL, 0);
+    fcntl (fd, F_SETFL, O_NONBLOCK);
     tcflush (fd, TCIOFLUSH);
 
     //get config from fd and put into options
@@ -949,16 +949,9 @@ bool Create::open()
 #endif
 	endAtomicOperation();
 	
-	if(m_tty < 0) {
-		perror("Create::open");
-		return false;
-	}
+	if(m_tty < 0) perror("Create::open");
 	
-	int flags = fcntl(m_tty, F_GETFL, 0);
-	fcntl(m_tty, F_SETFL, flags | O_NONBLOCK);
-	
-
-	return true;
+	return m_tty >= 0;
 }
 
 void Create::close()
