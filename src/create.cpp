@@ -680,7 +680,7 @@ bool Create::blockingRead(unsigned char *data, const size_t& size, unsigned time
 		printf("loop!\n");
 		int ret = read(data + total, size - total);
 		if(ret < 0 && errno != EAGAIN) return false;
-		total += ret;
+		if(errno != EAGAIN) total += ret;
 		
 		timeval current = timeOfDay();
 		timeval diff;
