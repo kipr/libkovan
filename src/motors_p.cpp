@@ -118,6 +118,7 @@ void Private::Motor::setControlMode(port_t port, Private::Motor::ControlMode con
 Private::Motor::ControlMode Private::Motor::controlMode(port_t port) const
 {
 	Private::Kovan *kovan = Private::Kovan::instance();
+	kovan->autoUpdate();
 	
 	port = fixPort(port);
 	const unsigned short offset = (3 - port) << 1;
@@ -132,6 +133,7 @@ Private::Motor::ControlMode Private::Motor::controlMode(port_t port) const
 bool Private::Motor::isPidActive(port_t port) const
 {
 	Private::Kovan *kovan = Private::Kovan::instance();
+	kovan->autoUpdate();
 	return (kovan->currentState().t[PID_STATUS] >> (3 - fixPort(port))) & 0x1;
 }
 
@@ -160,6 +162,7 @@ void Private::Motor::setPidGoalPos(port_t port, const int &pos)
 
 int Private::Motor::pidGoalPos(port_t port) const
 {
+	Private::Kovan::instance()->autoUpdate();
 	port = fixPort(port);
 	const State &state = Private::Kovan::instance()->currentState();
 	return state.t[goalPosHighRegisters[port]] << 16 || state.t[goalPosLowRegisters[port]];
@@ -167,6 +170,7 @@ int Private::Motor::pidGoalPos(port_t port) const
 
 void Private::Motor::pidGains(port_t port, short &p, short &i, short &d, short &pd, short &id, short &dd)
 {
+	Private::Kovan::instance()->autoUpdate();
 	port = fixPort(port);
 	if(port > 3) return;
 	const State &state = Private::Kovan::instance()->currentState();
@@ -180,7 +184,7 @@ void Private::Motor::pidGains(port_t port, short &p, short &i, short &d, short &
 
 void Private::Motor::setPwm(port_t port, const unsigned char &speed)
 {
-	setControlMode(port, Private::Motor::Inactive);
+	// setControlMode(port, Private::Motor::Inactive);
 	port = fixPort(port);
 	Private::Kovan *kovan = Private::Kovan::instance();
 	const unsigned int adjustedSpeed = speed > 100 ? 100 : speed; 
@@ -192,7 +196,7 @@ void Private::Motor::setPwmDirection(port_t port, const Motor::Direction &dir)
 	// FIXME: This assumes that our current state is the latest.
 	// If somebody has altered the motor drive codes in the mean time,
 	// this will undo their work.
-	setControlMode(port, Private::Motor::Inactive);
+	// setControlMode(port, Private::Motor::Inactive);
 	Private::Kovan *kovan = Private::Kovan::instance();
 	
 	port = fixPort(port);
@@ -214,6 +218,7 @@ void Private::Motor::setPwmDirection(port_t port, const Motor::Direction &dir)
 
 unsigned char Private::Motor::pwm(port_t port)
 {
+	Private::Kovan::instance()->autoUpdate();
 	return Private::Kovan::instance()->currentState().t[motorRegisters[fixPort(port)]];
 }
 
@@ -224,6 +229,7 @@ void Private::Motor::stop(port_t port)
 
 int Private::Motor::backEMF(port_t port)
 {
+	Private::Kovan::instance()->autoUpdate();
 	port = fixPort(port);
 	if(port > 3) return 0xFFFF;
 	const Private::State &s = Private::Kovan::instance()->currentState();
