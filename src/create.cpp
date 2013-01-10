@@ -680,7 +680,7 @@ bool Create::blockingRead(unsigned char *data, const size_t& size, unsigned time
 		
 		timeval current = timeOfDay();
 		timeval diff;
-		timersub(&start, &current, &diff);
+		timersub(&current, &start, &diff);
 		msecs = diff.tv_sec * 1000 + diff.tv_usec / 1000;
 		printf("msecs: %ld\n", msecs);
 	} while(total < size && msecs < timeout);
