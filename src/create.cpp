@@ -15,6 +15,7 @@
 
 #include <iostream>
 #include <cstring>
+#include <cerrno>
 
 #define LOW_BYTE(x) ((x) & 0xFF)
 #define HIGH_BYTE(x) (((x) & 0xFF00) >> 8)
