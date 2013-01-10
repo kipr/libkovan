@@ -40,6 +40,7 @@
 #include "util.h"
 #include "general.h"
 #include "console.h"
+#include "display.h"
 #include "datalog.h"
 #include "accel.h"
 
