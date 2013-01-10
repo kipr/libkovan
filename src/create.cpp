@@ -633,8 +633,9 @@ bool Create::write(const unsigned char *data, const size_t& len)
 {
 	if(!m_tty) return false;
 #ifndef WIN32
-	bool ret = ::write(m_tty, data, len) == len;
-	return ret;
+	int ret = ::write(m_tty, data, len);
+	if(ret < 0) perror("::write");
+	return ret == len;
 #else
 	#warning Create library not yet implemented for Windows
 #endif
