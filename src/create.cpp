@@ -511,7 +511,6 @@ set_interface_attribs (int fd, int speed, int parity)
 #ifndef WIN32
     struct termios options;   
 
-    fcntl (fd, F_SETFL, O_NONBLOCK);
     tcflush (fd, TCIOFLUSH);
 
     //get config from fd and put into options
