@@ -610,7 +610,9 @@ Create::Mode Create::mode()
 	write(35);
 	short state = 0;
 	do {
+		printf("Reading state\n");
 		state = read();
+		printf("Got %d\n", state);
 		if(state < 0) return OffMode;
 	} while(state == 0);
 	endAtomicOperation();
@@ -670,7 +672,7 @@ int Create::read(unsigned char *data, const size_t& len)
 #else
 	#warning Create library not yet implemented for Windows
 #endif
-	if(ret < 0 && errno != EAGAIN) perror("::read");
+	if(ret < 0) perror("::read");
 	return ret;
 }
 
