@@ -669,7 +669,6 @@ int Create::read(unsigned char *data, const size_t& len)
 bool Create::blockingRead(unsigned char *data, const size_t& size, unsigned timeout)
 {
 	timeval start = timeOfDay();
-	timeval end = start;
 	
 	size_t total = 0;
 	long msecs = 0;
@@ -683,7 +682,9 @@ bool Create::blockingRead(unsigned char *data, const size_t& size, unsigned time
 		timeval diff;
 		timersub(&start, &current, &diff);
 		msecs = diff.tv_sec * 1000 + diff.tv_usec / 1000;
+		printf("msecs: %ld\n", msecs);
 	} while(total < size && msecs < timeout);
+	printf("Returning %d\n", msecs < timeout);
 	return msecs < timeout;
 }
 
