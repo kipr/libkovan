@@ -678,7 +678,6 @@ bool Create::blockingRead(unsigned char *data, const size_t& size, unsigned time
 	size_t total = 0;
 	long msecs = 0;
 	do {
-		printf("loop!\n");
 		int ret = read(data + total, size - total);
 		if(ret < 0 && errno != EAGAIN) return false;
 		if(ret > 0) total += ret;
@@ -687,7 +686,7 @@ bool Create::blockingRead(unsigned char *data, const size_t& size, unsigned time
 		timeval diff;
 		timersub(&current, &start, &diff);
 		msecs = diff.tv_sec * 1000 + diff.tv_usec / 1000;
-		printf("msecs: %ld, %ld of %ld\n", msecs, total, size);
+		// printf("msecs: %ld, %ld of %ld\n", msecs, total, size);
 		usleep(5000);
 	} while(total < size && msecs < timeout);
 	return msecs < timeout;
@@ -748,11 +747,11 @@ void Create::turn(const short& angle, const unsigned short& speed)
 	spin(angle > 0 ? speed : -speed);
 	const short goalAngle = m_state.angle + angle;
 	double timeToGoal = (deg2rad(angle + 360 / angle) * 258) / angularVelocity();
-	printf("Time to Goal: %f (rad = %f, av = %d)\n", timeToGoal, deg2rad(angle), angularVelocity());
+	// printf("Time to Goal: %f (rad = %f, av = %d)\n", timeToGoal, deg2rad(angle), angularVelocity());
 	double startTime = timevalToFloat(timeOfDay());
 	usleep(timeToGoal * 1000000L - 300);
 	double elapsed = timevalToFloat(timeOfDay());
-	printf("Diff: %lf\n", elapsed - startTime - timeToGoal);
+	// printf("Diff: %lf\n", elapsed - startTime - timeToGoal);
 	spin(0);
 }
 
@@ -761,11 +760,11 @@ void Create::move(const short& millimeters, const unsigned short& speed)
 	driveDirect(speed, speed);
 	const short goalDistance = m_state.distance + millimeters;
 	double timeToGoal = ((double)millimeters) / speed;
-	printf("Time to Goal: %f (milli = %d, s = %d)\n", timeToGoal, millimeters, speed);
+	// printf("Time to Goal: %f (milli = %d, s = %d)\n", timeToGoal, millimeters, speed);
 	double startTime = timevalToFloat(timeOfDay());
 	usleep(timeToGoal * 1000000L - 300);
 	double elapsed = timevalToFloat(timeOfDay());
-	printf("Diff: %lf\n", elapsed - startTime - timeToGoal);
+	// printf("Diff: %lf\n", elapsed - startTime - timeToGoal);
 	driveDirect(0, 0);
 }
 
@@ -991,7 +990,6 @@ void Create::updateSensorPacket1()
 	beginAtomicOperation();
 	write(OI_SENSORS);
 	write(1);
-	printf("Update sensor packet res: %d\n", blockingRead(m_1));
 	printArray(m_1);
 	timestamps[0] = timeOfDay();
 	endAtomicOperation();
