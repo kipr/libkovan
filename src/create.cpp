@@ -643,7 +643,7 @@ bool Create::write(const unsigned char *data, const size_t& len)
 void Create::flush()
 {
 #ifndef WIN32
-	tcflush(m_tty, TCIOFLUSH);
+	tcflush(m_tty, TCIFLUSH);
 #endif
 }
 
