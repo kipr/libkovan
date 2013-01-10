@@ -687,7 +687,6 @@ void Create::setLeds(const bool& advance, const bool& play, const unsigned char&
 	write(packed);
 	write(color);
 	write(brightness);
-	flush();
 	endAtomicOperation();
 }
 
@@ -700,8 +699,6 @@ void Create::drive(const short& velocity, const short& radius)
 	write(LOW_BYTE(velocity));
 	write(HIGH_BYTE(radius));
 	write(LOW_BYTE(radius));
-
-	flush();
 
 	m_state.radius = radius;
 	m_state.leftVelocity = -velocity;
@@ -720,8 +717,6 @@ void Create::driveDirect(const short& left, const short& right)
 	write(LOW_BYTE(right));
 	write(HIGH_BYTE(left));
 	write(LOW_BYTE(left));
-	
-	flush();
 
 	m_state.radius = 0xFFFF;
 	m_state.leftVelocity = left;
@@ -975,7 +970,7 @@ void printArray(const T& array) {
 void Create::updateSensorPacket1()
 {
 	if(!hasRequiredTimePassed(timestamps[0])) return;
-	
+	flush();
 	beginAtomicOperation();
 	write(OI_SENSORS);
 	write(1);
@@ -987,6 +982,7 @@ void Create::updateSensorPacket1()
 void Create::updateSensorPacket2()
 {
 	if(!hasRequiredTimePassed(timestamps[1])) return;
+	flush();
 	beginAtomicOperation();
 	write(OI_SENSORS);
 	write(2);
@@ -1001,7 +997,7 @@ void Create::updateSensorPacket2()
 void Create::updateSensorPacket3()
 {
 	if(!hasRequiredTimePassed(timestamps[2])) return;
-	
+	flush();
 	beginAtomicOperation();
 	write(OI_SENSORS);
 	write(3);
@@ -1013,7 +1009,7 @@ void Create::updateSensorPacket3()
 void Create::updateSensorPacket4()
 {
 	if(!hasRequiredTimePassed(timestamps[3])) return;
-	
+	flush();
 	beginAtomicOperation();
 	write(OI_SENSORS);
 	write(4);
@@ -1025,7 +1021,7 @@ void Create::updateSensorPacket4()
 void Create::updateSensorPacket5()
 {
 	if(!hasRequiredTimePassed(timestamps[4])) return;
-	
+	flush();
 	beginAtomicOperation();
 	write(OI_SENSORS);
 	write(5);
