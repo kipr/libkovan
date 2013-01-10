@@ -548,8 +548,6 @@ bool Create::connect()
 		close();
 		return false;
 	}
-	
-	setLeds(true, true, 255, 255);
 
 	return true;
 }
@@ -571,6 +569,7 @@ void Create::setPassiveMode()
 	beginAtomicOperation();
 	start();
 	endAtomicOperation();
+	setLeds(true, false, 255, 255);
 }
 
 void Create::setSafeMode()
@@ -578,6 +577,7 @@ void Create::setSafeMode()
 	beginAtomicOperation();
 	write(OI_SAFE);
 	endAtomicOperation();
+	setLeds(true, true, 127, 255);
 }
 
 void Create::setFullMode()
@@ -585,6 +585,7 @@ void Create::setFullMode()
 	beginAtomicOperation();
 	write(OI_FULL);
 	endAtomicOperation();
+	setLeds(true, true, 255, 255);
 }
 
 void Create::setMode(const Create::Mode& mode)
