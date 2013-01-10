@@ -947,10 +947,18 @@ bool Create::open()
 #else
 	#warning Create library not yet implemented for Windows
 #endif
-	if(m_tty < 0) perror("Create::open");
 	endAtomicOperation();
+	
+	if(m_tty < 0) {
+		perror("Create::open");
+		return false;
+	}
+	
+	int flags = fcntl(m_tty, F_GETFL, 0);
+	fcntl(m_tty, F_SETFL, flags | O_NONBLOCK);
+	
 
-	return m_tty >= 0;
+	return true;
 }
 
 void Create::close()
