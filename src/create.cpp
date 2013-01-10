@@ -662,7 +662,7 @@ int Create::read(unsigned char *data, const size_t& len)
 #else
 	#warning Create library not yet implemented for Windows
 #endif
-	if(ret < 0) perror("::read");
+	if(ret < 0 && errno != EAGAIN) perror("::read");
 	return ret;
 }
 
