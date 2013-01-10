@@ -510,21 +510,21 @@ int
 set_interface_attribs (int fd, int speed, int parity)
 {
 #ifndef WIN32
-    struct termios options;   
+	struct termios options;   
 
-    tcflush (fd, TCIOFLUSH);
+	tcflush (fd, TCIOFLUSH);
 
-    //get config from fd and put into options
-    tcgetattr (fd, &options); 
-    //give raw data path
-    cfmakeraw (&options);
-    //set baud
-    cfsetispeed (&options, B57600);                 
-    cfsetospeed (&options, B57600);
-    //send options back to fd
-    tcsetattr (fd, TCSANOW, &options);
+	//get config from fd and put into options
+	tcgetattr (fd, &options); 
+	//give raw data path
+	cfmakeraw (&options);
+	//set baud
+	cfsetispeed (&options, B57600);                 
+	cfsetospeed (&options, B57600);
+	//send options back to fd
+	tcsetattr (fd, TCSANOW, &options);
 #endif
-    return 0;
+	return 0;
 }
 
 bool Create::connect()
@@ -647,7 +647,7 @@ bool Create::write(const unsigned char *data, const size_t& len)
 void Create::flush()
 {
 #ifndef WIN32
-	tcflush(m_tty, TCIOFLUSH);
+	tcflush(m_tty, TCIFLUSH);
 #endif
 }
 
