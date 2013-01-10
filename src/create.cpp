@@ -611,7 +611,7 @@ Create::Mode Create::mode()
 	short state = 0;
 	do {
 		printf("Reading state\n");
-		state = read();
+		blockingRead(reinterpret_cast<char *>(&state), 1);
 		printf("Got %d\n", state);
 		if(state < 0) return OffMode;
 	} while(state == 0);
