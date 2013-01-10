@@ -673,6 +673,7 @@ bool Create::blockingRead(unsigned char *data, const size_t& size, unsigned time
 	
 	size_t total = 0;
 	long msecs = 0;
+	printf("Reading...");
 	do {
 		int ret = read(data + total, size - total);
 		if(ret < 0 && errno != EAGAIN) return false;
@@ -685,6 +686,7 @@ bool Create::blockingRead(unsigned char *data, const size_t& size, unsigned time
 		printf("msecs: %ld\n", msecs);
 		usleep(5000);
 	} while(total < size && msecs < timeout);
+	printf("Done\n");
 	return msecs < timeout;
 }
 
