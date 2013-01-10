@@ -531,7 +531,6 @@ bool Create::connect()
 {
 	if(!open()) return false;
 #ifndef WIN32
-	printf("Setting interface atrribs...\n");
 	if(set_interface_attribs(m_tty, B57600, 0) != 0) {
 		close();
 		return false;
@@ -539,20 +538,16 @@ bool Create::connect()
 #endif
 	
 	// setLocalBaudRate(baudCodeRate[10]); // This is the default rate
-	printf("Start\n");
 	start();
 	
 	// Make the connection baud rate 115200
 	// setBaudRate(11);
 	
-	printf("Set mode\n");
 	setMode(SafeMode);
 	if(mode() != SafeMode) {
 		close();
 		return false;
 	}
-	
-	printf("Done\n");
 
 	return true;
 }
@@ -610,9 +605,7 @@ Create::Mode Create::mode()
 	write(35);
 	short state = 0;
 	do {
-		printf("Reading state\n");
 		blockingRead(reinterpret_cast<unsigned char *>(&state), 1);
-		printf("Got %d\n", state);
 		if(state < 0) return OffMode;
 	} while(state == 0);
 	endAtomicOperation();
@@ -640,10 +633,8 @@ bool Create::write(const unsigned char *data, const size_t& len)
 {
 	if(!m_tty) return false;
 #ifndef WIN32
-	printf("Writing %d\n", data[0]);
 	int ret = ::write(m_tty, data, len);
 	if(ret < 0) perror("::write");
-	printf("Done\n\n");
 	return ret == len;
 #else
 	#warning Create library not yet implemented for Windows
@@ -672,7 +663,7 @@ int Create::read(unsigned char *data, const size_t& len)
 #else
 	#warning Create library not yet implemented for Windows
 #endif
-	if(ret < 0) perror("::read");
+	if(ret < 0 && errno != EAGAIN) perror("::read");
 	return ret;
 }
 
@@ -682,7 +673,6 @@ bool Create::blockingRead(unsigned char *data, const size_t& size, unsigned time
 	
 	size_t total = 0;
 	long msecs = 0;
-	printf("Reading...");
 	do {
 		int ret = read(data + total, size - total);
 		if(ret < 0 && errno != EAGAIN) return false;
@@ -695,7 +685,6 @@ bool Create::blockingRead(unsigned char *data, const size_t& size, unsigned time
 		printf("msecs: %ld\n", msecs);
 		usleep(5000);
 	} while(total < size && msecs < timeout);
-	printf("Done\n");
 	return msecs < timeout;
 }
 
