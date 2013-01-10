@@ -531,6 +531,7 @@ bool Create::connect()
 {
 	if(!open()) return false;
 #ifndef WIN32
+	printf("Setting interface atrribs...\n");
 	if(set_interface_attribs(m_tty, B57600, 0) != 0) {
 		close();
 		return false;
@@ -538,16 +539,20 @@ bool Create::connect()
 #endif
 	
 	// setLocalBaudRate(baudCodeRate[10]); // This is the default rate
+	printf("Start\n");
 	start();
 	
 	// Make the connection baud rate 115200
 	// setBaudRate(11);
 	
+	printf("Set mode\n");
 	setMode(SafeMode);
 	if(mode() != SafeMode) {
 		close();
 		return false;
 	}
+	
+	printf("Done\n");
 
 	return true;
 }
@@ -633,6 +638,7 @@ bool Create::write(const unsigned char *data, const size_t& len)
 {
 	if(!m_tty) return false;
 #ifndef WIN32
+	printf("Writing")
 	int ret = ::write(m_tty, data, len);
 	if(ret < 0) perror("::write");
 	return ret == len;
