@@ -666,16 +666,25 @@ int Create::read(unsigned char *data, const size_t& len)
 	return ret;
 }
 
-bool Create::blockingRead(unsigned char *data, const size_t& size)
+bool Create::blockingRead(unsigned char *data, const size_t& size, unsigned timeout)
 {
+	timeval start = timeOfDay();
+	timeval end = start;
+	
 	size_t total = 0;
-	while(total < size) {
+	long msecs = 0;
+	do {
 		int ret = read(data + total, size - total);
-
+		
 		if(ret < 0) return false;
 		total += ret;
-	}
-	return true;
+		
+		timeval current = timeOfDay();
+		timeval diff;
+		timersub(&start, &current, &diff);
+		msecs = diff.tv_sec * 1000 + diff.tv_usec / 1000;
+	} while(total < size && msecs < timeout);
+	return msecs < timeout;
 }
 
 void Create::setLeds(const bool& advance, const bool& play, const unsigned char& color, const unsigned char& brightness)
@@ -975,8 +984,7 @@ void Create::updateSensorPacket1()
 	beginAtomicOperation();
 	write(OI_SENSORS);
 	write(1);
-	blockingRead(m_1);
-	timestamps[0] = timeOfDay();
+	if(blockingRead(m_1)) timestamps[0] = timeOfDay();
 	endAtomicOperation();
 }
 
@@ -987,11 +995,11 @@ void Create::updateSensorPacket2()
 	beginAtomicOperation();
 	write(OI_SENSORS);
 	write(2);
-	blockingRead(m_2);
-	printArray(m_2);
-	m_state.distance += SHORT(m_2.distance);
-	m_state.angle += SHORT(m_2.angle);
-	timestamps[1] = timeOfDay();
+	if(blockingRead(m_3)) {
+		timestamps[1] = timeOfDay();
+		m_state.distance += SHORT(m_2.distance);
+		m_state.angle += SHORT(m_2.angle);
+	}
 	endAtomicOperation();
 }
 
@@ -1002,8 +1010,7 @@ void Create::updateSensorPacket3()
 	beginAtomicOperation();
 	write(OI_SENSORS);
 	write(3);
-	blockingRead(m_3);
-	timestamps[2] = timeOfDay();
+	if(blockingRead(m_3)) timestamps[2] = timeOfDay();
 	endAtomicOperation();
 }
 
@@ -1014,8 +1021,7 @@ void Create::updateSensorPacket4()
 	beginAtomicOperation();
 	write(OI_SENSORS);
 	write(4);
-	blockingRead(m_4);
-	timestamps[3] = timeOfDay();
+	if(blockingRead(m_4)) timestamps[3] = timeOfDay();
 	endAtomicOperation();
 }
 
@@ -1026,7 +1032,6 @@ void Create::updateSensorPacket5()
 	beginAtomicOperation();
 	write(OI_SENSORS);
 	write(5);
-	blockingRead(m_5);
-	timestamps[4] = timeOfDay();
+	if(blockingRead(m_5)) timestamps[4] = timeOfDay();
 	endAtomicOperation();
 }

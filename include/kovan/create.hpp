@@ -282,13 +282,14 @@ public:
 	 * \return true if reading succeeded, false if there was an error
 	 * \blocks
 	 */
-	bool blockingRead(unsigned char *data, const size_t& size);
+	bool blockingRead(unsigned char *data, const size_t& size, unsigned timeout = 25);
 	
 	
 	template<typename T>
-	inline bool blockingRead(T& data)
+	inline bool blockingRead(T& data, unsigned timeout = 0)
 	{
-		return blockingRead(reinterpret_cast<unsigned char *>(&data), sizeof(T));
+		return blockingRead(reinterpret_cast<unsigned char *>(&data), sizeof(T),
+			timeout ? timeout : sizeof(T) * 7);
 	}
 
 	void setLeds(const bool& advance, const bool& play, const unsigned char& color, const unsigned char& brightness);
