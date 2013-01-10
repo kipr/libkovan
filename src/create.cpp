@@ -674,7 +674,7 @@ bool Create::blockingRead(unsigned char *data, const size_t& size, unsigned time
 	long msecs = 0;
 	do {
 		int ret = read(data + total, size - total);
-		
+		printf("ret = %d\n", ret);
 		if(ret < 0) return false;
 		total += ret;
 		
