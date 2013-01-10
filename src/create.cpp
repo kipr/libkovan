@@ -672,10 +672,8 @@ bool Create::blockingRead(unsigned char *data, const size_t& size, unsigned time
 	size_t total = 0;
 	long msecs = 0;
 	do {
-		printf("total = %ld, size = %ld\n", total, size);
 		int ret = read(data + total, size - total);
-		printf("ret = %d\n", ret);
-		if(ret < 0) return false;
+		if(ret < 0 && errno != EAGAIN) return false;
 		total += ret;
 		
 		timeval current = timeOfDay();
@@ -683,8 +681,8 @@ bool Create::blockingRead(unsigned char *data, const size_t& size, unsigned time
 		timersub(&current, &start, &diff);
 		msecs = diff.tv_sec * 1000 + diff.tv_usec / 1000;
 		printf("msecs: %ld\n", msecs);
+		usleep(5000);
 	} while(total < size && msecs < timeout);
-	printf("Returning %d\n", msecs < timeout);
 	return msecs < timeout;
 }
 
