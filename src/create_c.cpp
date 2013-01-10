@@ -303,7 +303,7 @@ void create_spin_CCW(int speed)
 
 void create_drive_direct(int l_speed, int r_speed)
 {
-	Create::instance()->driveDirect(r_speed, l_speed);
+	Create::instance()->driveDirect(l_speed, r_speed);
 }
 
 int create_spin_block(int speed, int angle)

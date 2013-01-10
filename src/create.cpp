@@ -634,7 +634,7 @@ bool Create::write(const unsigned char *data, const size_t& len)
 #ifndef WIN32
 	bool ret = ::write(m_tty, data, len) == len;
 	// TODO: This needs to be tested
-	tcflush(m_tty, TCIOFLUSH);
+	// tcflush(m_tty, TCIOFLUSH);
 	return ret;
 #else
 	#warning Create library not yet implemented for Windows
