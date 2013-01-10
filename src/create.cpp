@@ -647,7 +647,7 @@ bool Create::write(const unsigned char *data, const size_t& len)
 void Create::flush()
 {
 #ifndef WIN32
-	tcflush(m_tty, TCIFLUSH);
+	tcflush(m_tty, TCIOFLUSH);
 #endif
 }
 
@@ -680,7 +680,7 @@ bool Create::blockingRead(unsigned char *data, const size_t& size, unsigned time
 		printf("loop!\n");
 		int ret = read(data + total, size - total);
 		if(ret < 0 && errno != EAGAIN) return false;
-		if(errno != EAGAIN) total += ret;
+		if(ret > 0) total += ret;
 		
 		timeval current = timeOfDay();
 		timeval diff;
