@@ -986,7 +986,7 @@ void Create::updateSensorPacket1()
 	beginAtomicOperation();
 	write(OI_SENSORS);
 	write(1);
-	blockingRead(m_1);
+	printf("Update sensor packet res: %d\n", blockingRead(m_1));
 	timestamps[0] = timeOfDay();
 	endAtomicOperation();
 }
