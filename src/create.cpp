@@ -634,6 +634,9 @@ bool Create::write(const unsigned char *data, const size_t& len)
 	if(!m_tty) return false;
 #ifndef WIN32
 	int ret = ::write(m_tty, data, len);
+	if(ret != len) {
+		printf("Only wrote %d of %ld bytes\n", ret, len);
+	}
 	if(ret < 0) perror("::write");
 	return ret == len;
 #else
