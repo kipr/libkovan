@@ -638,6 +638,7 @@ bool Create::write(const unsigned char *data, const size_t& len)
 		printf("Only wrote %d of %ld bytes\n", ret, len);
 	}
 	if(ret < 0) perror("::write");
+	tcdrain(m_tty);
 	return ret == len;
 #else
 	#warning Create library not yet implemented for Windows
