@@ -65,7 +65,7 @@ bool Private::Button::isTextDirty(const ::Button::Type::Id &id) const
 const char *Private::Button::text(const ::Button::Type::Id &id) const
 {
 	const unsigned char offset = buttonOffset(id);
-	if(!isTextDirty(id) || offset < 6) return m_text[offset];
+	if(offset < 6) return m_text[offset];
 	
 	unsigned short start = 0;
 	unsigned short end = 0;
