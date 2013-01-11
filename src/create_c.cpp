@@ -23,6 +23,12 @@
 
 int create_connect()
 {
+	while(!create_connect_once());
+	return 0;
+}
+
+int create_connect_once()
+{
 	return Create::instance()->connect() ? 1 : 0;
 }
 
@@ -368,5 +374,5 @@ void create_write_byte(char byte)
 
 void create_clear_serial_buffer()
 {
-	
+	Create::instance()->flush();
 }

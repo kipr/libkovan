@@ -554,6 +554,7 @@ bool Create::connect()
 
 bool Create::disconnect()
 {
+	stop();
 	setLeds(true, false, 0, 255);
 	close();
 	return true;

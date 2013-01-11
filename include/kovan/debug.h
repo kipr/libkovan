@@ -7,6 +7,8 @@ extern "C" {
 
 void debug_print_registers();
 
+unsigned short register_value(unsigned short addy);
+
 #ifdef __cplusplus
 }
 #endif

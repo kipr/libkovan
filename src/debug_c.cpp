@@ -16,3 +16,9 @@ void debug_print_registers()
 	}
 	std::cout << "]" << std::endl;
 }
+
+unsigned short register_value(unsigned short addy)
+{
+	if(addy >= TOTAL_REGS) return 0xFFFF;
+	return Private::Kovan::instance()->currentState().t[addy];
+}

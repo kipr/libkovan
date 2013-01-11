@@ -34,12 +34,21 @@ extern "C" {
 #endif
 
 /*!
+ * Waits to establish a connection to the create.
+ * \blocksuntil A connection to a create is established
+ * \return 0 on success
+ * \see create_disconnect
+ * \ingroup create
+ */
+int create_connect();
+
+/*!
  * Attempts to establish a connection to the create.
  * \return 1 if connection succeeded, 0 if connection failed
  * \see create_disconnect
  * \ingroup create
  */
-int create_connect();
+int create_connect_once();
 
 /*!
  * Cleans up connection to the create.
