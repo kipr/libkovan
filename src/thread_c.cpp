@@ -11,7 +11,7 @@ public:
 	
 	void run()
 	{
-		m_fund();
+		(*m_func)();
 	}
 	
 private:
@@ -28,17 +28,17 @@ FunctionThread *threadObject(void *data)
 	return reinterpret_cast<FunctionThread *>(data);
 }
 
-mutex mutexStruct(Mutex *mutex)
+mutex mutexStruct(Mutex *m)
 {
 	mutex ret;
-	ret.data = reinterpret_cast<void *>(mutex);
+	ret.data = reinterpret_cast<void *>(m);
 	return ret;
 }
 
-thread threadStruct(FunctionThread *thread)
+thread threadStruct(FunctionThread *t)
 {
 	thread ret;
-	thread.data = reinterpret_cast<void *>(thread);
+	ret.data = reinterpret_cast<void *>(t);
 	return ret;
 }
 
@@ -49,22 +49,22 @@ mutex mutex_create(void)
 
 void mutex_lock(mutex m)
 {
-	mutexObject(m)->lock();
+	mutexObject(m.data)->lock();
 }
 
 int mutex_trylock(mutex m)
 {
-	mutexObject(m)->tryLock();
+	return mutexObject(m.data)->tryLock() ? 1 : 0;
 }
 
 void mutex_unlock(mutex m)
 {
-	mutexObject(m)->unlock();
+	mutexObject(m.data)->unlock();
 }
 
 void mutex_destroy(mutex m)
 {
-	delete mutexObject(m);
+	delete mutexObject(m.data);
 }
 
 thread thread_create(thread_function func)
@@ -74,15 +74,15 @@ thread thread_create(thread_function func)
 
 void thread_start(thread id)
 {
-	threadObject(id)->start();
+	threadObject(id.data)->start();
 }
 
 void thread_join(thread id)
 {
-	threadObject(id)->join();
+	threadObject(id.data)->join();
 }
 
 void thread_destroy(thread id)
 {
-	delete threadObject(id);
+	delete threadObject(id.data);
 }
