@@ -150,7 +150,6 @@ void alloff();
  */
 void ao();
 
-int get_backemf(int port);
 
 #ifdef __cplusplus
 }
