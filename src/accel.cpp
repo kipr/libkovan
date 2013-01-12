@@ -21,21 +21,24 @@ short Acceleration::x()
 {
 	setupI2C();
 	if(!s_setup) return 0xFFFF;
-	return static_cast<short>(Private::I2C::instance()->read(R_XOUT8));
+	char x_accel = (char)Private::I2C::instance()->read(R_XOUT8);
+	return 4 * (short)(x_accel);
 }
 
 short Acceleration::y()
 {
 	setupI2C();
 	if(!s_setup) return 0xFFFF;
-	return static_cast<short>(Private::I2C::instance()->read(R_YOUT8));
+	char y_accel = (char)Private::I2C::instance()->read(R_YOUT8);
+	return 4 * (short)(y_accel);
 }
 
 short Acceleration::z()
 {
 	setupI2C();
 	if(!s_setup) return 0xFFFF;
-	return static_cast<short>(Private::I2C::instance()->read(R_ZOUT8));
+	char z_accel = (char)Private::I2C::instance()->read(R_ZOUT8);
+	return 4 * (short)(z_accel);
 }
 
 void Acceleration::setupI2C()
@@ -68,9 +71,9 @@ bool Acceleration::calibrate()
 
 	for (int i = 0; i < 100; i++){
 
-		accel_x = static_cast<short>(Private::I2C::instance()->read(R_XOUT8));
-        accel_y = static_cast<short>(Private::I2C::instance()->read(R_YOUT8));
-       	accel_z = static_cast<short>(Private::I2C::instance()->read(R_ZOUT8));
+		accel_x = (short)(char)Private::I2C::instance()->read(R_XOUT8);
+        accel_y = (short)(char)Private::I2C::instance()->read(R_YOUT8);
+       	accel_z = (short)(char)Private::I2C::instance()->read(R_ZOUT8);
 
 		if (((accel_x * accel_x) + (accel_y * accel_y) + (accel_z - 64)*(accel_z-64)) < 17){
 			return true; // success
