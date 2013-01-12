@@ -42,7 +42,7 @@ char Private::I2C::read(const unsigned char &addr)
 		return 0;
 	}
 #ifdef KOVAN
-	return i2c_read_byte(m_fd, addr);
+	return (char)i2c_read_byte(m_fd, addr);
 #else
 	WARN("Not implemented for this host.");
 	return 0;

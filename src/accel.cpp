@@ -21,24 +21,24 @@ short Acceleration::x()
 {
 	setupI2C();
 	if(!s_setup) return 0xFFFF;
-	short x_accel = Private::I2C::instance()->read(R_XOUT8);
-	return (4 * x_accel);
+	signed short x_accel = Private::I2C::instance()->read(R_XOUT8);
+	return (((short)4) * x_accel);
 }
 
 short Acceleration::y()
 {
 	setupI2C();
 	if(!s_setup) return 0xFFFF;
-	short y_accel = Private::I2C::instance()->read(R_YOUT8);
-	return (4 * y_accel);
+	signed short y_accel = Private::I2C::instance()->read(R_YOUT8);
+	return ((short)4 * y_accel);
 }
 
 short Acceleration::z()
 {
 	setupI2C();
 	if(!s_setup) return 0xFFFF;
-	short z_accel = Private::I2C::instance()->read(R_ZOUT8);
-	return (4 * z_accel);
+	signed short z_accel = Private::I2C::instance()->read(R_ZOUT8);
+	return ((short)4 * z_accel);
 }
 
 void Acceleration::setupI2C()
