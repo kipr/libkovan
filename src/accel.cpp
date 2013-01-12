@@ -62,11 +62,12 @@ bool Acceleration::calibrate()
 	short accel_bias_y = 0;
 	short accel_bias_z = 0;
 
-	char accel_x = 0;
-	char accel_y = 0;
-	char accel_z = 0;
+	short accel_x = 0;
+	short accel_y = 0;
+	short accel_z = 0;
 
 	for (int i = 0; i < 100; i++){
+
 		accel_x = static_cast<short>(Private::I2C::instance()->read(R_XOUT8));
         accel_y = static_cast<short>(Private::I2C::instance()->read(R_YOUT8));
        	accel_z = static_cast<short>(Private::I2C::instance()->read(R_ZOUT8));
