@@ -70,7 +70,7 @@ bool Private::Servo::setPosition(port_t port, const unsigned short& position)
 {
 	port = fixPort(port);
 	if(port > 3) return false;
-	unsigned short cappedPosition = position & 0x03FF;
+	unsigned short cappedPosition = position & 0x07FF;
 	const unsigned short val = (unsigned int)(((SERVO_MAX - SERVO_MIN) * (cappedPosition / 2048.0)) + SERVO_MIN) >> 8;
 	Private::Kovan::instance()->enqueueCommand(createWriteCommand(servoRegisters[port], val));
 	return true; // TODO: Remove return value?
