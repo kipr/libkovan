@@ -1,6 +1,8 @@
 #include "kovan/accel.hpp"
 #include "i2c_p.hpp"
+
 #include <unistd.h>
+#include <string.h>
 
 #define R_XOUT8 0x6
 #define R_YOUT8 0x7
