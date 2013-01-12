@@ -8,9 +8,9 @@
 #define R_YOUT8 0x7
 #define R_ZOUT8 0x8
 
-#define I2C_CONFIG_ADDY		0x16
-#define SENSITIVITY_2G		0x4
-#define MEASUREMENT_MODE	0x1
+#define I2C_CONFIG_ADDY 	0x16
+#define SENSITIVITY_2G 		0x4
+#define MEASUREMENT_MODE 	0x1
 
 #define R_XBIAS 0x10
 #define R_YBIAS 0x12
@@ -22,30 +22,21 @@ short Acceleration::x()
 {
 	setupI2C();
 	if(!s_setup) return 0xFFFF;
-	unsigned char raw = Private::I2C::instance()->read(R_XOUT8);
-	char sign = 0;
-	memcpy(&sign, &raw, sizeof(char));
-	return (4 * (short)sign);
+	return (4 * (short)(char)Private::I2C::instance()->read(R_XOUT8));
 }
 
 short Acceleration::y()
 {
 	setupI2C();
 	if(!s_setup) return 0xFFFF;
-	unsigned char raw = Private::I2C::instance()->read(R_YOUT8);
-	char sign = 0;
-	memcpy(&sign, &raw, sizeof(char));
-	return (4 * (short)sign);
+	return (4 * (short)(char)Private::I2C::instance()->read(R_YOUT8));
 }
 
 short Acceleration::z()
 {
 	setupI2C();
 	if(!s_setup) return 0xFFFF;
-	unsigned char raw = Private::I2C::instance()->read(R_ZOUT8);
-	char sign = 0;
-	memcpy(&sign, &raw, sizeof(char));
-	return (4 * (short)sign);
+	return (4 * (short)(char)Private::I2C::instance()->read(R_ZOUT8));
 }
 
 void Acceleration::setupI2C()
@@ -76,23 +67,22 @@ bool Acceleration::calibrate()
 	short accel_y = 0;
 	short accel_z = 0;
 
-	for (int i = 0; i < 100; i++){
-
+	for(int i = 0; i < 100; i++) {
 		accel_x = (short)(char)Private::I2C::instance()->read(R_XOUT8);
-        accel_y = (short)(char)Private::I2C::instance()->read(R_YOUT8);
-       	accel_z = (short)(char)Private::I2C::instance()->read(R_ZOUT8);
+		accel_y = (short)(char)Private::I2C::instance()->read(R_YOUT8);
+		accel_z = (short)(char)Private::I2C::instance()->read(R_ZOUT8);
 
 		if (((accel_x * accel_x) + (accel_y * accel_y) + (accel_z - 64)*(accel_z-64)) < 17){
 			return true; // success
 		}
 
-   		accel_bias_x += accel_x * 2;
-  		accel_bias_y += accel_y * 2;
-      	accel_bias_z += (accel_z-64) * 2;
+		accel_bias_x += accel_x * 2;
+		accel_bias_y += accel_y * 2;
+		accel_bias_z += (accel_z-64) * 2;
 
-      	Private::I2C::instance()->write(R_XBIAS, -accel_bias_x , false);
-      	Private::I2C::instance()->write(R_YBIAS, -accel_bias_y, false);
-      	Private::I2C::instance()->write(R_ZBIAS, -accel_bias_z, false);
+		Private::I2C::instance()->write(R_XBIAS, -accel_bias_x , false);
+		Private::I2C::instance()->write(R_YBIAS, -accel_bias_y, false);
+		Private::I2C::instance()->write(R_ZBIAS, -accel_bias_z, false);
 	}
 
 	return false; // fail
