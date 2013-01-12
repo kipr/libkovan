@@ -1,7 +1,7 @@
 #include "kovan/accel.hpp"
 #include "i2c_p.hpp"
 
-#define DATA_ADDR 0x16
+#define DATA_ADDR 16
 #define DATA_VAL 0x05
 
 #define R_XOUTL 0x0
