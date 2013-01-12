@@ -35,7 +35,7 @@ bool Private::I2C::write(const unsigned char &addr, const unsigned char &val, co
 #endif
 }
 
-unsigned char Private::I2C::read(const unsigned char &addr)
+char Private::I2C::read(const unsigned char &addr)
 {
 	if(m_fd < 0) {
 		WARN("Bad file handle for i2c bus.");
