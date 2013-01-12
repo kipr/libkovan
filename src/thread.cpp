@@ -57,7 +57,7 @@ void *__runThread(void *data)
 
 Thread::Thread()
 #ifdef WIN32
-	: m_thread(INVALID_HANDLE)
+	: m_thread(-1)
 #endif
 {
 	

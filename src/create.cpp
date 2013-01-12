@@ -682,11 +682,12 @@ bool Create::blockingRead(unsigned char *data, const size_t& size, unsigned time
 		int ret = read(data + total, size - total);
 		if(ret < 0 && errno != EAGAIN) return false;
 		if(ret > 0) total += ret;
-		
+#ifndef WIN32
 		timeval current = timeOfDay();
 		timeval diff;
 		timersub(&current, &start, &diff);
 		msecs = diff.tv_sec * 1000 + diff.tv_usec / 1000;
+#endif
 		// printf("msecs: %ld, %ld of %ld\n", msecs, total, size);
 		usleep(5000);
 	} while(total < size && msecs < timeout);
