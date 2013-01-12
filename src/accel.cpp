@@ -10,7 +10,6 @@
 #define SENSITIVITY_2G		0x4
 #define MEASUREMENT_MODE	0x1
 
-
 #define R_XBIAS 0x10
 #define R_YBIAS 0x12
 #define R_ZBIAS 0x14
@@ -21,24 +20,30 @@ short Acceleration::x()
 {
 	setupI2C();
 	if(!s_setup) return 0xFFFF;
-	signed short x_accel = Private::I2C::instance()->read(R_XOUT8);
-	return (((short)4) * x_accel);
+	unsigned char raw = Private::I2C::instance()->read(R_XOUT8);
+	char sign = 0;
+	memcpy(&sign, &raw, sizeof(char));
+	return (4 * (short)sign);
 }
 
 short Acceleration::y()
 {
 	setupI2C();
 	if(!s_setup) return 0xFFFF;
-	signed short y_accel = Private::I2C::instance()->read(R_YOUT8);
-	return ((short)4 * y_accel);
+	unsigned char raw = Private::I2C::instance()->read(R_YOUT8);
+	char sign = 0;
+	memcpy(&sign, &raw, sizeof(char));
+	return (4 * (short)sign);
 }
 
 short Acceleration::z()
 {
 	setupI2C();
 	if(!s_setup) return 0xFFFF;
-	signed short z_accel = Private::I2C::instance()->read(R_ZOUT8);
-	return ((short)4 * z_accel);
+	unsigned char raw = Private::I2C::instance()->read(R_ZOUT8);
+	char sign = 0;
+	memcpy(&sign, &raw, sizeof(char));
+	return (4 * (short)sign);
 }
 
 void Acceleration::setupI2C()

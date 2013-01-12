@@ -44,5 +44,6 @@
 #include "display.h"
 #include "datalog.h"
 #include "accel.h"
+#include "thread.h"
 
 #endif

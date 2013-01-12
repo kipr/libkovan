@@ -21,7 +21,7 @@ void mutex_destroy(mutex m);
 
 thread thread_create(thread_function func);
 void thread_start(thread id);
-void thread_join(thread id);
+void thread_wait(thread id);
 void thread_destroy(thread id);
 
 #endif

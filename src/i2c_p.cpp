@@ -35,14 +35,14 @@ bool Private::I2C::write(const unsigned char &addr, const unsigned char &val, co
 #endif
 }
 
-char Private::I2C::read(const unsigned char &addr)
+unsigned char Private::I2C::read(const unsigned char &addr)
 {
 	if(m_fd < 0) {
 		WARN("Bad file handle for i2c bus.");
 		return 0;
 	}
 #ifdef KOVAN
-	return (char)i2c_read_byte(m_fd, addr);
+	return i2c_read_byte(m_fd, addr);
 #else
 	WARN("Not implemented for this host.");
 	return 0;

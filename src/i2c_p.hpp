@@ -8,7 +8,7 @@ namespace Private
 	public:
 		bool pickSlave(const char *slave);
 		bool write(const unsigned char &addr, const unsigned char &val, const bool &readback);
-		char read(const unsigned char &addr);
+		unsigned char read(const unsigned char &addr);
 		
 		static I2C *instance();
 	private:
