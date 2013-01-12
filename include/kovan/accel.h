@@ -9,6 +9,8 @@ short accel_x();
 short accel_y();
 short accel_z();
 
+int accel_calibrate();
+
 #ifdef __cplusplus
 }
 #endif

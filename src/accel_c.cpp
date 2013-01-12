@@ -15,3 +15,12 @@ short accel_z()
 {
 	return Acceleration::z();
 }
+
+int accel_calibrate()
+{
+	short success = (short) Acceleration::calibrate();
+
+	if (success) return 0;
+
+	return -1;
+}

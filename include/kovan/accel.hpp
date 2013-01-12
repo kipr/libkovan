@@ -7,6 +7,7 @@ public:
 	static short x();
 	static short y();
 	static short z();
+	static bool calibrate();
 private:
 	static void setupI2C();
 	static bool s_setup;
