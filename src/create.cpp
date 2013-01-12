@@ -991,7 +991,7 @@ void Create::updateSensorPacket1()
 	beginAtomicOperation();
 	write(OI_SENSORS);
 	write(1);
-	printArray(m_1);
+	blockingRead(m_1);
 	timestamps[0] = timeOfDay();
 	endAtomicOperation();
 }
@@ -1003,7 +1003,7 @@ void Create::updateSensorPacket2()
 	beginAtomicOperation();
 	write(OI_SENSORS);
 	write(2);
-	blockingRead(m_3);
+	blockingRead(m_2);
 	timestamps[1] = timeOfDay();
 	m_state.distance += SHORT(m_2.distance);
 	m_state.angle += SHORT(m_2.angle);

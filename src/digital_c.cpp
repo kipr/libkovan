@@ -23,7 +23,7 @@
 
 int digital(int port)
 {
-	return get_digital_value(port);
+	return !get_digital_value(port);
 }
 
 void set_digital_value(int port, int value)

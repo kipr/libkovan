@@ -27,6 +27,7 @@
 #ifndef _KOVAN_H_
 #define _KOVAN_H_
 
+#include "audio.h"
 #include "motors.h"
 #include "servo.h"
 #include "button.h"

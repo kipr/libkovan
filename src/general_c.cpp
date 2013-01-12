@@ -41,10 +41,10 @@ void halt()
 	ao();
 	disable_servos();
 	for(int i = 0; i < 8; ++i) {
-		set_analog_pullup(i, 0);
+		set_analog_pullup(i, 1);
 	}
 	for(int i = 8; i < 16; ++i) {
 		set_digital_output(i, 0);
-		set_digital_pullup(i, 0);
+		set_digital_pullup(i, 1);
 	}
 }
