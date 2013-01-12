@@ -24,6 +24,7 @@ short Acceleration::x()
 	// high bits must be read immediately afterwards
 	short x_low = static_cast<short>(Private::I2C::instance()->read(R_XOUTL));
 	short x_high = static_cast<short>(Private::I2C::instance()->read(R_XOUTH));
+	if(x_high & 0x02) x_high |= 0xFE;
 	return ((x_high << 8) | x_low);
 }
 
@@ -33,6 +34,7 @@ short Acceleration::y()
 	if(!s_setup) return 0xFFFF;
 	short y_low = static_cast<short>(Private::I2C::instance()->read(R_YOUTL));
 	short y_high = static_cast<short>(Private::I2C::instance()->read(R_YOUTH));
+	if(y_high & 0x02) y_high |= 0xFE;
 	return ((y_high << 8) | y_low);}
 
 short Acceleration::z()
@@ -41,6 +43,7 @@ short Acceleration::z()
 	if(!s_setup) return 0xFFFF;
 	short z_low = static_cast<short>(Private::I2C::instance()->read(R_ZOUTL));
 	short z_high = static_cast<short>(Private::I2C::instance()->read(R_ZOUTH));
+	if(z_high & 0x02) z_high |= 0xFE;
 	return ((z_high << 8) | z_low);
 }
 
