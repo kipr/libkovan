@@ -45,5 +45,6 @@
 #include "datalog.h"
 #include "accel.h"
 #include "thread.h"
+#include "botball.h"
 
 #endif
