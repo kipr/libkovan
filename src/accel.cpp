@@ -22,7 +22,6 @@ short Acceleration::x()
 	setupI2C();
 	if(!s_setup) return 0xFFFF;
 	short x_accel = Private::I2C::instance()->read(R_XOUT8);
-	if (x_accel > 127) x_accel = 127 - x_accel;
 	return (4 * x_accel);
 }
 
@@ -31,7 +30,6 @@ short Acceleration::y()
 	setupI2C();
 	if(!s_setup) return 0xFFFF;
 	short y_accel = Private::I2C::instance()->read(R_YOUT8);
-	if (y_accel > 127) y_accel = 127 - y_accel;
 	return (4 * y_accel);
 }
 
@@ -40,7 +38,6 @@ short Acceleration::z()
 	setupI2C();
 	if(!s_setup) return 0xFFFF;
 	short z_accel = Private::I2C::instance()->read(R_ZOUT8);
-	if (z_accel > 127) z_accel = 127 - z_accel;
 	return (4 * z_accel);
 }
 
