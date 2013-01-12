@@ -1,7 +1,7 @@
 #include "kovan/accel.hpp"
 #include "i2c_p.hpp"
 
-#define DATA_ADDR 16
+#define DATA_ADDR 0x16
 #define DATA_VAL 0x05
 
 #define R_XOUTL 0x0
@@ -35,7 +35,8 @@ short Acceleration::y()
 	short y_low = static_cast<short>(Private::I2C::instance()->read(R_YOUTL));
 	short y_high = static_cast<short>(Private::I2C::instance()->read(R_YOUTH));
 	if(y_high & 0x02) y_high |= 0xFE;
-	return ((y_high << 8) | y_low);}
+	return ((y_high << 8) | y_low);
+}
 
 short Acceleration::z()
 {
