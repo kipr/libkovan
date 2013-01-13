@@ -33,11 +33,12 @@ void display_clear()
 }
 
 // column, row, string with format phrases, args
-void display_printf(int col, int row, char *t, ...)
+void display_printf(int col, int row, const char *t, ...)
 {
 	va_list argp;              // argp is typed for traversing the variable part of the arg list
 	int i; char *c; double d;  // working variables to receive arg values
-	char *cp, *fmte, sc;       // cp traverses format string t, fmte marks end of each format phrase, sc is switch control
+	const char *cp;
+	char *fmte, sc;       // cp traverses format string t, fmte marks end of each format phrase, sc is switch control
 
 	int y;                   // row index
 	char *dp;                // pointer into display
