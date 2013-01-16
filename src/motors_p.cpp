@@ -184,8 +184,8 @@ void Private::Motor::pidGains(port_t port, short &p, short &i, short &d, short &
 
 void Private::Motor::setPwm(port_t port, const unsigned char &speed)
 {
-	// setControlMode(port, Private::Motor::Inactive);
 	port = fixPort(port);
+	setControlMode(port, Private::Motor::Inactive);
 	Private::Kovan *kovan = Private::Kovan::instance();
 	const unsigned int adjustedSpeed = speed > 100 ? 100 : speed; 
 	kovan->enqueueCommand(createWriteCommand(motorRegisters[port], adjustedSpeed * 2600 / 100));
@@ -196,10 +196,10 @@ void Private::Motor::setPwmDirection(port_t port, const Motor::Direction &dir)
 	// FIXME: This assumes that our current state is the latest.
 	// If somebody has altered the motor drive codes in the mean time,
 	// this will undo their work.
-	// setControlMode(port, Private::Motor::Inactive);
 	Private::Kovan *kovan = Private::Kovan::instance();
 	
 	port = fixPort(port);
+	setControlMode(port, Private::Motor::Inactive);
 	const unsigned short offset = (3 - port) << 1;
 	unsigned short &dcs = kovan->currentState().t[MOTOR_DRIVE_CODE_T];
 	
@@ -224,6 +224,7 @@ unsigned char Private::Motor::pwm(port_t port)
 
 void Private::Motor::stop(port_t port)
 {
+	setControlMode(fixPort(port), Private::Motor::Inactive);
 	setPwmDirection(fixPort(port), PassiveStop);
 }
 
