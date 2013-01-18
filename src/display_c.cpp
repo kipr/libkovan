@@ -33,11 +33,13 @@ void display_clear()
 }
 
 // column, row, string with format phrases, args
-void display_printf(int col, int row, char *t, ...)
+void display_printf(int col, int row, const char *t, ...)
 {
 	va_list argp;              // argp is typed for traversing the variable part of the arg list
 	int i; char *c; double d;  // working variables to receive arg values
-	char *cp, *fmte, sc;       // cp traverses format string t, fmte marks end of each format phrase, sc is switch control
+	const char *cp;
+
+	char sc;       // cp traverses format string t, fmte marks end of each format phrase, sc is switch control
 
 	int y;                   // row index
 	char *dp;                // pointer into display
@@ -80,7 +82,7 @@ void display_printf(int col, int row, char *t, ...)
 			continue;             // return to top
 		}
 		// OK, if we're here we may have hit a format phrase
-		fmte = strpbrk(cp + 1, "dioxXucsfeEgG%"); // look for format end
+		const char *fmte = strpbrk(cp + 1, "dioxXucsfeEgG%"); // look for format end
 		// strpbrk returns the location of 1st character of its argument that is in the scan string
 		
 		// what's left is not a format phrase so insert % and return to top 
@@ -113,9 +115,9 @@ void display_printf(int col, int row, char *t, ...)
 			break;
 		}
 		
-		for(i = 0; i < strlen(fws); ++i) { // insert formatted phrase in display map
+		for(unsigned int j = 0; j < strlen(fws); ++j) { // insert formatted phrase in display map
 			if (maxw == 0) break;      // if no more room get out of this
-			*dp = fws[i];              // insert next character from formatted phrase
+			*dp = fws[j];              // insert next character from formatted phrase
 			dp++; maxw--;
 		}
 		if (maxw==0) break;           // if no more room proceed to display refresh

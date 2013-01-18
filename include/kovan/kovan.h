@@ -31,6 +31,7 @@
 #include "motors.h"
 #include "servo.h"
 #include "button.h"
+#include "digital.h"
 #include "camera.h"
 #include "create.h"
 #include "analog.h"
