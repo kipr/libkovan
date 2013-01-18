@@ -28,6 +28,8 @@
 #ifndef _UTIL_H_
 #define _UTIL_H_
 
+#include "export.h"
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -37,10 +39,10 @@ extern "C" {
  * \param msecs The number of milliseconds to sleep.
  * \blocks
  */
-void msleep(long msecs);
+EXPORT_SYM void msleep(long msecs);
 
-unsigned long systime();
-double seconds();
+EXPORT_SYM unsigned long systime();
+EXPORT_SYM double seconds();
 
 #ifdef __cplusplus
 }

@@ -22,6 +22,7 @@
 #define _SENSOR_LOGIC_HPP_
 
 #include "sensor.hpp"
+#include "export.h"
 
 /*!
  * Contains all logical sensors (sensors apply logical operations to other sensors.)
@@ -29,7 +30,7 @@
  */
 namespace SensorLogic
 {
-	class Base : public Sensor<bool>
+	class EXPORT_SYM Base : public Sensor<bool>
 	{
 	public:
 		Base(const Sensor<bool> *a, const Sensor<bool> *b);
@@ -41,21 +42,21 @@ namespace SensorLogic
 		const Sensor<bool> *m_b;
 	};
 	
-	class And : public Base
+	class EXPORT_SYM And : public Base
 	{
 	public:
 		And(const Sensor<bool> *a, const Sensor<bool> *b);
 		virtual bool value() const;
 	};
 	
-	class Or : public Base
+	class EXPORT_SYM Or : public Base
 	{
 	public:
 		Or(const Sensor<bool> *a, const Sensor<bool> *b);
 		virtual bool value() const;
 	};
 	
-	class Xor : public Base
+	class EXPORT_SYM Xor : public Base
 	{
 	public:
 		Xor(const Sensor<bool> *a, const Sensor<bool> *b);

@@ -27,12 +27,14 @@
 #ifndef _DISPLAY_H_
 #define _DISPLAY_H_
 
+#include "export.h"
+
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-void display_clear();  // clears console and sets display map to all spaces
-void display_printf(int col, int row, char *t, ...); // runs printf formatting to specified screen location
+EXPORT_SYM void display_clear();  // clears console and sets display map to all spaces
+EXPORT_SYM void display_printf(int col, int row, char *t, ...); // runs printf formatting to specified screen location
 
 #ifdef __cplusplus
 }

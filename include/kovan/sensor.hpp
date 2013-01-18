@@ -29,6 +29,8 @@
 #ifndef _SENSORS_HPP_
 #define _SENSORS_HPP_
 
+#include "export.h"
+
 /*!
  * \class Sensor
  * \brief The base class for all sensors of any type
@@ -37,7 +39,7 @@
  * \ingroup sensor
  */
 template<typename T>
-class Sensor
+class EXPORT_SYM Sensor
 {
 public:
 	virtual ~Sensor() {}

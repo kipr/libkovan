@@ -21,15 +21,17 @@
 #ifndef _DRAW_H_
 #define _DRAW_H_
 
+#include "export.h"
+
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-int draw_open();
-void draw_point(int x, int y);
-void draw_line(int sx, int sy, int ex, int ey);
-void draw_clear();
-void draw_close();
+EXPORT_SYM int draw_open();
+EXPORT_SYM void draw_point(int x, int y);
+EXPORT_SYM void draw_line(int sx, int sy, int ex, int ey);
+EXPORT_SYM void draw_clear();
+EXPORT_SYM void draw_close();
 
 #ifdef __cplusplus
 }

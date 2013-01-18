@@ -28,11 +28,13 @@
 #ifndef _BATTERY_HPP_
 #define _BATTERY_HPP_
 
+#include "export.h"
+
 /*!
  * \class Battery
  * \brief Provides helper methods for accessing the device's power level
  */
-class Battery
+class EXPORT_SYM Battery
 {
 public:
 	static bool isCharging();

@@ -48,6 +48,7 @@ typedef unsigned int speed_t;
 
 #include "sensor.hpp"
 #include "button.hpp"
+#include "export.h"
 
 #define PI 3.14159f
 
@@ -55,7 +56,7 @@ typedef unsigned int speed_t;
  * \class CreateScript
  * \ingroup create
  */
-class CreateScript
+class EXPORT_SYM CreateScript
 {
 public:
 	CreateScript();
@@ -206,7 +207,7 @@ namespace CreateSensors
  * \author Braden McDorman
  * \ingroup create
  */
-class Create
+class EXPORT_SYM Create
 {
 public:
 	/*!

@@ -1,11 +1,15 @@
 #include "kovan/thread.hpp"
 
+#ifdef WIN32
+#include <windows.h>
+#else
 #include <pthread.h>
+#endif
 
 Mutex::Mutex()
 {
 #ifdef WIN32
-	m_handle = CreateMutex(NULL, FALSE, NULL);
+	m_handle = (void *)CreateMutex(NULL, FALSE, NULL);
 #else
 	pthread_mutex_init(&m_handle, NULL);
 #endif

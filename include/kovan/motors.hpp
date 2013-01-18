@@ -31,6 +31,7 @@
 
 #include "port.hpp"
 #include "sensor.hpp"
+ #include "export.h"
 
 /*!
  * \class Motor
@@ -38,7 +39,7 @@
  * \details Allows both PWM and PID control of a motor.
  * \ingroup motor
  */
-class Motor
+class EXPORT_SYM Motor
 {
 public:
 	/*!
@@ -111,7 +112,7 @@ private:
  * \brief Allows the reading of the back emf values for each motor.
  * \ingroup motor
  */
-class BackEMF : public Sensor<int>
+class EXPORT_SYM BackEMF : public Sensor<int>
 {
 public:
 	BackEMF(const unsigned char& port);

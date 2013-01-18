@@ -21,7 +21,9 @@
 #ifndef _IR_HPP_
 #define _IR_HPP_
 
-class Ir
+#include "export.h"
+
+class EXPORT_SYM Ir
 {
 public:
 	static void read();

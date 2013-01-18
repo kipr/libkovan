@@ -21,12 +21,14 @@
 #ifndef _IR_H_
 #define _IR_H_
 
+#include "export.h"
+
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-void ir_read();
-void ir_write();
+EXPORT_SYM void ir_read();
+EXPORT_SYM void ir_write();
 
 #ifdef __cplusplus
 }

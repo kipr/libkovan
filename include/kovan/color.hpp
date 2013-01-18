@@ -1,6 +1,8 @@
 #ifndef _COLOR_HPP_
 #define _COLOR_HPP_
 
+#include "export.h"
+
 struct Rgb
 {
 	unsigned char r;

@@ -12,6 +12,8 @@
 #include <vector>
 #include <map>
 
+#include "export.h"
+
 class DataLog;
 
 /*!
@@ -20,7 +22,7 @@ class DataLog;
  * This is conceptually similar to a column in a spreadsheet.
  * \ingroup datalog
  */
-class Category
+class EXPORT_SYM Category
 {
 public:
 	/*!
@@ -59,7 +61,7 @@ private:
  * Base class for data log writers.
  * \ingroup datalog
  */
-class DataLogWriter
+class EXPORT_SYM DataLogWriter
 {
 public:
 	virtual ~DataLogWriter();
@@ -73,7 +75,7 @@ public:
  * imported into almost any spreadsheet program.
  * \ingroup datalog
  */
-class CsvWriter : public DataLogWriter
+class EXPORT_SYM CsvWriter : public DataLogWriter
 {
 public:
 	CsvWriter(const std::string& path);
@@ -88,7 +90,7 @@ private:
  * Writes a data log as plain text.
  * \ingroup datalog
  */
-class PlainWriter : public DataLogWriter
+class EXPORT_SYM PlainWriter : public DataLogWriter
 {
 public:
 	PlainWriter(const std::string& path);
@@ -105,7 +107,7 @@ private:
  * This class is conceptually similar to a spreadsheet that holds multiple columns.
  * \ingroup datalog
  */
-class DataLog
+class EXPORT_SYM DataLog
 {
 public:
 	~DataLog();

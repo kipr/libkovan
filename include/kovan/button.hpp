@@ -31,6 +31,8 @@
 
 #include "sensor.hpp"
 #include "button_ids.hpp"
+ #include "export.h"
+ 
 
 /*!
  * \class AbstractButton
@@ -38,7 +40,7 @@
  * \details Provides several convenience methods for working with buttons
  * \ingroup button
  */
-class AbstractButton : public Sensor<bool>
+class EXPORT_SYM AbstractButton : public Sensor<bool>
 {
 public:
 	virtual ~AbstractButton();
@@ -99,7 +101,7 @@ public:
  * \details Provides methods to access and manipulate the button's text
  * \ingroup button
  */
-class AbstractTextButton : public AbstractButton
+class EXPORT_SYM AbstractTextButton : public AbstractButton
 {
 public:
 	virtual ~AbstractTextButton();
@@ -132,7 +134,7 @@ public:
 	virtual void resetText() = 0;
 };
 
-class IdButton : public AbstractTextButton
+class EXPORT_SYM IdButton : public AbstractTextButton
 {
 public:
 	IdButton(const Button::Type::Id& id, const char *defaultText);
@@ -155,7 +157,7 @@ private:
  * \brief Helper methods to manipulate and access the state of the X, Y, and Z buttons.
  * \ingroup button
  */
-class ExtraButtons
+class EXPORT_SYM ExtraButtons
 {
 public:
 	/*!

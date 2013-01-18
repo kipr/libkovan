@@ -28,6 +28,8 @@
 #ifndef _BUTTON_H_
 #define _BUTTON_H_
 
+#include "export.h"
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -37,42 +39,42 @@ extern "C" {
  * \param text The text to display. Limit of 16 characters.
  * \ingroup button
  */
-void set_a_button_text(const char *text);
+EXPORT_SYM void set_a_button_text(const char *text);
 
 /*!
  * Updates the B button's text.
  * \param text The text to display. Limit of 16 characters.
  * \ingroup button
  */
-void set_b_button_text(const char *text);
+EXPORT_SYM void set_b_button_text(const char *text);
 
 /*!
  * Updates the C button's text.
  * \param text The text to display. Limit of 16 characters.
  * \ingroup button
  */
-void set_c_button_text(const char *text);
+EXPORT_SYM void set_c_button_text(const char *text);
 
 /*!
  * Updates the X button's text.
  * \param text The text to display. Limit of 16 characters.
  * \ingroup button
  */
-void set_x_button_text(const char *text);
+EXPORT_SYM void set_x_button_text(const char *text);
 
 /*!
  * Updates the Y button's text.
  * \param text The text to display. Limit of 16 characters.
  * \ingroup button
  */
-void set_y_button_text(const char *text);
+EXPORT_SYM void set_y_button_text(const char *text);
 
 /*!
  * Updates the Z button's text.
  * \param text The text to display. Limit of 16 characters.
  * \ingroup button
  */
-void set_z_button_text(const char *text);
+EXPORT_SYM void set_z_button_text(const char *text);
 
 /*!
  * Gets the A button's state (pressed or not pressed.)
@@ -80,7 +82,7 @@ void set_z_button_text(const char *text);
  * \see a_button_clicked
  * \ingroup button
  */
-int a_button();
+EXPORT_SYM int a_button();
 
 /*!
  * Gets the B button's state (pressed or not pressed.)
@@ -88,7 +90,7 @@ int a_button();
  * \see b_button_clicked
  * \ingroup button
  */
-int b_button();
+EXPORT_SYM int b_button();
 
 /*!
  * Gets the C button's state (pressed or not pressed.)
@@ -96,7 +98,7 @@ int b_button();
  * \see c_button_clicked
  * \ingroup button
  */
-int c_button();
+EXPORT_SYM int c_button();
 
 /*!
  * Gets the X button's state (pressed or not pressed.)
@@ -105,7 +107,7 @@ int c_button();
  * \see x_button_clicked
  * \ingroup button
  */
-int x_button();
+EXPORT_SYM int x_button();
 
 /*!
  * Gets the Y button's state (pressed or not pressed.)
@@ -114,7 +116,7 @@ int x_button();
  * \see y_button_clicked
  * \ingroup button
  */
-int y_button();
+EXPORT_SYM int y_button();
 
 /*!
  * Gets the Z button's state (pressed or not pressed.)
@@ -123,7 +125,7 @@ int y_button();
  * \see z_button_clicked
  * \ingroup button
  */
-int z_button();
+EXPORT_SYM int z_button();
 
 /*!
  * Gets the side button's state (pressed or not pressed.)
@@ -131,7 +133,7 @@ int z_button();
  * \see side_button_clicked
  * \ingroup button
  */
-int side_button();
+EXPORT_SYM int side_button();
 
 /*!
  * Gets the side button's state (pressed or not pressed.)
@@ -140,7 +142,7 @@ int side_button();
  * \see side_button
  * \ingroup button
  */
-int black_button();
+EXPORT_SYM int black_button();
 
 /*!
  * Gets the A button's state (pressed or not pressed.)
@@ -148,7 +150,7 @@ int black_button();
  * \see a_button
  * \ingroup button
  */
-int a_button_clicked();
+EXPORT_SYM int a_button_clicked();
 
 /*!
  * Gets the B button's state (pressed or not pressed.)
@@ -157,7 +159,7 @@ int a_button_clicked();
  * \see b_button
  * \ingroup button
  */
-int b_button_clicked();
+EXPORT_SYM int b_button_clicked();
 
 /*!
  * Gets the C button's state (pressed or not pressed.)
@@ -166,7 +168,7 @@ int b_button_clicked();
  * \see c_button
  * \ingroup button
  */
-int c_button_clicked();
+EXPORT_SYM int c_button_clicked();
 
 /*!
  * Gets the X button's state (pressed or not pressed.)
@@ -176,7 +178,7 @@ int c_button_clicked();
  * \see x_button
  * \ingroup button
  */
-int x_button_clicked();
+EXPORT_SYM int x_button_clicked();
 
 /*!
  * Gets the Y button's state (pressed or not pressed.)
@@ -186,7 +188,7 @@ int x_button_clicked();
  * \see y_button
  * \ingroup button
  */
-int y_button_clicked();
+EXPORT_SYM int y_button_clicked();
 
 /*!
  * Gets the Z button's state (pressed or not pressed.)
@@ -196,7 +198,7 @@ int y_button_clicked();
  * \see z_button
  * \ingroup button
  */
-int z_button_clicked();
+EXPORT_SYM int z_button_clicked();
 
 /*!
  * Gets the side button's state (pressed or not pressed.)
@@ -205,37 +207,37 @@ int z_button_clicked();
  * \see side_button
  * \ingroup button
  */
-int side_button_clicked();
+EXPORT_SYM int side_button_clicked();
 
-int any_button();
+EXPORT_SYM int any_button();
 
 /*!
  * Shows the X, Y, and Z buttons.
  * \see set_extra_buttons_visible
  * \ingroup button
  */
-void extra_buttons_show();
+EXPORT_SYM void extra_buttons_show();
 
 /*!
  * Hides the X, Y, and Z buttons. This is the default.
  * \see set_extra_buttons_visible
  * \ingroup button
  */
-void extra_buttons_hide();
+EXPORT_SYM void extra_buttons_hide();
 
 /*!
  * Determines whether or not the X, Y, and Z buttons are visible.
  * \see set_extra_buttons_visible
  * \ingroup button
  */
-int get_extra_buttons_visible();
+EXPORT_SYM int get_extra_buttons_visible();
 
 /*!
  * Sets whether or not the X, Y, and Z buttons are visible.
  * \see get_extra_buttons_visible
  * \ingroup button
  */
-void set_extra_buttons_visible(int visible);
+EXPORT_SYM void set_extra_buttons_visible(int visible);
 
 #ifdef __cplusplus
 }

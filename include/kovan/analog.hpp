@@ -31,6 +31,8 @@
 
 #include "sensor.hpp"
 
+#include "export.h"
+
 /*!
  * \class Analog
  * \brief Implements the sensor type "analog"
@@ -39,7 +41,7 @@
  * \author Braden McDorman
  * \ingroup sensor
  */
-class Analog : public Sensor<unsigned short>
+class EXPORT_SYM  Analog : public Sensor<unsigned short>
 {
 public:
 	Analog(const unsigned char& port);
@@ -67,7 +69,7 @@ private:
  * \author Braden McDorman
  * \ingroup sensor
  */
-class Analog8 : public Analog
+class EXPORT_SYM Analog8 : public Analog
 {
 public:
 	Analog8(const unsigned char& port);

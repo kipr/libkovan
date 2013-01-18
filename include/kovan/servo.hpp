@@ -30,13 +30,14 @@
 #define _SERVOS_HPP_
 
 #include "port.hpp"
+ #include "export.h"
 
 /*!
  * \class Servo
  * \brief Encapsulates the concept of a servo motor
  * \ingroup servo
  */
-class Servo
+class EXPORT_SYM Servo
 {
 public:
 	typedef unsigned int ticks_t;

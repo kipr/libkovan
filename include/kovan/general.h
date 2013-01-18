@@ -28,6 +28,8 @@
 #ifndef _GENERAL_H_
 #define _GENERAL_H_
 
+#include "export.h"
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -41,7 +43,7 @@ extern "C" {
  * requires publish() to be called before changes will be written to the system.
  * \ingroup general
  */
-void set_auto_publish(int on);
+EXPORT_SYM void set_auto_publish(int on);
 
 /*!
  * \brief Explictly publishes new data to the system
@@ -49,9 +51,9 @@ void set_auto_publish(int on);
  * This allows for batch execution of commands with automatic publishing turned off.
  * \ingroup general
  */
-void publish();
+EXPORT_SYM void publish();
 
-void halt();
+EXPORT_SYM void halt();
 
 #ifdef __cplusplus
 }

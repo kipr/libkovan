@@ -4,8 +4,9 @@
 #include <string>
 #include <map>
 #include <vector>
+#include "export.h"
 
-class Config
+class EXPORT_SYM Config
 {
 public:
 	Config();

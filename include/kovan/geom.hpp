@@ -2,9 +2,10 @@
 #define _GEOM_HPP_
 
 #include "geom.h"
+#include "export.h"
 
 template<typename T>
-class Point2
+class EXPORT_SYM Point2
 {
 public:
 	Point2(const T& x, const T &y)
@@ -44,7 +45,7 @@ private:
 };
 
 template<typename T>
-class Rectangle
+class EXPORT_SYM Rectangle
 {
 public:
 	Rectangle(const T &x, const T &y, const T &width, const T &height)

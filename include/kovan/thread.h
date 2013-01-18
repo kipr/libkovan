@@ -1,6 +1,8 @@
 #ifndef _THREAD_H_
 #define _THREAD_H_
 
+#include "export.h"
+
 typedef struct
 {
 	void *data;
@@ -13,15 +15,15 @@ typedef struct
 
 typedef void (*thread_function)();
 
-mutex mutex_create(void);
-void mutex_lock(mutex m);
-int mutex_trylock(mutex m);
-void mutex_unlock(mutex m);
-void mutex_destroy(mutex m);
+EXPORT_SYM mutex mutex_create(void);
+EXPORT_SYM void mutex_lock(mutex m);
+EXPORT_SYM int mutex_trylock(mutex m);
+EXPORT_SYM void mutex_unlock(mutex m);
+EXPORT_SYM void mutex_destroy(mutex m);
 
-thread thread_create(thread_function func);
-void thread_start(thread id);
-void thread_wait(thread id);
-void thread_destroy(thread id);
+EXPORT_SYM thread thread_create(thread_function func);
+EXPORT_SYM void thread_start(thread id);
+EXPORT_SYM void thread_wait(thread id);
+EXPORT_SYM void thread_destroy(thread id);
 
 #endif

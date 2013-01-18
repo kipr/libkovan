@@ -1,5 +1,11 @@
 #include "kovan/botball.h"
 
+#include "kovan/button.h"
+#include "kovan/util.h"
+#include "kovan/display.h"
+#include "kovan/analog.h"
+#include "kovan/audio.h"
+
 void wait_for_light(int light_port_)
 {
 	int xBut, l_on_, l_off_, l_mid_, t, OK = 0;

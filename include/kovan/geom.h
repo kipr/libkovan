@@ -21,6 +21,8 @@
 #ifndef _GEOM_H_
 #define _GEOM_H_
 
+#include "export.h"
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -39,8 +41,8 @@ typedef struct rectangle
 	int height;
 } rectangle;
 
-point2 create_point2(int x, int y);
-rectangle create_rectangle(int ulx, int uly, int width, int height);
+EXPORT_SYM point2 create_point2(int x, int y);
+EXPORT_SYM rectangle create_rectangle(int ulx, int uly, int width, int height);
 
 #ifdef __cplusplus
 }
