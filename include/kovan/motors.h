@@ -38,119 +38,119 @@ extern "C" {
 /*!
  * \ingroup motor
  */
-int get_motor_position_counter(int motor);
+EXPORT_SYM int get_motor_position_counter(int motor);
 
 /*!
  * \ingroup motor
  */
-void clear_motor_position_counter(int motor);
+EXPORT_SYM void clear_motor_position_counter(int motor);
 
 /*!
  * \ingroup motor
  */
-int move_at_velocity(int motor, int velocity);
+EXPORT_SYM int move_at_velocity(int motor, int velocity);
 
 /*!
  * \see move_at_velocity
  * \ingroup motor
  */
-int mav(int motor, int velocity);
+EXPORT_SYM int mav(int motor, int velocity);
 
-int move_to_position(int motor, int speed, int goal_pos);
+EXPORT_SYM int move_to_position(int motor, int speed, int goal_pos);
 
 /*!
  * \see move_to_position
  * \ingroup motor
  */
-int mtp(int motor, int speed, int goal_pos);
+EXPORT_SYM int mtp(int motor, int speed, int goal_pos);
 
-int move_relative_position(int motor, int speed, int delta_pos);
+EXPORT_SYM int move_relative_position(int motor, int speed, int delta_pos);
 
 /*!
  * \see move_relative_position
  * \ingroup motor
  */
-int mrp(int motor, int speed, int delta_pos);
+EXPORT_SYM int mrp(int motor, int speed, int delta_pos);
 
 /*!
  * \ingroup motor
  */
-void set_pid_gains(int motor, short p, short i, short d, short pd, short id, short dd);
+EXPORT_SYM void set_pid_gains(int motor, short p, short i, short d, short pd, short id, short dd);
 
 /*!
  * \ingroup motor
  */
-void get_pid_gains(int motor, short *p, short *i, short *d, short *pd, short *id, short *dd);
+EXPORT_SYM void get_pid_gains(int motor, short *p, short *i, short *d, short *pd, short *id, short *dd);
 
 /*!
  * \ingroup motor
  */
-int freeze(int motor);
+EXPORT_SYM int freeze(int motor);
 
 /*!
  * \ingroup motor
  */
-int get_motor_done(int motor);
+EXPORT_SYM int get_motor_done(int motor);
 
 /*!
  * \ingroup motor
  */
-void block_motor_done(int motor);
+EXPORT_SYM void block_motor_done(int motor);
 
 /*!
  * \see block_motor_done
  * \ingroup motor
  */
-void bmd(int motor);
+EXPORT_SYM void bmd(int motor);
 
 /*!
  * \ingroup motor
  */
-int setpwm(int motor, int pwm);
+EXPORT_SYM int setpwm(int motor, int pwm);
 
 /*!
  * \ingroup motor
  */
-int getpwm(int motor);
+EXPORT_SYM int getpwm(int motor);
 
 /*!
  * Moves the given motor forward at full power
  * \param motor the motor's port.
  * \ingroup motor
  */
-void fd(int motor);
+EXPORT_SYM void fd(int motor);
 
 /*!
  * Moves the given motor backward at full power
  * \param motor the motor's port.
  * \ingroup motor
  */
-void bk(int motor);
+EXPORT_SYM void bk(int motor);
 
 /*!
  * \ingroup motor
  */
-void motor(int motor, int percent);
+EXPORT_SYM void motor(int motor, int percent);
 
 /*!
  * Turns the specified motor off.
  * \param motor the motor's port.
  * \ingroup motor
  */
-void off(int motor);
+EXPORT_SYM void off(int motor);
 
 /*!
  * Turns all motors off.
  * \see ao
  * \ingroup motor
  */
-void alloff();
+EXPORT_SYM void alloff();
 
 /*!
  * Turns all motors off.
  * \ingroup motor
  */
-void ao();
+EXPORT_SYM void ao();
 
 
 #ifdef __cplusplus
