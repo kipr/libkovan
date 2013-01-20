@@ -19,8 +19,10 @@
  **************************************************************************/
 
 #include "kovan/motors.hpp"
+#include "kovan/util.h"
 #include "motors_p.hpp"
 #include <cstdlib>
+#include <math.h>
 
 Motor::Motor(const port_t& port) throw()
 	: m_port(port)
@@ -41,9 +43,12 @@ void Motor::moveAtVelocity(const short& velocity)
 
 void Motor::moveToPosition(const short& speed, const int& goalPos)
 {
+	short velocity = std::abs(speed);
+	const int sign = Private::Motor::instance()->backEMF(m_port) > goalPos ? 1 : -1;
+	velocity *= sign;
 	Private::Motor::instance()->setControlMode(m_port, Private::Motor::SpeedPosition);
 	Private::Motor::instance()->setPidGoalPos(m_port, goalPos);
-	Private::Motor::instance()->setPidVelocity(m_port, speed);
+	Private::Motor::instance()->setPidVelocity(m_port, velocity);
 }
 
 void Motor::moveRelativePosition(const short& speed, const int& deltaPos)
@@ -69,12 +74,13 @@ void Motor::freeze()
 
 bool Motor::isMotorDone() const
 {
-	return Private::Motor::instance()->isPidActive(m_port);
+	return !Private::Motor::instance()->isPidActive(m_port);
 }
 
 void Motor::blockMotorDone() const
 {
-	while(isMotorDone()); // TODO: Yield in the future
+	msleep(50);
+	while(isMotorDone()) msleep(40);
 }
 
 void Motor::forward()

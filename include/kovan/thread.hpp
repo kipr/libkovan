@@ -22,7 +22,7 @@ private:
 	Mutex(const Mutex &rhs);
 
 #ifdef WIN32
-	void *m_handle;
+	CRITICAL_SECTION m_handle;
 #else
 	pthread_mutex_t m_handle;
 #endif

@@ -55,6 +55,8 @@ EXPORT_SYM void publish();
 
 EXPORT_SYM void halt();
 
+void freeze_halt();
+
 #ifdef __cplusplus
 }
 #endif

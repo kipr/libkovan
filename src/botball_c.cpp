@@ -5,6 +5,47 @@
 #include "kovan/display.h"
 #include "kovan/analog.h"
 #include "kovan/audio.h"
+#include "kovan/thread.hpp"
+#include "kovan/general.h"
+
+#include <cstdlib>
+#include <iostream>
+
+class ShutDownIn : public Thread
+{
+public:
+	ShutDownIn(double s)
+		: m_s(s)
+	{
+		atexit(&halt);
+	}
+	
+	~ShutDownIn()
+	{
+	}
+	
+	virtual void run()
+	{
+		const double start = seconds();
+		msleep(m_s * 1000.0);
+		const double end = seconds();
+		std::cout << std::endl << "Shutdown after " << (end - start) << " seconds" << std::endl;
+		exit(0);
+	}
+	
+private:
+	double m_s;
+};
+
+void shut_down_in(double s)
+{
+	static ShutDownIn *s_instance;
+	if(s_instance) {
+		std::cout << "Warning: shut_down_in already called once. Ignoring." << std::endl;
+	}
+	s_instance = new ShutDownIn(s);
+	s_instance->start();
+}
 
 void wait_for_light(int light_port_)
 {

@@ -19,10 +19,12 @@
  **************************************************************************/
 
 #include "kovan/motors.h"
+#include "kovan/util.h"
 #include "motors_p.hpp"
 
 #include <iostream>
 #include <cstdlib>
+#include <math.h>
 
 int get_motor_position_counter(int motor)
 {
@@ -48,9 +50,12 @@ int mav(int motor, int velocity)
 
 int move_to_position(int motor, int speed, int goal_pos)
 {
+	short velocity = std::abs(speed);
+	const int sign = Private::Motor::instance()->backEMF(motor) > goal_pos ? 1 : -1;
+	velocity *= sign;
 	Private::Motor::instance()->setControlMode(motor, Private::Motor::SpeedPosition);
 	Private::Motor::instance()->setPidGoalPos(motor, goal_pos);
-	Private::Motor::instance()->setPidVelocity(motor, speed);
+	Private::Motor::instance()->setPidVelocity(motor, velocity);
 	return 0;
 }
 
@@ -96,7 +101,8 @@ int get_motor_done(int motor)
 
 void block_motor_done(int motor)
 {
-	while(!get_motor_done(motor)); // TODO: Yield in the future
+	msleep(50);
+	while(!get_motor_done(motor)) msleep(40);
 }
 
 void bmd(int motor)

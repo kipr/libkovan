@@ -9,7 +9,7 @@
 Mutex::Mutex()
 {
 #ifdef WIN32
-	m_handle = (void *)CreateMutex(NULL, FALSE, NULL);
+	InitializeCriticalSection(&m_handle);
 #else
 	pthread_mutex_init(&m_handle, NULL);
 #endif
@@ -18,7 +18,7 @@ Mutex::Mutex()
 Mutex::~Mutex()
 {
 #ifdef WIN32
-	CloseHandle(m_handle);
+	DeleteCriticalSection(&m_handle);
 #else
 	pthread_mutex_destroy(&m_handle);
 #endif
@@ -27,7 +27,7 @@ Mutex::~Mutex()
 void Mutex::lock()
 {
 #ifdef WIN32
-	
+	EnterCriticalSection(&m_handle);
 #else
 	pthread_mutex_lock(&m_handle);
 #endif
@@ -35,13 +35,17 @@ void Mutex::lock()
 
 bool Mutex::tryLock()
 {
-	
+#ifdef WIN32
+	return TryEnterCriticalSection(&m_handle);
+#else
+	return pthread_mutex_trylock(&m_handle) == 0;
+#endif
 }
 
 void Mutex::unlock()
 {
 #ifdef WIN32
-	
+	LeaveCriticalSection(&m_handle);
 #else
 	pthread_mutex_unlock(&m_handle);
 #endif
@@ -70,7 +74,7 @@ Thread::Thread()
 Thread::~Thread()
 {
 #ifdef WIN32
-	
+	if(m_thread != INVALID_HANDLE) CloseHandle(m_thread);
 #else
 	pthread_cancel(m_thread);
 #endif
@@ -79,7 +83,8 @@ Thread::~Thread()
 void Thread::start()
 {
 #ifdef WIN32
-
+	CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)__runThread,
+		reinterpret_cast<LPVOID>(this), 0, NULL);
 #else
 	pthread_create(&m_thread, NULL, &__runThread,
 		reinterpret_cast<void *>(this));
@@ -89,7 +94,7 @@ void Thread::start()
 void Thread::join()
 {
 #ifdef WIN32
-	
+	WaitForSingleObject(m_thread, INFINITE);
 #else
 	pthread_join(m_thread, NULL);
 #endif

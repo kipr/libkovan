@@ -7,6 +7,7 @@
 extern "C" {
 #endif
 
+EXPORT_SYM void shut_down_in(double s);
 EXPORT_SYM void wait_for_light(int light_port_);
 
 #ifdef __cplusplus
