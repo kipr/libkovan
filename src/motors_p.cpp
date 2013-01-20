@@ -165,9 +165,10 @@ void Private::Motor::setPidGoalPos(port_t port, int pos)
 int Private::Motor::pidGoalPos(port_t port) const
 {
 	Private::Kovan::instance()->autoUpdate();
+	const uint64_t off = m_cleared[port];
 	port = fixPort(port);
 	const State &state = Private::Kovan::instance()->currentState();
-	return state.t[goalPosHighRegisters[port]] << 16 || state.t[goalPosLowRegisters[port]];
+	return (state.t[goalPosHighRegisters[port]] << 16 || state.t[goalPosLowRegisters[port]]) + off;
 }
 
 void Private::Motor::pidGains(port_t port, short &p, short &i, short &d, short &pd, short &id, short &dd)
