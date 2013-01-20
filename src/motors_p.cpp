@@ -23,6 +23,7 @@
 #include "kovan_regs_p.hpp"
 #include <iostream> // FIXME: tmp
 #include <cstdio> // FIXME: tmp
+#include <cstring>
 #include "nyi.h"
 
 static const unsigned short motorRegisters[4] = {
