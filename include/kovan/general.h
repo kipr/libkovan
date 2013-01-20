@@ -53,6 +53,8 @@ void publish();
 
 void halt();
 
+void freeze_halt();
+
 #ifdef __cplusplus
 }
 #endif

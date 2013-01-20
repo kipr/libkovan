@@ -5,6 +5,7 @@
 extern "C" {
 #endif
 
+void shut_down_in(double s);
 void wait_for_light(int light_port_);
 
 #ifdef __cplusplus

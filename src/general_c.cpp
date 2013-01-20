@@ -24,6 +24,7 @@
 #include "kovan/motors.h"
 #include "kovan/servo.h"
 #include "kovan/analog.h"
+#include "kovan/create.h"
 #include "kovan/digital.h"
 
 void set_auto_publish(int on)
@@ -38,8 +39,14 @@ void publish()
 
 void halt()
 {
-	ao();
+	freeze_halt();
 	disable_servos();
+
+}
+
+void freeze_halt()
+{
+	ao();
 	for(int i = 0; i < 8; ++i) {
 		set_analog_pullup(i, 1);
 	}
@@ -47,4 +54,5 @@ void halt()
 		set_digital_output(i, 0);
 		set_digital_pullup(i, 1);
 	}
+	create_stop();
 }
