@@ -51,7 +51,7 @@ int mav(int motor, int velocity)
 int move_to_position(int motor, int speed, int goal_pos)
 {
 	short velocity = std::abs(speed);
-	const int sign = Private::Motor::instance()->backEMF(motor) > goal_pos ? 1 : -1;
+	const int sign = Private::Motor::instance()->backEMF(motor) > goal_pos ? -1 : 1;
 	velocity *= sign;
 	Private::Motor::instance()->setControlMode(motor, Private::Motor::SpeedPosition);
 	Private::Motor::instance()->setPidGoalPos(motor, goal_pos);
