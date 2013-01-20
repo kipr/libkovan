@@ -19,6 +19,7 @@
  **************************************************************************/
 
 #include "kovan/motors.hpp"
+#include "kovan/util.h"
 #include "motors_p.hpp"
 #include <cstdlib>
 #include <math.h>
@@ -73,12 +74,13 @@ void Motor::freeze()
 
 bool Motor::isMotorDone() const
 {
-	return Private::Motor::instance()->isPidActive(m_port);
+	return !Private::Motor::instance()->isPidActive(m_port);
 }
 
 void Motor::blockMotorDone() const
 {
-	while(isMotorDone()); // TODO: Yield in the future
+	msleep(50);
+	while(isMotorDone()) msleep(40);
 }
 
 void Motor::forward()

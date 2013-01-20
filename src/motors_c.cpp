@@ -19,6 +19,7 @@
  **************************************************************************/
 
 #include "kovan/motors.h"
+#include "kovan/util.h"
 #include "motors_p.hpp"
 
 #include <iostream>
@@ -100,7 +101,8 @@ int get_motor_done(int motor)
 
 void block_motor_done(int motor)
 {
-	while(!get_motor_done(motor)); // TODO: Yield in the future
+	msleep(50);
+	while(!get_motor_done(motor)) msleep(40);
 }
 
 void bmd(int motor)
