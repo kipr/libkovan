@@ -1,13 +1,13 @@
 #ifndef _THREAD_HPP_
 #define _THREAD_HPP_
 
-#ifdef WIN32
-#include <windows.h>
-#else
+#ifndef WIN32
 #include <pthread.h>
 #endif
 
-class Mutex
+#include "export.h"
+
+class EXPORT_SYM Mutex
 {
 public:
 	Mutex();
@@ -28,7 +28,7 @@ private:
 #endif
 };
 
-class Thread
+class EXPORT_SYM Thread
 {
 public:
 	Thread();
@@ -43,7 +43,7 @@ private:
 #ifndef WIN32
 	pthread_t m_thread;
 #else
-	DWORD m_thread;
+	unsigned long m_thread;
 #endif
 };
 

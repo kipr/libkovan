@@ -1,9 +1,9 @@
 #include "kovan/botball.h"
 
-#include "kovan/display.h"
 #include "kovan/button.h"
-#include "kovan/analog.h"
 #include "kovan/util.h"
+#include "kovan/display.h"
+#include "kovan/analog.h"
 #include "kovan/audio.h"
 #include "kovan/thread.hpp"
 #include "kovan/general.h"

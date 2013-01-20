@@ -29,6 +29,8 @@
 #ifndef _MOTORS_H_
 #define _MOTORS_H_
 
+#include "export.h"
+
 #ifdef __cplusplus
 extern "C" {
 #endif

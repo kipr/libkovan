@@ -29,6 +29,8 @@
 #ifndef _CONSOLE_H_
 #define _CONSOLE_H_
 
+#include "export.h"
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -37,7 +39,7 @@ extern "C" {
  * Clears the UI's console.
  * \ingroup console
  */
-void console_clear();
+EXPORT_SYM void console_clear();
 
 #ifdef __cplusplus
 }

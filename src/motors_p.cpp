@@ -96,7 +96,7 @@ void Private::Motor::setPidGains(port_t port, const short &p, const short &i, co
 void Private::Motor::clearBemf(unsigned char port)
 {
 	if(port > 3) return;
-	Private::Kovan::instance()->enqueueCommand(createWriteCommand(MOT_BEMF_CLEAR, 1 << port));
+	m_cleared[port] = backEMF(port);
 }
 
 void Private::Motor::setControlMode(port_t port, Private::Motor::ControlMode controlMode)
@@ -152,9 +152,10 @@ int Private::Motor::pidVelocity(port_t port) const
 	return state.t[goalSpeedHighRegisters[port]] << 16 || state.t[goalSpeedLowRegisters[port]];
 }
 
-void Private::Motor::setPidGoalPos(port_t port, const int &pos)
+void Private::Motor::setPidGoalPos(port_t port, int pos)
 {
 	Private::Kovan *kovan = Private::Kovan::instance();
+	pos -= m_cleared[port];
 	port = fixPort(port);
 	kovan->enqueueCommand(createWriteCommand(goalPosLowRegisters[port], pos & 0x0000FFFF));
 	kovan->enqueueCommand(createWriteCommand(goalPosHighRegisters[port], (pos & 0xFFFF0000) >> 16));
@@ -245,6 +246,7 @@ Private::Motor *Private::Motor::instance()
 
 Private::Motor::Motor()
 {
+	memset(m_cleared, 0, sizeof(uint32_t) * 4);
 }
 
 port_t Private::Motor::fixPort(port_t port) const

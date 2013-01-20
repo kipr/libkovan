@@ -1,6 +1,10 @@
 #include "kovan/thread.hpp"
 
+#ifdef WIN32
+#include <windows.h>
+#else
 #include <pthread.h>
+#endif
 
 Mutex::Mutex()
 {
@@ -61,7 +65,7 @@ void *__runThread(void *data)
 
 Thread::Thread()
 #ifdef WIN32
-	: m_thread(INVALID_HANDLE)
+	: m_thread(-1)
 #endif
 {
 	

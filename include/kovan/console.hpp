@@ -29,12 +29,14 @@
 #ifndef _CONSOLE_HPP_
 #define _CONSOLE_HPP_
 
+#include "export.h"
+
 /*!
  * \class Console
  * Methods for working with the console inside the UI
  * \ingroup console
  */
-class Console
+class EXPORT_SYM Console
 {
 public:
 	/*!

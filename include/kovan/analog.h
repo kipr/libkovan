@@ -21,6 +21,8 @@
 #ifndef _ANALOG_H_
 #define _ANALOG_H_
 
+#include "export.h"
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -32,7 +34,7 @@ extern "C" {
  * \see analog
  * \ingroup sensor
  */
-int analog10(int port);
+EXPORT_SYM int analog10(int port);
 
 /*!
  * Gets the 8-bit analog value of a port.
@@ -41,10 +43,10 @@ int analog10(int port);
  * \see analog10
  * \ingroup sensor
  */
-int analog(int port);
+EXPORT_SYM int analog(int port);
 
-void set_analog_pullup(int port, int pullup);
-int get_analog_pullup(int port);
+EXPORT_SYM void set_analog_pullup(int port, int pullup);
+EXPORT_SYM int get_analog_pullup(int port);
 
 #ifdef __cplusplus
 }

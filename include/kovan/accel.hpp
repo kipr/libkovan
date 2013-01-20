@@ -1,6 +1,8 @@
 #ifndef _ACCEL_HPP_
 #define _ACCEL_HPP_
 
+#include "export.h"
+
 class Acceleration
 {
 public:

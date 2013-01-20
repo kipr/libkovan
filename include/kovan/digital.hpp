@@ -30,6 +30,7 @@
 #define _DIGITAL_HPP_
 
 #include "sensor.hpp"
+#include "export.h" 
 
 /*!
  * \class Digital
@@ -37,7 +38,7 @@
  * \author Braden McDorman
  * \ingroup sensor
  */
-class Digital : public Sensor<bool>
+class EXPORT_SYM Digital : public Sensor<bool>
 {
 public:
 	Digital(const unsigned char& port);

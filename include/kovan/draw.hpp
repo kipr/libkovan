@@ -29,12 +29,14 @@
 #ifndef _DRAW_HPP_
 #define _DRAW_HPP_
 
+ #include "export.h"
+
 namespace Private
 {
 	class Draw;
 }
 
-class Draw
+class EXPORT_SYM Draw
 {
 public:
 	Draw();

@@ -24,6 +24,7 @@
 #include "geom.hpp"
 #include "color.hpp"
 #include "config.hpp"
+ #include "export.h"
 #include <cstring>
 #include <string>
 #include <vector>
@@ -52,7 +53,7 @@ namespace Camera
 {
 	class Device;
 	
-	class Object
+	class EXPORT_SYM Object
 	{
 	public:
 		Object(const Point2<unsigned> &centroid,
@@ -78,7 +79,7 @@ namespace Camera
 	
 	typedef std::vector<Object> ObjectVector;
 	
-	class ChannelImpl
+	class EXPORT_SYM ChannelImpl
 	{
 	public:
 		ChannelImpl();
@@ -96,7 +97,7 @@ namespace Camera
 		cv::Mat m_image;
 	};
 	
-	class ChannelImplManager
+	class EXPORT_SYM ChannelImplManager
 	{
 	public:
 		virtual ~ChannelImplManager();
@@ -104,7 +105,7 @@ namespace Camera
 		virtual ChannelImpl *channelImpl(const std::string &name) = 0;
 	};
 	
-	class DefaultChannelImplManager : public ChannelImplManager
+	class EXPORT_SYM DefaultChannelImplManager : public ChannelImplManager
 	{
 	public:
 		DefaultChannelImplManager();
@@ -117,7 +118,7 @@ namespace Camera
 		std::map<std::string, ChannelImpl *> m_channelImpls;
 	};
 	
-	class Channel
+	class EXPORT_SYM Channel
 	{
 	public:
 		Channel(Device *device, const Config &config);
@@ -144,7 +145,7 @@ namespace Camera
 	
 	typedef std::vector<Channel *> ChannelPtrVector;
 	
-	class ConfigPath
+	class EXPORT_SYM ConfigPath
 	{
 	public:
 		static std::string extension();
@@ -159,7 +160,7 @@ namespace Camera
 		static std::string s_path;
 	};
 	
-	class Device
+	class EXPORT_SYM Device
 	{
 	public:
 		Device();

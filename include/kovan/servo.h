@@ -29,21 +29,23 @@
 #ifndef _SERVOS_H_
 #define _SERVOS_H_
 
+#include "export.h"
+
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-void enable_servo(int port);
+EXPORT_SYM void enable_servo(int port);
 
-void disable_servo(int port);
+EXPORT_SYM void disable_servo(int port);
 
-void enable_servos();
+EXPORT_SYM void enable_servos();
 
-void disable_servos();
+EXPORT_SYM void disable_servos();
 
-void set_servo_enabled(int port, int enabled);
+EXPORT_SYM void set_servo_enabled(int port, int enabled);
 
-int get_servo_enabled(int port);
+EXPORT_SYM int get_servo_enabled(int port);
 
 
 /*!
@@ -61,7 +63,7 @@ int get_servo_enabled(int port);
  * because 300 hasn't been sent to the servo yet.
  * \ingroup servo
  */
-int get_servo_position(int servo);
+EXPORT_SYM int get_servo_position(int servo);
 
 /*!
  * \param servo The port of the servo
@@ -72,7 +74,7 @@ int get_servo_position(int servo);
  * reach will cause the servo to audibly strain and will consume battery very quickly.
  * \ingroup servo
  */
-void set_servo_position(int servo, int position);
+EXPORT_SYM void set_servo_position(int servo, int position);
 
 #ifdef __cplusplus
 }

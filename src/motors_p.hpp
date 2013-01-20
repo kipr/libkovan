@@ -23,6 +23,8 @@
 
 #include "kovan/port.hpp"
 
+#include <stdint.h>
+
 namespace Private
 {
 	class Motor
@@ -57,7 +59,7 @@ namespace Private
 		void setPidVelocity(port_t port, const int &ticks);
 		int pidVelocity(port_t port) const;
 		
-		void setPidGoalPos(port_t port, const int &pos);
+		void setPidGoalPos(port_t port, int pos);
 		int pidGoalPos(port_t port) const;
 		
 		void setControlMode(const Motor::ControlMode &mode);
@@ -81,6 +83,8 @@ namespace Private
 		Motor();
 		
 		port_t fixPort(port_t port) const;
+		
+		int64_t m_cleared[4];
 	};
 }
 
