@@ -7,20 +7,6 @@
 
 using namespace Camera;
 
-#ifdef KOVAN
-
-class CustomV4LCapture : cv::VideoCapture
-{
-public:
-	virtual bool open(int device)
-	{
-		cap = cvCreateCameraCapture_V4L_Custom(device);
-		return isOpened();
-	}
-};
-
-#endif
-
 // Object //
 
 Camera::Object::Object(const Point2<unsigned> &centroid,
@@ -249,11 +235,7 @@ void Camera::ConfigPath::setDefaultConfigPath(const std::string &name)
 // Device //
 
 Camera::Device::Device()
-#ifndef KOVAN
 	: m_capture(new cv::VideoCapture),
-#else
-	: m_capture(new CustomV4LCapture),
-#endif
 	m_channelImplManager(new DefaultChannelImplManager),
 	m_grabCount(1)
 {
