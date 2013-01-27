@@ -2,7 +2,7 @@
 
 Note from Braden:
 
-This is copied directly from OpenCV 2.4.2's codebase. The ONLY modification in this
+This is copied directly from OpenCV 2.4.2's codebase. The onyl real modification in this
 file is the define DEFAULT_V4L_BUFFERS. This value was causing noticable lag when
 user programs had sleeps in their primary update loop.
 
@@ -1726,7 +1726,7 @@ static void icvCloseCAM_V4L( CvCaptureCAM_V4L* capture ){
 };
 
 
-class CvCaptureCAM_V4L_CPP : CvCapture
+class CvCaptureCAM_V4L_CPP_Custom : CvCapture
 {
 public:
     CvCaptureCAM_V4L_CPP() { captureV4L = 0; }
@@ -1739,19 +1739,19 @@ public:
     virtual bool setProperty(int, double);
     virtual bool grabFrame();
     virtual IplImage* retrieveFrame(int);
-protected:
 
+protected:
     CvCaptureCAM_V4L* captureV4L;
 };
 
-bool CvCaptureCAM_V4L_CPP::open( int index )
+bool CvCaptureCAM_V4L_CPP_Custom::open( int index )
 {
     close();
     captureV4L = icvCaptureFromCAM_V4L(index);
     return captureV4L != 0;
 }
 
-void CvCaptureCAM_V4L_CPP::close()
+void CvCaptureCAM_V4L_CPP_Custom::close()
 {
     if( captureV4L )
     {
@@ -1760,29 +1760,29 @@ void CvCaptureCAM_V4L_CPP::close()
     }
 }
 
-bool CvCaptureCAM_V4L_CPP::grabFrame()
+bool CvCaptureCAM_V4L_CPP_Custom::grabFrame()
 {
     return captureV4L ? icvGrabFrameCAM_V4L( captureV4L ) != 0 : false;
 }
 
-IplImage* CvCaptureCAM_V4L_CPP::retrieveFrame(int)
+IplImage* CvCaptureCAM_V4L_CPP_Custom::retrieveFrame(int)
 {
     return captureV4L ? icvRetrieveFrameCAM_V4L( captureV4L, 0 ) : 0;
 }
 
-double CvCaptureCAM_V4L_CPP::getProperty( int propId )
+double CvCaptureCAM_V4L_CPP_Custom::getProperty( int propId )
 {
     return captureV4L ? icvGetPropertyCAM_V4L( captureV4L, propId ) : 0.0;
 }
 
-bool CvCaptureCAM_V4L_CPP::setProperty( int propId, double value )
+bool CvCaptureCAM_V4L_CPP_Custom::setProperty( int propId, double value )
 {
     return captureV4L ? icvSetPropertyCAM_V4L( captureV4L, propId, value ) != 0 : false;
 }
 
-CvCapture* cvCreateCameraCapture_V4L( int index )
+CvCapture* cvCreateCameraCapture_V4L_Custom( int index )
 {
-    CvCaptureCAM_V4L_CPP* capture = new CvCaptureCAM_V4L_CPP;
+    CvCaptureCAM_V4L_CPP_Custom* capture = new CvCaptureCAM_V4L_CPP_Custom;
 
     if( capture->open( index ))
         return (CvCapture*)capture;
