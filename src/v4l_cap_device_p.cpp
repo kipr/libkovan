@@ -233,12 +233,15 @@ make & enjoy!
 //
 //M*/
 
+
+#ifdef KOVAN
+
 #include <opencv2/highgui/highgui.hpp>
 #include <opencv2/highgui/highgui_c.h>
 #include <opencv2/imgproc/imgproc_c.h>
 #include <opencv2/core/internal.hpp>
 
-#ifdef KOVAN
+#include "v4l_cap_device_p.hpp"
 
 #define CLEAR(x) memset (&(x), 0, sizeof (x))
 
