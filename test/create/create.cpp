@@ -49,6 +49,16 @@ void cliffTest(Create *create)
 	stopWhen(&sensor);
 }
 
+void distanceTest(Create *create)
+{
+	continueMessage("Drive forward while reading dist");
+	create->driveDirect(200, 200);
+	SensorLogic::Or sensor(create->bumpLeft(), create->bumpRight());
+	while(!sensor.value()) {
+		cout << "value: " << create->distance()->value() << endl;
+	}
+}
+
 int main(int argc, char *argv[])
 {
 	Create *create = Create::instance();
@@ -63,6 +73,7 @@ int main(int argc, char *argv[])
 
 	continueMessage("iRobot (R) Create (TM) Test!");
 
+	distanceTest(create);
 	moveTest(create);
 	turnTest(create);
 	bumpTest(create);

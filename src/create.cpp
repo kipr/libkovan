@@ -20,7 +20,7 @@
 #define LOW_BYTE(x) ((x) & 0xFF)
 #define HIGH_BYTE(x) (((x) & 0xFF00) >> 8)
 
-#define SHORT_FROM_BYTES(high, low) (((high) << 8) | (low))
+#define SHORT_FROM_BYTES(high, low) ((short)(((high) << 8) | (low)))
 #define SHORT(array) SHORT_FROM_BYTES(array[0], array[1])
 
 template<typename T>
@@ -320,6 +320,7 @@ namespace CreateSensors
 
 		virtual int value() const
 		{
+			m_create->statePacket2();
 			return m_create->state()->angle;
 		}
 	private:
@@ -333,6 +334,7 @@ namespace CreateSensors
 
 		virtual int value() const
 		{
+			m_create->statePacket2();
 			return m_create->state()->distance;
 		}
 	private:
@@ -913,6 +915,7 @@ Create::Create()
 #ifndef WIN32
 	pthread_mutex_init(&m_mutex, 0);
 #endif
+	memset(&m_state, 0, sizeof(CreateState));
 }
 
 Create::Create(const Create&) {}
@@ -948,7 +951,7 @@ bool Create::open()
 	
 	beginAtomicOperation();
 #ifndef WIN32
-	m_tty = ::open("/dev/ttyS2", O_RDWR | O_NOCTTY | O_NONBLOCK);
+	m_tty = ::open("/dev/tty.usbserial-FTCVZ1V9", O_RDWR | O_NOCTTY | O_NONBLOCK);
 #else
 	#warning Create library not yet implemented for Windows
 #endif
