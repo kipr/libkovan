@@ -22,10 +22,22 @@
 
 #include <unistd.h>
 #include <sys/time.h>
+#include <errno.h>
+#include <string.h>
+#include <algorithm>
 
-void Private::Time::microsleep(const long& microsecs)
+void Private::Time::microsleep(unsigned long microsecs)
 {
-	usleep(microsecs);
+	// So... it turns out usleep isn't defined for values larger than 1000000.
+	// This is the workaround.
+	while(microsecs) {
+		const unsigned long current = std::min(microsecs, 999999UL);
+		if(usleep(current)) {
+			perror("usleep");
+			return;
+		}
+		microsecs -= current;
+	}
 }
 
 unsigned long Private::Time::systime()
