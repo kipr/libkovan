@@ -320,7 +320,7 @@ namespace CreateSensors
 
 		virtual int value() const
 		{
-			m_create->statePacket2();
+			m_create->sensorPacket2();
 			return m_create->state()->angle;
 		}
 	private:
@@ -334,7 +334,7 @@ namespace CreateSensors
 
 		virtual int value() const
 		{
-			m_create->statePacket2();
+			m_create->sensorPacket2();
 			return m_create->state()->distance;
 		}
 	private:
@@ -531,6 +531,10 @@ set_interface_attribs (int fd, int speed, int parity)
 
 bool Create::connect()
 {
+#ifdef WIN32
+	return false;
+#endif
+	
 	if(!open()) return false;
 #ifndef WIN32
 	if(set_interface_attribs(m_tty, B57600, 0) != 0) {
@@ -556,19 +560,21 @@ bool Create::connect()
 
 bool Create::disconnect()
 {
+	if(!isConnected()) return false;
 	stop();
 	setLeds(true, false, 0, 255);
 	close();
 	return true;
 }
 
-bool Create::isConnected()
+bool Create::isConnected() const
 {
 	return m_tty;
 }
 
 void Create::setPassiveMode()
 {
+	if(!isConnected()) return;
 	beginAtomicOperation();
 	start();
 	endAtomicOperation();
@@ -577,6 +583,7 @@ void Create::setPassiveMode()
 
 void Create::setSafeMode()
 {
+	if(!isConnected()) return;
 	beginAtomicOperation();
 	write(OI_SAFE);
 	endAtomicOperation();
@@ -585,6 +592,7 @@ void Create::setSafeMode()
 
 void Create::setFullMode()
 {
+	if(!isConnected()) return;
 	beginAtomicOperation();
 	write(OI_FULL);
 	endAtomicOperation();
@@ -650,6 +658,7 @@ bool Create::write(const unsigned char *data, const size_t& len)
 
 void Create::flush()
 {
+	if(!isConnected()) return;
 #ifndef WIN32
 	tcflush(m_tty, TCIOFLUSH);
 #endif
@@ -657,13 +666,14 @@ void Create::flush()
 
 short Create::read()
 {
+	if(!isConnected()) return 0xFFFF;
 	unsigned char ret = 0;
 	return read(&ret, 1) == 1 ? ret : -1;
 }
 
 int Create::read(unsigned char *data, const size_t& len)
 {
-	if(!m_tty) return 0;
+	if(!isConnected()) return 0;
 	int ret = 0;
 #ifndef WIN32
 	ret = ::read(m_tty, data, len);
@@ -676,6 +686,7 @@ int Create::read(unsigned char *data, const size_t& len)
 
 bool Create::blockingRead(unsigned char *data, const size_t& size, unsigned timeout)
 {
+	if(!isConnected()) return false;
 	timeval start = timeOfDay();
 	
 	size_t total = 0;
@@ -698,6 +709,7 @@ bool Create::blockingRead(unsigned char *data, const size_t& size, unsigned time
 
 void Create::setLeds(const bool& advance, const bool& play, const unsigned char& color, const unsigned char& brightness)
 {
+	if(!isConnected()) return;
 	beginAtomicOperation();
 	write(OI_LEDS);
 	unsigned char packed = 0;
@@ -711,6 +723,7 @@ void Create::setLeds(const bool& advance, const bool& play, const unsigned char&
 
 void Create::drive(const short& velocity, const short& radius)
 {
+	if(!isConnected()) return;
 	beginAtomicOperation();
 
 	write(OI_DRIVE);
@@ -729,6 +742,7 @@ void Create::drive(const short& velocity, const short& radius)
 
 void Create::driveDirect(const short& left, const short& right)
 {
+	if(!isConnected()) return;
 	beginAtomicOperation();
 
 	write(OI_DRIVE_DIRECT);
@@ -748,6 +762,7 @@ void Create::driveDirect(const short& left, const short& right)
 
 void Create::turn(const short& angle, const unsigned short& speed)
 {
+	if(!isConnected()) return;
 	spin(angle > 0 ? speed : -speed);
 	const short goalAngle = m_state.angle + angle;
 	double timeToGoal = (deg2rad(angle + 360 / angle) * 258) / angularVelocity();
@@ -761,6 +776,7 @@ void Create::turn(const short& angle, const unsigned short& speed)
 
 void Create::move(const short& millimeters, const unsigned short& speed)
 {
+	if(!isConnected()) return;
 	driveDirect(speed, speed);
 	const short goalDistance = m_state.distance + millimeters;
 	double timeToGoal = ((double)millimeters) / speed;
@@ -774,20 +790,21 @@ void Create::move(const short& millimeters, const unsigned short& speed)
 
 void Create::spin(const short& speed)
 {
+	if(!isConnected()) return;
 	drive(speed, 1);
 	m_state.leftVelocity = -speed;
 	m_state.rightVelocity = speed;
 	updateState();
 }
 
-short Create::angularVelocity()
+short Create::angularVelocity() const
 {
 	return m_state.rightVelocity - m_state.leftVelocity;
 }
 
 bool Create::setBaudRate(const unsigned char& baudCode)
 {
-	if(!m_tty || baudCode >= 12) return false;
+	if(!isConnected() || baudCode >= 12) return false;
 
 	beginAtomicOperation();
 	
@@ -838,33 +855,33 @@ const CreatePackets::_5 *Create::sensorPacket5()
 	return &m_5;
 }
 
-AbstractButton *Create::playButton() LAZY_RETURN(m_playButton);
-AbstractButton *Create::advanceButton() LAZY_RETURN(m_advanceButton);
-Sensor<bool> *Create::wall() LAZY_RETURN(m_wall);
-Sensor<bool> *Create::cliffLeft() LAZY_RETURN(m_cliffLeft);
-Sensor<bool> *Create::cliffFrontLeft() LAZY_RETURN(m_cliffFrontLeft);
-Sensor<bool> *Create::cliffFrontRight() LAZY_RETURN(m_cliffFrontRight);
-Sensor<bool> *Create::cliffRight() LAZY_RETURN(m_cliffRight);
-Sensor<bool> *Create::virtualWall() LAZY_RETURN(m_virtualWall);
-Sensor<unsigned short> *Create::wallSignal() LAZY_RETURN(m_wallSignal);
-Sensor<unsigned short> *Create::cliffLeftSignal() LAZY_RETURN(m_cliffLeftSignal);
-Sensor<unsigned short> *Create::cliffFrontLeftSignal() LAZY_RETURN(m_cliffFrontLeftSignal);
-Sensor<unsigned short> *Create::cliffFrontRightSignal() LAZY_RETURN(m_cliffFrontRightSignal);
-Sensor<unsigned short> *Create::cliffRightSignal() LAZY_RETURN(m_cliffRightSignal);
-Sensor<unsigned short> *Create::cargoBayAnalogSignal() LAZY_RETURN(m_cargoBayAnalogSignal);
-Sensor<unsigned char> *Create::cargoBayDigitalInputs() LAZY_RETURN(m_cargoBayDigitalInputs);
-Sensor<unsigned char> *Create::ir() LAZY_RETURN(m_ir);
-Sensor<unsigned char> *Create::chargingState() LAZY_RETURN(m_chargingState);
-Sensor<char> *Create::batteryTemperature() LAZY_RETURN(m_batteryTemperature);
-Sensor<unsigned short> *Create::batteryCharge() LAZY_RETURN(m_batteryCharge);
-Sensor<unsigned short> *Create::batteryCapacity() LAZY_RETURN(m_batteryCapacity);
-Sensor<int> *Create::angle() LAZY_RETURN(m_angle);
-Sensor<int> *Create::distance() LAZY_RETURN(m_distance);
-Sensor<bool> *Create::bumpLeft() LAZY_RETURN(m_bumpLeft);
-Sensor<bool> *Create::bumpRight() LAZY_RETURN(m_bumpRight);
-Sensor<bool> *Create::wheelDropLeft() LAZY_RETURN(m_wheelDropLeft);
-Sensor<bool> *Create::wheelDropRight() LAZY_RETURN(m_wheelDropRight);
-Sensor<bool> *Create::wheelDropCaster() LAZY_RETURN(m_wheelDropCaster);
+AbstractButton *Create::playButton() const LAZY_RETURN(m_playButton);
+AbstractButton *Create::advanceButton() const LAZY_RETURN(m_advanceButton);
+Sensor<bool> *Create::wall() const LAZY_RETURN(m_wall);
+Sensor<bool> *Create::cliffLeft() const LAZY_RETURN(m_cliffLeft);
+Sensor<bool> *Create::cliffFrontLeft() const LAZY_RETURN(m_cliffFrontLeft);
+Sensor<bool> *Create::cliffFrontRight() const LAZY_RETURN(m_cliffFrontRight);
+Sensor<bool> *Create::cliffRight() const LAZY_RETURN(m_cliffRight);
+Sensor<bool> *Create::virtualWall() const LAZY_RETURN(m_virtualWall);
+Sensor<unsigned short> *Create::wallSignal() const LAZY_RETURN(m_wallSignal);
+Sensor<unsigned short> *Create::cliffLeftSignal() const LAZY_RETURN(m_cliffLeftSignal);
+Sensor<unsigned short> *Create::cliffFrontLeftSignal() const LAZY_RETURN(m_cliffFrontLeftSignal);
+Sensor<unsigned short> *Create::cliffFrontRightSignal() const LAZY_RETURN(m_cliffFrontRightSignal);
+Sensor<unsigned short> *Create::cliffRightSignal() const LAZY_RETURN(m_cliffRightSignal);
+Sensor<unsigned short> *Create::cargoBayAnalogSignal() const LAZY_RETURN(m_cargoBayAnalogSignal);
+Sensor<unsigned char> *Create::cargoBayDigitalInputs() const LAZY_RETURN(m_cargoBayDigitalInputs);
+Sensor<unsigned char> *Create::ir() const LAZY_RETURN(m_ir);
+Sensor<unsigned char> *Create::chargingState() const LAZY_RETURN(m_chargingState);
+Sensor<char> *Create::batteryTemperature() const LAZY_RETURN(m_batteryTemperature);
+Sensor<unsigned short> *Create::batteryCharge() const LAZY_RETURN(m_batteryCharge);
+Sensor<unsigned short> *Create::batteryCapacity() const LAZY_RETURN(m_batteryCapacity);
+Sensor<int> *Create::angle() const LAZY_RETURN(m_angle);
+Sensor<int> *Create::distance() const LAZY_RETURN(m_distance);
+Sensor<bool> *Create::bumpLeft() const LAZY_RETURN(m_bumpLeft);
+Sensor<bool> *Create::bumpRight() const LAZY_RETURN(m_bumpRight);
+Sensor<bool> *Create::wheelDropLeft() const LAZY_RETURN(m_wheelDropLeft);
+Sensor<bool> *Create::wheelDropRight() const LAZY_RETURN(m_wheelDropRight);
+Sensor<bool> *Create::wheelDropCaster() const LAZY_RETURN(m_wheelDropCaster);
 
 void Create::setRefreshRate(const unsigned short& refreshRate)
 {
@@ -923,6 +940,7 @@ Create& Create::operator=(const Create&) { return *this; }
 
 void Create::setLocalBaudRate(const speed_t& baudRate)
 {
+	if(!isConnected()) return;
 #ifndef WIN32
 	struct termios attribs;
 	tcgetattr(m_tty, &attribs);
@@ -936,7 +954,7 @@ void Create::setLocalBaudRate(const speed_t& baudRate)
 
 bool Create::start()
 {
-	if(!m_tty) return false;
+	if(!isConnected()) return false;
 
 	beginAtomicOperation();
 	const bool ret = write(OI_START);
@@ -947,7 +965,7 @@ bool Create::start()
 
 bool Create::open()
 {
-	if(m_tty) return false;
+	if(isConnected()) return false;
 	
 	beginAtomicOperation();
 #ifndef WIN32
