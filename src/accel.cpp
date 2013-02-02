@@ -68,9 +68,12 @@ bool Acceleration::calibrate()
 		signed char accel_y = (signed char)Private::I2C::instance()->read(R_YOUT8);
 		signed char accel_z = (signed char)Private::I2C::instance()->read(R_ZOUT8);
 
-		if(((accel_x * accel_x) + (accel_y * accel_y) + (accel_z - 64) * (accel_z - 64)) < 17) {
-			return true; // success
-		}
+
+		signed short err_sqrd = (accel_x * accel_x)
+				+ (accel_y * accel_y)
+				+ (accel_z - 64) * (accel_z - 64);
+
+		if(err_sqrd < 17) return true; // success
 
 		// "char" on our platform is unsigned char by default
 		// any time a "unsigned" value is used in calculation on ARM
