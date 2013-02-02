@@ -99,6 +99,8 @@ bool Acceleration::calibrate()
 		printf("bias: [%d %d %d]  read [%d %d %d]\n\n",
 				accel_bias_x, accel_bias_y, accel_bias_z,
 				rb_x, rb_y, rb_z);
+
+		usleep(5000);
 	}
 
 	return false; // fail
