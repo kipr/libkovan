@@ -25,6 +25,7 @@
 #include <errno.h>
 #include <string.h>
 #include <algorithm>
+#include <stdio.h>
 
 void Private::Time::microsleep(unsigned long microsecs)
 {
