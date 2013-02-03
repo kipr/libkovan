@@ -246,7 +246,7 @@ public:
 	 * \see connect
 	 * \see disconnect
 	 */
-	bool isConnected();
+	bool isConnected() const;
 	
 	void setPassiveMode();
 	void setSafeMode();
@@ -327,7 +327,7 @@ public:
 	 * and negative for clockwise velocity.
 	 * \return angular velocity of the create, between 0 and 1000 mm/s
 	 */
-	short angularVelocity();
+	short angularVelocity() const;
 	
 	inline void spinClockwise(const short& speed) { spin(-speed); }
 	inline void spinCounterClockwise(const short& speed) { spin(speed); }
@@ -335,40 +335,40 @@ public:
 	bool setBaudRate(const unsigned char& baudCode);
 	
 	// High level sensors
-	AbstractButton *playButton();
-	AbstractButton *advanceButton();
+	AbstractButton *playButton() const;
+	AbstractButton *advanceButton() const;
 
-	Sensor<bool> *wall();
-	Sensor<bool> *cliffLeft();
-	Sensor<bool> *cliffFrontLeft();
-	Sensor<bool> *cliffFrontRight();
-	Sensor<bool> *cliffRight();
-	Sensor<bool> *virtualWall();
+	Sensor<bool> *wall() const;
+	Sensor<bool> *cliffLeft() const;
+	Sensor<bool> *cliffFrontLeft() const;
+	Sensor<bool> *cliffFrontRight() const;
+	Sensor<bool> *cliffRight() const;
+	Sensor<bool> *virtualWall() const;
 	
-	Sensor<unsigned short> *wallSignal();
-	Sensor<unsigned short> *cliffLeftSignal();
-	Sensor<unsigned short> *cliffFrontLeftSignal();
-	Sensor<unsigned short> *cliffFrontRightSignal();
-	Sensor<unsigned short> *cliffRightSignal();
-	Sensor<unsigned short> *cargoBayAnalogSignal();
-	Sensor<unsigned char> *cargoBayDigitalInputs();
+	Sensor<unsigned short> *wallSignal() const;
+	Sensor<unsigned short> *cliffLeftSignal() const;
+	Sensor<unsigned short> *cliffFrontLeftSignal() const;
+	Sensor<unsigned short> *cliffFrontRightSignal() const;
+	Sensor<unsigned short> *cliffRightSignal() const;
+	Sensor<unsigned short> *cargoBayAnalogSignal() const;
+	Sensor<unsigned char> *cargoBayDigitalInputs() const;
 	
-	Sensor<unsigned char> *ir();
+	Sensor<unsigned char> *ir() const;
 	
-	Sensor<unsigned char> *chargingState();
-	Sensor<char> *batteryTemperature();
-	Sensor<unsigned short> *batteryCharge();
-	Sensor<unsigned short> *batteryCapacity();
+	Sensor<unsigned char> *chargingState() const;
+	Sensor<char> *batteryTemperature() const;
+	Sensor<unsigned short> *batteryCharge() const;
+	Sensor<unsigned short> *batteryCapacity() const;
 	
-	Sensor<int> *angle();
-	Sensor<int> *distance();
+	Sensor<int> *angle() const;
+	Sensor<int> *distance() const;
 	
-	Sensor<bool> *bumpLeft();
-	Sensor<bool> *bumpRight();
+	Sensor<bool> *bumpLeft() const;
+	Sensor<bool> *bumpRight() const;
 
-	Sensor<bool> *wheelDropLeft();
-	Sensor<bool> *wheelDropRight();
-	Sensor<bool> *wheelDropCaster();
+	Sensor<bool> *wheelDropLeft() const;
+	Sensor<bool> *wheelDropRight() const;
+	Sensor<bool> *wheelDropCaster() const;
 
 	void setRefreshRate(const unsigned short& refreshRate);
 	const unsigned short& refreshRate() const;
@@ -468,40 +468,45 @@ private:
 	CreatePackets::_5 m_5;
 	timeval timestamps[5];
 
-	CreateSensors::PlayButton *m_playButton;
-	CreateSensors::AdvanceButton *m_advanceButton;
 
-	CreateSensors::Wall *m_wall;
-	CreateSensors::CliffLeft *m_cliffLeft;
-	CreateSensors::CliffFrontLeft *m_cliffFrontLeft;
-	CreateSensors::CliffFrontRight *m_cliffFrontRight;
-	CreateSensors::CliffRight *m_cliffRight;
-	CreateSensors::VirtualWall *m_virtualWall;
+	// These are all marked mutable because they
+	// are initialized lazily in a const accessor.
+	// I have yet to decide if this is the "correct"
+	// way to go about it.
+	mutable CreateSensors::PlayButton *m_playButton;
+	mutable CreateSensors::AdvanceButton *m_advanceButton;
 
-	CreateSensors::WallSignal *m_wallSignal;
-	CreateSensors::CliffLeftSignal *m_cliffLeftSignal;
-	CreateSensors::CliffFrontLeftSignal *m_cliffFrontLeftSignal;
-	CreateSensors::CliffFrontRightSignal *m_cliffFrontRightSignal;
-	CreateSensors::CliffRightSignal *m_cliffRightSignal;
-	CreateSensors::CargoBayAnalogSignal *m_cargoBayAnalogSignal;
-	CreateSensors::CargoBayDigitalInputs *m_cargoBayDigitalInputs;
-	
-	CreateSensors::IR *m_ir;
-	
-	CreateSensors::ChargingState *m_chargingState;
-	CreateSensors::BatteryTemperature *m_batteryTemperature;
-	CreateSensors::BatteryCharge *m_batteryCharge;
-	CreateSensors::BatteryCapacity *m_batteryCapacity;
-	
-	CreateSensors::Angle *m_angle;
-	CreateSensors::Distance *m_distance;
-	
-	CreateSensors::BumpLeft *m_bumpLeft;
-	CreateSensors::BumpRight *m_bumpRight;
+	mutable CreateSensors::Wall *m_wall;
+	mutable CreateSensors::CliffLeft *m_cliffLeft;
+	mutable CreateSensors::CliffFrontLeft *m_cliffFrontLeft;
+	mutable CreateSensors::CliffFrontRight *m_cliffFrontRight;
+	mutable CreateSensors::CliffRight *m_cliffRight;
+	mutable CreateSensors::VirtualWall *m_virtualWall;
 
-	CreateSensors::WheelDropLeft *m_wheelDropLeft;
-	CreateSensors::WheelDropRight *m_wheelDropRight;
-	CreateSensors::WheelDropCaster *m_wheelDropCaster;
+	mutable CreateSensors::WallSignal *m_wallSignal;
+	mutable CreateSensors::CliffLeftSignal *m_cliffLeftSignal;
+	mutable CreateSensors::CliffFrontLeftSignal *m_cliffFrontLeftSignal;
+	mutable CreateSensors::CliffFrontRightSignal *m_cliffFrontRightSignal;
+	mutable CreateSensors::CliffRightSignal *m_cliffRightSignal;
+	mutable CreateSensors::CargoBayAnalogSignal *m_cargoBayAnalogSignal;
+	mutable CreateSensors::CargoBayDigitalInputs *m_cargoBayDigitalInputs;
+	
+	mutable CreateSensors::IR *m_ir;
+	
+	mutable CreateSensors::ChargingState *m_chargingState;
+	mutable CreateSensors::BatteryTemperature *m_batteryTemperature;
+	mutable CreateSensors::BatteryCharge *m_batteryCharge;
+	mutable CreateSensors::BatteryCapacity *m_batteryCapacity;
+	
+	mutable CreateSensors::Angle *m_angle;
+	mutable CreateSensors::Distance *m_distance;
+	
+	mutable CreateSensors::BumpLeft *m_bumpLeft;
+	mutable CreateSensors::BumpRight *m_bumpRight;
+
+	mutable CreateSensors::WheelDropLeft *m_wheelDropLeft;
+	mutable CreateSensors::WheelDropRight *m_wheelDropRight;
+	mutable CreateSensors::WheelDropCaster *m_wheelDropCaster;
 
 	size_t m_i;
 	CreateScript m_script;

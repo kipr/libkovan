@@ -23,7 +23,7 @@
 
 void msleep(long msecs)
 {
-	Private::Time::microsleep(msecs * 1000);
+	Private::Time::microsleep(msecs * 1000UL);
 }
 
 unsigned long systime()
@@ -33,5 +33,5 @@ unsigned long systime()
 
 double seconds()
 {
-	return systime() / 1000.0f;
+	return systime() / 1000.0;
 }
