@@ -81,11 +81,7 @@ unsigned short Private::Servo::position(port_t port) const
 	port = fixPort(port);
 	if(port > 3) return 0xFFFF;
 	const unsigned int val = Private::Kovan::instance()->currentState().t[servoRegisters[port]];
-
-	unsigned short ret = (2047 * (val - 6500)) / 26000;
-	if (ret > 0) ret += 1;
-
-	return ret;
+	return ((2047 * (val - 6500)) / 26000);
 }
 
 Private::Servo *Private::Servo::instance()
