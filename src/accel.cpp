@@ -75,8 +75,6 @@ bool Acceleration::calibrate()
 				+ (accel_y * accel_y)
 				+ (accel_z - 64) * (accel_z - 64);
 
-		printf("[%d, %d, %d] err: %d\n", accel_x, accel_y, accel_z, err_sqrd);
-
 		if(err_sqrd < 17) return true; // success
 
 		// "char" on our platform is unsigned char by default
@@ -91,14 +89,6 @@ bool Acceleration::calibrate()
 		Private::I2C::instance()->write(R_XBIAS, -accel_bias_x, false);
 		Private::I2C::instance()->write(R_YBIAS, -accel_bias_y, false);
 		Private::I2C::instance()->write(R_ZBIAS, -accel_bias_z, false);
-
-		signed char rb_x = (signed char)Private::I2C::instance()->read(R_XBIAS);
-		signed char rb_y = (signed char)Private::I2C::instance()->read(R_YBIAS);
-		signed char rb_z = (signed char)Private::I2C::instance()->read(R_ZBIAS);
-
-		printf("bias: [%d %d %d]  read [%d %d %d]\n\n",
-				accel_bias_x, accel_bias_y, accel_bias_z,
-				rb_x, rb_y, rb_z);
 
 		usleep(5000);
 	}
