@@ -131,4 +131,7 @@
 #define BUTTON_Z_TEXT_START 	137
 #define BUTTON_Z_TEXT_END 	145
 
+// Analog Voltage (3.3V or 5V, etc)
+#define VANA			146
+
 #endif
