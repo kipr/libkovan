@@ -4,127 +4,60 @@
 //
 // Console screen display window size is 10 rows and limited to 42 columns, indexed from 0
 //
-// Initial version: 1/8/2013 - cnw (Charles Winton)
-// Revisions: none yet
+// Initial version: 1/8/2013 - cnw
+// Revisions: 2/2/2013 - cnw
+//    1. switched variadic usage to vsprintf
+//    2. fixed to work for both normal and extra button cases
+// Revision:  2/4/2013 - cnw
+//    maxw failing to prevent scroll bar display; simply needed a reduction by 1
 // stdarg.h provides macros for accessing a function's argument list ... see K&R
 
 #include "kovan/display.h"
+#include "kovan/button.h"
 #include "kovan/console.h"
 
 #include <stdarg.h>
 #include <string.h>
 #include <stdio.h>
 
-#define _MAPy 10  // 10 rows
+#define _MAPy 10  // 10 rows with 3 buttons visible, loses last 2 rows if 6 buttons visible
 #define _MAPx 43  // 42 columns is max fit for screen (array has 43 to accommodate \0)
 char _display_map[_MAPy][_MAPx];
-int _initialize_ = 1;
+int _initialize_ = 1;   // flag to signal need to clear display on first use
 
-// clears console and sets display map to all spaces
-void display_clear()
-{
+void display_clear() {  // clears console and sets display map to all spaces
+	int i,j;
 	console_clear();
-	for(int i = 0; i < _MAPy; ++i) {
-		for(int j = 0; j < _MAPx; ++j) _display_map[i][j] = ' ';  //  initialize to spaces
-	}
-	for(int i = 0; i < _MAPy; ++i) {
-		_display_map[i][_MAPx-1] = '\0'; // make each row is a string
-	}
+	for (i=0;i<_MAPy;i++) for(j=0;j<_MAPx;j++) _display_map[i][j]=' ';  //  initialize to spaces
+	for (i=0;i<_MAPy;i++) _display_map[i][_MAPx-1]='\0';                // make each row a string
 }
 
-// column, row, string with format phrases, args
-void display_printf(int col, int row, const char *t, ...)
-{
-	va_list argp;              // argp is typed for traversing the variable part of the arg list
-	int i; char *c; double d;  // working variables to receive arg values
-	const char *cp;
+// Usage: same as printf except the first two parameters specify
+//    the (column, row) of the display where print is to begin.
+// Excess print to a line is truncated.
+void display_printf(int col, int row, const char *t, ...) { // variadic function
+	va_list argp;       // variadic argument list pointer for vsprintf
+	int i, maxw;        // maxw marks available room on row
+	int rb6=0;          // row adjustment (2 for 6 button case)
+	char *dp, ws[256];  // pointer into display map, working string for vsprintf
 
-	char sc;       // cp traverses format string t, fmte marks end of each format phrase, sc is switch control
-
-	int y;                   // row index
-	char *dp;                // pointer into display
-	int maxw;                // available room on line
-	char fws[_MAPx];         // formatted phrase work area
-	char fmt[_MAPx]; int fl; // fmt is a working string for each format extracted
-
-	va_start (argp,t);  // t is last named argument in link_printf's function header;
-	// this initializes argp to point to first variable arg
-	
-	// bad col so wrap to next line
-	if (col >= _MAPx) {
-		row = row + 1; col = 0;
+	va_start (argp,t);  // t is last named argument in display_printf's function header;
+	// Note: system macro va_start points argp to first variadic arg for vsprintf
+	if (get_extra_buttons_visible()) rb6=2;
+	if (col >= _MAPx) {row = row+1; col = 0;} // bad col so wrap to next line
+	if (row >= _MAPy) row = _MAPy - 1;        // bad row so (over) print on last line
+	console_clear();               // ready the display
+	if (_initialize_ == 1) {display_clear(); _initialize_=0;} // clear map to spaces on first call
+	dp = &_display_map[row][col];  // starting point for printf
+	maxw=_MAPx - col - 1;          // space remaining on line
+	vsprintf(ws, t, argp);         // same as sprintf except requires a pointer to argument list
+	for(i=0; i<strlen(ws); i++) {  // insert formatted phrase in display map
+		if (maxw==0) break;         // if no more room get out of this
+		*dp = ws[i];                // insert next character from working string
+		dp++; maxw--;
 	}
-	if (row >= _MAPy) row = _MAPy - 1;          // bad row so print on last line
-	console_clear();                            // ready the display
-	
-	// clear map to spaces on first call
-	if (_initialize_ == 1) {
-		display_clear();
-		_initialize_ = 0;
-	}
-	dp = &_display_map[row][col];      // starting point for printf
-	maxw = _MAPx - col;                // space remaining on line
-	// process printf string; stop when *cp = '\0'
-	for (cp = t; *cp; cp++) {
-		// if not a format phrase
-		if (*cp != '%') {
-			if(strspn(cp,"\n\t\v\b\r\f") > 0) {  // is it a spec char? if so treat as if \n
-				for (i = 0; i < maxw; ++i) { // clear balance of line
-					*dp=' '; dp++;
-				}
-				if (row == _MAPy) break; // out of rows so proceed to display refresh
-				++row;
-				dp = &_display_map[row][0]; maxw = _MAPx; // set up for new line
-			} else { // nothing special about this one so insert it
-				*dp = *cp; dp++;
-				maxw--; if (maxw == 0) break; // no more room on line so proceed to display refresh
-			}
-			continue;             // return to top
-		}
-		// OK, if we're here we may have hit a format phrase
-		const char *fmte = strpbrk(cp + 1, "dioxXucsfeEgG%"); // look for format end
-		// strpbrk returns the location of 1st character of its argument that is in the scan string
-		
-		// what's left is not a format phrase so insert % and return to top 
-		if (fmte == NULL) {
-			*dp='%'; dp++;
-			maxw--; if (maxw==0) break;  // no more room on line so proceed to display refresh
-			continue;                    // return to top
-		}
-		// OK, there looks to be a format phrase
-		sc = *fmte;                // set switch control for the case
-		fl = 1 + fmte-cp;          // pick off phrase (pointed to by cp)
-		strncpy(fmt, cp, fl);      // capture the format phrase
-		fmt[fl] = '\0';            // make it a string
-		switch (sc)                // process the kind of format specified
-		{
-			case 'd': case 'i': case 'o': case 'x': case 'X': case 'u': case 'c':
-			i = va_arg(argp, int);    // return next parm as type int and step argp
-			sprintf(fws, fmt, i);       // use sprintf to do the formatting to fws
-			break;
-			case 's':
-			c = va_arg(argp, char *); // return next parm as type char * and step argp
-			sprintf(fws, fmt, c);       // use sprintf to do the formatting to fws
-			break;
-			case 'f': case 'e': case 'E': case 'g': case 'G':
-			d = va_arg(argp, double); // return next parm as type double and step argp
-			sprintf(fws, fmt, d);       // use sprintf to do the formatting to fws
-			break;
-			case '%':                 // no format specified between %'s
-			sprintf(fws, fmt);
-			break;
-		}
-		
-		for(unsigned int j = 0; j < strlen(fws); ++j) { // insert formatted phrase in display map
-			if (maxw == 0) break;      // if no more room get out of this
-			*dp = fws[j];              // insert next character from formatted phrase
-			dp++; maxw--;
-		}
-		if (maxw==0) break;           // if no more room proceed to display refresh
-		cp = fmte;                    // set cp for next pass
-	}
-	va_end(argp);                         // clean up
-	for(y = 0; y <  _MAPy - 1; ++y) printf("%s\n", _display_map[y]); // refresh the display
-	printf("%s", _display_map[y]);
+	va_end(argp);                  // clean up
+	for(i=0; i< _MAPy-rb6-1; i++) printf("%s\n",_display_map[i]); // refresh the display
+	printf("%s",_display_map[i]);  // last line printed without new line
 }
 
