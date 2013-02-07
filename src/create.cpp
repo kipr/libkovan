@@ -969,7 +969,7 @@ bool Create::open()
 	
 	beginAtomicOperation();
 #ifndef WIN32
-	m_tty = ::open("/dev/tty.usbserial-FTCVZ1V9", O_RDWR | O_NOCTTY | O_NONBLOCK);
+	m_tty = ::open("/dev/ttyS2", O_RDWR | O_NOCTTY | O_NONBLOCK);
 #else
 	#warning Create library not yet implemented for Windows
 #endif
