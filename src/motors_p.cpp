@@ -96,6 +96,7 @@ void Private::Motor::setPidGains(port_t port, const short &p, const short &i, co
 
 void Private::Motor::clearBemf(unsigned char port)
 {
+	port = fixPort(port);
 	if(port > 3) return;
 	m_cleared[port] = backEMF(port);
 }
@@ -237,7 +238,7 @@ int Private::Motor::backEMF(port_t port)
 	port = fixPort(port);
 	if(port > 3) return 0xFFFF;
 	const Private::State &s = Private::Kovan::instance()->currentState();
-	return ((int)s.t[bemfHighRegisters[port]]) << 16 | s.t[bemfLowRegisters[port]];
+	return (((int)s.t[bemfHighRegisters[port]]) << 16 | s.t[bemfLowRegisters[port]]) - m_cleared[port];
 }
 
 Private::Motor *Private::Motor::instance()
