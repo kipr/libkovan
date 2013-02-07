@@ -98,7 +98,9 @@ void Private::Motor::clearBemf(unsigned char port)
 {
 	port = fixPort(port);
 	if(port > 3) return;
-	m_cleared[port] = backEMF(port);
+	Private::Kovan::instance()->autoUpdate();
+	const Private::State &s = Private::Kovan::instance()->currentState();
+	m_cleared[port] = (((int)s.t[bemfHighRegisters[port]]) << 16 | s.t[bemfLowRegisters[port]]);
 }
 
 void Private::Motor::setControlMode(port_t port, Private::Motor::ControlMode controlMode)
