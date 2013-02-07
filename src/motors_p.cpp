@@ -228,8 +228,8 @@ unsigned char Private::Motor::pwm(port_t port)
 
 void Private::Motor::stop(port_t port)
 {
-	setControlMode(fixPort(port), Private::Motor::Inactive);
-	setPwmDirection(fixPort(port), PassiveStop);
+	setControlMode(port, Private::Motor::Inactive);
+	setPwmDirection(port, PassiveStop);
 }
 
 int Private::Motor::backEMF(port_t port)
