@@ -106,6 +106,7 @@ void Private::Motor::clearBemf(unsigned char port)
 void Private::Motor::setControlMode(port_t port, Private::Motor::ControlMode controlMode)
 {
 	Private::Kovan *kovan = Private::Kovan::instance();
+	kovan->autoUpdate();
 	
 	port = fixPort(port);
 	const unsigned short offset = (3 - port) << 1;
