@@ -820,6 +820,16 @@ bool Create::setBaudRate(const unsigned char& baudCode)
 	return true;
 }
 
+void Create::setDistance(const int distance)
+{
+	m_state.distance = distance;
+}
+
+void Create::setAngle(const int angle)
+{
+	m_state.angle = angle;
+}
+
 const CreateState *Create::state()
 {
 	return &m_state;

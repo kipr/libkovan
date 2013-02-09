@@ -334,6 +334,9 @@ public:
 	
 	bool setBaudRate(const unsigned char& baudCode);
 	
+	void setDistance(const int distance);
+	void setAngle(const int angle);
+	
 	// High level sensors
 	AbstractButton *playButton() const;
 	AbstractButton *advanceButton() const;

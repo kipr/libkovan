@@ -159,7 +159,7 @@ int get_create_normalized_angle()
 
 void set_create_normalized_angle(int angle)
 {
-
+	set_create_total_angle(angle);
 }
 
 int get_create_total_angle()
@@ -169,7 +169,7 @@ int get_create_total_angle()
 
 void set_create_total_angle(int angle)
 {
-	
+	Create::instance()->setAngle(angle);
 }
 
 int get_create_distance()
@@ -179,7 +179,7 @@ int get_create_distance()
 
 void set_create_distance(int dist)
 {
-	
+	Create::instance()->setDistance(dist);
 }
 
 int get_create_battery_charging_state()
