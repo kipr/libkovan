@@ -108,7 +108,8 @@ bool KovanModule::send(const CommandVector& commands)
 	memcpy(packet->commands, &commands[0], commands.size() * sizeof(Command));
 	
 	bool ret = true;
-	while(sendto(m_sock, reinterpret_cast<const char *>(packet), packetSize, 0, (sockaddr *)&m_out, sizeof(m_out)) != packetSize) {
+	while(sendto(m_sock, reinterpret_cast<const char *>(packet), packetSize, 0,
+		(sockaddr *)&m_out, sizeof(m_out)) != packetSize) {
 		if(errno == EINTR) continue;
 		perror("sendto");
 		ret = false;
@@ -123,7 +124,8 @@ bool KovanModule::recv(State& state)
 	memset(&state, 0, sizeof(State));
 	
 	ssize_t i = 0;
-	while((i = recvfrom(m_sock, reinterpret_cast<char *>(&state), sizeof(State), 0, NULL, NULL)) != sizeof(State)) {
+	while((i = recvfrom(m_sock, reinterpret_cast<char *>(&state),
+		sizeof(State), 0, NULL, NULL)) != sizeof(State)) {
 		if(errno == EINTR) continue;
 		perror("recvfrom");
 		printf("Got %ld\n", i);

@@ -43,6 +43,7 @@
 #include "motors.hpp"
 #include "servo.hpp"
 #include "analog.hpp"
+#include "digital.hpp"
 #include "sensor_logic.hpp"
 #include "button.hpp"
 #include "camera.hpp"
