@@ -62,6 +62,18 @@ namespace SensorLogic
 		Xor(const Sensor<bool> *a, const Sensor<bool> *b);
 		virtual bool value() const;
 	};
+	
+	class EXPORT_SYM Not : public Sensor<bool>
+	{
+	public:
+		Not(const Sensor<bool> *input);
+		virtual bool value() const;
+		
+		const Sensor<bool> *input() const;
+		
+	private:
+		const Sensor<bool> *m_input;
+	};
 }
 
 #endif

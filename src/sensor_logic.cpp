@@ -55,3 +55,18 @@ bool Xor::value() const
 	const bool b = Base::b()->value();
 	return a()->value() ? !b : b;
 }
+
+Not::Not(const Sensor<bool> *input)
+	: m_input(input)
+{
+}
+
+bool Not::value() const
+{
+	return !m_input->value();
+}
+
+const Sensor<bool> *Not::input() const
+{
+	return m_input;
+}
