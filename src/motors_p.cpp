@@ -205,8 +205,8 @@ void Private::Motor::setPwmDirection(port_t port, const Motor::Direction &dir)
 	// this will undo their work.
 	Private::Kovan *kovan = Private::Kovan::instance();
 	
-	port = fixPort(port);
 	setControlMode(port, Private::Motor::Inactive);
+	port = fixPort(port);
 	const unsigned short offset = (3 - port) << 1;
 	unsigned short &dcs = kovan->currentState().t[MOTOR_DRIVE_CODE_T];
 	
