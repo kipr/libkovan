@@ -95,3 +95,18 @@ bool Acceleration::calibrate()
 
 	return false; // fail
 }
+
+short AccelX::value() const
+{
+	return Acceleration::x();
+}
+
+short AccelY::value() const
+{
+	return Acceleration::y();
+}
+
+short AccelZ::value() const
+{
+	return Acceleration::z();
+}
