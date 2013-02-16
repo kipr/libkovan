@@ -160,8 +160,8 @@ int Private::Motor::pidVelocity(port_t port) const
 void Private::Motor::setPidGoalPos(port_t port, int pos)
 {
 	Private::Kovan *kovan = Private::Kovan::instance();
-	pos -= m_cleared[port];
 	port = fixPort(port);
+	pos += m_cleared[port];
 	kovan->enqueueCommand(createWriteCommand(goalPosLowRegisters[port], pos & 0x0000FFFF));
 	kovan->enqueueCommand(createWriteCommand(goalPosHighRegisters[port], (pos & 0xFFFF0000) >> 16));
 }
