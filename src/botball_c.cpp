@@ -17,7 +17,6 @@ public:
 	ShutDownIn(double s)
 		: m_s(s)
 	{
-		atexit(&halt);
 	}
 	
 	~ShutDownIn()
@@ -30,7 +29,7 @@ public:
 		msleep(m_s * 1000.0);
 		const double end = seconds();
 		std::cout << std::endl << "Shutdown after " << (end - start) << " seconds" << std::endl;
-		exit(0);
+		_Exit(0);
 	}
 	
 private:
