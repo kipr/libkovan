@@ -455,7 +455,7 @@ private:
 	void updateState();
 	
 	void updateSensorPacket1();
-	void updateSensorPacket2();
+	void updateSensorPacket2(bool forceUpdate = false);
 	void updateSensorPacket3();
 	void updateSensorPacket4();
 	void updateSensorPacket5();

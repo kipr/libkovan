@@ -822,11 +822,15 @@ bool Create::setBaudRate(const unsigned char& baudCode)
 
 void Create::setDistance(const int distance)
 {
+	// Clear distance on device
+	updateSensorPacket2(true);
 	m_state.distance = distance;
 }
 
 void Create::setAngle(const int angle)
 {
+	// Clear angle on device
+	updateSensorPacket2(true);
 	m_state.angle = angle;
 }
 
@@ -1028,9 +1032,9 @@ void Create::updateSensorPacket1()
 	endAtomicOperation();
 }
 
-void Create::updateSensorPacket2()
+void Create::updateSensorPacket2(bool forceUpdate)
 {
-	if(!hasRequiredTimePassed(timestamps[1])) return;
+	if(!forceUpdate && !hasRequiredTimePassed(timestamps[1])) return;
 	flush();
 	beginAtomicOperation();
 	write(OI_SENSORS);
