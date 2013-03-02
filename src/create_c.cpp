@@ -21,6 +21,8 @@
 #include "kovan/create.h"
 #include "kovan/create.hpp"
 
+#include <climits>
+
 int create_connect()
 {
 	while(!create_connect_once());
@@ -364,7 +366,7 @@ void create_play_song(int num)
 
 int create_read_block(char *data, int count)
 {
-	return Create::instance()->read(reinterpret_cast<unsigned char *>(data), count);
+	return Create::instance()->blockingRead(reinterpret_cast<unsigned char *>(data), count, UINT_MAX);
 }
 
 void create_write_byte(char byte)
