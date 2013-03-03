@@ -55,9 +55,10 @@ Mutex::Mutex(const Mutex &)
 {
 }
 
-void *__runThread(void *data)
+static void *__runThread(void *data)
 {
 	Thread *t = reinterpret_cast<Thread *>(data);
+	if(!t) return NULL;
 	t->run();
 	return NULL;
 }

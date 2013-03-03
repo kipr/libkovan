@@ -41,6 +41,7 @@
 #define _KOVAN_HPP_
 
 #include "motors.hpp"
+#include "ardrone.hpp"
 #include "servo.hpp"
 #include "analog.hpp"
 #include "digital.hpp"

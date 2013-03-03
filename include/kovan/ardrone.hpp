@@ -1,5 +1,5 @@
 /**************************************************************************
- *  Copyright 2012 KISS Institute for Practical Robotics                  *
+ *  Copyright 2013 KISS Institute for Practical Robotics                  *
  *                                                                        *
  *  This file is part of libkovan.                                        *
  *                                                                        *
@@ -18,35 +18,45 @@
  *  If not, see <http://www.gnu.org/licenses/>.                           *
  **************************************************************************/
 
-/*!
- * \file kovan.h
- * \author Braden McDorman
- * \copyright KISS Institute for Practical Robotics
- */
+#ifndef _ARDRONE_HPP_
+#define _ARDRONE_HPP_
 
-#ifndef _KOVAN_H_
-#define _KOVAN_H_
+class DroneController;
 
-#include "ardrone.h"
-#include "audio.h"
-#include "motors.h"
-#include "servo.h"
-#include "button.h"
-#include "digital.h"
-#include "camera.h"
-#include "create.h"
-#include "analog.h"
-#include "ir.h"
-#include "wifi.h"
-#include "draw.h"
-#include "battery.h"
-#include "util.h"
-#include "general.h"
-#include "console.h"
-#include "display.h"
-#include "datalog.h"
-#include "accel.h"
-#include "thread.h"
-#include "botball.h"
+class ARDrone
+{
+public:
+	enum State
+	{
+		Disconnected = 0,
+		Landed,
+		TakenOff
+	};
+	
+	~ARDrone();
+	
+	bool connect(const char *ip = "192.168.1.1");
+	void disconnect();
+	
+	void flatTrim();
+	void takeoff();
+	void land();
+	
+	void hover();
+	void move(const float x, const float y, const float z, const float yaw);
+	
+	ARDrone::State state() const;
+	
+	static ARDrone *instance();
+	
+private:
+	ARDrone();
+	
+	DroneController *m_controller;
+	
+	int m_controlFd;
+};
+
+
 
 #endif
