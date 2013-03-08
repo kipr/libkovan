@@ -7,6 +7,7 @@
 #include "kovan/audio.h"
 #include "kovan/thread.hpp"
 #include "kovan/general.h"
+#include "kovan/create.hpp"
 
 #include <cstdlib>
 #include <iostream>
@@ -30,7 +31,7 @@ public:
 		const double end = seconds();
 		std::cout << std::endl << "Shutdown after " << (end - start) << " seconds" << std::endl;
 		// Note: Might want to move this to botui in the future.
-		create_stop();
+		Create::instance()->stop();
 		_Exit(0);
 	}
 	
