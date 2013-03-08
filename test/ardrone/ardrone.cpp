@@ -9,16 +9,16 @@ int main(int argc, char *argv[])
 	}
 
 	drone->flatTrim();
-	msleep(100);
+	msleep(1000);
 	
 	drone->takeoff();
 	msleep(5000);
 	
-	drone->move(0.1f, 0.0f, 0.0f, 1.0f);
-	msleep(10000);
+	// drone->move(0.0f, 0.0f, 0.0f, 1.0f);
+	// msleep(10000);
 	
-	drone->hover();
-	msleep(10000);
+	// drone->hover();
+	// msleep(10000);
 	
 	drone->land();
 	msleep(2000);

@@ -54,7 +54,7 @@ private:
 	
 	DroneController *m_controller;
 	
-	int m_controlFd;
+	int m_fd;
 };
 
 

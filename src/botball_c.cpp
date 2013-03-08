@@ -29,6 +29,8 @@ public:
 		msleep(m_s * 1000.0);
 		const double end = seconds();
 		std::cout << std::endl << "Shutdown after " << (end - start) << " seconds" << std::endl;
+		// Note: Might want to move this to botui in the future.
+		create_stop();
 		_Exit(0);
 	}
 	
