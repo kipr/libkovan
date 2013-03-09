@@ -44,6 +44,7 @@ void shut_down_in(double s)
 	static ShutDownIn *s_instance;
 	if(s_instance) {
 		std::cout << "Warning: shut_down_in already called once. Ignoring." << std::endl;
+		return;
 	}
 	s_instance = new ShutDownIn(s);
 	s_instance->start();
