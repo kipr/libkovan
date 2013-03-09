@@ -30,7 +30,7 @@ public:
 	{
 		Disconnected = 0,
 		Landed,
-		TakenOff
+		Flying
 	};
 	
 	~ARDrone();

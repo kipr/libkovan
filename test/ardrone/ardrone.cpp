@@ -1,5 +1,6 @@
 #include "kovan/kovan.hpp"
 #include <cstdlib>
+#include <iostream>
 
 int main(int argc, char *argv[])
 {
@@ -11,8 +12,12 @@ int main(int argc, char *argv[])
 	drone->flatTrim();
 	msleep(1000);
 	
+	std::cout << "flying? " << (drone->state() == ARDrone::Flying) << std::endl;
+	
 	drone->takeoff();
 	msleep(5000);
+	
+	std::cout << "flying? " << (drone->state() == ARDrone::Flying) << std::endl;
 	
 	// drone->move(0.0f, 0.0f, 0.0f, 1.0f);
 	// msleep(10000);

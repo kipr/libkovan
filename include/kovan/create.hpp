@@ -298,7 +298,11 @@ public:
 	void drive(const short& velocity, const short& radius);
 	void driveDirect(const short& left, const short& right);
 	inline void driveStraight(const short& speed) { driveDirect(speed, speed); }
-	inline void stop() { driveStraight(0); }
+	inline void stop()
+	{
+		flush();
+		driveStraight(0);
+	}
 	
 	/*!
 	 * A very accurate turn method based on time rather than the create's own readings, which are often less than accurate.
