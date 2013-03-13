@@ -1,7 +1,31 @@
+/**************************************************************************
+ *  Copyright 2013 KISS Institute for Practical Robotics                  *
+ *                                                                        *
+ *  This file is part of libkovan.                                        *
+ *                                                                        *
+ *  libkovan is free software: you can redistribute it and/or modify      *
+ *  it under the terms of the GNU General Public License as published by  *
+ *  the Free Software Foundation, either version 2 of the License, or     *
+ *  (at your option) any later version.                                   *
+ *                                                                        *
+ *  libkovan is distributed in the hope that it will be useful,           *
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of        *
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the         *
+ *  GNU General Public License for more details.                          *
+ *                                                                        *
+ *  You should have received a copy of the GNU General Public License     *
+ *  along with libkovan. Check the LICENSE file in the project root.      *
+ *  If not, see <http://www.gnu.org/licenses/>.                           *
+ **************************************************************************/
+
 #include "kovan/ardrone.hpp"
 #include "kovan/thread.hpp"
 #include "kovan/util.h"
 #include "ardrone_constants_p.hpp"
+	 
+#ifdef WIN32
+	 #error AR.Drone library doesn't work on Windows.
+#endif
 
 #include <arpa/inet.h>
 #include <netinet/in.h>
@@ -328,7 +352,7 @@ void DroneController::sendMagic()
 	sprintf(command, "%s%%u,%u\r", ARDRONE_AT_PMODE, 2);
 	oneTimeCommand(command);
 	msleep(100);
-        sprintf(command, "%s%%u,%u,%u,%u,%u\r", ARDRONE_AT_MISC, 2, 20, 2000, 3000);
+    sprintf(command, "%s%%u,%u,%u,%u,%u\r", ARDRONE_AT_MISC, 2, 20, 2000, 3000);
 	oneTimeCommand(command);
 	msleep(100);
 }
