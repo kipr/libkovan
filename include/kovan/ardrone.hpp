@@ -21,6 +21,8 @@
 #ifndef _ARDRONE_HPP_
 #define _ARDRONE_HPP_
 
+#include <opencv2/core/core.hpp>
+
 class DroneController;
 
 class ARDrone
@@ -35,7 +37,7 @@ public:
 	
 	~ARDrone();
 	
-	bool connect(const char *ip = "192.168.1.1");
+	bool connect(const char *const ip = "192.168.1.1");
 	void disconnect();
 	
 	void flatTrim();
@@ -45,6 +47,8 @@ public:
 	void hover();
 	void move(const float x, const float y, const float z, const float yaw);
 	
+	cv::Mat video() const;
+	
 	ARDrone::State state() const;
 	
 	static ARDrone *instance();
@@ -53,8 +57,6 @@ private:
 	ARDrone();
 	
 	DroneController *m_controller;
-	
-	int m_fd;
 };
 
 

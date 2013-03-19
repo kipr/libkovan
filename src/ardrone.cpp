@@ -20,18 +20,15 @@
 
 #include "kovan/ardrone.hpp"
 #include "kovan/thread.hpp"
+#include "kovan/socket.hpp"
 #include "kovan/util.h"
 #include "ardrone_constants_p.hpp"
-	 
-#ifdef WIN32
-	 #error AR.Drone library doesn't work on Windows.
-#endif
+#include "uvlc_video_decoder_p.hpp"
 
-#include <arpa/inet.h>
-#include <netinet/in.h>
+#include <opencv2/opencv.hpp>
+
 #include <stdio.h>
-#include <sys/types.h>
-#include <sys/socket.h>
+
 #include <unistd.h>
 #include <cstdlib>
 #include <cstdio>
@@ -39,7 +36,6 @@
 #include <cstring>
 #include <string>
 #include <errno.h>
-#include <fcntl.h>
 
 #include <stack>
 
@@ -70,6 +66,26 @@ struct navdata_t {
 	navdata_option_t options[];
 } __attribute__((packed));
 
+struct navdata_mat3_t
+{
+	float _00;
+	float _01;
+	float _02;
+	float _10;
+	float _11;
+	float _12;
+	float _20;
+	float _21;
+	float _22;
+} __attribute__((packed));
+
+struct navdata_vec3_t
+{
+	float _0;
+	float _1;
+	float _2;
+} __attribute__((packed));
+
 struct navdata_demo_t
 {
 	// Flying state (landed, flying, hovering, etc.) defined in CTRL_STATES enum.
@@ -91,16 +107,63 @@ struct navdata_demo_t
 	int32_t altitude;
 
 	// UAV's estimated linear velocity
-	float vx;
-	
-	// UAV's estimated linear velocity
-	float vy;
-	
-	// UAV's estimated linear velocity
-	float vz;
+	navdata_vec3_t velocity;
 
-	uint32_t num_frames;
+	uint32_t frameIndex;
+	
+	navdata_mat3_t detection_cam_rotation;
+	navdata_vec3_t detection_cam_translation;
+	uint32_t tagIndex;
+	uint32_t detectionType;
+	
+	navdata_mat3_t drone_cam_rotation;
+	navdata_vec3_t drone_cam_translation;
 } __attribute__((packed));
+
+struct navdata_raw_t
+{
+	uint16_t accelX;
+	uint16_t accelY;
+	uint16_t accelZ;
+	
+	uint16_t gyroX;
+	uint16_t gyroY;
+	uint16_t gyroZ;
+	
+	int16_t gyroX_110;
+	int16_t gyroY_110;
+	
+	uint32_t batteryMilliVolt;
+	
+	uint16_t usEchoStart;
+	uint16_t usEchoEnd;
+	uint16_t usEchoAssociation;
+	uint16_t usEchoDistance;
+	
+	uint16_t usCurveTime;
+	uint16_t usCurveValue;
+	uint16_t usCurveRef;
+	
+	uint16_t echoFlagIni;
+	uint16_t echoNum;
+	uint16_t echoSum;
+        
+	int32_t altTemp;
+} __attribute__((packed));
+
+struct navdata_phys_t
+{
+	 float accelTemp;
+	 uint16_t gyroTemp;
+	 
+	 navdata_vec3_t accel;
+         navdata_vec3_t gyro;
+	 
+	 uint32_t alim3V3;
+	 uint32_t vrefEpson;
+	 uint32_t vrefIDG;
+} __attribute__((packed));
+
 
 class DroneSequencer
 {
@@ -155,7 +218,6 @@ public:
 	DroneController();
 	~DroneController();
 	
-	void setup(const sockaddr_in &addr, int fd);
 	void invalidate();
 	
 	void flatTrim();
@@ -166,7 +228,11 @@ public:
 	void move(const float x, const float y, const float z, const float yaw);
 	
 	bool requestNavdata();
-	void config(const char *const cmd, const char *const value);
+	bool requestVideo();
+	
+	void setVideoCodec(const unsigned id);
+	
+	void configure(const char *const cmd, const char *const value);
 	
 	void run();
 	
@@ -177,42 +243,68 @@ public:
 	void sendMagic();
 	
 	void setOwner(const char *const mac);
+	void setSsid(const char *const ssid);
+	void setNavdataDemo(const bool mode);
 	
 	bool isControlWatchdog() const;
 	bool isLowBatt() const;
 	
-	
 	void resetControlWatchdog();
 	void sendCommWatchdog();
 	
-	std::string currentConfig();
-	
 	const navdata_t *latestNavdata() const;
+	const navdata_demo_t *latestNavdataDemo() const;
+	const navdata_raw_t *latestNavdataRawMeasures() const;
+	
 	bool writeNavdata(const char *const path) const;
+	
+	void setAtAddress(const Address &atAddress);
+	void setNavdataAddress(const Address &atAddress);
+	void setVideoAddress(const Address &atAddress);
+	
+	const Address &atAddress() const;
+	const Address &navdataAddress() const;
+	const Address &videoAddress() const;
+	
+	const Private::Image &image() const;
 	
 private:
 	void pushCommand(const char *const command);
 	void popCommand();
-	
 	void oneTimeCommand(const char *const command);
+	bool sendCurrentCommand();
 	
-	bool update();
 	bool fetchNavdata();
+	bool fetchVideo();
+	
+	bool wakeupStream(Socket &socket, const Address &address);
 	
 	void __enumerateOptions();
 	
-	sockaddr_in m_addr;
-	int m_fd;
+	bool setupSocket(Socket &socket, const unsigned short bindTo = 0) const;
+	
+	Socket m_atSocket;
+	Socket m_navdataSocket;
+	Socket m_videoSocket;
+	
+	Address m_atAddress;
+	Address m_navdataAddress;
+	Address m_videoAddress;
+	
 	Mutex m_mutex;
 	Mutex m_control;
 	std::stack<DroneCommand> m_commandStack;
 	DroneSequencer m_seq;
 	bool m_stop;
 	unsigned char m_navdata[65507];
+	
+	const navdata_demo_t *m_navdataDemo;
+	const navdata_raw_t *m_navdataRawMeasures;
+	
+	Private::Image m_image;
 };
 
 DroneController::DroneController()
-	: m_fd(-1)
 {
 	memset(m_navdata, 0, sizeof(m_navdata));
 }
@@ -221,16 +313,12 @@ DroneController::~DroneController()
 {
 }
 
-void DroneController::setup(const sockaddr_in &addr, int fd)
-{
-	m_addr = addr;
-	m_fd = fd;
-}
-
 void DroneController::invalidate()
 {
 	m_mutex.lock();
-	m_fd = -1;
+	m_atSocket.close();
+	m_navdataSocket.close();
+	m_videoSocket.close();
 	m_mutex.unlock();
 }
 
@@ -276,26 +364,28 @@ void DroneController::move(const float x, const float y, const float z, const fl
 
 bool DroneController::requestNavdata()
 {
-	if(m_fd < 0) return true;
-	
-	sockaddr_in navport = m_addr;
-	navport.sin_port = htons(ARDRONE_NAVDATA_PORT);
-	
-	const static char dummy[4] = { 0x01, 0x00, 0x00, 0x00 };
-	if(sendto(m_fd, dummy, sizeof(dummy), 0,
-		(const sockaddr *)&navport, sizeof(navport)) != sizeof(dummy)) {
-		perror("DroneController::requestNavdata -> sendto");
-		return false;
-	}
-	
-	return true;
+	if(!m_navdataSocket.isOpen()) return true;
+	return wakeupStream(m_navdataSocket, m_navdataAddress);
 }
 
-void DroneController::config(const char *const cmd, const char *const value)
+bool DroneController::requestVideo()
+{
+	if(!m_videoSocket.isOpen()) return true;
+	return wakeupStream(m_videoSocket, m_videoAddress);
+}
+
+void DroneController::setVideoCodec(const unsigned id)
+{
+	char idbuf[128];
+	sprintf(idbuf, "%d", id);
+	configure(ARDRONE_VIDEO_CODEC, idbuf);
+}
+
+void DroneController::configure(const char *const cmd, const char *const value)
 {
 	char command[ARDRONE_MAX_CMD_LENGTH];
 	sprintf(command, "%s%%u,\"%s\",\"%s\",\"%s\"\r", ARDRONE_AT_CONFIG_IDS,
-		ARDRONE_SESSION_ID,ARDRONE_USER_ID, ARDRONE_APPLICATION_ID);
+		ARDRONE_SESSION_ID, ARDRONE_USER_ID, ARDRONE_APPLICATION_ID);
 	oneTimeCommand(command);
 	
 	sprintf(command, "%s%%u,\"%s\",\"%s\"\r", ARDRONE_AT_CONFIG, cmd, value);
@@ -308,16 +398,21 @@ void DroneController::run()
 	while(!m_stop) {
 		if(ticks % 100 == 0) {
 			// sendCommWatchdog();
+			requestVideo();
 			requestNavdata();
 		}
+		
 		m_mutex.lock();
 		bool success = true;
 		
 		// Slower update sub-loop
 		if(++ticks % 11 == 0) {
 			__enumerateOptions();
-			success &= update();
+			success &= sendCurrentCommand();
+			success &= fetchVideo();
+			if(isControlWatchdog()) std::cout << "control watchdog!" << std::endl;
 		}
+		
 		success &= fetchNavdata();
 		m_mutex.unlock();
 		if(!success) break;
@@ -351,15 +446,23 @@ void DroneController::sendMagic()
 	char command[ARDRONE_MAX_CMD_LENGTH];
 	sprintf(command, "%s%%u,%u\r", ARDRONE_AT_PMODE, 2);
 	oneTimeCommand(command);
-	msleep(100);
-    sprintf(command, "%s%%u,%u,%u,%u,%u\r", ARDRONE_AT_MISC, 2, 20, 2000, 3000);
+	sprintf(command, "%s%%u,%u,%u,%u,%u\r", ARDRONE_AT_MISC, 2, 20, 2000, 3000);
 	oneTimeCommand(command);
-	msleep(100);
 }
 
 void DroneController::setOwner(const char *const mac)
 {
-	config(ARDRONE_NETWORK_OWNER_MAC, mac);
+	configure(ARDRONE_NETWORK_OWNER_MAC, mac);
+}
+
+void DroneController::setSsid(const char *const ssid)
+{
+	configure(ARDRONE_NETWORK_SSID, ssid);
+}
+
+void DroneController::setNavdataDemo(const bool mode)
+{
+	configure(ARDRONE_NAVDATA_DEMO, mode ? ARDRONE_TRUE : ARDRONE_FALSE);
 }
 
 bool DroneController::isControlWatchdog() const
@@ -390,42 +493,6 @@ void DroneController::sendCommWatchdog()
 	oneTimeCommand(command);
 }
 
-std::string DroneController::currentConfig()
-{
-	int fd = socket(AF_INET, SOCK_STREAM, 0);
-	if(fd < 0) return std::string();
-	
-	sockaddr_in addr = m_addr;
-	addr.sin_port = htons(5559);
-	std::cout << "connecting" << std::endl;
-	
-	if(connect(fd, (sockaddr *)&addr, sizeof(addr)) < 0) {
-		perror("connect");
-		close(fd);
-		return std::string();
-	}
-	
-	std::cout << "sending" << std::endl;
-	
-	
-	
-	std::cout << "recving" << std::endl;
-	std::string ret;
-	char buffer[128];
-	while(recv(fd, buffer, 128, 0) < 0 && errno == EAGAIN) {
-		std::cout << buffer << std::endl;
-		ret += buffer;
-	}
-	ret += buffer;
-	if(errno != EAGAIN) {
-		perror("recv");
-	}
-	
-	close(fd);
-	
-	return ret;
-}
-
 const navdata_t *DroneController::latestNavdata() const
 {
 	const navdata_t *const ret = reinterpret_cast<const navdata_t *>(m_navdata);
@@ -440,6 +507,53 @@ bool DroneController::writeNavdata(const char *const path) const
 	fwrite(m_navdata, 1, sizeof(m_navdata), fp);
 	fclose(fp);
 	return true;
+}
+
+void DroneController::setAtAddress(const Address &atAddress)
+{
+	m_mutex.lock();
+	m_atAddress = atAddress;
+	
+	setupSocket(m_atSocket);
+	m_mutex.unlock();
+}
+
+void DroneController::setNavdataAddress(const Address &navdataAddress)
+{
+	m_mutex.lock();
+	m_navdataAddress = navdataAddress;
+	
+	setupSocket(m_navdataSocket, m_navdataAddress.port());
+	m_mutex.unlock();
+}
+
+void DroneController::setVideoAddress(const Address &videoAddress)
+{
+	m_mutex.lock();
+	m_videoAddress = videoAddress;
+	
+	setupSocket(m_videoSocket, m_videoAddress.port());
+	m_mutex.unlock();
+}
+
+const Address &DroneController::atAddress() const
+{
+	return m_atAddress;
+}
+
+const Address &DroneController::navdataAddress() const
+{
+	return m_navdataAddress;
+}
+
+const Address &DroneController::videoAddress() const
+{
+	return m_videoAddress;
+}
+
+const Private::Image &DroneController::image() const
+{
+	return m_image;
 }
 
 void DroneController::pushCommand(const char *const command)
@@ -468,18 +582,46 @@ void DroneController::oneTimeCommand(const char *const command)
 
 bool DroneController::fetchNavdata()
 {
-	if(m_fd < 0) return true;
+	if(!m_navdataSocket.isOpen()) return true;
 	
 	ssize_t readLength = 0;
 	char data[sizeof(m_navdata)];
-	if((readLength = recv(m_fd, data, sizeof(data), 0)) < 0 && errno != EAGAIN) {
+	if((readLength = m_navdataSocket.recv(data, sizeof(data))) < 0 && errno != EAGAIN) {
 		perror("recvfrom");
 		return false;
 	}
 	if(readLength < 0) return true;
-	std::cout << "readLength: " << readLength << std::endl;
-	
+	std::cout << "Read " << readLength << " bytes from navdata stream" << std::endl;
 	memcpy(m_navdata, data, sizeof(m_navdata));
+	return true;
+}
+
+bool DroneController::fetchVideo()
+{
+	if(!m_videoSocket.isOpen()) return true;
+	
+	ssize_t readLength = 0;
+	unsigned char data[UVLC_MAX_SIZE];
+	if((readLength = m_videoSocket.recv(data, sizeof(data))) < 0 && errno != EAGAIN) {
+		perror("recvfrom");
+		return false;
+	}
+	if(readLength < 0) return true;
+	std::cout << "Read " << readLength << " bytes from video stream" << std::endl;
+	Private::UvlcVideoDecoder().decode(data, readLength, m_image);
+	return true;
+}
+
+bool DroneController::wakeupStream(Socket &socket, const Address &address)
+{
+	if(!socket.isOpen()) return false;
+	
+	const static char dummy[4] = { 0x01, 0x00, 0x00, 0x00 };
+	if(socket.sendto(dummy, sizeof(dummy), address) != sizeof(dummy)) {
+		perror("DroneController::wakeupStream -> sendto");
+		return false;
+	}
+	
 	return true;
 }
 
@@ -488,26 +630,33 @@ void DroneController::__enumerateOptions()
 	const navdata_t *const navdata = latestNavdata();
 	if(!navdata || navdata->header != ARDRONE_NAVDATA_HEADER) return;
 	
-	const navdata_option_t *option = navdata->options;
-	// std::cout << "Got tag: " << (int)option->tag << std::endl;
-	// std::cout << "\tsize:  " << (int)option->size << " (navdata_demo_t size: " << sizeof(navdata_demo_t) << ")" << std::endl;
-	for(int i = 0; i < 3; option += option->size, ++i) {
-		std::cout << "Got tag: " << (int)option->tag << std::endl;
-		std::cout << "\tsize:  " << (int)option->size << " (navdata_demo_t size: " << sizeof(navdata_demo_t) << ")" << std::endl;
+	const char *offset = reinterpret_cast<const char *>(navdata->options);
+	for(;;) {
+		const navdata_option_t *const option = reinterpret_cast<const navdata_option_t *const>(offset);
+		if(option->tag == ARDRONE_NAVDATA_CKS_TAG) break;
+		offset += option->size;
+		
+		switch(option->tag) {
+		case ARDRONE_NAVDATA_DEMO_TAG:
+			m_navdataDemo = reinterpret_cast<const navdata_demo_t *>(option->data);
+			break;
+		}
+		// std::cout << "Got tag: " << (int)option->tag << std::endl;
+		// std::cout << "\tsize:  " << (int)option->size << " (navdata_raw_t size: " << sizeof(navdata_raw_t) << ")" << std::endl;
 	}
 }
 
-bool DroneController::update()
+bool DroneController::sendCurrentCommand()
 {
 	// Nothing to do.
-	if(m_commandStack.empty() || m_fd < 0) return true;
+	if(m_commandStack.empty() || !m_atSocket.isOpen()) return true;
 	
 	char realCommand[ARDRONE_MAX_CMD_LENGTH];
 	sprintf(realCommand, m_commandStack.top().data, m_seq.next());
 	
-	printf("Sending %s\n", realCommand);
-	if(sendto(m_fd, realCommand, strlen(realCommand), 0,
-		(const sockaddr *)&m_addr, sizeof(m_addr)) < 0) {
+	std::cout << "Sending " << realCommand << std::endl;
+	
+	if(m_atSocket.sendto(realCommand, strlen(realCommand), m_atAddress) < 0) {
 		perror("DroneController::run -> sendto");
 		return false;
 	}
@@ -515,69 +664,50 @@ bool DroneController::update()
 	return true;
 }
 
+bool DroneController::setupSocket(Socket &socket, const unsigned short bindTo) const
+{
+	socket.close();
+	socket = Socket::udp();
+	
+	bool success = true;
+	success &= socket.setBlocking(false);
+	success &= socket.setReusable(true);
+	if(bindTo) success &= socket.bind(bindTo);
+	if(!success) socket.close();
+	
+	return success;
+}
+
 ARDrone::~ARDrone()
 {
 	disconnect();
 }
 	
-bool ARDrone::connect(const char *ip)
+bool ARDrone::connect(const char *const ip)
 {
-	m_fd = socket(AF_INET, SOCK_DGRAM, 0);
-	if(m_fd < 0) return false;
+	m_controller->setAtAddress(Address(ip, ARDRONE_AT_PORT));
+	m_controller->setNavdataAddress(Address(ip, ARDRONE_NAVDATA_PORT));
+	m_controller->setVideoAddress(Address(ip, ARDRONE_VIDEO_PORT));
 	
-	const int flags = fcntl(m_fd, F_GETFL);
-	fcntl(m_fd, F_SETFL, flags | O_NONBLOCK);
-	
-	sockaddr_in bindAddr;
-	memset(&bindAddr, 0, sizeof(bindAddr));
-	bindAddr.sin_family = AF_INET;
-	bindAddr.sin_addr.s_addr = htonl(INADDR_ANY);
-	bindAddr.sin_port = htons(ARDRONE_NAVDATA_PORT);
-	if(bind(m_fd, (struct sockaddr *)&bindAddr, sizeof(bindAddr)) < 0) {
-		perror("bind");
-		close(m_fd);
-		return false;
-	}
-	
-	const int yes = 1;
-	setsockopt(m_fd, SOL_SOCKET, SO_REUSEADDR, &yes, sizeof(yes));
-	
-	sockaddr_in si_other;
-	memset(&si_other, 0, sizeof(si_other));
-	si_other.sin_family = AF_INET;
-	si_other.sin_port = htons(ARDRONE_AT_PORT);
-	if(inet_aton(ip, &si_other.sin_addr) == 0) {
-		perror("inet_aton");
-		close(m_fd);
-		return false;
-	}
-		
-	m_controller->setup(si_other, m_fd);
 	m_controller->sendMagic();
-	m_controller->config(ARDRONE_NAVDATA_DEMO, ARDRONE_TRUE);
+	m_controller->setNavdataDemo(true);
+	m_controller->setVideoCodec(ARDRONE_VIDEO_UVLC_CODEC);
 	m_controller->control();
 	
 	// Set ourself as the owner
-	// m_controller->config("network:ssid_single_player","myArdroneNetwork");
-	// m_controller->setOwner("14:10:9f:e3:6c:fd");
-	
-	// std::cout << m_controller->currentConfig() << std::endl;
+	m_controller->setSsid("Braden's Drone");
+	// m_controller->setOwner("48:5d:60:a3:af:c4");
 	
 	return true;
 }
 
 void ARDrone::disconnect()
 {
-	// Already disconnected?
-	if(m_fd < 0) return;
-	
 	m_controller->land(true);
 	msleep(100);
 	// while(state() != ARDrone::Landed) msleep(100);
 	
 	m_controller->invalidate();
-	
-	close(m_fd);
 }
 
 void ARDrone::flatTrim()
@@ -605,6 +735,18 @@ void ARDrone::move(const float x, const float y, const float z, const float yaw)
 	m_controller->move(x, y, z, yaw);
 }
 
+cv::Mat ARDrone::video() const
+{
+	const Private::Image &image = m_controller->image();
+	if(image.width <= 0 || image.height <= 0) return cv::Mat();
+	cv::Mat mat(image.height, image.width, CV_8UC3);
+	memcpy(mat.ptr(), image.data, image.height * image.width * 3);
+	cv::Mat bgr = mat;
+	cv::cvtColor(bgr, mat, CV_RGB2BGR);
+	cv::imshow("AR.Drone Camera", mat);
+	return mat;
+}
+
 ARDrone::State ARDrone::state() const
 {
 	// TODO: Stub
@@ -628,7 +770,6 @@ ARDrone *ARDrone::instance()
 
 ARDrone::ARDrone()
 	: m_controller(new DroneController)
-	, m_fd(-1)
 {
 	m_controller->start();
 }
