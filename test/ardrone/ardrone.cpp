@@ -1,6 +1,7 @@
 #include "kovan/kovan.hpp"
 #include <cstdlib>
 #include <iostream>
+#include <opencv2/opencv.hpp>
 
 int main(int argc, char *argv[])
 {
@@ -15,15 +16,13 @@ int main(int argc, char *argv[])
 	std::cout << "flying? " << (drone->state() == ARDrone::Flying) << std::endl;
 	
 	drone->takeoff();
-	msleep(5000);
 	
-	std::cout << "flying? " << (drone->state() == ARDrone::Flying) << std::endl;
-	
-	// drone->move(0.0f, 0.0f, 0.0f, 1.0f);
-	// msleep(10000);
-	
-	// drone->hover();
-	// msleep(10000);
+	const double start = seconds();
+	while(seconds() - start < 20.0) {
+		drone->video();
+		cv::waitKey(1);
+		msleep(10);
+	}
 	
 	drone->land();
 	msleep(2000);
