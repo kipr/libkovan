@@ -41,6 +41,8 @@
 
 #include <stdint.h>
 
+#define ARDRONE_DEBUG
+
 struct navdata_option_t
 {
 	// Navdata block ('option') identifier
@@ -598,7 +600,12 @@ bool DroneController::fetchNavdata()
 
 bool DroneController::fetchVideo()
 {
-	if(!m_videoSocket.isOpen()) return true;
+	if(!m_videoSocket.isOpen()) {
+#ifdef ARDRONE_DEBUG
+		std::cout << "Video socket is not open. fetchVideo will silently fail." << std::endl;
+#endif
+		return true;
+	}
 	
 	ssize_t readLength = 0;
 	unsigned char data[UVLC_MAX_SIZE];
@@ -606,15 +613,27 @@ bool DroneController::fetchVideo()
 		perror("recvfrom");
 		return false;
 	}
-	if(readLength < 0) return true;
+	if(readLength < 0) {
+#ifdef ARDRONE_DEBUG
+		std::cout << "Didn't read any data from video stream." << std::endl;
+#endif
+		return true;
+	}
+#ifdef ARDRONE_DEBUG
 	std::cout << "Read " << readLength << " bytes from video stream" << std::endl;
+#endif
 	Private::UvlcVideoDecoder().decode(data, readLength, m_image);
 	return true;
 }
 
 bool DroneController::wakeupStream(Socket &socket, const Address &address)
 {
-	if(!socket.isOpen()) return false;
+	if(!socket.isOpen()) {
+#ifdef ARDRONE_DEBUG
+		std::cout << "Failed to wakeup stream using invalid socket." << std::endl;
+#endif
+		return false;
+	}
 	
 	const static char dummy[4] = { 0x01, 0x00, 0x00, 0x00 };
 	if(socket.sendto(dummy, sizeof(dummy), address) != sizeof(dummy)) {
@@ -649,7 +668,12 @@ void DroneController::__enumerateOptions()
 bool DroneController::sendCurrentCommand()
 {
 	// Nothing to do.
-	if(m_commandStack.empty() || !m_atSocket.isOpen()) return true;
+	if(m_commandStack.empty() || !m_atSocket.isOpen()) {
+#ifdef ARDRONE_DEBUG
+		std::cout << "Waiting on valid socket and non-empty command stack" << std::endl;
+#endif
+		return true;
+	}
 	
 	char realCommand[ARDRONE_MAX_CMD_LENGTH];
 	sprintf(realCommand, m_commandStack.top().data, m_seq.next());
