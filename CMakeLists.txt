@@ -35,6 +35,8 @@ ELSEIF(UNIX)
 	SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fPIC")
 ENDIF()
 
+add_definitions(-O3)
+
 ADD_LIBRARY(kovan SHARED ${SOURCES})
 IF(NOT WIN32)
 TARGET_LINK_LIBRARIES(kovan pthread opencv_core opencv_highgui opencv_imgproc zbar)
