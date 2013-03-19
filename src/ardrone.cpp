@@ -593,7 +593,9 @@ bool DroneController::fetchNavdata()
 		return false;
 	}
 	if(readLength < 0) return true;
+#ifdef ARDRONE_DEBUG
 	std::cout << "Read " << readLength << " bytes from navdata stream" << std::endl;
+#endif
 	memcpy(m_navdata, data, sizeof(m_navdata));
 	return true;
 }
@@ -678,7 +680,9 @@ bool DroneController::sendCurrentCommand()
 	char realCommand[ARDRONE_MAX_CMD_LENGTH];
 	sprintf(realCommand, m_commandStack.top().data, m_seq.next());
 	
+#ifdef ARDRONE_DEBUG
 	std::cout << "Sending " << realCommand << std::endl;
+#endif
 	
 	if(m_atSocket.sendto(realCommand, strlen(realCommand), m_atAddress) < 0) {
 		perror("DroneController::run -> sendto");
