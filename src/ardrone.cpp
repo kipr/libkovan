@@ -41,7 +41,7 @@
 
 #include <stdint.h>
 
-#define ARDRONE_DEBUG
+// #define ARDRONE_DEBUG
 
 struct navdata_option_t
 {
