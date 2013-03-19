@@ -104,7 +104,7 @@ bool Socket::setReusable(const bool reusable)
 {
 	if(m_fd < 0) return false;
 	
-	const int v = reusable? 1 : 0;
+	const int v = reusable ? 1 : 0;
 	return setsockopt(m_fd, SOL_SOCKET, SO_REUSEADDR, &v, sizeof(v)) >= 0;
 }
 
