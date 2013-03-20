@@ -10,7 +10,7 @@ class DeviceSingleton
 public:
 	static Camera::Device *instance()
 	{
-		static Camera::Device s_device;
+		static Camera::Device s_device(new Camera::UsbInputProvider);
 		return &s_device;
 	}
 };
@@ -43,16 +43,6 @@ int camera_open(enum Resolution res)
 int camera_open_device(int number)
 {
 	return DeviceSingleton::instance()->open(number) ? 1 : 0;
-}
-
-void set_camera_grab_count(int grabs)
-{
-	DeviceSingleton::instance()->setGrabCount(grabs);
-}
-
-int get_camera_grab_count()
-{
-	return DeviceSingleton::instance()->grabCount();
 }
 
 int camera_load_config(const char *name)

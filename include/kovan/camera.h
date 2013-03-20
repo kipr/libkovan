@@ -63,10 +63,6 @@ EXPORT_SYM int camera_open(enum Resolution res);
  */
 EXPORT_SYM int camera_open_device(int number);
 
-EXPORT_SYM void set_camera_grab_count(int grabs);
-
-EXPORT_SYM int get_camera_grab_count();
-
 /**
  * Loads the config file specified by name.
  * \param name The configuration to load. Configuration file names are case sensitive.

@@ -12,16 +12,22 @@
 
 int main(int argc, char *argv[])
 {
-	Camera::Device device;
-	if(!device.open(0)) {
+	
+	ARDrone *drone = ARDrone::instance();
+	if(!drone->connect()) {
+		std::cout << "Failed to connect to drone" << std::endl;
 		return 1;
 	}
-	device.setWidth(320);
-	device.setHeight(240);
+	
+	Camera::Device device(new Camera::ARDroneInputProvider);
+	if(!device.open()) return 1;
+	
+	// device.setWidth(320);
+	// device.setHeight(240);
 	cv::namedWindow("Blobs");
 
 	Config config;
-	config.setValue("camera/num_channels", 2);
+	config.setValue("camera/num_channels", 1);
 	config.setValue("camera/channel_0/type", "hsv");
 	
 	config.setValue("camera/channel_0/th", 10);
@@ -32,8 +38,6 @@ int main(int argc, char *argv[])
 	config.setValue("camera/channel_0/bs", 150);
 	config.setValue("camera/channel_0/bv", 100);
 	
-	config.setValue("camera/channel_1/type", "barcode");
-	
 	device.setConfig(config);
 
 	time_t start, end;
@@ -42,17 +46,32 @@ int main(int argc, char *argv[])
 
 	time(&start);
 
+	drone->takeoff();
+	msleep(10000);
+
 	cv::Mat image;
 	while(cv::waitKey(1) == -1) {
 		device.update();
-		device.videoCapture()->retrieve(image);
-		const Camera::ObjectVector *objects = device.channels()[1]->objects();
+		image = device.rawImage();
+		if(image.empty()) continue;
+		const Camera::ObjectVector *objects = device.channels()[0]->objects();
 		if(!objects) continue;
 		Camera::ObjectVector::const_iterator it = objects->begin();
 		for(; it != objects->end(); ++it) {
 			const Camera::Object &object = *it;
 			cv::rectangle(image, cv::Rect(object.boundingBox().x(), object.boundingBox().y(),
 				object.boundingBox().width(), object.boundingBox().height()), cv::Scalar(0, 255, 0));
+		}
+		
+		if(objects->size() > 0) {
+			Camera::Object obj = objects->at(0);
+			if(obj.boundingBox().center().x() < image.size().width / 2) {
+				drone->move(0.0f, 0.0f, 0.0f, -0.3f);
+				std::cout << "left" << std::endl;
+			} else {
+				drone->move(0.0f, 0.0f, 0.0f, 0.3f);
+				std::cout << "right" << std::endl;
+			}
 		}
 		
 		time(&end);
@@ -69,7 +88,11 @@ int main(int argc, char *argv[])
 		cv::imshow("Blobs", image);
 	}
 	
+	drone->land();
+	msleep(3000);
+	
 	device.close();
+	drone->disconnect();
 	
 	cv::destroyAllWindows();
 }

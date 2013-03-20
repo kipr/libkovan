@@ -134,12 +134,12 @@ bool Socket::close()
 	return ret;
 }
 
-ssize_t Socket::recv(void *buffer, const size_t length, int flags)
+ssize_t Socket::recv(void *const buffer, const size_t length, int flags)
 {
 	return ::recv(m_fd, buffer, length, flags);
 }
 
-ssize_t Socket::recvfrom(void *buffer, const size_t length, Address &address, int flags)
+ssize_t Socket::recvfrom(void *const buffer, const size_t length, Address &address, int flags)
 {
 	sockaddr_in rawAddress;
 	socklen_t rawAddressLength;

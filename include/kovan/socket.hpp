@@ -41,8 +41,8 @@ public:
 	bool bind(const unsigned short port);
 	bool close();
 	
-	ssize_t recv(void *buffer, const size_t length, int flags = 0);
-	ssize_t recvfrom(void *buffer, const size_t length, Address &address, int flags = 0);
+	ssize_t recv(void *const buffer, const size_t length, int flags = 0);
+	ssize_t recvfrom(void *const buffer, const size_t length, Address &address, int flags = 0);
 	
 	ssize_t send(const void *const buffer, const size_t length, int flags = 0);
 	ssize_t sendto(const void *const buffer, const size_t length, const Address &dest, int flags = 0);

@@ -657,37 +657,6 @@ void ProcessStream()
 	}
 }
 
-bool decodeImage(const unsigned char *const stream, const size_t streamLength, Private::Image &resultImage)
-{
-	Width = Height = -1;
-	ImageStream = stream;
-	ImageStreamLength = streamLength;
-	ProcessStream();
-	resultImage.width = Width;
-	resultImage.height = Height;
-	
-	if(Width < 0 || Height < 0) {
-		std::cout << "image decoding FAIL!!" << std::endl;
-		return false;
-	}
-	
-	const static unsigned short red_mask = 0xF800;
-	const static unsigned short green_mask = 0x07E0;
-	const static unsigned short blue_mask = 0x001F;
-	
-	size_t length = Width * Height;
-	for(int i = 0, j = 0; i < length; i++, j += 3) {
-		unsigned char red = (PixelData[i] & red_mask) >> 11;
-		unsigned char green = (PixelData[i] & green_mask) >> 5;
-		unsigned char blue = (PixelData[i] & blue_mask);
-		
-		resultImage.data[j + 0] = red << 3;
-		resultImage.data[j + 1] = green << 2;
-		resultImage.data[j + 2] = blue << 3;
-	}  
-	return true;
-}
-
 Private::UvlcVideoDecoder::UvlcVideoDecoder()
 {
 }
@@ -696,7 +665,36 @@ Private::UvlcVideoDecoder::~UvlcVideoDecoder()
 {
 }
 
-void Private::UvlcVideoDecoder::decode(const unsigned char *const buffer, const size_t length, Private::Image &image)
+bool Private::UvlcVideoDecoder::decode(const unsigned char *const buffer, const size_t length, cv::Mat &image)
 {
-	if(!decodeImage(buffer, length, image)) return;
+	Width = Height = -1;
+	ImageStream = buffer;
+	ImageStreamLength = length;
+	ProcessStream();
+	ImageStream = 0;
+	
+	if(Width < 0 || Height < 0) {
+		std::cout << "image decoding FAIL!!" << std::endl;
+		return false;
+	}
+	
+	image = cv::Mat(Height, Width, CV_8UC3);
+	
+	const static unsigned short red_mask = 0xF800;
+	const static unsigned short green_mask = 0x07E0;
+	const static unsigned short blue_mask = 0x001F;
+	
+	size_t imageLength = Width * Height;
+	for(int i = 0, j = 0; i < imageLength; i++, j += 3) {
+		unsigned char red = (PixelData[i] & red_mask) >> 11;
+		unsigned char green = (PixelData[i] & green_mask) >> 5;
+		unsigned char blue = (PixelData[i] & blue_mask) >> 0;
+		
+		// OpenCV expects BGR
+		image.at<unsigned char>(j + 2) = red << 3;
+		image.at<unsigned char>(j + 1) = green << 2;
+		image.at<unsigned char>(j + 0) = blue << 3;
+	}
+	
+	return true;
 }

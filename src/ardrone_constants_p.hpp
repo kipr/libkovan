@@ -38,6 +38,7 @@
 #define ARDRONE_NETWORK_OWNER_MAC ("network:owner_mac")
 #define ARDRONE_NETWORK_SSID ("network:ssid_single_player")
 #define ARDRONE_VIDEO_CODEC ("video:video_codec")
+#define ARDRONE_VIDEO_CHANNEL ("video:video_channel")
 
 // Navdata
 #define ARDRONE_NAVDATA_HEADER (0x55667788)
@@ -114,6 +115,10 @@ typedef enum {
 #define ARDRONE_VIDEO_NULL_CODEC (0x00)
 #define ARDRONE_VIDEO_UVLC_CODEC (0x20)
 #define ARDRONE_VIDEO_P264_CODEC (0x40)
+
+// Used in conjunction with video:video_channel
+#define ARDRONE_FRONT_CAMERA (0)
+#define ARDRONE_BOTTOM_CAMERA (1)
 
 // Application IDs
 #define ARDRONE_APPLICATION_ID ("d87f7e0c")

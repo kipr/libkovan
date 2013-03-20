@@ -1,4 +1,5 @@
 #include "kovan/camera.hpp"
+#include "kovan/ardrone.hpp"
 #include "channel_p.hpp"
 #include "warn.hpp"
 
@@ -232,12 +233,63 @@ void Camera::ConfigPath::setDefaultConfigPath(const std::string &name)
 	file.close();	
 }
 
+// Input Providers //
+
+InputProvider::~InputProvider()
+{
+}
+
+UsbInputProvider::UsbInputProvider()
+	: m_capture(new cv::VideoCapture)
+{
+}
+
+UsbInputProvider::~UsbInputProvider()
+{
+	delete m_capture;
+}
+
+bool UsbInputProvider::open(const int number)
+{
+	if(m_capture->isOpened()) return false;
+	return m_capture->open(number);
+}
+
+bool UsbInputProvider::isOpen() const
+{
+	return m_capture->isOpened();
+}
+
+void UsbInputProvider::setWidth(const unsigned width)
+{
+	m_capture->set(CV_CAP_PROP_FRAME_WIDTH, width);
+}
+
+void UsbInputProvider::setHeight(const unsigned height)
+{
+	m_capture->set(CV_CAP_PROP_FRAME_HEIGHT, height);
+}
+
+bool UsbInputProvider::next(cv::Mat &image)
+{
+	bool success = true;
+	success &= m_capture->grab();
+	success &= m_capture->retrieve(image);
+	return success;
+}
+
+bool UsbInputProvider::close()
+{
+	if(!m_capture->isOpened()) return false;
+	m_capture->release();
+	return true;
+}
+
 // Device //
 
-Camera::Device::Device()
-	: m_capture(new cv::VideoCapture),
-	m_channelImplManager(new DefaultChannelImplManager),
-	m_grabCount(1)
+Camera::Device::Device(InputProvider *const inputProvider)
+	: m_inputProvider(inputProvider),
+	m_channelImplManager(new DefaultChannelImplManager)
 {
 	Config *config = Config::load(Camera::ConfigPath::defaultConfigPath());
 	if(!config) return;
@@ -249,58 +301,37 @@ Camera::Device::~Device()
 {
 	ChannelPtrVector::iterator it = m_channels.begin();
 	for(; it != m_channels.end(); ++it) delete *it;
-	delete m_capture;
 }
 
-bool Camera::Device::open(const int &number)
+bool Camera::Device::open(const int number)
 {
-	if(m_capture->isOpened()) return true;
-	return m_capture->open(number);
+	return m_inputProvider->open(number);
 }
 
 bool Camera::Device::isOpen() const
 {
-	return m_capture->isOpened();
+	return m_inputProvider->isOpen();
 }
 
-void Camera::Device::setWidth(const unsigned &width)
+void Camera::Device::setWidth(const unsigned width)
 {
-	m_capture->set(CV_CAP_PROP_FRAME_WIDTH, width);
+	m_inputProvider->setWidth(width);
 }
 
-void Camera::Device::setHeight(const unsigned &height)
+void Camera::Device::setHeight(const unsigned height)
 {
-	m_capture->set(CV_CAP_PROP_FRAME_HEIGHT, height);
+	m_inputProvider->setHeight(height);
 }
 
-void Camera::Device::setGrabCount(unsigned char grabs)
+bool Camera::Device::close()
 {
-	if(grabs < 1) grabs = 1;
-	else if(grabs > 5) grabs = 5;
-	m_grabCount = grabs;
-}
-
-unsigned char Camera::Device::grabCount() const
-{
-	return m_grabCount;
-}
-
-void Camera::Device::close()
-{
-	if(!m_capture->isOpened()) return;
-	m_capture->release();
+	return m_inputProvider->close();
 }
 
 bool Camera::Device::update()
 {
 	// Get new image
-	bool success = true;
-	for(unsigned char i = 0; i < m_grabCount; ++i) {
-		success &= m_capture->grab();
-	}
-	success &= m_capture->retrieve(m_image);
-	
-	if(!success) return false;
+	if(!m_inputProvider->next(m_image)) return false;
 	
 	// No need to update channels if there are none.
 	if(m_channels.empty()) return true;
@@ -309,7 +340,7 @@ bool Camera::Device::update()
 	m_channelImplManager->setImage(m_image);
 	
 	// Invalidate all channels
-	ChannelPtrVector::iterator it = m_channels.begin();
+	ChannelPtrVector::const_iterator it = m_channels.begin();
 	for(; it != m_channels.end(); ++it) (*it)->invalidate();
 	return true;
 }
@@ -319,9 +350,9 @@ const ChannelPtrVector &Camera::Device::channels() const
 	return m_channels;
 }
 
-cv::VideoCapture *Camera::Device::videoCapture() const
+InputProvider *Camera::Device::inputProvider() const
 {
-	return m_capture;
+	return m_inputProvider;
 }
 
 const cv::Mat &Camera::Device::rawImage() const
@@ -353,7 +384,7 @@ ChannelImplManager *Camera::Device::channelImplManager() const
 
 void Camera::Device::updateConfig()
 {
-	ChannelPtrVector::iterator it = m_channels.begin();
+	ChannelPtrVector::const_iterator it = m_channels.begin();
 	for(; it != m_channels.end(); ++it) delete *it;
 	m_channels.clear();
 	

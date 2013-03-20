@@ -9,7 +9,7 @@ int main(int argc, char *argv[])
 	if(!drone->connect()) {
 		return EXIT_FAILURE;
 	}
-
+	drone->setActiveCamera(ARDrone::Front);
 	drone->flatTrim();
 	msleep(1000);
 	
@@ -19,11 +19,9 @@ int main(int argc, char *argv[])
 	
 	const double start = seconds();
 	while(seconds() - start < 20.0) {
-		cv::Mat mat = drone->video();
-		if(mat.empty()) std::cout << ".";
-		else cv::imshow("test", mat);
+		// drone->rawImage();
 		cv::waitKey(1);
-		msleep(10);
+		msleep(30);
 	}
 	
 	drone->land();

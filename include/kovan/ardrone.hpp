@@ -22,10 +22,11 @@
 #define _ARDRONE_HPP_
 
 #include <opencv2/core/core.hpp>
+#include "kovan/camera.hpp"
 
 class DroneController;
 
-class ARDrone
+class EXPORT_SYM ARDrone
 {
 public:
 	enum State
@@ -35,10 +36,20 @@ public:
 		Flying
 	};
 	
+	enum Camera
+	{
+		None = 0,
+		Front,
+		Bottom
+	};
+	
 	~ARDrone();
 	
-	bool connect(const char *const ip = "192.168.1.1");
+	bool connect(const char *const ip = "192.168.1.1", const double timeout = 2.0);
 	void disconnect();
+	
+	void setActiveCamera(const Camera activeCamera);
+	Camera activeCamera() const;
 	
 	void flatTrim();
 	void takeoff();
@@ -47,7 +58,7 @@ public:
 	void hover();
 	void move(const float x, const float y, const float z, const float yaw);
 	
-	cv::Mat video() const;
+	const cv::Mat &rawImage() const;
 	
 	ARDrone::State state() const;
 	
@@ -57,8 +68,25 @@ private:
 	ARDrone();
 	
 	DroneController *m_controller;
+	Camera m_activeCamera;
 };
 
-
+namespace Camera
+{
+	class EXPORT_SYM ARDroneInputProvider : public InputProvider
+	{
+	public:
+		ARDroneInputProvider();
+		virtual bool open(const int number);
+		virtual bool isOpen() const;
+		virtual void setWidth(const unsigned width);
+		virtual void setHeight(const unsigned height);
+		virtual bool next(cv::Mat &image);
+		virtual bool close();
+		
+	private:
+		bool m_opened;
+	};
+}
 
 #endif

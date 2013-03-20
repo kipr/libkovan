@@ -160,25 +160,52 @@ namespace Camera
 		static std::string s_path;
 	};
 	
+	class EXPORT_SYM InputProvider
+	{
+	public:
+		virtual ~InputProvider();
+		virtual bool open(const int number) = 0;
+		virtual bool isOpen() const = 0;
+		virtual void setWidth(const unsigned width) = 0;
+		virtual void setHeight(const unsigned height) = 0;
+		virtual bool next(cv::Mat &image) = 0;
+		virtual bool close() = 0;
+	};
+	
+	class EXPORT_SYM UsbInputProvider : public InputProvider
+	{
+	public:
+		UsbInputProvider();
+		~UsbInputProvider();
+		
+		virtual bool open(const int number);
+		virtual bool isOpen() const;
+		virtual void setWidth(const unsigned width);
+		virtual void setHeight(const unsigned height);
+		virtual bool next(cv::Mat &image);
+		virtual bool close();
+		
+	private:
+		cv::VideoCapture *m_capture;
+	};
+	
 	class EXPORT_SYM Device
 	{
 	public:
-		Device();
+		Device(InputProvider *const inputProvider);
 		~Device();
 		
-		bool open(const int &number = 0);
+		bool open(const int number = 0);
 		bool isOpen() const;
-		void close();
+		bool close();
 		bool update();
 		
-		void setWidth(const unsigned &width);
-		void setHeight(const unsigned &height);
-		void setGrabCount(unsigned char grabs);
-		unsigned char grabCount() const;
+		void setWidth(const unsigned width);
+		void setHeight(const unsigned height);
 		
 		const ChannelPtrVector &channels() const;
 		
-		cv::VideoCapture *videoCapture() const;
+		InputProvider *inputProvider() const;
 		const cv::Mat &rawImage() const;
 		
 		void setConfig(const Config &config);
@@ -190,11 +217,10 @@ namespace Camera
 	private:
 		void updateConfig();
 		
+		InputProvider *const m_inputProvider;
 		Config m_config;
-		cv::VideoCapture *m_capture;
 		ChannelPtrVector m_channels;
 		ChannelImplManager *m_channelImplManager;
-		unsigned char m_grabCount;
 		cv::Mat m_image;
 		timeval m_lastUpdate;
 	};
