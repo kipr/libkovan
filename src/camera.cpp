@@ -81,6 +81,11 @@ ChannelImpl::~ChannelImpl()
 
 void ChannelImpl::setImage(const cv::Mat &image)
 {
+	if(image.empty()) {
+		m_image = cv::Mat();
+		m_dirty = true;
+		return;
+	}
 	m_image = image;
 	m_dirty = true;
 }
@@ -242,6 +247,8 @@ InputProvider::~InputProvider()
 UsbInputProvider::UsbInputProvider()
 	: m_capture(new cv::VideoCapture)
 {
+	setWidth(160);
+	setHeight(120);
 }
 
 UsbInputProvider::~UsbInputProvider()
@@ -331,7 +338,10 @@ bool Camera::Device::close()
 bool Camera::Device::update()
 {
 	// Get new image
-	if(!m_inputProvider->next(m_image)) return false;
+	if(!m_inputProvider->next(m_image)) {
+		m_image = cv::Mat();
+		return false;
+	}
 	
 	// No need to update channels if there are none.
 	if(m_channels.empty()) return true;

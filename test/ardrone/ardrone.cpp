@@ -19,7 +19,8 @@ int main(int argc, char *argv[])
 	
 	const double start = seconds();
 	while(seconds() - start < 20.0) {
-		// drone->rawImage();
+		cv::Mat m = drone->rawImage();
+		std::cout << m.size().width << " x " << m.size().height << std::endl;
 		cv::waitKey(1);
 		msleep(30);
 	}

@@ -22,21 +22,23 @@ int main(int argc, char *argv[])
 	Camera::Device device(new Camera::ARDroneInputProvider);
 	if(!device.open()) return 1;
 	
+	//drone->setActiveCamera(ARDrone::Bottom);
+	
 	// device.setWidth(320);
 	// device.setHeight(240);
 	cv::namedWindow("Blobs");
 
 	Config config;
 	config.setValue("camera/num_channels", 1);
-	config.setValue("camera/channel_0/type", "hsv");
+	config.setValue("camera/channel_0/type", "qr");
 	
-	config.setValue("camera/channel_0/th", 10);
-	config.setValue("camera/channel_0/ts", 240);
-	config.setValue("camera/channel_0/tv", 175);
+	config.setValue("camera/channel_0/th", 75);
+	config.setValue("camera/channel_0/ts", 200);
+	config.setValue("camera/channel_0/tv", 225);
 	
-	config.setValue("camera/channel_0/bh", 160);
-	config.setValue("camera/channel_0/bs", 150);
-	config.setValue("camera/channel_0/bv", 100);
+	config.setValue("camera/channel_0/bh", 51);
+	config.setValue("camera/channel_0/bs", 55);
+	config.setValue("camera/channel_0/bv", 85);
 	
 	device.setConfig(config);
 
@@ -47,9 +49,10 @@ int main(int argc, char *argv[])
 	time(&start);
 
 	drone->takeoff();
-	msleep(10000);
+	msleep(4000);
 
 	cv::Mat image;
+	double yaw = 0.0;
 	while(cv::waitKey(1) == -1) {
 		device.update();
 		image = device.rawImage();
@@ -65,14 +68,14 @@ int main(int argc, char *argv[])
 		
 		if(objects->size() > 0) {
 			Camera::Object obj = objects->at(0);
-			if(obj.boundingBox().center().x() < image.size().width / 2) {
-				drone->move(0.0f, 0.0f, 0.0f, -0.3f);
-				std::cout << "left" << std::endl;
-			} else {
-				drone->move(0.0f, 0.0f, 0.0f, 0.3f);
-				std::cout << "right" << std::endl;
-			}
+			std::cout << obj.data() << std::endl;
+			int offset = obj.boundingBox().center().x() - image.size().width / 2;
+			std::cout << offset / (image.size().width / 2.0) * 0.3f << std::endl;
+			yaw = yaw*0.9 + offset*0.05*0.1;
+		} else {
+			yaw = yaw*0.9;
 		}
+		drone->move(0.0f, 0.0f, 0.0f, yaw);
 		
 		time(&end);
 
@@ -89,7 +92,8 @@ int main(int argc, char *argv[])
 	}
 	
 	drone->land();
-	msleep(3000);
+	msleep(2000);
+	
 	
 	device.close();
 	drone->disconnect();

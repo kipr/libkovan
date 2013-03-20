@@ -520,18 +520,18 @@ void DroneController::setActiveCamera(const ARDrone::Camera camera)
 	m_mutex.unlock();
 	if(!m_cameraActivated) return;
 	
-	/*unsigned value = 0;
+	unsigned value = 0;
 	switch(camera) {
 	case ARDrone::Front:
-		value = 1;
+		value = 0;
 		break;
 	case ARDrone::Bottom:
-		value = 2;
+		value = 1;
 		break;
 	default: break;
 	}
 	
-	configure(ARDRONE_VIDEO_CHANNEL, value);*/
+	configure(ARDRONE_VIDEO_CHANNEL, value);
 }
 
 const navdata_t *DroneController::latestNavdata() const
@@ -657,9 +657,11 @@ bool DroneController::fetchNavdata()
 		return false;
 	}
 	if(readLength < 0) return true;
+	
 #ifdef ARDRONE_DEBUG
 	std::cout << "Read " << readLength << " bytes from navdata stream" << std::endl;
 #endif
+	
 	memcpy(m_navdata, data, sizeof(m_navdata));
 	return true;
 }
@@ -809,7 +811,7 @@ bool ARDrone::connect(const char *const ip, const double timeout)
 	m_controller->sendMagic();
 	m_controller->setNavdataDemo(true);
 	m_controller->setVideoCodec(ARDRONE_VIDEO_UVLC_CODEC);
-	// m_controller->setActiveCamera(m_activeCamera);
+	m_controller->setActiveCamera(m_activeCamera);
 	m_controller->control();
 	
 	/* bool gotComm = false;
@@ -880,7 +882,6 @@ void ARDrone::move(const float x, const float y, const float z, const float yaw)
 const cv::Mat &ARDrone::rawImage() const
 {
 	const cv::Mat &mat = m_controller->image();
-	if(!mat.empty()) cv::imshow("AR.Drone Camera", mat);
 	return mat;
 }
 
