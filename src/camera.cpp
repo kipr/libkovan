@@ -299,8 +299,9 @@ Camera::Device::Device(InputProvider *const inputProvider)
 
 Camera::Device::~Device()
 {
-	ChannelPtrVector::iterator it = m_channels.begin();
+	ChannelPtrVector::const_iterator it = m_channels.begin();
 	for(; it != m_channels.end(); ++it) delete *it;
+	delete m_inputProvider;
 }
 
 bool Camera::Device::open(const int number)
