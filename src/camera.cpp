@@ -12,8 +12,8 @@ using namespace Camera;
 
 Camera::Object::Object(const Point2<unsigned> &centroid,
 	const Rectangle<unsigned> &boundingBox,
-	const double &confidence, const char *data,
-	const size_t &dataLength)
+	const double confidence, const char *const data,
+	const size_t dataLength)
 	: m_centroid(centroid),
 	m_boundingBox(boundingBox),
 	m_confidence(confidence),
@@ -55,7 +55,7 @@ const Rectangle<unsigned> &Camera::Object::boundingBox() const
 	return m_boundingBox;
 }
 
-const double &Camera::Object::confidence() const
+const double Camera::Object::confidence() const
 {
 	return m_confidence;
 }
@@ -65,7 +65,7 @@ const char *Camera::Object::data() const
 	return m_data;
 }
 
-const size_t &Camera::Object::dataLength() const
+const size_t Camera::Object::dataLength() const
 {
 	return m_dataLength;
 }

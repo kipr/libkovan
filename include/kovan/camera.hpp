@@ -24,7 +24,7 @@
 #include "geom.hpp"
 #include "color.hpp"
 #include "config.hpp"
- #include "export.h"
+#include "export.h"
 #include <cstring>
 #include <string>
 #include <vector>
@@ -58,16 +58,16 @@ namespace Camera
 	public:
 		Object(const Point2<unsigned> &centroid,
 			const Rectangle<unsigned> &boundingBox,
-			const double &confidence, const char *data = 0,
-			const size_t &dataLength = 0);
+			const double confidence, const char *const data = 0,
+			const size_t dataLength = 0);
 		Object(const Object &rhs);
 		~Object();
 		
 		const Point2<unsigned> &centroid() const;
 		const Rectangle<unsigned> &boundingBox() const;
-		const double &confidence() const;
+		const double confidence() const;
 		const char *data() const;
-		const size_t &dataLength() const;
+		const size_t dataLength() const;
 		
 	private:
 		Point2<unsigned> m_centroid;
