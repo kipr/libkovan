@@ -1,6 +1,7 @@
 #include "kovan/debug.h"
 #include "kovan_p.hpp"
 
+#include <cstdio>
 #include <iostream>
 
 void debug_print_registers()
