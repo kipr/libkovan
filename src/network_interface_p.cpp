@@ -8,7 +8,6 @@
 #include <netdb.h>
 #include <cstring>
 #include <cstdio>
-#include <sys/sockio.h>
 
 using namespace Private;
 
