@@ -394,6 +394,7 @@ public:
 private:
 	void pushCommand(const char *const command);
 	void popCommand();
+	void popAllCommands();
 	void oneTimeCommand(const char *const command);
 	bool sendCurrentCommand();
 	
@@ -559,6 +560,7 @@ void DroneController::run()
 	}
 	m_stop = false;
 	m_seq.reset();
+	popAllCommands();
 	if(m_video) m_video->end();
 }
 
@@ -812,6 +814,13 @@ void DroneController::popCommand()
 	m_mutex.unlock();
 }
 
+void DroneController::popAllCommands()
+{
+	m_mutex.lock();
+	while(!m_commandStack.empty()) m_commandStack.pop();
+	m_mutex.unlock();
+}
+
 void DroneController::oneTimeCommand(const char *const command)
 {
 	pushCommand(command);
@@ -1043,6 +1052,10 @@ ARDrone::~ARDrone()
 	
 bool ARDrone::connect(const char *const ip, const double timeout)
 {
+	m_controller->stop();
+	m_controller->join();
+	m_controller->start();
+	
 	m_controller->setAtAddress(Address(ip, ARDRONE_AT_PORT));
 	m_controller->setNavdataAddress(Address(ip, ARDRONE_NAVDATA_PORT));
 	m_controller->setConfigAddress(Address(ip, ARDRONE_CONFIG_PORT));
@@ -1051,7 +1064,7 @@ bool ARDrone::connect(const char *const ip, const double timeout)
 	
 	if(!m_controller->isValid()) return false;
 	
-	// m_controller->sendMagic();
+	m_controller->sendMagic();
 	m_controller->setNavdataDemo(true);
 	m_controller->setActiveCamera(m_activeCamera);
 	// m_controller->control();
@@ -1082,12 +1095,15 @@ void ARDrone::disconnect()
 {
 	m_controller->land(true);
 	msleep(100);
-	// while(state() != ARDrone::Landed) msleep(100);
+	while(state() != ARDrone::Landed && !m_controller->isNotTalking()) msleep(100);
 	
 	m_controller->invalidate();
 	
 	m_emergencyStop->stop();
 	m_emergencyStop->join();
+	
+	m_controller->stop();
+	m_controller->join();
 }
 
 ARDrone::Version ARDrone::version() const
@@ -1228,7 +1244,6 @@ ARDrone::ARDrone()
 	m_emergencyStop(new Private::ARDroneEmergencyStop(this)),
 	m_activeCamera(ARDrone::None)
 {
-	m_controller->start();
 }
 
 ARDrone::ARDrone(const ARDrone &)
