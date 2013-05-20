@@ -1,22 +1,16 @@
 #include "kovan/camera.h"
 #include "kovan/camera.hpp"
 #include "nyi.h"
+#include "camera_c_p.hpp"
 
 #include <iostream>
 #include <cstdlib>
 
-class DeviceSingleton
-{
-public:
-	static Camera::Device *instance()
-	{
-		static Camera::Device s_device(new Camera::UsbInputProvider);
-		return &s_device;
-	}
-};
+using namespace Private;
 
 int camera_open(enum Resolution res)
 {
+	DeviceSingleton::setInputProvider(new Camera::UsbInputProvider);
 	bool ret = DeviceSingleton::instance()->open();
 	if(!ret) return 0;
 	int width = 0;
@@ -40,9 +34,29 @@ int camera_open(enum Resolution res)
 	return 1;
 }
 
-int camera_open_device(int number)
+int camera_open_device(int number, enum Resolution res)
 {
-	return DeviceSingleton::instance()->open(number) ? 1 : 0;
+	bool ret = DeviceSingleton::instance()->open(number);
+	if(!ret) return 0;
+	int width = 0;
+	int height = 0;
+	switch(res) {
+	case LOW_RES:
+		width = 160;
+		height = 120;
+		break;
+	case MED_RES:
+		width = 320;
+		height = 240;
+		break;
+	case HIGH_RES:
+		width = 640;
+		height = 480;
+		break;
+	}
+	DeviceSingleton::instance()->setWidth(width);
+	DeviceSingleton::instance()->setHeight(height);
+	return 1;
 }
 
 int camera_load_config(const char *name)

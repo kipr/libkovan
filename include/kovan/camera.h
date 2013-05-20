@@ -57,11 +57,15 @@ EXPORT_SYM int camera_open(enum Resolution res);
 /**
  * Opens a camera for use.
  * \param number The camera's id. 0 is the first camera, 1 is the second camera, etc.
+ * \param res The resolution the camera should operate at. This can be:
+ *   - LOW_RES (160x120)
+ *   - MED_RES (320x240)
+ *   - HIGH_RES (640x480)
  * \return 1 on success, 0 on failure
  * \see camera_open
  * \see camera_close
  */
-EXPORT_SYM int camera_open_device(int number);
+EXPORT_SYM int camera_open_device(int number, enum Resolution res);
 
 /**
  * Loads the config file specified by name.

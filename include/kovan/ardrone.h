@@ -26,43 +26,57 @@ extern "C" {
 #endif
 
 /**
- * \brief This function will establish a connection between the drone and the CBC for transmitting information.
+ * \brief Establishes a connection between the drone and the Link.
+ * This function must be called before any other ardrone functions.
  */
-void drone_connect();
+int drone_connect(void);
 
 /*
- * \brief This function will be used to disconnect the drone from the CBC.
+ * \brief Disconnects from the drone.
  */
-void drone_disconnect();
+void drone_disconnect(void);
 
 /**
- * \brief This function will be used to make the drone takeoff and stabilize itself.
+ * \brief Calibrates the drone's accelerometers to understand what "flat" is.
+ */
+void drone_calibrate(void);
+
+/**
+ * \return The version of the currently connected drone. For example, an AR.Drone 1 will return
+ * the integer 1. The value -1 is returned upon error.
+ */ 
+int get_drone_version(void);
+
+/**
+ * \brief Makes the drone takeoff and stabilize itself. This command will return immeadiately.
  * \pre drone_connect must have been previously called to establish a connection to the drone.
  * \post The drone should reach its normal operating height
+ * \see drone_takeoff_block
  */
-void drone_takeoff();
+void drone_takeoff(void);
 
 /**
  * \brief This function will be used to land the drone at its current position.
  * \pre drone_connect must have been previously called to establish a connection to the drone.
  * \post The drone should slowly descend to the ground from its current height.
  */
-void drone_land();
-
-/**
- * \brief This function will be used to immediately turn off the drone rotors or reset the emergency toggle
- * \pre drone_connect must have been previously called to establish a connection to the drone.
- * \post The drone will stop moving and fall to the ground.
- */
-void drone_emergency();
+void drone_land(void);
 
 /**
  * \brief retrieves the cached battery value
  * \pre drone_connect must have been previously called to establish a connection to the drone.
  * \return An integer representing the current battery level 
- * \TODO Specify the range in the above comment 
  */
-int drone_get_battery();
+int get_drone_battery(void);
+
+/**
+ * \brief Clears the accumulated absolute x, y, and z positions of the AR.Drone.
+ * \pre drone_connect must have been previously called to esåtablish a connection to the drone.
+ * \see get_drone_x
+ * \see get_drone_y
+ * \see get_drone_z
+ */  
+void drone_clear_position();
 
 /**
  * \brief Retrieves the x value relative to the drones starting position.  Negative values indicate
@@ -71,83 +85,87 @@ int drone_get_battery();
  * \return x value away from the drones starting position in milimeters
  * \TODO verify it is in fact milimeters
  */
-float drone_get_x();
+float get_drone_x(void);
 
 /**
  * \brief Retrieves the y value relative to the drones starting position.  Negative values indicate
  * the drone has moved backwards from it's starting position.
  * \pre drone_connect must have been previously called to establish a connection to the drone.
  * \return y value away from the drones starting position in milimeters
- * \TODO verify it is in fact milimeters
  **/
-float drone_get_y();
+float get_drone_y(void);
 
 /**
  * \brief Retrieves the y value relative to the drones starting position.  Negative values indicate
  * the drone has moved down from it's starting position.
  * \pre drone_connect must have been previously called to establish a connection to the drone.
  * \return z value away from the drones starting position in milimeters
- * \TODO verify it is in fact milimeters also verify that the z can be negative is it negative from the ground or its air starting position
  */
-float drone_get_z();
+float get_drone_z(void);
 
 /**
  * \brief Retrieves the current velocity in the right or left direction.
  * \pre drone_connect must have been previously called to establish a connection to the drone.
  * \return A float indicating the millimeters per second 
  */
-float drone_get_x_velocity();
+float get_drone_x_velocity(void);
 
 /**
  * \brief Retrieves the current velocity in the forward or backwards direction.
  * \pre drone_connect must have been previously called to establish a connection to the drone.
  * \return A float indicating the velocity in millimeters per second 
  */
-float drone_get_y_velocity();
+float get_drone_y_velocity(void);
 
 /**
  * \brief Retrieves the current velocity in the upward or downwards direction.
  * \pre drone_connect must have been previously called to establish a connection to the drone.
  * \return A float indicating the velocity in millimeters per second 
  */
-float drone_get_z_velocity();
+float get_drone_z_velocity(void);
+
+float get_drone_pitch(void);
+
+float get_drone_roll(void);
+
+float get_drone_altitude(void);
 
 /**
  * \brief Retrieves the current rotation in the clockwise (positive) or counterclockwise (negative) direction.
  * \pre drone_connect must have been previously called to establish a connection to the drone.
  * \return A float indicating the degrees rotated from the original orientation
  */
-float drone_get_yaw();
+float get_drone_yaw(void);
 
-/**
- * \brief Switches the drone vision feed to the front facing camera
- * \pre drone_connect must have been previously called to establish a connection to the drone.
- */
-void drone_front_camera();
-
-/**
- * \brief Switches the drone vision feed to the downward facing camera
- * \pre drone_connect must have been previously called to establish a connection to the drone.
- */
-void drone_down_camera();
-
-/**
- * \brief Starts sending video data to the cbc for vision tracking.
- * \pre drone_connect must have been previously called to establish a connection to the drone.
- */
-void enable_drone_vision();
+enum drone_camera
+{
+	FRONT_CAMERA,
+	BOTTOM_CAMERA
+};
 
 /**
  * \brief Stops the drone from sending data to the cbc for vision tracking.
  * \pre drone_connect must have been previously called to establish a connection to the drone.
+ * \return 1 on success, 0 on failure
  */
-void disable_drone_vision();
+int drone_camera_open(enum drone_camera camera);
 
 /**
- * \brief Sets the Drone's Mac Address Pair to be the given string
- * \param macAddress A string representing the Mac Address of your CBC
+ * \brief Sets the Drone's MAC Address Pair to be the given string
+ * \param macAddress A string representing the MAC Address to pair
+ * \return 1 for success, 0 for failure
+ * \see drone_pair
  */
-void set_drone_Mac_Address(char * macAddress);
+int set_drone_mac_address(const char *const address);
+
+/**
+ * \brief Automatically detects the host MAC Address and pairs the drone with it
+ * \return 1 for success, 0 for failure
+ * \see set_drone_mac_address
+ */
+int drone_pair(void);
+
+int set_drone_ssid(const char *const ssid);
  
 /**
  * \brief Tells the drone to move with the given parameters
@@ -159,46 +177,28 @@ void set_drone_Mac_Address(char * macAddress);
  * \param yaw_vel A value indicating the rotational velocity of the dronein milieters per second
  * \param z_vel A value indicating the change in altitude in milimeters per second
  */
-void drone_move(float x_tilt, float y_tilt, float yaw_vel, float z_vel);
+void drone_move(float x_tilt, float y_tilt, float z_vel, float yaw_vel);
 
 /**
  * \brief Tells the drone that it should stop moving and hover at its current location
  * \pre drone_connect must have been previously called to establish a connection to the drone.
  */
-void drone_hover();
+void drone_hover(void);
 
 /**
- * \brief Tells the drone to hover over the Roundel that it has detected
- * \param shouldHover A integer representing if the drone should hover or not 
- * 1 == True meaning the drone will attempt to hover on a roundel
- * 0 == False meaning the drone will resume normal flight
- * \pre drone_connect must have been previously called to establish a connection to the drone.
- * \pre A roundel must have been detected in the drones vision tags
+ * When developing programs for the AR.Drone, it is often useful to be able to "emergency land".
+ * This will turn the Link's side button into a dedicated AR.Drone "kill switch".
+ * Note that using side_button in conjunction with this function may result in undefined behavior.
+ * \param enabled 0 for off, 1 for on
  */
-void drone_hover_on_roundel(int shouldHover);
+void set_drone_emergency_stop_enabled(int enabled);
 
 /**
- * \brief Switches the channel the drone's altitude meter operates on so that interferance does not occur between two drones
- * \param channel A integer representing which channel to operate on 
- * 1 == True turns the drone to channel A
- * 0 == False turns the drone to channel B
- * \pre drone_connect must have been previously called to establish a connection to the drone.
- */
-void drone_set_ultrasound_channel(int channel);
-
-/**
- * \brief Initializes the drone's onboard video detection
- * \param channel A integer representing which channel to operate on 
- * 0 == Turns the drones detection off
- * 1 == Detects green enemies via the front camera
- * 2 == Detects yellow enemies via the front camera
- * 3 == Detects blue enemies via the front camera
- * 4 == Detects orange/green ground stripes via the bottom camera
- * 5 == Detects yellow/blue ground stripes via the bottom camera
- * 6 == Detects roundels via the bottom camera
- * \pre drone_connect must have been previously called to establish a connection to the drone.
- */
-void drone_set_detection(int detectType);
+ * Gets the previously set emergency stop enabled flag.
+ * \see set_drone_emergency_stop_enabled
+ * \return 1 if emergency stop is enabled, 0 otherwise
+ */ 
+int get_drone_emergency_stop_enabled(void);
 
 #ifdef __cplusplus
 }

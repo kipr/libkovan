@@ -22,9 +22,18 @@
 #define _ARDRONE_HPP_
 
 #include <opencv2/core/core.hpp>
+#include <map>
+#include <string>
+
 #include "kovan/camera.hpp"
+#include "kovan/types.hpp"
 
 class DroneController;
+
+namespace Private
+{
+	class ARDroneEmergencyStop;
+}
 
 class EXPORT_SYM ARDrone
 {
@@ -43,10 +52,52 @@ public:
 		Bottom
 	};
 	
+	enum Version
+	{
+		Unknown = 0,
+		V1,
+		V2
+	};
+	
+	struct NavigationData
+	{
+		uint32_t battery;
+		
+		float pitch;
+		float roll;
+		float yaw;
+		
+		float altitude;
+		
+		Vec3f velocity;
+		Vec3f position;
+	};
+	
 	~ARDrone();
 	
-	bool connect(const char *const ip = "192.168.1.1", const double timeout = 2.0);
+	
+	bool connect(const char *const ip = "192.168.1.1", const double timeout = 3.0);
+	
+	/**
+	 * Disconnects from the AR.Drone. The AR.Drone will perform an emergency landing (violently falling).
+	 */
 	void disconnect();
+	
+	/**
+	 * Gets the version of the connected AR.Drone
+	 */
+	Version version() const;
+	
+	NavigationData navigationData() const;
+	
+	void clearPosition();
+	
+	/**
+	 * Sets the SSID of the drone. The drone must be rebooted for this
+	 * change to take effect.
+	 * \param ssid The new ssid
+	 */
+	void setSsid(const char *const ssid);
 	
 	void setActiveCamera(const Camera activeCamera);
 	Camera activeCamera() const;
@@ -55,10 +106,23 @@ public:
 	void takeoff();
 	void land();
 	
+	void setEmergencyStopEnabled(const bool emergencyStopEnabled);
+	bool isEmergencyStopEnabled() const;
+	
+	void setOwnerAddress(const char *const address);
+	void pair();
+	
+	/**
+	 * Tells the AR.Drone to hover. This is equivalent to move(0.0f, 0.0f, 0.0f, 0.0f)
+	 * \see move
+	 */
 	void hover();
+	
 	void move(const float x, const float y, const float z, const float yaw);
 	
-	const cv::Mat &rawImage() const;
+	std::map<std::string, std::string> configuration() const;
+	
+	void rawImage(cv::Mat &image) const;
 	
 	ARDrone::State state() const;
 	
@@ -66,8 +130,12 @@ public:
 	
 private:
 	ARDrone();
+	ARDrone(const ARDrone &);
+	
+	ARDrone &operator =(const ARDrone &rhs);
 	
 	DroneController *m_controller;
+	Private::ARDroneEmergencyStop *m_emergencyStop;
 	Camera m_activeCamera;
 };
 

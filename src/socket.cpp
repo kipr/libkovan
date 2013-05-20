@@ -76,6 +76,11 @@ socklen_t Address::addrLength() const
 	return sizeof(m_addr);
 }
 
+const char *Address::ip() const
+{
+	return inet_ntoa(m_addr.sin_addr);
+}
+
 Socket::Socket()
 	: m_fd(-1)
 {
@@ -121,6 +126,12 @@ bool Socket::bind(const unsigned short port)
 	return ::bind(m_fd, (sockaddr *)&addr, sizeof(addr)) >= 0;
 }
 
+bool Socket::connect(const Address &addr)
+{
+	if(m_fd < 0) return false;
+	return ::connect(m_fd, addr.addr(), addr.addrLength()) == 0;
+}
+
 socket_fd_t Socket::fd() const
 {
 	return m_fd;
@@ -162,5 +173,12 @@ Socket Socket::udp()
 {
 	Socket ret;
 	ret.open(AF_INET, SOCK_DGRAM, 0);
+	return ret;
+}
+
+Socket Socket::tcp()
+{
+	Socket ret;
+	ret.open(AF_INET, SOCK_STREAM, 0);
 	return ret;
 }

@@ -444,43 +444,37 @@ void UvlcVideoDecoder::decodeFieldBytes(int &run, int &level, bool &last)
 	readStreamData(streamLength);
 }
 
+static const short zigZagPositions[] = {
+	0,   1,  8, 16,  9,  2,  3, 10,
+	17, 24, 32, 25, 18, 11,  4,  5,
+	12, 19, 26, 33, 40, 48, 41, 34,
+	27, 20, 13,  6,  7, 14, 21, 28,
+	35, 42, 49, 56, 57, 50, 43, 36,
+	29, 22, 15, 23, 30, 37, 44, 51,
+	58, 59, 52, 45, 38, 31, 39, 46,
+	53, 60, 61, 54, 47, 55, 62, 63,
+};
+
+// Cfr. Handbook of Data Compression - Page 529
+// David Salomon
+// Giovanni Motta
+
+static const short quantizerValues[] = {
+	3,   5,  7,  9, 11, 13, 15, 17,
+	5,   7,  9, 11, 13, 15, 17, 19,
+	7,   9, 11, 13, 15, 17, 19, 21,
+	9,  11, 13, 15, 17, 19, 21, 23,
+	11, 13, 15, 17, 19, 21, 23, 25,
+	13, 15, 17, 19, 21, 23, 25, 27,
+	15, 17, 19, 21, 23, 25, 27, 29,
+	17, 19, 21, 23, 25, 27, 29, 31
+};
+
 void UvlcVideoDecoder::blockBytes(short dataBlockBuffer[64], bool acCoefficientsAvailable)
 {
-	static const short zigZagPositions[] = {
-		0,   1,  8, 16,  9,  2,  3, 10,
-		17, 24, 32, 25, 18, 11,  4,  5,
-		12, 19, 26, 33, 40, 48, 41, 34,
-		27, 20, 13,  6,  7, 14, 21, 28,
-		35, 42, 49, 56, 57, 50, 43, 36,
-		29, 22, 15, 23, 30, 37, 44, 51,
-		58, 59, 52, 45, 38, 31, 39, 46,
-		53, 60, 61, 54, 47, 55, 62, 63,
-	};
-
-	// Cfr. Handbook of Data Compression - Page 529
-	// David Salomon
-	// Giovanni Motta
-
-	static const short quantizerValues[] = {
-		3,   5,  7,  9, 11, 13, 15, 17,
-		5,   7,  9, 11, 13, 15, 17, 19,
-		7,   9, 11, 13, 15, 17, 19, 21,
-		9,  11, 13, 15, 17, 19, 21, 23,
-		11, 13, 15, 17, 19, 21, 23, 25,
-		13, 15, 17, 19, 21, 23, 25, 27,
-		15, 17, 19, 21, 23, 25, 27, 29,
-		17, 19, 21, 23, 25, 27, 29, 31
-	};
-	
-	int run = 0;
-	int level = 0;
-	int zigZagPosition = 0;
-	int matrixPosition = 0;
-	bool last = false;
-	
 	::memset(dataBlockBuffer, 0, 64 * sizeof(short));
 	
-	unsigned int dcCoefficient = readStreamData(10);
+	const unsigned int dcCoefficient = readStreamData(10);
 	if(QuantizerMode != CONST_TableQuantization) {
 		std::cout << "Constant quantizer mode is not yet implemented" << std::endl;
 		return;
@@ -489,6 +483,12 @@ void UvlcVideoDecoder::blockBytes(short dataBlockBuffer[64], bool acCoefficients
 	dataBlockBuffer[0] = (short)(dcCoefficient * quantizerValues[0]);
 	
 	if(!acCoefficientsAvailable) return;
+	
+	int run = 0;
+	int level = 0;
+	int zigZagPosition = 0;
+	int matrixPosition = 0;
+	bool last = false;
 	
 	decodeFieldBytes(run, level, last);
 	
@@ -614,7 +614,7 @@ bool UvlcVideoDecoder::decode(const unsigned char *const buffer, const size_t le
 	ImageStream = 0;
 	
 	if(image.empty()) {
-		std::cout << "image decoding FAIL!!" << std::endl;
+		std::cout << "UVLC decoder failed to decode incoming buffer." << std::endl;
 		return false;
 	}
 	

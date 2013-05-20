@@ -35,11 +35,11 @@ ELSEIF(UNIX)
 	SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fPIC")
 ENDIF()
 
-add_definitions(-O3)
+add_definitions(-O0)
 
 ADD_LIBRARY(kovan SHARED ${SOURCES})
 IF(NOT WIN32)
-TARGET_LINK_LIBRARIES(kovan pthread opencv_core opencv_highgui opencv_imgproc zbar)
+TARGET_LINK_LIBRARIES(kovan pthread opencv_core opencv_highgui opencv_imgproc zbar avcodec avformat avutil z swscale)
 ELSE(NOT WIN32)
 # TODO: Make sure these are current
 TARGET_LINK_LIBRARIES(kovan pthread opencv_core249 opencv_highgui249 opencv_imgproc249 zbar)
@@ -49,6 +49,8 @@ IF(KOVAN)
 	TARGET_LINK_LIBRARIES(kovan i2c_wrapper)
 	ADD_DEFINITIONS(-DKOVAN)
 ENDIF(KOVAN)
+
+ADD_DEFINITIONS(-DARDRONE_DEBUG)
 
 IF(WIN32)
 target_link_libraries(kovan ws2_32)

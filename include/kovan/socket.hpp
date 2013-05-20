@@ -24,6 +24,8 @@ public:
 	const sockaddr *addr() const;
 	socklen_t addrLength() const;
 	
+	const char *ip() const;
+	
 private:
 	bool m_valid;
 	sockaddr_in m_addr;
@@ -39,6 +41,9 @@ public:
 	bool setBlocking(const bool blocking);
 	bool setReusable(const bool reusable);
 	bool bind(const unsigned short port);
+	bool connect(const Address &addr);
+	bool disconnect(); 
+	
 	bool close();
 	
 	ssize_t recv(void *const buffer, const size_t length, int flags = 0);
@@ -50,6 +55,7 @@ public:
 	socket_fd_t fd() const;
 	
 	static Socket udp();
+	static Socket tcp();
 	
 private:
 	socket_fd_t m_fd;
