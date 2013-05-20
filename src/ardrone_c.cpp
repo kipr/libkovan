@@ -3,6 +3,8 @@
 #include "kovan/util.h"
 #include "camera_c_p.hpp"
 
+#include <cstdio>
+
 using namespace Private;
 
 #include <cstring>
