@@ -68,10 +68,9 @@ Thread::Thread()
 #ifdef WIN32
 	: m_thread(-1)
 #else
-	: m_started(false)
+	: m_thread(pthread_self())
 #endif
 {
-	
 }
 
 Thread::~Thread()
@@ -79,7 +78,7 @@ Thread::~Thread()
 #ifdef WIN32
 	if(m_thread != INVALID_HANDLE) CloseHandle(m_thread);
 #else
-	m_started = false;
+	if(pthread_equal(m_thread, pthread_self())) return;
 	pthread_cancel(m_thread);
 #endif
 }
@@ -90,20 +89,19 @@ void Thread::start()
 	CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)__runThread,
 		reinterpret_cast<LPVOID>(this), 0, NULL);
 #else
-	if(m_started) return;
 	pthread_create(&m_thread, NULL, &__runThread,
 		reinterpret_cast<void *>(this));
-	m_started = true;
 #endif
 }
 
 void Thread::join()
 {
 #ifdef WIN32
+	if(m_thread < 0) return;
 	WaitForSingleObject(m_thread, INFINITE);
 #else
-	if(!m_started) return;
+	if(pthread_equal(m_thread, pthread_self())) return;
 	pthread_join(m_thread, NULL);
-	m_started = false;
+	m_thread = pthread_self();
 #endif
 }

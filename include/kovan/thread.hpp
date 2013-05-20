@@ -41,7 +41,6 @@ public:
 	
 private:
 #ifndef WIN32
-	bool m_started;
 	pthread_t m_thread;
 #else
 	unsigned long m_thread;
