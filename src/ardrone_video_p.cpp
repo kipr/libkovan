@@ -6,6 +6,12 @@
 #include "kovan/util.h"
 #include "kovan/thread.hpp"
 
+// ARM Workaround for labav.
+// see: https://github.com/AutonomyLab/ardrone_autonomy/issues/1
+#ifndef UINT64_C
+#define UINT64_C(c) (c ## ULL)
+#endif
+
 // AR.Drone 2 video
 extern "C" {
 	#include <libavcodec/avcodec.h>
