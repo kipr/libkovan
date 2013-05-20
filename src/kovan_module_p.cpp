@@ -105,8 +105,11 @@ bool KovanModule::send(const CommandVector& commands)
 {
 	uint32_t packetSize = 0;
 	Packet *packet = createPacket(commands.size(), packetSize);
+	if(packet == NULL) { //As createPacket now can return NULL, we have to check for this
+	    return false;
+	}
+
 	memcpy(packet->commands, &commands[0], commands.size() * sizeof(Command));
-	
 	bool ret = true;
 	while(sendto(m_sock, reinterpret_cast<const char *>(packet), packetSize, 0,
 		(sockaddr *)&m_out, sizeof(m_out)) != packetSize) {
@@ -138,8 +141,12 @@ bool KovanModule::recv(State& state)
 Packet *KovanModule::createPacket(const uint16_t& num, uint32_t& packet_size)
 {
 	packet_size = sizeof(Packet) + sizeof(Command) * (num - 1);
-	Packet *packet = reinterpret_cast<Packet *>(malloc(packet_size));
-	packet->num = num;
+	void *buffer = malloc(packet_size);
+	if(buffer == NULL) { //malloc returns NULL if allocating the memory fails
+	    return NULL;
+	}
+	Packet *packet = reinterpret_cast<Packet *>(buffer);
+	packet->num = num; //<-- this crashes if malloc returns 0, as -> tries to dereference it
 	return packet;
 }
 
