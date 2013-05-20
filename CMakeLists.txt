@@ -39,7 +39,7 @@ add_definitions(-O0)
 
 ADD_LIBRARY(kovan SHARED ${SOURCES})
 IF(NOT WIN32)
-TARGET_LINK_LIBRARIES(kovan pthread opencv_core opencv_highgui opencv_imgproc zbar avcodec avformat avutil z swscale)
+TARGET_LINK_LIBRARIES(kovan pthread opencv_core opencv_highgui opencv_imgproc zbar avcodec avformat avutil z swscale bz2)
 ELSE(NOT WIN32)
 # TODO: Make sure these are current
 TARGET_LINK_LIBRARIES(kovan pthread opencv_core249 opencv_highgui249 opencv_imgproc249 zbar)

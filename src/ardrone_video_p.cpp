@@ -418,10 +418,7 @@ private:
 		if(s_init) return;
 		avcodec_init();
 		avcodec_register_all();
-		extern AVOutputFormat ff_h264_muxer;
-		av_register_output_format(&ff_h264_muxer);
-		extern AVInputFormat ff_h264_demuxer;
-		av_register_input_format(&ff_h264_demuxer);
+		av_register_all();
 		s_init = true;
 	}
 	
