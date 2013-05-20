@@ -182,11 +182,6 @@ public:
 	
 	bool start(const Address &address)
 	{
-		static int calls = 0;
-		if(calls++ > 0) {
-			abort();
-		}
-		
 		m_address = address;
 		if(!setupSocket(m_socket)) {
 			std::cerr << "!!! Failed to setup video stream socket." << std::endl;
@@ -303,19 +298,26 @@ public:
 		} else if(m_state == WaitForIFrame && (header.frame_type == FRAME_TYPE_IDR_FRAME
 			|| header.frame_type == FRAME_TYPE_I_FRAME)) {
 			m_state = Normal;
+		} else if(m_state == WaitForIFrame) {
+			return true;
 		}
 		lastFrame = header.frame_number;
 		
 		
+		std::cout << "payload size: " << header.payload_size << std::endl;
+		
 		size_t read = 0;
-		unsigned char *payload = new unsigned char[header.payload_size];
+		
+		// Is it bad to assume things? Yes. It is *computationally fast* to assume things? Yes.
+		unsigned char payload[40000];
+		
 		// Copy over part of the payload that was sent with the header
 		memcpy(payload, part + header.header_size, readLength - header.header_size);
 		read += readLength - header.header_size;
 		
 		double lastRead = seconds();
 		while(read < header.payload_size && seconds() - lastRead < 0.3) {
-			// std::cout << read << " of " << header.payload_size << std::endl;
+			std::cout << read << " of " << header.payload_size << std::endl;
 			if((readLength = m_socket.recv(payload + read, header.payload_size - read)) < 0 && errno != EAGAIN) {
 				perror("DroneController::fetchVideo");
 				return false;
@@ -336,8 +338,6 @@ public:
 		adjustDimensions(header);
 		
 		AVPacket packet;
-		av_init_packet(&packet);
-		
 		packet.data = payload;
 		packet.size = header.payload_size;
 		
@@ -347,17 +347,15 @@ public:
 #ifdef ARDRONE_DEBUG
 			std::cout << "Didn't decode frame" << std::endl;
 #endif
-			av_free_packet(&packet);
 			return true;
 		}
 		
-		av_free_packet(&packet);
-		
-		if(!done) return true;
-		
-		static unsigned i = 0;
+		if(!done) {
+			return true;
+		}
 		
 #ifdef ARDRONE_DEBUG
+		static unsigned i = 0;
 		std::cout << "Got video frame from AR.Drone 2 (num frames: " << ++i << ")" << std::endl;
 #endif
 		
@@ -365,8 +363,9 @@ public:
 			0, m_codecCtx->height, m_frameBgr->data, m_frameBgr->linesize);
 
 		m_mutex.lock();
+		
 #ifdef ARDRONE_DEBUG
-	std::cout << "Copying video stream to latest image buffer" << std::endl;
+		std::cout << "Copying video stream to latest image buffer" << std::endl;
 #endif
 		memcpy(m_img.ptr(), m_frameBgr->data[0], m_codecCtx->width * ((m_codecCtx->height == 368)
 			? 360 : m_codecCtx->height) * sizeof(uint8_t) * 3);

@@ -26,14 +26,15 @@ int main(int argc, char *argv[])
 	
 	std::cout << "Starting main loop" << std::endl;
 	const double start = seconds();
-	while(seconds() - start < 20.0) {
+	for(;;) {
 		cv::Mat m;
 		drone->rawImage(m);
+		cv::imshow("test", m);
 		// if(m.empty()) continue;
-		const ARDrone::NavigationData nd = drone->navigationData();
+		/* const ARDrone::NavigationData nd = drone->navigationData();
 		std::cout << "roll: " << nd.roll << " pitch: " << nd.pitch << " yaw: " << nd.yaw << std::endl;
 		std::cout << "altitude: " << nd.altitude << std::endl;
-		std::cout << "vel: " << nd.velocity.x << ", " << nd.velocity.y << ", " << nd.velocity.z << std::endl;
+		std::cout << "vel: " << nd.velocity.x << ", " << nd.velocity.y << ", " << nd.velocity.z << std::endl; */
 		// cv::imshow("Data", m);
 		// cv::waitKey(1);
 		msleep(10);

@@ -1071,6 +1071,8 @@ bool ARDrone::connect(const char *const ip, const double timeout)
 	m_controller->setSsid("Braden's Drone");
 	// m_controller->setOwner("48:5d:60:a3:af:c4");
 	
+	m_emergencyStop->stop();
+	m_emergencyStop->join();
 	m_emergencyStop->start();
 	
 	return true;
