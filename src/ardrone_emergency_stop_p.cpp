@@ -16,7 +16,7 @@ void ARDroneEmergencyStop::run()
 {
 	m_stop = false;
 	while(!m_stop) {
-		msleep(30);
+		msleep(200);
 		if(!m_enabled || Button::Side.isNotPressed()) continue;
 		
 		m_drone->disconnect();

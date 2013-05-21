@@ -277,7 +277,10 @@ public:
 			return false;
 		}
 
-		if(readLength < 0) return true;
+		if(readLength < 0) {
+			std::cout << "No frame :(" << std::endl;
+			return true;
+		}
 		
 		parrot_video_encapsulation_t header;
 		memcpy(&header, part, sizeof(parrot_video_encapsulation_t));
@@ -288,6 +291,8 @@ public:
 #endif
 			return true;
 		}
+		
+		printPave(header, std::cout);
 		
 		if(m_state == Normal && header.frame_number != lastFrame + 1) {
 			m_state = WaitForIFrame;
@@ -303,8 +308,6 @@ public:
 		}
 		lastFrame = header.frame_number;
 		
-		
-		std::cout << "payload size: " << header.payload_size << std::endl;
 		
 		size_t read = 0;
 		
@@ -350,15 +353,13 @@ public:
 			return true;
 		}
 		
-		if(!done) {
-			return true;
-		}
+		if(!done) return true;
 		
 #ifdef ARDRONE_DEBUG
 		static unsigned i = 0;
 		std::cout << "Got video frame from AR.Drone 2 (num frames: " << ++i << ")" << std::endl;
 #endif
-		
+	
 		sws_scale(m_convertCtx, (const uint8_t *const *)m_frame->data, m_frame->linesize,
 			0, m_codecCtx->height, m_frameBgr->data, m_frameBgr->linesize);
 
@@ -369,6 +370,7 @@ public:
 #endif
 		memcpy(m_img.ptr(), m_frameBgr->data[0], m_codecCtx->width * ((m_codecCtx->height == 368)
 			? 360 : m_codecCtx->height) * sizeof(uint8_t) * 3);
+		
 		m_mutex.unlock();
 		
 		return true;
@@ -458,6 +460,33 @@ private:
 	        m_convertCtx = sws_getCachedContext(m_convertCtx, pave.display_width, pave.display_height,
 			m_codecCtx->pix_fmt, pave.display_width, pave.display_height,
 			m_codecCtx->pix_fmt, SWS_FAST_BILINEAR, 0, 0, 0);
+	}
+	
+	void printPave(const parrot_video_encapsulation_t &pave, std::ostream &o) {
+		using namespace std;
+		o << "PaVE Dump: " << endl;
+		o << "\tVersion: " << (uint32_t)pave.version << endl;
+		o << "\tVideo Codec: " << (uint32_t)pave.video_codec << endl;
+		o << "\tHeader Size: " << (uint32_t)pave.header_size << endl;
+		o << "\tPayload Size: " << (uint32_t)pave.payload_size << endl;
+		o << "\tEncoded Size: " << (uint32_t)pave.encoded_stream_width << ", "
+			<< (uint32_t)pave.encoded_stream_height << endl;
+		o << "\tDisplay Size: " << (uint32_t)pave.display_width
+			<< (uint32_t)pave.display_height << endl;
+		o << "\tFrame Number: " << pave.frame_number << endl;
+		o << "\tTimestamp: " << (uint32_t)pave.timestamp << endl;
+		o << "\tTotal Chunks: " << (uint32_t)pave.total_chunks << endl;
+		o << "\tChunk Index: " << (uint32_t)pave.chunk_index << endl;
+		o << "\tFrame Type: " << (uint32_t)pave.frame_type << endl;
+		o << "\tControl: " << (uint32_t)pave.control << endl;
+		o << "\tStream Byte Position: " << pave.stream_byte_position_lw << ", "
+			<< pave.stream_byte_position_uw << endl;
+		o << "\tStream ID: " << (uint32_t)pave.stream_id << endl;
+		o << "\tTotal Slices: " << (uint32_t)pave.total_slices << endl;
+		o << "\tSlice Index: " << (uint32_t)pave.slice_index << endl;
+		o << "\tHeader2 Size: " << (uint32_t)pave.header2_size << endl;
+		o << "\tHeader1 Size: " << (uint32_t)pave.header1_size << endl;
+		o << "\tAdvertised Size: " << (uint32_t)pave.advertised_size << endl;
 	}
 	
 	Socket m_socket;
