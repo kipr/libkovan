@@ -552,7 +552,7 @@ void DroneController::run()
 		m_mutex.lock();
 		DroneController::DoReturn at = doAt(ticks);
 		DroneController::DoReturn navdata = doNavdata(ticks);
-		// DroneController::DoReturn video = doVideo(ticks);
+		DroneController::DoReturn video = doVideo(ticks);
 		m_mutex.unlock();
 		
 		if(at == DroneController::Error
