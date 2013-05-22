@@ -25,23 +25,24 @@ int main(int argc, char *argv[])
 	
 	// std::cout << "flying? " << (drone->state() == ARDrone::Flying) << std::endl;
 	
-	drone->takeoff();
+	// drone->takeoff();
 	
 	std::cout << "Starting main loop" << std::endl;
 	const double start = seconds();
-	drone->move(0.0, 0.0, 0.0, 0.2);
+	// drone->move(0.0, 0.0, 0.0, 0.2);
 	for(;;) {
 		cv::Mat m;
+		std::cout << "Requesting raw image" << std::endl;
 		drone->rawImage(m);
-		msleep(100);
-		if(m.empty()) continue;
+		msleep(30);
+		// if(m.empty()) continue;
 		cv::imshow("test", m);
 		/* const ARDrone::NavigationData nd = drone->navigationData();
 		std::cout << "roll: " << nd.roll << " pitch: " << nd.pitch << " yaw: " << nd.yaw << std::endl;
 		std::cout << "altitude: " << nd.altitude << std::endl;
 		std::cout << "vel: " << nd.velocity.x << ", " << nd.velocity.y << ", " << nd.velocity.z << std::endl; */
 		// cv::imshow("Data", m);
-		if(cv::waitKey(0) > 0) break;
+		if(cv::waitKey(1) > 0) break;
 	}
 	
 	drone->land();

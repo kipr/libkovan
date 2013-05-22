@@ -39,6 +39,7 @@
 #define ARDRONE_NETWORK_SSID ("network:ssid_single_player")
 #define ARDRONE_VIDEO_CODEC ("video:video_codec")
 #define ARDRONE_VIDEO_CHANNEL ("video:video_channel")
+#define ARDRONE_VIDEO_CODEC_FPS ("video:codec_fps")
 
 // Navdata
 #define ARDRONE_NAVDATA_HEADER (0x55667788)

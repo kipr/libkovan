@@ -391,7 +391,7 @@ public:
 	
 	std::map<std::string, std::string> configuration(const double timeout = 3.0);
 	
-	bool restartProgramElf(const Address &address);
+	void setVideoFrameRate(const unsigned videoFrameRate);
 	
 private:
 	void pushCommand(const char *const command);
@@ -402,9 +402,9 @@ private:
 	
 	DroneController::FetchReturn fetchNavdata();
 	
-	DoReturn doAt(const size_t ticks);
-	DoReturn doNavdata(const size_t ticks);
-	DoReturn doVideo(const size_t ticks);
+	DoReturn doAt();
+	DoReturn doNavdata();
+	DoReturn doVideo();
 	
 	void linkNavdata();
 	
@@ -417,6 +417,10 @@ private:
 	
 	Socket m_navdataSocket;
 	double m_navLast;
+	double m_navReqLast;
+	
+	double m_videoFetchLast;
+	double m_videoWakeupLast;
 	
 	Address m_atAddress;
 	Address m_navdataAddress;
@@ -445,13 +449,19 @@ private:
 	ARDrone::Version m_currentVersion;
 	
 	ARDroneVideo *m_video;
+	double m_videoRefreshRate;
 };
 
 DroneController::DroneController()
 	: m_atLast(0.0),
+	m_navLast(0.0),
+	m_navReqLast(0.0),
+	m_videoFetchLast(0.0),
+	m_videoWakeupLast(0.0),
 	m_stop(true),
 	m_cameraActivated(false),
-	m_video(0)
+	m_video(0),
+	m_videoRefreshRate(0.023)
 {
 	invalidate();
 }
@@ -546,24 +556,22 @@ void DroneController::configure(const char *const cmd, unsigned value)
 	
 void DroneController::run()
 {
-	unsigned long ticks = 0;
 	m_stop = false;
 	while(!m_stop) {
 		m_mutex.lock();
-		DroneController::DoReturn at = doAt(ticks);
-		DroneController::DoReturn navdata = doNavdata(ticks);
-		DroneController::DoReturn video = doVideo(ticks);
+		DroneController::DoReturn at = doAt();
+		DroneController::DoReturn navdata = doNavdata();
+		DroneController::DoReturn video = doVideo();
 		m_mutex.unlock();
 		
 		if(at == DroneController::Error
-			 || navdata == DroneController::Error
-			//|| video == DroneController::Error) {
+			|| navdata == DroneController::Error
+			// || video == DroneController::Error) {
 		) {
-				std::cerr << "AR.Drone internal error" << std::endl;
+			std::cerr << "AR.Drone internal error" << std::endl;
 		}
 		
-		msleep(1);
-		++ticks;
+		msleep(2);
 	}
 	m_stop = false;
 	m_seq.reset();
@@ -777,6 +785,7 @@ bool DroneController::isNavdataSocketValid() const
 {
 	return m_navdataSocket.isOpen();
 }
+
 void DroneController::image(cv::Mat &image) const
 {
 	if(!m_video || !m_video->isStarted()) return;
@@ -854,7 +863,7 @@ DroneController::FetchReturn DroneController::fetchNavdata()
 	return DroneController::Fetched;
 }
 
-DroneController::DoReturn DroneController::doAt(const size_t it)
+DroneController::DoReturn DroneController::doAt()
 {
 	if(!m_atSocket.isOpen()) return DroneController::NotReady;
 	
@@ -869,7 +878,7 @@ DroneController::DoReturn DroneController::doAt(const size_t it)
 	return DroneController::Success;
 }
 
-DroneController::DoReturn DroneController::doNavdata(const size_t it)
+DroneController::DoReturn DroneController::doNavdata()
 {
 	if(!m_navdataSocket.isOpen()) return DroneController::NotReady;
 	
@@ -887,25 +896,26 @@ DroneController::DoReturn DroneController::doNavdata(const size_t it)
 		m_navLast = seconds();
 	}
 	
-	if(it % 1000) {
+	if(seconds() - m_navReqLast > 2.0) {
 		if(!requestNavdata()) return DroneController::Error;
+		m_navReqLast = seconds();
 	}
 	
 	return DroneController::Success;
 }
 
-DroneController::DoReturn DroneController::doVideo(const size_t it)
+DroneController::DoReturn DroneController::doVideo()
 {
 	if(!m_video || !m_video->isStarted()) return DroneController::NotReady;
 	
-	// 30 Hz
-	if(it % 11) {
-		// if(isControlWatchdog()) std::cout << "Control watchdog!" << std::endl;
+	if(seconds() - m_videoFetchLast > m_videoRefreshRate) {
 		if(!m_video->fetch()) return DroneController::Error;
+		m_videoFetchLast = seconds();
 	}
 	
-	if(it % 100) {
+	if(seconds() - m_videoWakeupLast > 0.9) {
 		if(!m_video->wakeup()) return DroneController::Error;
+		m_videoWakeupLast = seconds();
 	}
 	
 	return DroneController::Success;
@@ -1068,57 +1078,9 @@ ARDrone::Version DroneController::findVersion()
 	return ARDrone::Unknown;
 }
 
-bool DroneController::restartProgramElf(const Address &address)
+void DroneController::setVideoFrameRate(const unsigned videoFrameRate)
 {
-	Socket telnet = Socket::tcp();
-	telnet.setReusable(true);
-	
-	telnet.setBlocking(false);
-	if(!telnet.connect(address) && errno != EINPROGRESS) {
-		telnet.close();
-		return false;
-	}
-	telnet.setBlocking(true);
-	
-	timeval tv;
-	tv.tv_sec = 2;
-	tv.tv_usec = 0;
-
-	fd_set write;
-	fd_set err;
-	FD_ZERO(&write);
-	FD_ZERO(&err);
-	FD_SET(telnet.fd(), &write);
-	FD_SET(telnet.fd(), &err);
-
-	// check if the socket is ready
-	select(0, NULL, &write, &err, &tv);
-	if(!FD_ISSET(telnet.fd(), &write)) {
-		telnet.close();
-		return false;
-	}
-	
-	static const char *const command[2] = {
-		"DO killall program.elf",
-		// "/bin/program.elf"
-	};
-	
-	bool success = true;
-	
-	std::cout << "Sending command 1" << std::endl;
-	if(!telnet.send(command[0], strlen(command[0]) + 1)) {
-		std::cerr << "Failed to send first command" << std::endl;
-		success &= false;
-	}
-	
-	/*if(!telnet.send(command[1], strlen(command[1]) + 1)) {
-		std::cerr << "Failed to send second command" << std::endl;
-		success &= false;
-	}*/
-	
-	telnet.close();
-	
-	return success;
+	configure(ARDRONE_VIDEO_CODEC_FPS, videoFrameRate);
 }
 
 ARDrone::~ARDrone()
@@ -1164,6 +1126,8 @@ bool ARDrone::connect(const char *const ip, const double timeout)
 	// Set ourself as the owner
 	m_controller->setSsid("Braden's Drone");
 	// m_controller->setOwner("48:5d:60:a3:af:c4");
+	
+	m_controller->setVideoFrameRate(20);
 	
 	m_emergencyStop->stop();
 	m_emergencyStop->join();

@@ -262,6 +262,19 @@ public:
 	
 	bool wakeup()
 	{
+		if(!m_socket.isOpen()) {
+#ifdef ARDRONE_DEBUG
+			std::cout << "Failed to wakeup stream using invalid socket." << std::endl;
+#endif
+			return false;
+		}
+	
+		const static char startCode[4] = { 0x01, 0x00, 0x00, 0x00 };
+		if(m_socket.sendto(startCode, sizeof(startCode), m_address) != sizeof(startCode)) {
+			perror("DroneController::wakeupStream -> sendto");
+			return false;
+		}
+	
 		return true;
 	}
 	
@@ -292,16 +305,19 @@ public:
 			return true;
 		}
 		
-		printPave(header, std::cout);
+		// printPave(header, std::cout);
 		
 		if(m_state == Normal && header.frame_number != lastFrame + 1) {
 			m_state = WaitForIFrame;
 #ifdef ARDRONE_DEBUG
-			std::cout << "Waiting for next I frame" << std::endl;
+			std::cout << "FRAME MISSED (got " << header.frame_number << ", expected" << (lastFrame + 1) <<  ")" << std::endl;
 #endif
 			return true;
 		} else if(m_state == WaitForIFrame && (header.frame_type == FRAME_TYPE_IDR_FRAME
 			|| header.frame_type == FRAME_TYPE_I_FRAME)) {
+#ifdef ARDRONE_DEBUG
+			std::cout << "Got our I Frame" << std::endl;
+#endif
 			m_state = Normal;
 		} else if(m_state == WaitForIFrame) {
 			return true;
@@ -319,7 +335,7 @@ public:
 		read += readLength - header.header_size;
 		
 		double lastRead = seconds();
-		while(read < header.payload_size && seconds() - lastRead < 0.3) {
+		while(read < header.payload_size && seconds() - lastRead < 0.1) {
 			std::cout << read << " of " << header.payload_size << std::endl;
 			if((readLength = m_socket.recv(payload + read, header.payload_size - read)) < 0 && errno != EAGAIN) {
 				perror("DroneController::fetchVideo");
@@ -371,6 +387,9 @@ public:
 		memcpy(m_img.ptr(), m_frameBgr->data[0], m_codecCtx->width * ((m_codecCtx->height == 368)
 			? 360 : m_codecCtx->height) * sizeof(uint8_t) * 3);
 		
+		cv::circle(m_img, cv::Point(1, i), 2, cv::Scalar(255, 0, 0));
+		std::cout << "Copied new image" << std::endl;
+		
 		m_mutex.unlock();
 		
 		return true;
@@ -409,6 +428,7 @@ public:
 	void latestImage(cv::Mat &image) const
 	{
 		m_mutex.lock();
+		std::cout << "Cloning latest image" << std::endl;
 		image = m_img.clone();
 		m_mutex.unlock();
 	}
