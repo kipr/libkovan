@@ -571,7 +571,7 @@ void DroneController::run()
 			std::cerr << "AR.Drone internal error" << std::endl;
 		}
 		
-		msleep(2);
+		msleep(4);
 	}
 	m_stop = false;
 	m_seq.reset();
@@ -869,9 +869,11 @@ DroneController::DoReturn DroneController::doAt()
 	
 	if(seconds() - m_atLast >= 0.03) {
 		if(!sendCurrentCommand()) return DroneController::Error;
+#ifdef ARDRONE_DEBUG
 		if(seconds() - m_atLast >= 0.04) {
 			std::cout << "WARNING: SLOW AT (" << (seconds() - m_atLast) << ")" << std::endl;
 		}
+#endif
 		m_atLast = seconds();
 	}
 	

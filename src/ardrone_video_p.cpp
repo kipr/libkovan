@@ -290,10 +290,8 @@ public:
 			return false;
 		}
 
-		if(readLength < 0) {
-			std::cout << "No frame :(" << std::endl;
-			return true;
-		}
+		if(readLength < 0) return true;
+		
 		
 		parrot_video_encapsulation_t header;
 		memcpy(&header, part, sizeof(parrot_video_encapsulation_t));
@@ -336,7 +334,9 @@ public:
 		
 		double lastRead = seconds();
 		while(read < header.payload_size && seconds() - lastRead < 0.1) {
+#ifdef ARDRONE_DEBUG
 			std::cout << read << " of " << header.payload_size << std::endl;
+#endif
 			if((readLength = m_socket.recv(payload + read, header.payload_size - read)) < 0 && errno != EAGAIN) {
 				perror("DroneController::fetchVideo");
 				return false;
@@ -387,9 +387,6 @@ public:
 		memcpy(m_img.ptr(), m_frameBgr->data[0], m_codecCtx->width * ((m_codecCtx->height == 368)
 			? 360 : m_codecCtx->height) * sizeof(uint8_t) * 3);
 		
-		cv::circle(m_img, cv::Point(1, i), 2, cv::Scalar(255, 0, 0));
-		std::cout << "Copied new image" << std::endl;
-		
 		m_mutex.unlock();
 		
 		return true;
@@ -428,7 +425,6 @@ public:
 	void latestImage(cv::Mat &image) const
 	{
 		m_mutex.lock();
-		std::cout << "Cloning latest image" << std::endl;
 		image = m_img.clone();
 		m_mutex.unlock();
 	}

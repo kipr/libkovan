@@ -5,9 +5,6 @@
 
 int main(int argc, char *argv[])
 {
-	char buffer[123];
-	gets(buffer);
-	
 	ARDrone *drone = ARDrone::instance();
 	if(!drone->connect()) {
 		std::cout << "Couldn't connect to the drone" << std::endl;
@@ -32,7 +29,6 @@ int main(int argc, char *argv[])
 	// drone->move(0.0, 0.0, 0.0, 0.2);
 	for(;;) {
 		cv::Mat m;
-		std::cout << "Requesting raw image" << std::endl;
 		drone->rawImage(m);
 		msleep(30);
 		// if(m.empty()) continue;
