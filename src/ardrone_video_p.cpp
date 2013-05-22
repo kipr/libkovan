@@ -96,8 +96,6 @@ public:
 		m_mutex.lock();
 		image = m_image.clone();
 		m_mutex.unlock();
-		cv::imshow("decoded", image);
-		cv::waitKey(1);
 	}
 	
 private:
