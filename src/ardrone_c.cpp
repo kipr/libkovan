@@ -46,7 +46,7 @@ void drone_land(void)
 
 int get_drone_battery(void)
 {
-	// TODO: NYI
+	return ARDrone::instance()->navigationData().battery;
 }
 
 void drone_clear_position()
