@@ -88,10 +88,24 @@ EXPORT_SYM void set_camera_width(int width);
 EXPORT_SYM void set_camera_height(int height);
 
 /**
+ * Gets the camera's x resolution.
+ * \attention This value might be different than the previously set x resolution. Never assume the x resolution.
+ * \return The camera's x resolution, in pixels.
+ */
+EXPORT_SYM int get_camera_width(void);
+
+/**
+ * Gets the camera's y resolution.
+ * \attention This value might be different than the previously set y resolution. Never assume the x resolution.
+ * \return The camera's y resolution, in pixels.
+ */
+EXPORT_SYM int get_camera_height(void);
+
+/**
  * Pulls a new image from the camera for processing.
  * \return 1 on success, 0 on failure.
  */
-EXPORT_SYM int camera_update();
+EXPORT_SYM int camera_update(void);
 
 /**
  * \param p The point at which the pixel lies.
@@ -104,7 +118,7 @@ EXPORT_SYM pixel get_camera_pixel(point2 p);
  * \return Number of channels in the current configuration.
  * \see get_object_count
  */
-EXPORT_SYM int get_channel_count();
+EXPORT_SYM int get_channel_count(void);
 
 /**
  * \param channel The channel to scan for objects.

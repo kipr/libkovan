@@ -146,3 +146,13 @@ void drone_hover(void)
 {
 	ARDrone::instance()->hover();
 }
+
+void set_drone_emergency_stop_enabled(int enabled)
+{
+	ARDrone::instance()->setEmergencyStopEnabled(enabled);
+}
+
+int get_drone_emergency_stop_enabled(void)
+{
+	return ARDrone::instance()->isEmergencyStopEnabled() ? 1 : 0;
+}

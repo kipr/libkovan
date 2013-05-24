@@ -331,6 +331,18 @@ void Camera::Device::setHeight(const unsigned height)
 	m_inputProvider->setHeight(height);
 }
 
+unsigned Camera::Device::width() const
+{
+	if(m_image.empty()) return 0;
+	return m_image.cols;
+}
+
+unsigned Camera::Device::height() const
+{
+	if(m_image.empty()) return 0;
+	return m_image.rows;
+}
+
 bool Camera::Device::close()
 {
 	return m_inputProvider->close();

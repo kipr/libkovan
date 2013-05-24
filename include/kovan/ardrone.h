@@ -124,10 +124,25 @@ float get_drone_y_velocity(void);
  */
 float get_drone_z_velocity(void);
 
+/**
+ * \brief Retrieves the current pitch of the AR.Drone, in degrees.
+ * \pre drone_connect must have been previously called to establish a connection to the drone.
+ * \return A float indicating the pitch of the AR.Drone in degrees.
+ */
 float get_drone_pitch(void);
 
+/**
+ * \brief Retrieves the current roll of the AR.Drone, in degrees.
+ * \pre drone_connect must have been previously called to establish a connection to the drone.
+ * \return A float indicating the roll of the AR.Drone in degrees.
+ */
 float get_drone_roll(void);
 
+/**
+ * \brief Retrieves the current altitude of the AR.Drone, in meters.
+ * \pre drone_connect must have been previously called to establish a connection to the drone.
+ * \return A float indicating the altitude of the AR.Drone in meters.
+ */
 float get_drone_altitude(void);
 
 /**
@@ -165,6 +180,11 @@ int set_drone_mac_address(const char *const address);
  */
 int drone_pair(void);
 
+/**
+ * Sets the SSID of the Drone to the given ssid.
+ * \attention This setting will not take effect until the AR.Drone is restarted.
+ * \return 1 for success, 0 for failure.
+ */
 int set_drone_ssid(const char *const ssid);
  
 /**

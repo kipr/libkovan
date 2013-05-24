@@ -86,7 +86,17 @@ void set_camera_height(int height)
 	DeviceSingleton::instance()->setHeight(height);
 }
 
-int camera_update()
+int get_camera_width(void)
+{
+	return DeviceSingleton::instance()->width();
+}
+
+int get_camera_height(void)
+{
+	return DeviceSingleton::instance()->height();
+}
+
+int camera_update(void)
 {
 	return DeviceSingleton::instance()->update() ? 1 : 0;
 }
@@ -96,7 +106,7 @@ pixel get_camera_pixel(point2 p)
 	nyi("get_camera_pixel");
 }
 
-int get_channel_count()
+int get_channel_count(void)
 {
 	return DeviceSingleton::instance()->channels().size();
 }

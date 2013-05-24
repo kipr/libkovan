@@ -203,6 +203,9 @@ namespace Camera
 		void setWidth(const unsigned width);
 		void setHeight(const unsigned height);
 		
+		unsigned width() const;
+		unsigned height() const;
+		
 		const ChannelPtrVector &channels() const;
 		
 		InputProvider *inputProvider() const;
