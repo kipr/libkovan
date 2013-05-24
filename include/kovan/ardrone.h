@@ -21,6 +21,11 @@
 #ifndef _ARDRONE_H_
 #define _ARDRONE_H_
 
+/**
+ * \file ardrone.h
+ * \author Braden McDorman
+ */
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -159,8 +164,9 @@ enum drone_camera
 };
 
 /**
- * \brief Stops the drone from sending data to the cbc for vision tracking.
+ * \brief Opens the AR.Drone's camera as the camera input device. You must use camera_close() once finished.
  * \pre drone_connect must have been previously called to establish a connection to the drone.
+ * \param camera FRONT_CAMERA for the horizontal camera, BOTTOM_CAMERA for the vertical camera.
  * \return 1 on success, 0 on failure
  */
 int drone_camera_open(enum drone_camera camera);
