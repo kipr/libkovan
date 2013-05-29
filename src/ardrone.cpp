@@ -1127,7 +1127,6 @@ bool ARDrone::connect(const char *const ip, const double timeout)
 	
 	// Set ourself as the owner
 	// m_controller->setSsid("Braden's Drone");
-	pair();
 	
 	m_controller->setVideoFrameRate(20);
 	
