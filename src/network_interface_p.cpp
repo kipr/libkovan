@@ -13,19 +13,37 @@ using namespace Private;
 
 char *NetworkInterface::macAddress(const char *const interface)
 {
-	ifreq s;
+#ifndef __linux__
+	return 0;
+#else
 	int fd = socket(PF_INET, SOCK_DGRAM, IPPROTO_IP);
 	if(fd < 0) return 0;
 	
-	ifaddrs *addrs;
-	if(getifaddrs(&addrs)) return 0;
+	struct ifreq ifr;
+	struct ifconf ifc;
 	
-	ifaddrs *real = addrs;
-	while(real) {
-		if(!strcmp(real->ifa_name, interface)) break;
-		real = real->ifa_next;
+	char buf[1024];
+	ifc.ifc_len = sizeof(buf);
+	ifc.ifc_buf = buf;
+	if(ioctl(fd, SIOCGIFCONF, &ifc) == -1) return 0;
+
+	ifreq *it = ifc.ifc_req;
+	const ifreq *const end = it + (ifc.ifc_len / sizeof(ifreq));
+
+	bool success = false;
+	for(; it != end; ++it) {
+		printf("ifr_name: %s\n", it->ifr_name);
+		strcpy(ifr.ifr_name, it->ifr_name);
+		if(ioctl(fd, SIOCGIFFLAGS, &ifr) != 0) continue;
+		if(ifr.ifr_flags & IFF_LOOPBACK) continue; // don't count loopback
+		if(ioctl(fd, SIOCGIFHWADDR, &ifr) == 0) {
+			success = true;
+			break;
+		}
 	}
-	if(!real) return 0;
+	
+	
+	if(!success) return 0;
 	
 	static const char *const exampleMacAddress = "01:23:45:67:89:ab";
 	const size_t macLength = strlen(exampleMacAddress);
@@ -42,13 +60,13 @@ char *NetworkInterface::macAddress(const char *const interface)
 	char *walker = ret;
 	size_t i = 0;
 	while(walker <= ret + macLength) {
-		const unsigned char &c = real->ifa_addr->sa_data[i++];
-		*(++walker) = hexLookup[(c & 0x0F) >> 0];
-		*(++walker) = hexLookup[(c & 0xF0) >> 4];
-		if(walker <= ret + macLength) *walker = ':';
+		const unsigned char &c = ifr.ifr_hwaddr->sa_data[i++];
+		*(walker++) = hexLookup[(c & 0x0F) >> 0];
+		*(walker++) = hexLookup[(c & 0xF0) >> 4];
+		if(walker <= ret + macLength) *(walker++) = ':';
 	}
 	ret[macLength] = 0;
 	
-	freeifaddrs(addrs);
 	return ret;
+#endif
 }

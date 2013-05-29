@@ -1127,7 +1127,7 @@ bool ARDrone::connect(const char *const ip, const double timeout)
 	
 	// Set ourself as the owner
 	// m_controller->setSsid("Braden's Drone");
-	// pair();
+	pair();
 	
 	m_controller->setVideoFrameRate(20);
 	
@@ -1268,13 +1268,8 @@ void ARDrone::setOwnerAddress(const char *const address)
 
 void ARDrone::pair()
 {
-	const char *const addr = Private::NetworkInterface::macAddress(
-#ifdef __APPLE__
-		"en0"
-#else
-		"wlan0"
-#endif
-	);
+	const char *const addr = Private::NetworkInterface::macAddress("wlan0");
+	if(!addr) return;
 	printf("setting owner as %s\n", addr);
 	setOwnerAddress(addr);
 	delete[] addr;
