@@ -60,7 +60,7 @@ char *NetworkInterface::macAddress(const char *const interface)
 	char *walker = ret;
 	size_t i = 0;
 	while(walker <= ret + macLength) {
-		const unsigned char &c = ifr.ifr_hwaddr->sa_data[i++];
+		const unsigned char &c = ifr.ifr_hwaddr.sa_data[i++];
 		*(walker++) = hexLookup[(c & 0x0F) >> 0];
 		*(walker++) = hexLookup[(c & 0xF0) >> 4];
 		if(walker <= ret + macLength) *(walker++) = ':';
