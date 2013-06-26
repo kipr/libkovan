@@ -22,7 +22,7 @@
 #define _CAMERA_H_
 
 #include "geom.h"
- #include "export.h"
+#include "export.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -182,6 +182,12 @@ EXPORT_SYM point2 get_object_center(int channel, int object);
  * \see camera_open_device
  */
 EXPORT_SYM void camera_close();
+
+/**
+ * Sets the path in which to look for camera configurations.
+ * \param path the absolute directory path in which to look for camera configurations.
+ */
+EXPORT_SYM void set_camera_config_base_path(const char *const path);
 
 #ifdef __cplusplus
 }

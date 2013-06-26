@@ -206,3 +206,8 @@ void camera_close()
 {
 	DeviceSingleton::instance()->close();
 }
+
+void set_camera_config_base_path(const char *const path)
+{
+	Camera::ConfigPath::setBasePath(path);
+}
