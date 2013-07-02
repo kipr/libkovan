@@ -8,16 +8,30 @@ CMAKE_MINIMUM_REQUIRED(VERSION 2.6.0)
 
 SET(INCLUDE ${libkovan_SOURCE_DIR}/include)
 SET(SRC ${libkovan_SOURCE_DIR}/src)
+SET(PIXELTOASTER ${SRC}/pixeltoaster)
 
 INCLUDE_DIRECTORIES(${INCLUDE})
 
 FILE(GLOB INCLUDES ${INCLUDE}/kovan/*.h ${INCLUDE}/kovan/*.hpp)
-FILE(GLOB SOURCES ${SRC}/*.cpp)
+FILE(GLOB SOURCES ${SRC}/*.cpp ${PIXELTOASTER}/*.cpp)
 
 SET(CMAKE_CXX_FLAGS "-Wall")
 
 set(LIBRARY_OUTPUT_PATH ${CMAKE_SOURCE_DIR}/lib)
 
+#############################
+#   PixelToaster settings   #
+#############################
+IF(APPLE)
+	FILE(GLOB OBJC_SOURCES ${PIXELTOASTER}/*.mm)
+ELSEIF(WIN32)
+	ADD_DEFINITIONS(-fno-check-new)
+	INCLUDE_DIRECTORIES(${DIRECTX}/Include)
+ENDIF()
+
+##################################
+# Windows kiss-platform nonsense #
+##################################
 IF(WIN32)
 	INCLUDE_DIRECTORIES(${CMAKE_SOURCE_DIR}/../prefix/include)
 	INCLUDE_DIRECTORIES(${CMAKE_SOURCE_DIR}/../opencv/kiss-prefix/include)
@@ -37,13 +51,20 @@ ENDIF()
 
 add_definitions(-O3)
 
-ADD_LIBRARY(kovan SHARED ${SOURCES})
+ADD_LIBRARY(kovan SHARED ${SOURCES} ${OBJC_SOURCES})
 IF(NOT WIN32)
-TARGET_LINK_LIBRARIES(kovan pthread opencv_core opencv_highgui opencv_imgproc zbar avcodec avformat avutil z swscale bz2)
+	TARGET_LINK_LIBRARIES(kovan pthread opencv_core opencv_highgui opencv_imgproc zbar avcodec avformat avutil z swscale bz2)
 ELSE(NOT WIN32)
-# TODO: Make sure these are current
-TARGET_LINK_LIBRARIES(kovan pthread opencv_core249 opencv_highgui249 opencv_imgproc249 zbar)
+	# TODO: Make sure these are current
+	TARGET_LINK_LIBRARIES(kovan pthread opencv_core249 opencv_highgui249 opencv_imgproc249 zbar)
 ENDIF(NOT WIN32)
+
+IF(APPLE)
+	FIND_LIBRARY(OPENGL_LIBRARY OpenGL)
+	FIND_LIBRARY(COCOA_LIBRARY Cocoa)
+	FIND_LIBRARY(CORESERVICE_LIBRARY CoreServices)
+	target_link_libraries(kovan ${OPENGL_LIBRARY} ${COCOA_LIBRARY} ${CORESERVICE_LIBRARY})
+ENDIF(APPLE)
 
 IF(KOVAN)
 	TARGET_LINK_LIBRARIES(kovan i2c_wrapper)

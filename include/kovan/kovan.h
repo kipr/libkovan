@@ -38,7 +38,7 @@
 #include "analog.h"
 #include "ir.h"
 #include "wifi.h"
-#include "draw.h"
+#include "graphics.h"
 #include "battery.h"
 #include "util.h"
 #include "general.h"
