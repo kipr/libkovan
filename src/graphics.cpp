@@ -33,7 +33,7 @@ namespace Kiss
 			return width() * height();
 		}
 		
-		inline bool isValidPoint(const int& x, const int& y) const
+		inline bool isValidPoint(const int x, const int y) const
 		{
 			return x >= 0 && y >= 0 && x < width() && y < height();
 		}
@@ -72,15 +72,15 @@ namespace Kiss
 			return m_mouse.y;
 		}
 		
-		bool isKeyPressed(const Key& key)
+		bool isKeyPressed(const int key)
 		{
-			return m_keyStates[(int)key];
+			return m_keyStates[key];
 		}
 		
 	protected:
 		void onKeyDown(DisplayInterface& display, Key key)
 		{
-			m_keyStates[key] = true;
+			m_keyStates[(int)key] = true;
 		}
 
 		void onKeyPressed(DisplayInterface& display, Key key)
@@ -89,7 +89,7 @@ namespace Kiss
 
 		void onKeyUp(DisplayInterface& display, Key key)
 		{
-			m_keyStates[key] = false;
+			m_keyStates[(int)key] = false;
 		}
 
 		void onMouseButtonDown(DisplayInterface& display, Mouse mouse)
@@ -129,9 +129,12 @@ namespace Kiss
 
 using namespace Kiss;
 
-inline Pixel fromTrueColor(const int& r, const int& g, const int& b)
+inline Pixel fromTrueColor(Encoding enc, const int _0, const int _1, const int _2)
 {
-	return Pixel(r / 255.0, g / 255.0, b / 255.0);
+	switch(enc) {
+		case RGB: return Pixel(_0 / 255.0, _1 / 255.0, _2 / 255.0);
+		case BGR: return Pixel(_2 / 255.0, _1 / 255.0, _0 / 255.0);
+	}
 }
 
 int graphics_open(int width, int height)
@@ -159,12 +162,22 @@ void graphics_clear()
 	g_graphics.pixels.clear();
 }
 
-void graphics_blit(unsigned char *data, int x, int y, int width, int height)
+void graphics_blit(const unsigned char *data, int x, int y, int width, int height)
 {
-	graphics_blit_region(data, 0, 0, width - 1, height - 1, width, height, x, y);
+	graphics_blit_enc(data, RGB, x, y, width, height);
 }
 
-void graphics_blit_section(unsigned char *data, const int& index, const int& dindex, const int& length)
+void graphics_blit_region(const unsigned char *data, int sx, int sy, int ex, int ey, int width, int height, int dx, int dy)
+{
+	graphics_blit_region_enc(data, RGB, sx, sy, ex, ey, width, height, dx, dy);
+}
+
+void graphics_blit_enc(const unsigned char *data, Encoding enc, int x, int y, int width, int height)
+{
+	graphics_blit_region_enc(data, enc, 0, 0, width - 1, height - 1, width, height, x, y);
+}
+
+void graphics_blit_section(const unsigned char *data, Encoding enc, const int index, const int dindex, const int length)
 {
 	int actualLength = length + dindex < g_graphics.size()
 		? length : g_graphics.size() - dindex;
@@ -174,12 +187,12 @@ void graphics_blit_section(unsigned char *data, const int& index, const int& din
 	
 	for(int i = 0; i < actualLength; ++i) {
 		const unsigned int offset = (i + index) * 3;
-		g_graphics.pixels[dindex + i] = fromTrueColor(data[offset],
+		g_graphics.pixels[dindex + i] = fromTrueColor(enc, data[offset],
 			data[offset + 1], data[offset + 2]);
 	}
 }
 
-void graphics_blit_region(unsigned char *data, int sx, int sy, int ex, int ey, int width, int height, int dx, int dy)
+void graphics_blit_region_enc(const unsigned char *data, Encoding enc, int sx, int sy, int ex, int ey, int width, int height, int dx, int dy)
 {
 	if(sx >= ex || sy >= ey) return;
 	if(dx >= g_graphics.width() || dy >= g_graphics.height()) return;
@@ -191,7 +204,7 @@ void graphics_blit_region(unsigned char *data, int sx, int sy, int ex, int ey, i
 		if(cols + dx > g_graphics.width()) cols -= dx;
 		const int index = (sy + i) * width + sx;
 		const int dindex = (dy + i) * g_graphics.width() + dx;
-		graphics_blit_section(data,
+		graphics_blit_section(data, enc,
 			index < 0 ? 0 : index,
 			dindex < 0 ? 0 : dindex,
 			cols);
@@ -200,13 +213,13 @@ void graphics_blit_region(unsigned char *data, int sx, int sy, int ex, int ey, i
 
 void graphics_fill(int r, int g, int b)
 {
-	g_graphics.pixels.assign(g_graphics.size(), fromTrueColor(r, g, b));
+	g_graphics.pixels.assign(g_graphics.size(), fromTrueColor(RGB, r, g, b));
 }
 
 void graphics_pixel(int x, int y, int r, int g, int b)
 {
 	if(!g_graphics.isValidPoint(x, y)) return;
-	g_graphics.pixels[y * g_graphics.width() + x] = fromTrueColor(r, g, b);
+	g_graphics.pixels[y * g_graphics.width() + x] = fromTrueColor(RGB, r, g, b);
 }
 
 void graphics_line(int x1, int y1, int x2, int y2, int r, int g, int b)
@@ -327,9 +340,9 @@ void graphics_triangle_fill(int x1, int y1, int x2, int y2, int x3, int y3, int 
 	graphics_line(x1, y1, x3, y3, r, g, b);
 }
 
-int get_key_state(KeyCode key)
+int get_key_state(enum KeyCode key)
 {
-	return g_listener.isKeyPressed((Key::Code)key) ? 1 : 0;
+	return g_listener.isKeyPressed((int)key) ? 1 : 0;
 }
 
 void get_mouse_position(int *x, int *y)

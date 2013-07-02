@@ -96,7 +96,7 @@ EXPORT_SYM int get_camera_width(void);
 
 /**
  * Gets the camera's y resolution.
- * \attention This value might be different than the previously set y resolution. Never assume the x resolution.
+ * \attention This value might be different than the previously set y resolution. Never assume the y resolution.
  * \return The camera's y resolution, in pixels.
  */
 EXPORT_SYM int get_camera_height(void);
@@ -188,6 +188,14 @@ EXPORT_SYM void camera_close();
  * \param path the absolute directory path in which to look for camera configurations.
  */
 EXPORT_SYM void set_camera_config_base_path(const char *const path);
+
+/**
+ * Retrieves the current camera frame as a BGR (BGR888) array. The returned
+ * pointer is invalid after camera_update() is called again.
+ * 
+ * \return the current BGR888 camera frame.
+ */
+EXPORT_SYM const unsigned char *get_camera_frame();
 
 #ifdef __cplusplus
 }

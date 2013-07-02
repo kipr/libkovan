@@ -211,3 +211,8 @@ void set_camera_config_base_path(const char *const path)
 {
 	Camera::ConfigPath::setBasePath(path);
 }
+
+const unsigned char *get_camera_frame()
+{
+	return DeviceSingleton::instance()->rawImage().ptr();
+}
