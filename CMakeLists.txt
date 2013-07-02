@@ -49,7 +49,7 @@ ELSEIF(UNIX)
 	SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fPIC")
 ENDIF()
 
-add_definitions(-O3)
+# add_definitions(-O3)
 
 ADD_LIBRARY(kovan SHARED ${SOURCES} ${OBJC_SOURCES})
 IF(NOT WIN32)

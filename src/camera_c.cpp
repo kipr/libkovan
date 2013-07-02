@@ -28,9 +28,10 @@ int camera_open(enum Resolution res)
 		width = 640;
 		height = 480;
 		break;
+	default: break;
 	}
-	DeviceSingleton::instance()->setWidth(width);
-	DeviceSingleton::instance()->setHeight(height);
+	if(width) DeviceSingleton::instance()->setWidth(width);
+	if(height) DeviceSingleton::instance()->setHeight(height);
 	return 1;
 }
 
@@ -103,7 +104,25 @@ int camera_update(void)
 
 pixel get_camera_pixel(point2 p)
 {
-	nyi("get_camera_pixel");
+	const cv::Mat &mat = DeviceSingleton::instance()->rawImage();
+	if(mat.empty()) {
+		std::cout << "Camera image is empty." << std::endl;
+		return pixel();
+	}
+	
+	if(p.x < 0 || p.y < 0 || p.x > mat.cols || p.y > mat.rows) {
+		std::cout << "Point isn't within the image." << std::endl;
+		return pixel();
+	}
+	
+	const cv::Vec3b v = mat.at<cv::Vec3b>(p.y, p.x);
+	
+	pixel ret;
+	ret.r = v[2];
+	ret.g = v[1];
+	ret.b = v[0];
+	
+	return ret;
 }
 
 int get_channel_count(void)
@@ -212,7 +231,17 @@ void set_camera_config_base_path(const char *const path)
 	Camera::ConfigPath::setBasePath(path);
 }
 
+const unsigned char *get_camera_frame_row(unsigned row)
+{
+	return DeviceSingleton::instance()->rawImage().ptr(row);
+}
+
 const unsigned char *get_camera_frame()
 {
-	return DeviceSingleton::instance()->rawImage().ptr();
+	return DeviceSingleton::instance()->bgr();
+}
+
+unsigned get_camera_element_size()
+{
+	return DeviceSingleton::instance()->rawImage().elemSize();
 }

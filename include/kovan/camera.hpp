@@ -121,7 +121,7 @@ namespace Camera
 	class EXPORT_SYM Channel
 	{
 	public:
-		Channel(Device *device, const Config &config);
+		Channel(Device *device, const Config config);
 		~Channel();
 		
 		void invalidate();
@@ -217,6 +217,8 @@ namespace Camera
 		void setChannelImplManager(ChannelImplManager *channelImplManager);
 		ChannelImplManager *channelImplManager() const;
 		
+		const unsigned char *bgr() const;
+		
 	private:
 		void updateConfig();
 		
@@ -226,7 +228,15 @@ namespace Camera
 		ChannelImplManager *m_channelImplManager;
 		cv::Mat m_image;
 		timeval m_lastUpdate;
+		
+		mutable unsigned char *m_bgr;
+		mutable unsigned m_bgrSize;
 	};
+	
+	/**
+	 * Retrieve the device singleton that backs the libkovan C camera API
+	 */
+	Camera::Device *cDevice();
 }
 
 

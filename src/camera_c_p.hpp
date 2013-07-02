@@ -8,13 +8,13 @@ namespace Private
 	class DeviceSingleton
 	{
 	public:
-		static void setInputProvider(Camera::InputProvider *const inputProvider);
+		static void setInputProvider(::Camera::InputProvider *const inputProvider);
 		
-		static Camera::Device *instance();
+		static ::Camera::Device *instance();
 		
 	private:
-		static Camera::Device *s_device;
-		static Camera::InputProvider *s_inputProvider;
+		static ::Camera::Device *s_device;
+		static ::Camera::InputProvider *s_inputProvider;
 	};
 }
 

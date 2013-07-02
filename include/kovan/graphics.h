@@ -20,7 +20,7 @@ typedef enum Encoding {
 void graphics_blit(const unsigned char *data, int x, int y, int width, int height);
 void graphics_blit_region(const unsigned char *data, int sx, int sy, int ex, int ey, int width, int height, int dx, int dy);
 
-void graphics_blit_enc(const unsigned char *data, Encoding enc, int x, int y, int width, int height);
+void graphics_blit_enc (const unsigned char *data, Encoding enc, int x, int y, int width, int height);
 void graphics_blit_region_enc(const unsigned char *data, Encoding enc, int sx, int sy, int ex, int ey, int width, int height, int dx, int dy);
 
 void graphics_fill(int r, int g, int b);

@@ -39,7 +39,8 @@ enum Resolution
 {
 	LOW_RES,
 	MED_RES,
-	HIGH_RES
+	HIGH_RES,
+	NATIVE_RES
 };
 
 /**
@@ -190,12 +191,16 @@ EXPORT_SYM void camera_close();
 EXPORT_SYM void set_camera_config_base_path(const char *const path);
 
 /**
- * Retrieves the current camera frame as a BGR (BGR888) array. The returned
+ * Retrieves the current camera frame row as a BGR (BGR888) array. The returned
  * pointer is invalid after camera_update() is called again.
  * 
- * \return the current BGR888 camera frame.
+ * \return the current BGR888 camera frame row.
  */
+EXPORT_SYM const unsigned char *get_camera_frame_row(unsigned row);
+
 EXPORT_SYM const unsigned char *get_camera_frame();
+
+EXPORT_SYM unsigned get_camera_element_size();
 
 #ifdef __cplusplus
 }

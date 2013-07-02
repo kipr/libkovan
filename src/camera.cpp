@@ -1,6 +1,7 @@
 #include "kovan/camera.hpp"
 #include "kovan/ardrone.hpp"
 #include "channel_p.hpp"
+#include "camera_c_p.hpp"
 #include "warn.hpp"
 
 #include <fstream>
@@ -129,7 +130,7 @@ ChannelImpl *DefaultChannelImplManager::channelImpl(const std::string &name)
 
 // Channel //
 
-Camera::Channel::Channel(Device *device, const Config &config)
+Camera::Channel::Channel(Device *device, const Config config)
 	: m_device(device),
 	m_config(config),
 	m_impl(0),
@@ -142,7 +143,8 @@ Camera::Channel::Channel(Device *device, const Config &config)
 		return;
 	}
 	
-	m_impl = device->channelImplManager()->channelImpl(type);
+	ChannelImplManager *const manager = device->channelImplManager();
+	if(manager) m_impl = manager->channelImpl(type);
 	if(!m_impl) {
 		WARN("Type %s not found", type.c_str());
 		return;
@@ -258,7 +260,7 @@ UsbInputProvider::~UsbInputProvider()
 
 bool UsbInputProvider::open(const int number)
 {
-	if(m_capture->isOpened()) return false;
+	if(!m_capture || m_capture->isOpened()) return false;
 	return m_capture->open(number);
 }
 
@@ -287,7 +289,7 @@ bool UsbInputProvider::next(cv::Mat &image)
 
 bool UsbInputProvider::close()
 {
-	if(!m_capture->isOpened()) return false;
+	if(!m_capture || !m_capture->isOpened()) return false;
 	m_capture->release();
 	return true;
 }
@@ -296,7 +298,9 @@ bool UsbInputProvider::close()
 
 Camera::Device::Device(InputProvider *const inputProvider)
 	: m_inputProvider(inputProvider),
-	m_channelImplManager(new DefaultChannelImplManager)
+	m_channelImplManager(new DefaultChannelImplManager),
+	m_bgr(0),
+	m_bgrSize(0)
 {
 	Config *config = Config::load(Camera::ConfigPath::defaultConfigPath());
 	if(!config) return;
@@ -309,10 +313,12 @@ Camera::Device::~Device()
 	ChannelPtrVector::const_iterator it = m_channels.begin();
 	for(; it != m_channels.end(); ++it) delete *it;
 	delete m_inputProvider;
+	delete m_bgr;
 }
 
 bool Camera::Device::open(const int number)
 {
+	if(!m_inputProvider) return false;
 	return m_inputProvider->open(number);
 }
 
@@ -405,6 +411,23 @@ ChannelImplManager *Camera::Device::channelImplManager() const
 	return m_channelImplManager;
 }
 
+const unsigned char *Camera::Device::bgr() const
+{
+	const unsigned correctSize = m_image.rows * m_image.cols * m_image.elemSize();
+	if(m_bgrSize != correctSize) {
+		delete m_bgr;
+		m_bgrSize = correctSize;
+		m_bgr = new unsigned char[m_bgrSize];
+	}
+	
+	for(unsigned row = 0; row < m_image.rows; ++row) {
+		unsigned offset1 = row * m_image.cols * m_image.elemSize();
+		memcpy(m_bgr + offset1, m_image.ptr(row), m_image.cols * m_image.elemSize());
+	}
+	
+	return m_bgr;
+}
+
 void Camera::Device::updateConfig()
 {
 	ChannelPtrVector::const_iterator it = m_channels.begin();
@@ -424,4 +447,9 @@ void Camera::Device::updateConfig()
 		m_config.endGroup();
 	}
 	m_config.endGroup();
+}
+
+Camera::Device *Camera::cDevice()
+{
+	return Private::DeviceSingleton::instance();
 }
