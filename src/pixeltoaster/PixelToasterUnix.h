@@ -14,6 +14,8 @@
 #include <X11/Xutil.h>
 #include <X11/keysymdef.h>
 
+#include <stdlib.h>
+
 namespace PixelToaster
 {
 	template <typename T>
