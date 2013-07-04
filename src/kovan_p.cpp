@@ -74,7 +74,7 @@ Kovan *Kovan::instance()
 
 Kovan::Kovan()
 	// TODO: This needs to be exposed via API (remote libkovan connection)
-	: m_module(new KovanModule(inet_addr("127.0.0.1"), htons(5555))),
+	: m_module(new KovanModule(inet_addr("127.0.0.1"), htons(4628))),
 	m_autoFlush(true)
 {
 	// Create the socket descriptor for communication

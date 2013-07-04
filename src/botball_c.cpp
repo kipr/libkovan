@@ -7,6 +7,7 @@
 #include "kovan/audio.h"
 #include "kovan/thread.hpp"
 #include "kovan/general.h"
+#include "kovan/create.hpp"
 
 #include <cstdlib>
 #include <iostream>
@@ -17,7 +18,6 @@ public:
 	ShutDownIn(double s)
 		: m_s(s)
 	{
-		atexit(&halt);
 	}
 	
 	~ShutDownIn()
@@ -30,7 +30,9 @@ public:
 		msleep(m_s * 1000.0);
 		const double end = seconds();
 		std::cout << std::endl << "Shutdown after " << (end - start) << " seconds" << std::endl;
-		exit(0);
+		// Note: Might want to move this to botui in the future.
+		Create::instance()->stop();
+		_Exit(0);
 	}
 	
 private:
@@ -42,6 +44,7 @@ void shut_down_in(double s)
 	static ShutDownIn *s_instance;
 	if(s_instance) {
 		std::cout << "Warning: shut_down_in already called once. Ignoring." << std::endl;
+		return;
 	}
 	s_instance = new ShutDownIn(s);
 	s_instance->start();

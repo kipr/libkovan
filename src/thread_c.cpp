@@ -77,7 +77,7 @@ void thread_start(thread id)
 	threadObject(id.data)->start();
 }
 
-void thread_join(thread id)
+void thread_wait(thread id)
 {
 	threadObject(id.data)->join();
 }

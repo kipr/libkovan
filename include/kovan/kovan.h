@@ -27,6 +27,7 @@
 #ifndef _KOVAN_H_
 #define _KOVAN_H_
 
+#include "ardrone.h"
 #include "audio.h"
 #include "motors.h"
 #include "servo.h"
@@ -37,7 +38,7 @@
 #include "analog.h"
 #include "ir.h"
 #include "wifi.h"
-#include "draw.h"
+#include "graphics.h"
 #include "battery.h"
 #include "util.h"
 #include "general.h"

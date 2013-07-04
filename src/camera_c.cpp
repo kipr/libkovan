@@ -1,23 +1,43 @@
 #include "kovan/camera.h"
 #include "kovan/camera.hpp"
 #include "nyi.h"
+#include "camera_c_p.hpp"
 
 #include <iostream>
 #include <cstdlib>
 
-class DeviceSingleton
-{
-public:
-	static Camera::Device *instance()
-	{
-		static Camera::Device s_device;
-		return &s_device;
-	}
-};
+using namespace Private;
 
 int camera_open(enum Resolution res)
 {
+	DeviceSingleton::setInputProvider(new Camera::UsbInputProvider);
 	bool ret = DeviceSingleton::instance()->open();
+	if(!ret) return 0;
+	int width = 0;
+	int height = 0;
+	switch(res) {
+	case LOW_RES:
+		width = 160;
+		height = 120;
+		break;
+	case MED_RES:
+		width = 320;
+		height = 240;
+		break;
+	case HIGH_RES:
+		width = 640;
+		height = 480;
+		break;
+	default: break;
+	}
+	if(width) DeviceSingleton::instance()->setWidth(width);
+	if(height) DeviceSingleton::instance()->setHeight(height);
+	return 1;
+}
+
+int camera_open_device(int number, enum Resolution res)
+{
+	bool ret = DeviceSingleton::instance()->open(number);
 	if(!ret) return 0;
 	int width = 0;
 	int height = 0;
@@ -38,21 +58,6 @@ int camera_open(enum Resolution res)
 	DeviceSingleton::instance()->setWidth(width);
 	DeviceSingleton::instance()->setHeight(height);
 	return 1;
-}
-
-int camera_open_device(int number)
-{
-	return DeviceSingleton::instance()->open(number) ? 1 : 0;
-}
-
-void set_camera_grab_count(int grabs)
-{
-	DeviceSingleton::instance()->setGrabCount(grabs);
-}
-
-int get_camera_grab_count()
-{
-	return DeviceSingleton::instance()->grabCount();
 }
 
 int camera_load_config(const char *name)
@@ -82,17 +87,45 @@ void set_camera_height(int height)
 	DeviceSingleton::instance()->setHeight(height);
 }
 
-int camera_update()
+int get_camera_width(void)
+{
+	return DeviceSingleton::instance()->width();
+}
+
+int get_camera_height(void)
+{
+	return DeviceSingleton::instance()->height();
+}
+
+int camera_update(void)
 {
 	return DeviceSingleton::instance()->update() ? 1 : 0;
 }
 
 pixel get_camera_pixel(point2 p)
 {
-	nyi("get_camera_pixel");
+	const cv::Mat &mat = DeviceSingleton::instance()->rawImage();
+	if(mat.empty()) {
+		std::cout << "Camera image is empty." << std::endl;
+		return pixel();
+	}
+	
+	if(p.x < 0 || p.y < 0 || p.x > mat.cols || p.y > mat.rows) {
+		std::cout << "Point isn't within the image." << std::endl;
+		return pixel();
+	}
+	
+	const cv::Vec3b v = mat.at<cv::Vec3b>(p.y, p.x);
+	
+	pixel ret;
+	ret.r = v[2];
+	ret.g = v[1];
+	ret.b = v[0];
+	
+	return ret;
 }
 
-int get_channel_count()
+int get_channel_count(void)
 {
 	return DeviceSingleton::instance()->channels().size();
 }
@@ -191,4 +224,24 @@ point2 get_object_center(int channel, int object)
 void camera_close()
 {
 	DeviceSingleton::instance()->close();
+}
+
+void set_camera_config_base_path(const char *const path)
+{
+	Camera::ConfigPath::setBasePath(path);
+}
+
+const unsigned char *get_camera_frame_row(unsigned row)
+{
+	return DeviceSingleton::instance()->rawImage().ptr(row);
+}
+
+const unsigned char *get_camera_frame()
+{
+	return DeviceSingleton::instance()->bgr();
+}
+
+unsigned get_camera_element_size()
+{
+	return DeviceSingleton::instance()->rawImage().elemSize();
 }

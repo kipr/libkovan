@@ -820,6 +820,20 @@ bool Create::setBaudRate(const unsigned char& baudCode)
 	return true;
 }
 
+void Create::setDistance(const int distance)
+{
+	// Clear distance on device
+	updateSensorPacket2(true);
+	m_state.distance = distance;
+}
+
+void Create::setAngle(const int angle)
+{
+	// Clear angle on device
+	updateSensorPacket2(true);
+	m_state.angle = angle;
+}
+
 const CreateState *Create::state()
 {
 	return &m_state;
@@ -969,7 +983,7 @@ bool Create::open()
 	
 	beginAtomicOperation();
 #ifndef WIN32
-	m_tty = ::open("/dev/tty.usbserial-FTCVZ1V9", O_RDWR | O_NOCTTY | O_NONBLOCK);
+	m_tty = ::open("/dev/ttyS2", O_RDWR | O_NOCTTY | O_NONBLOCK);
 #else
 	#warning Create library not yet implemented for Windows
 #endif
@@ -1018,9 +1032,9 @@ void Create::updateSensorPacket1()
 	endAtomicOperation();
 }
 
-void Create::updateSensorPacket2()
+void Create::updateSensorPacket2(bool forceUpdate)
 {
-	if(!hasRequiredTimePassed(timestamps[1])) return;
+	if(!forceUpdate && !hasRequiredTimePassed(timestamps[1])) return;
 	flush();
 	beginAtomicOperation();
 	write(OI_SENSORS);

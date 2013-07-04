@@ -41,14 +41,15 @@
 #define _KOVAN_HPP_
 
 #include "motors.hpp"
+#include "ardrone.hpp"
 #include "servo.hpp"
 #include "analog.hpp"
+#include "digital.hpp"
 #include "sensor_logic.hpp"
 #include "button.hpp"
 #include "camera.hpp"
 #include "ir.hpp"
 #include "wifi.hpp"
-#include "draw.hpp"
 #include "battery.hpp"
 #include "create.hpp"
 #include "util.hpp"

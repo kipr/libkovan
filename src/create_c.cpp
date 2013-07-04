@@ -21,6 +21,8 @@
 #include "kovan/create.h"
 #include "kovan/create.hpp"
 
+#include <climits>
+
 int create_connect()
 {
 	while(!create_connect_once());
@@ -159,7 +161,7 @@ int get_create_normalized_angle()
 
 void set_create_normalized_angle(int angle)
 {
-
+	set_create_total_angle(angle);
 }
 
 int get_create_total_angle()
@@ -169,7 +171,7 @@ int get_create_total_angle()
 
 void set_create_total_angle(int angle)
 {
-	
+	Create::instance()->setAngle(angle);
 }
 
 int get_create_distance()
@@ -179,7 +181,7 @@ int get_create_distance()
 
 void set_create_distance(int dist)
 {
-	
+	Create::instance()->setDistance(dist);
 }
 
 int get_create_battery_charging_state()
@@ -364,7 +366,7 @@ void create_play_song(int num)
 
 int create_read_block(char *data, int count)
 {
-	return Create::instance()->read(reinterpret_cast<unsigned char *>(data), count);
+	return Create::instance()->blockingRead(reinterpret_cast<unsigned char *>(data), count, UINT_MAX);
 }
 
 void create_write_byte(char byte)

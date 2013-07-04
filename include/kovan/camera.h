@@ -22,7 +22,7 @@
 #define _CAMERA_H_
 
 #include "geom.h"
- #include "export.h"
+#include "export.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -39,7 +39,8 @@ enum Resolution
 {
 	LOW_RES,
 	MED_RES,
-	HIGH_RES
+	HIGH_RES,
+	NATIVE_RES
 };
 
 /**
@@ -57,15 +58,15 @@ EXPORT_SYM int camera_open(enum Resolution res);
 /**
  * Opens a camera for use.
  * \param number The camera's id. 0 is the first camera, 1 is the second camera, etc.
+ * \param res The resolution the camera should operate at. This can be:
+ *   - LOW_RES (160x120)
+ *   - MED_RES (320x240)
+ *   - HIGH_RES (640x480)
  * \return 1 on success, 0 on failure
  * \see camera_open
  * \see camera_close
  */
-EXPORT_SYM int camera_open_device(int number);
-
-EXPORT_SYM void set_camera_grab_count(int grabs);
-
-EXPORT_SYM int get_camera_grab_count();
+EXPORT_SYM int camera_open_device(int number, enum Resolution res);
 
 /**
  * Loads the config file specified by name.
@@ -88,10 +89,24 @@ EXPORT_SYM void set_camera_width(int width);
 EXPORT_SYM void set_camera_height(int height);
 
 /**
+ * Gets the camera's x resolution.
+ * \attention This value might be different than the previously set x resolution. Never assume the x resolution.
+ * \return The camera's x resolution, in pixels.
+ */
+EXPORT_SYM int get_camera_width(void);
+
+/**
+ * Gets the camera's y resolution.
+ * \attention This value might be different than the previously set y resolution. Never assume the y resolution.
+ * \return The camera's y resolution, in pixels.
+ */
+EXPORT_SYM int get_camera_height(void);
+
+/**
  * Pulls a new image from the camera for processing.
  * \return 1 on success, 0 on failure.
  */
-EXPORT_SYM int camera_update();
+EXPORT_SYM int camera_update(void);
 
 /**
  * \param p The point at which the pixel lies.
@@ -104,7 +119,7 @@ EXPORT_SYM pixel get_camera_pixel(point2 p);
  * \return Number of channels in the current configuration.
  * \see get_object_count
  */
-EXPORT_SYM int get_channel_count();
+EXPORT_SYM int get_channel_count(void);
 
 /**
  * \param channel The channel to scan for objects.
@@ -168,6 +183,24 @@ EXPORT_SYM point2 get_object_center(int channel, int object);
  * \see camera_open_device
  */
 EXPORT_SYM void camera_close();
+
+/**
+ * Sets the path in which to look for camera configurations.
+ * \param path the absolute directory path in which to look for camera configurations.
+ */
+EXPORT_SYM void set_camera_config_base_path(const char *const path);
+
+/**
+ * Retrieves the current camera frame row as a BGR (BGR888) array. The returned
+ * pointer is invalid after camera_update() is called again.
+ * 
+ * \return the current BGR888 camera frame row.
+ */
+EXPORT_SYM const unsigned char *get_camera_frame_row(unsigned row);
+
+EXPORT_SYM const unsigned char *get_camera_frame();
+
+EXPORT_SYM unsigned get_camera_element_size();
 
 #ifdef __cplusplus
 }

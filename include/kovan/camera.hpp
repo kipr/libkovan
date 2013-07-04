@@ -24,7 +24,7 @@
 #include "geom.hpp"
 #include "color.hpp"
 #include "config.hpp"
- #include "export.h"
+#include "export.h"
 #include <cstring>
 #include <string>
 #include <vector>
@@ -67,7 +67,7 @@ namespace Camera
 		const Rect<unsigned> &boundingBox() const;
 		const double &confidence() const;
 		const char *data() const;
-		const size_t &dataLength() const;
+		const size_t dataLength() const;
 		
 	private:
 		Point2<unsigned> m_centroid;
@@ -121,7 +121,7 @@ namespace Camera
 	class EXPORT_SYM Channel
 	{
 	public:
-		Channel(Device *device, const Config &config);
+		Channel(Device *device, const Config config);
 		~Channel();
 		
 		void invalidate();
@@ -160,25 +160,55 @@ namespace Camera
 		static std::string s_path;
 	};
 	
+	class EXPORT_SYM InputProvider
+	{
+	public:
+		virtual ~InputProvider();
+		virtual bool open(const int number) = 0;
+		virtual bool isOpen() const = 0;
+		virtual void setWidth(const unsigned width) = 0;
+		virtual void setHeight(const unsigned height) = 0;
+		virtual bool next(cv::Mat &image) = 0;
+		virtual bool close() = 0;
+	};
+	
+	class EXPORT_SYM UsbInputProvider : public InputProvider
+	{
+	public:
+		UsbInputProvider();
+		~UsbInputProvider();
+		
+		virtual bool open(const int number);
+		virtual bool isOpen() const;
+		virtual void setWidth(const unsigned width);
+		virtual void setHeight(const unsigned height);
+		virtual bool next(cv::Mat &image);
+		virtual bool close();
+		
+	private:
+		cv::VideoCapture *m_capture;
+	};
+	
 	class EXPORT_SYM Device
 	{
 	public:
-		Device();
+		Device(InputProvider *const inputProvider);
 		~Device();
 		
-		bool open(const int &number = 0);
+		bool open(const int number = 0);
 		bool isOpen() const;
-		void close();
+		bool close();
 		bool update();
 		
-		void setWidth(const unsigned &width);
-		void setHeight(const unsigned &height);
-		void setGrabCount(unsigned char grabs);
-		unsigned char grabCount() const;
+		void setWidth(const unsigned width);
+		void setHeight(const unsigned height);
+		
+		unsigned width() const;
+		unsigned height() const;
 		
 		const ChannelPtrVector &channels() const;
 		
-		cv::VideoCapture *videoCapture() const;
+		InputProvider *inputProvider() const;
 		const cv::Mat &rawImage() const;
 		
 		void setConfig(const Config &config);
@@ -187,17 +217,26 @@ namespace Camera
 		void setChannelImplManager(ChannelImplManager *channelImplManager);
 		ChannelImplManager *channelImplManager() const;
 		
+		const unsigned char *bgr() const;
+		
 	private:
 		void updateConfig();
 		
+		InputProvider *const m_inputProvider;
 		Config m_config;
-		cv::VideoCapture *m_capture;
 		ChannelPtrVector m_channels;
 		ChannelImplManager *m_channelImplManager;
-		unsigned char m_grabCount;
 		cv::Mat m_image;
 		timeval m_lastUpdate;
+		
+		mutable unsigned char *m_bgr;
+		mutable unsigned m_bgrSize;
 	};
+	
+	/**
+	 * Retrieve the device singleton that backs the libkovan C camera API
+	 */
+	Camera::Device *cDevice();
 }
 
 

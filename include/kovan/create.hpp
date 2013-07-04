@@ -298,7 +298,11 @@ public:
 	void drive(const short& velocity, const short& radius);
 	void driveDirect(const short& left, const short& right);
 	inline void driveStraight(const short& speed) { driveDirect(speed, speed); }
-	inline void stop() { driveStraight(0); }
+	inline void stop()
+	{
+		flush();
+		driveStraight(0);
+	}
 	
 	/*!
 	 * A very accurate turn method based on time rather than the create's own readings, which are often less than accurate.
@@ -333,6 +337,9 @@ public:
 	inline void spinCounterClockwise(const short& speed) { spin(speed); }
 	
 	bool setBaudRate(const unsigned char& baudCode);
+	
+	void setDistance(const int distance);
+	void setAngle(const int angle);
 	
 	// High level sensors
 	AbstractButton *playButton() const;
@@ -452,7 +459,7 @@ private:
 	void updateState();
 	
 	void updateSensorPacket1();
-	void updateSensorPacket2();
+	void updateSensorPacket2(bool forceUpdate = false);
 	void updateSensorPacket3();
 	void updateSensorPacket4();
 	void updateSensorPacket5();

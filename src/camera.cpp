@@ -1,5 +1,7 @@
 #include "kovan/camera.hpp"
+#include "kovan/ardrone.hpp"
 #include "channel_p.hpp"
+#include "camera_c_p.hpp"
 #include "warn.hpp"
 
 #include <fstream>
@@ -54,7 +56,7 @@ const Rect<unsigned> &Camera::Object::boundingBox() const
 	return m_boundingBox;
 }
 
-const double &Camera::Object::confidence() const
+const double Camera::Object::confidence() const
 {
 	return m_confidence;
 }
@@ -64,7 +66,7 @@ const char *Camera::Object::data() const
 	return m_data;
 }
 
-const size_t &Camera::Object::dataLength() const
+const size_t Camera::Object::dataLength() const
 {
 	return m_dataLength;
 }
@@ -80,6 +82,11 @@ ChannelImpl::~ChannelImpl()
 
 void ChannelImpl::setImage(const cv::Mat &image)
 {
+	if(image.empty()) {
+		m_image = cv::Mat();
+		m_dirty = true;
+		return;
+	}
 	m_image = image;
 	m_dirty = true;
 }
@@ -123,7 +130,7 @@ ChannelImpl *DefaultChannelImplManager::channelImpl(const std::string &name)
 
 // Channel //
 
-Camera::Channel::Channel(Device *device, const Config &config)
+Camera::Channel::Channel(Device *device, const Config config)
 	: m_device(device),
 	m_config(config),
 	m_impl(0),
@@ -136,7 +143,8 @@ Camera::Channel::Channel(Device *device, const Config &config)
 		return;
 	}
 	
-	m_impl = device->channelImplManager()->channelImpl(type);
+	ChannelImplManager *const manager = device->channelImplManager();
+	if(manager) m_impl = manager->channelImpl(type);
 	if(!m_impl) {
 		WARN("Type %s not found", type.c_str());
 		return;
@@ -232,12 +240,67 @@ void Camera::ConfigPath::setDefaultConfigPath(const std::string &name)
 	file.close();	
 }
 
+// Input Providers //
+
+InputProvider::~InputProvider()
+{
+}
+
+UsbInputProvider::UsbInputProvider()
+	: m_capture(new cv::VideoCapture)
+{
+	setWidth(160);
+	setHeight(120);
+}
+
+UsbInputProvider::~UsbInputProvider()
+{
+	delete m_capture;
+}
+
+bool UsbInputProvider::open(const int number)
+{
+	if(!m_capture || m_capture->isOpened()) return false;
+	return m_capture->open(number);
+}
+
+bool UsbInputProvider::isOpen() const
+{
+	return m_capture->isOpened();
+}
+
+void UsbInputProvider::setWidth(const unsigned width)
+{
+	m_capture->set(CV_CAP_PROP_FRAME_WIDTH, width);
+}
+
+void UsbInputProvider::setHeight(const unsigned height)
+{
+	m_capture->set(CV_CAP_PROP_FRAME_HEIGHT, height);
+}
+
+bool UsbInputProvider::next(cv::Mat &image)
+{
+	bool success = true;
+	success &= m_capture->grab();
+	success &= m_capture->retrieve(image);
+	return success;
+}
+
+bool UsbInputProvider::close()
+{
+	if(!m_capture || !m_capture->isOpened()) return false;
+	m_capture->release();
+	return true;
+}
+
 // Device //
 
-Camera::Device::Device()
-	: m_capture(new cv::VideoCapture),
+Camera::Device::Device(InputProvider *const inputProvider)
+	: m_inputProvider(inputProvider),
 	m_channelImplManager(new DefaultChannelImplManager),
-	m_grabCount(1)
+	m_bgr(0),
+	m_bgrSize(0)
 {
 	Config *config = Config::load(Camera::ConfigPath::defaultConfigPath());
 	if(!config) return;
@@ -247,60 +310,57 @@ Camera::Device::Device()
 
 Camera::Device::~Device()
 {
-	ChannelPtrVector::iterator it = m_channels.begin();
+	ChannelPtrVector::const_iterator it = m_channels.begin();
 	for(; it != m_channels.end(); ++it) delete *it;
-	delete m_capture;
+	delete m_inputProvider;
+	delete m_bgr;
 }
 
-bool Camera::Device::open(const int &number)
+bool Camera::Device::open(const int number)
 {
-	if(m_capture->isOpened()) return true;
-	return m_capture->open(number);
+	if(!m_inputProvider) return false;
+	return m_inputProvider->open(number);
 }
 
 bool Camera::Device::isOpen() const
 {
-	return m_capture->isOpened();
+	return m_inputProvider->isOpen();
 }
 
-void Camera::Device::setWidth(const unsigned &width)
+void Camera::Device::setWidth(const unsigned width)
 {
-	m_capture->set(CV_CAP_PROP_FRAME_WIDTH, width);
+	m_inputProvider->setWidth(width);
 }
 
-void Camera::Device::setHeight(const unsigned &height)
+void Camera::Device::setHeight(const unsigned height)
 {
-	m_capture->set(CV_CAP_PROP_FRAME_HEIGHT, height);
+	m_inputProvider->setHeight(height);
 }
 
-void Camera::Device::setGrabCount(unsigned char grabs)
+unsigned Camera::Device::width() const
 {
-	if(grabs < 1) grabs = 1;
-	else if(grabs > 5) grabs = 5;
-	m_grabCount = grabs;
+	if(m_image.empty()) return 0;
+	return m_image.cols;
 }
 
-unsigned char Camera::Device::grabCount() const
+unsigned Camera::Device::height() const
 {
-	return m_grabCount;
+	if(m_image.empty()) return 0;
+	return m_image.rows;
 }
 
-void Camera::Device::close()
+bool Camera::Device::close()
 {
-	if(!m_capture->isOpened()) return;
-	m_capture->release();
+	return m_inputProvider->close();
 }
 
 bool Camera::Device::update()
 {
 	// Get new image
-	bool success = true;
-	for(unsigned char i = 0; i < m_grabCount; ++i) {
-		success &= m_capture->grab();
+	if(!m_inputProvider->next(m_image)) {
+		m_image = cv::Mat();
+		return false;
 	}
-	success &= m_capture->retrieve(m_image);
-	
-	if(!success) return false;
 	
 	// No need to update channels if there are none.
 	if(m_channels.empty()) return true;
@@ -309,7 +369,7 @@ bool Camera::Device::update()
 	m_channelImplManager->setImage(m_image);
 	
 	// Invalidate all channels
-	ChannelPtrVector::iterator it = m_channels.begin();
+	ChannelPtrVector::const_iterator it = m_channels.begin();
 	for(; it != m_channels.end(); ++it) (*it)->invalidate();
 	return true;
 }
@@ -319,9 +379,9 @@ const ChannelPtrVector &Camera::Device::channels() const
 	return m_channels;
 }
 
-cv::VideoCapture *Camera::Device::videoCapture() const
+InputProvider *Camera::Device::inputProvider() const
 {
-	return m_capture;
+	return m_inputProvider;
 }
 
 const cv::Mat &Camera::Device::rawImage() const
@@ -351,9 +411,26 @@ ChannelImplManager *Camera::Device::channelImplManager() const
 	return m_channelImplManager;
 }
 
+const unsigned char *Camera::Device::bgr() const
+{
+	const unsigned correctSize = m_image.rows * m_image.cols * m_image.elemSize();
+	if(m_bgrSize != correctSize) {
+		delete m_bgr;
+		m_bgrSize = correctSize;
+		m_bgr = new unsigned char[m_bgrSize];
+	}
+	
+	for(unsigned row = 0; row < m_image.rows; ++row) {
+		unsigned offset1 = row * m_image.cols * m_image.elemSize();
+		memcpy(m_bgr + offset1, m_image.ptr(row), m_image.cols * m_image.elemSize());
+	}
+	
+	return m_bgr;
+}
+
 void Camera::Device::updateConfig()
 {
-	ChannelPtrVector::iterator it = m_channels.begin();
+	ChannelPtrVector::const_iterator it = m_channels.begin();
 	for(; it != m_channels.end(); ++it) delete *it;
 	m_channels.clear();
 	
@@ -370,4 +447,9 @@ void Camera::Device::updateConfig()
 		m_config.endGroup();
 	}
 	m_config.endGroup();
+}
+
+Camera::Device *Camera::cDevice()
+{
+	return Private::DeviceSingleton::instance();
 }

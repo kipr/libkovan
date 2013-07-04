@@ -14,11 +14,18 @@ HsvChannelImpl::HsvChannelImpl()
 
 void HsvChannelImpl::update(const cv::Mat &image)
 {
+	if(image.empty()) {
+		m_image = cv::Mat();
+		return;
+	}
 	cv::cvtColor(image, m_image, CV_BGR2HSV);
 }
 
 Camera::ObjectVector HsvChannelImpl::findObjects(const Config &config)
 {
+	if(m_image.empty()) return ::Camera::ObjectVector();
+	
+	
 	// TODO: This lookup is really slow compared to the rest of
 	// the algorithm.
 	cv::Vec3b top(config.intValue("th"),
@@ -78,6 +85,11 @@ BarcodeChannelImpl::BarcodeChannelImpl()
 
 void BarcodeChannelImpl::update(const cv::Mat &image)
 {
+	if(image.empty()) {
+		m_gray = cv::Mat();
+		return;
+	}
+	
 	cv::cvtColor(image, m_gray, CV_BGR2GRAY);
 	m_image.set_data(m_gray.data, m_gray.cols * m_gray.rows);
 	m_image.set_size(m_gray.cols, m_gray.rows);
@@ -85,6 +97,8 @@ void BarcodeChannelImpl::update(const cv::Mat &image)
 
 ::Camera::ObjectVector BarcodeChannelImpl::findObjects(const Config &config)
 {
+	if(m_gray.empty()) return ::Camera::ObjectVector();
+	
 	m_scanner.scan(m_image);
 	zbar::SymbolSet symbols = m_scanner.get_results();
 	::Camera::ObjectVector ret;

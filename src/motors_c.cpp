@@ -96,13 +96,14 @@ int freeze(int motor)
 int get_motor_done(int motor)
 {
 	if(motor < 0 || motor > 3) return -1;
+	// This sleep is necessary to make sure the PID control loop has run
+	msleep(50);
 	return Private::Motor::instance()->isPidActive(motor) ? 0 : 1;
 }
 
 void block_motor_done(int motor)
 {
-	msleep(50);
-	while(!get_motor_done(motor)) msleep(40);
+	while(!get_motor_done(motor));
 }
 
 void bmd(int motor)

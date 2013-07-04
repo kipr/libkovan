@@ -86,11 +86,11 @@ void Private::Motor::setPidGains(port_t port, const short &p, const short &i, co
 	if(port > 3) return;
 	
 	Private::Kovan *kovan = Private::Kovan::instance();
-	kovan->enqueueCommand(createWriteCommand(PID_PN_0 + port, p));
-	kovan->enqueueCommand(createWriteCommand(PID_IN_0 + port, i));
-	kovan->enqueueCommand(createWriteCommand(PID_DN_0 + port, d));
-	kovan->enqueueCommand(createWriteCommand(PID_PD_0 + port, pd));
-	kovan->enqueueCommand(createWriteCommand(PID_ID_0 + port, id));
+	kovan->enqueueCommand(createWriteCommand(PID_PN_0 + port, p), false);
+	kovan->enqueueCommand(createWriteCommand(PID_IN_0 + port, i), false);
+	kovan->enqueueCommand(createWriteCommand(PID_DN_0 + port, d), false);
+	kovan->enqueueCommand(createWriteCommand(PID_PD_0 + port, pd), false);
+	kovan->enqueueCommand(createWriteCommand(PID_ID_0 + port, id), false);
 	kovan->enqueueCommand(createWriteCommand(PID_DD_0 + port, dd));
 }
 
@@ -98,12 +98,15 @@ void Private::Motor::clearBemf(unsigned char port)
 {
 	port = fixPort(port);
 	if(port > 3) return;
-	m_cleared[port] = backEMF(port);
+	Private::Kovan::instance()->autoUpdate();
+	const Private::State &s = Private::Kovan::instance()->currentState();
+	m_cleared[port] = (((int)s.t[bemfHighRegisters[port]]) << 16 | s.t[bemfLowRegisters[port]]);
 }
 
 void Private::Motor::setControlMode(port_t port, Private::Motor::ControlMode controlMode)
 {
 	Private::Kovan *kovan = Private::Kovan::instance();
+	kovan->autoUpdate();
 	
 	port = fixPort(port);
 	const unsigned short offset = (3 - port) << 1;
@@ -143,7 +146,7 @@ void Private::Motor::setPidVelocity(port_t port, const int &ticks)
 {
 	Private::Kovan *kovan = Private::Kovan::instance();
 	port = fixPort(port);
-	kovan->enqueueCommand(createWriteCommand(goalSpeedLowRegisters[port], ticks & 0x0000FFFF));
+	kovan->enqueueCommand(createWriteCommand(goalSpeedLowRegisters[port], ticks & 0x0000FFFF), false);
 	kovan->enqueueCommand(createWriteCommand(goalSpeedHighRegisters[port], (ticks & 0xFFFF0000) >> 16));
 }
 
@@ -157,9 +160,9 @@ int Private::Motor::pidVelocity(port_t port) const
 void Private::Motor::setPidGoalPos(port_t port, int pos)
 {
 	Private::Kovan *kovan = Private::Kovan::instance();
-	pos -= m_cleared[port];
 	port = fixPort(port);
-	kovan->enqueueCommand(createWriteCommand(goalPosLowRegisters[port], pos & 0x0000FFFF));
+	pos += m_cleared[port];
+	kovan->enqueueCommand(createWriteCommand(goalPosLowRegisters[port], pos & 0x0000FFFF), false);
 	kovan->enqueueCommand(createWriteCommand(goalPosHighRegisters[port], (pos & 0xFFFF0000) >> 16));
 }
 
@@ -202,8 +205,8 @@ void Private::Motor::setPwmDirection(port_t port, const Motor::Direction &dir)
 	// this will undo their work.
 	Private::Kovan *kovan = Private::Kovan::instance();
 	
-	port = fixPort(port);
 	setControlMode(port, Private::Motor::Inactive);
+	port = fixPort(port);
 	const unsigned short offset = (3 - port) << 1;
 	unsigned short &dcs = kovan->currentState().t[MOTOR_DRIVE_CODE_T];
 	
@@ -228,8 +231,8 @@ unsigned char Private::Motor::pwm(port_t port)
 
 void Private::Motor::stop(port_t port)
 {
-	setControlMode(fixPort(port), Private::Motor::Inactive);
-	setPwmDirection(fixPort(port), PassiveStop);
+	setControlMode(port, Private::Motor::Inactive);
+	setPwmDirection(port, PassiveStop);
 }
 
 int Private::Motor::backEMF(port_t port)
