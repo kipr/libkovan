@@ -45,10 +45,10 @@ private:
 };
 
 template<typename T>
-class EXPORT_SYM Rectangle
+class EXPORT_SYM Rect
 {
 public:
-	Rectangle(const T &x, const T &y, const T &width, const T &height)
+	Rect(const T &x, const T &y, const T &width, const T &height)
 		: m_x(x),
 		m_y(y),
 		m_width(width),

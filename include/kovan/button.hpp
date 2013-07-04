@@ -197,26 +197,26 @@ public:
 namespace Button
 {
 	//! The A button instance
-	extern IdButton A;
+	extern EXPORT_SYM IdButton A;
 	//! The B button instance
-	extern IdButton B;
+	extern EXPORT_SYM IdButton B;
 	//! The C button instance
-	extern IdButton C;
+	extern EXPORT_SYM IdButton C;
 
 	//! The X button instance
-	extern IdButton X;
+	extern EXPORT_SYM IdButton X;
 	//! The Y button instance
-	extern IdButton Y;
+	extern EXPORT_SYM IdButton Y;
 	//! The Z button instance
-	extern IdButton Z;
+	extern EXPORT_SYM IdButton Z;
 	
 	//! The Side button instance
-	extern IdButton Side;
+	extern EXPORT_SYM IdButton Side;
 	
 	// extern AbstractButton side;
 	
 	//! Pointers to all 6 system buttons
-	extern IdButton *const all[7];
+	extern EXPORT_SYM IdButton *const all[7];
 }
 
 #endif
