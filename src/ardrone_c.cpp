@@ -1,3 +1,5 @@
+#ifndef _WIN32
+
 #include "kovan/ardrone.h"
 #include "kovan/ardrone.hpp"
 #include "kovan/util.h"
@@ -156,3 +158,5 @@ int get_drone_emergency_stop_enabled(void)
 {
 	return ARDrone::instance()->isEmergencyStopEnabled() ? 1 : 0;
 }
+
+#endif

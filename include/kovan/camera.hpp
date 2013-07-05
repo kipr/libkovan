@@ -65,7 +65,7 @@ namespace Camera
 		
 		const Point2<unsigned> &centroid() const;
 		const Rect<unsigned> &boundingBox() const;
-		const double &confidence() const;
+		const double confidence() const;
 		const char *data() const;
 		const size_t dataLength() const;
 		

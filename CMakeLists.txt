@@ -59,7 +59,7 @@ ELSE(NOT WIN32)
 	# TODO: Make sure these are current
 	TARGET_LINK_LIBRARIES(kovan pthread opencv_core249 opencv_highgui249 opencv_imgproc249 zbar)
 	LINK_DIRECTORIES(${DIRECTX})
-	target_link_libraries(kiss2 d3d9)
+	target_link_libraries(kovan d3d9)
 ENDIF(NOT WIN32)
 
 IF(APPLE)
@@ -87,4 +87,7 @@ install(FILES ${INCLUDES} DESTINATION include/kovan)
 install(TARGETS kovan LIBRARY DESTINATION lib)
 ENDIF(WIN32)
 
+IF(NOT WIN32)
 add_subdirectory(test)
+
+ENDIF(NOT WIN32)

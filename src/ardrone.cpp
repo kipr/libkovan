@@ -22,6 +22,8 @@
  * \author Braden McDorman
  */
 
+#ifndef _WIN32
+
 #include "kovan/ardrone.hpp"
 #include "kovan/thread.hpp"
 #include "kovan/socket.hpp"
@@ -1348,3 +1350,5 @@ bool Camera::ARDroneInputProvider::close()
 	m_opened = false;
 	return true;
 }
+
+#endif

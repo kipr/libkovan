@@ -18,6 +18,8 @@
  *  If not, see <http://www.gnu.org/licenses/>.                           *
  **************************************************************************/
 
+#ifndef _WIN32
+
 #ifndef _ARDRONE_H_
 #define _ARDRONE_H_
 
@@ -228,6 +230,8 @@ int get_drone_emergency_stop_enabled(void);
 
 #ifdef __cplusplus
 }
+#endif
+
 #endif
 
 #endif

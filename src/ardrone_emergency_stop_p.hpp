@@ -1,3 +1,5 @@
+#ifndef _WIN32
+
 #ifndef _ARDRONE_EMERGENCY_STOP_P_HPP_
 #define _ARDRONE_EMERGENCY_STOP_P_HPP_
 
@@ -24,5 +26,7 @@ namespace Private
 		bool m_enabled;
 	};
 }
+
+#endif
 
 #endif

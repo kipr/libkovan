@@ -1,3 +1,5 @@
+#ifndef _WIN32
+
 #include "ardrone_video_p.hpp"
 #include "ardrone_constants_p.hpp"
 
@@ -533,3 +535,5 @@ ARDroneVideo *ARDroneVideoFactory::video(const ARDrone::Version version)
 	}
 	return 0;
 }
+
+#endif

@@ -1,3 +1,5 @@
+#ifndef _WIN32
+
 #ifndef _ARDRONE_VIDEO_P_HPP_
 #define _ARDRONE_VIDEO_P_HPP_
 
@@ -25,5 +27,7 @@ namespace Private
 		static ARDroneVideo *video(const ARDrone::Version version);
 	};
 }
+
+#endif
 
 #endif
