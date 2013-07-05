@@ -114,6 +114,9 @@ bool KovanModule::send(const CommandVector& commands)
 	while(sendto(m_sock, reinterpret_cast<const char *>(packet), packetSize, 0,
 		(sockaddr *)&m_out, sizeof(m_out)) != packetSize) {
 		if(errno == EINTR) continue;
+#ifdef WIN32
+		std::cout << "Windows error code: " << WSAGetLastError() << std::endl;
+#endif
 		perror("sendto");
 		ret = false;
 	}
@@ -130,6 +133,9 @@ bool KovanModule::recv(State& state)
 	while((i = recvfrom(m_sock, reinterpret_cast<char *>(&state),
 		sizeof(State), 0, NULL, NULL)) != sizeof(State)) {
 		if(errno == EINTR) continue;
+#ifdef WIN32
+		std::cout << "Windows error code: " << WSAGetLastError() << std::endl;
+#endif
 		perror("recvfrom");
 		printf("Got %ld\n", i);
 		return false;

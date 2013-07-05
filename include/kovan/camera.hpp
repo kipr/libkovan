@@ -57,21 +57,21 @@ namespace Camera
 	{
 	public:
 		Object(const Point2<unsigned> &centroid,
-			const Rectangle<unsigned> &boundingBox,
-			const double confidence, const char *const data = 0,
-			const size_t dataLength = 0);
+			const Rect<unsigned> &boundingBox,
+			const double &confidence, const char *data = 0,
+			const size_t &dataLength = 0);
 		Object(const Object &rhs);
 		~Object();
 		
 		const Point2<unsigned> &centroid() const;
-		const Rectangle<unsigned> &boundingBox() const;
+		const Rect<unsigned> &boundingBox() const;
 		const double confidence() const;
 		const char *data() const;
 		const size_t dataLength() const;
 		
 	private:
 		Point2<unsigned> m_centroid;
-		Rectangle<unsigned> m_boundingBox;
+		Rect<unsigned> m_boundingBox;
 		double m_confidence;
 		char *m_data;
 		size_t m_dataLength;

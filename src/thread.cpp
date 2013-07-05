@@ -66,7 +66,7 @@ static void *__runThread(void *data)
 
 Thread::Thread()
 #ifdef WIN32
-	: m_thread(-1)
+	: m_thread(INVALID_HANDLE_VALUE)
 #else
 	: m_thread(pthread_self())
 #endif
@@ -76,7 +76,7 @@ Thread::Thread()
 Thread::~Thread()
 {
 #ifdef WIN32
-	if(m_thread != INVALID_HANDLE) CloseHandle(m_thread);
+	if(m_thread != INVALID_HANDLE_VALUE) CloseHandle(m_thread);
 #else
 	if(pthread_equal(m_thread, pthread_self())) return;
 	pthread_cancel(m_thread);
@@ -86,7 +86,7 @@ Thread::~Thread()
 void Thread::start()
 {
 #ifdef WIN32
-	CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)__runThread,
+	m_thread = CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)__runThread,
 		reinterpret_cast<LPVOID>(this), 0, NULL);
 #else
 	pthread_create(&m_thread, NULL, &__runThread,

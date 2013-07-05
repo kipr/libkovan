@@ -1,3 +1,5 @@
+#ifndef _WIN32
+
 #include "network_interface_p.hpp"
 
 #include <sys/socket.h>
@@ -70,3 +72,5 @@ char *NetworkInterface::macAddress(const char *const interface)
 	return ret;
 #endif
 }
+
+#endif

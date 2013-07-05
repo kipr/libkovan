@@ -1,7 +1,20 @@
+#ifndef _WIN32
+
 #ifndef _SOCKET_HPP_
 #define _SOCKET_HPP_
 
+#ifndef _WIN32
 #include <netinet/in.h>
+#else
+#ifndef _WIN32_WINNT
+#define _WIN32_WINNT 0x0501
+#endif
+#include <winsock2.h>
+#include <winsock.h>
+typedef u_long socklen_t;
+#endif
+
+#include <unistd.h>
 
 typedef int socket_fd_t;
 
@@ -60,5 +73,7 @@ public:
 private:
 	socket_fd_t m_fd;
 };
+
+#endif
 
 #endif

@@ -1,3 +1,5 @@
+#ifndef _WIN32
+
 #include "ardrone_emergency_stop_p.hpp"
 #include "kovan/ardrone.hpp"
 #include "kovan/button.hpp"
@@ -38,3 +40,5 @@ bool ARDroneEmergencyStop::isEnabled() const
 {
 	return m_enabled;
 }
+
+#endif

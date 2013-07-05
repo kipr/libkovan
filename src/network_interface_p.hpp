@@ -1,3 +1,5 @@
+#ifndef _WIN32
+
 #ifndef _NETWORK_INTERFACE_P_HPP_
 #define _NETWORK_INTERFACE_P_HPP_
 
@@ -9,5 +11,7 @@ namespace Private
 		static char *macAddress(const char *const interface);
 	};
 }
+
+#endif
 
 #endif

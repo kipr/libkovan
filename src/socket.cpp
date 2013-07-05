@@ -1,3 +1,5 @@
+#ifndef _WIN32
+
 #include "kovan/socket.hpp"
 
 #ifndef WIN32
@@ -6,9 +8,6 @@
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <fcntl.h>
-#include <unistd.h>
-#else
-#error Windows not yet supported.
 #endif
 
 #include <cerrno>
@@ -101,8 +100,13 @@ bool Socket::setBlocking(const bool blocking)
 {
 	if(m_fd < 0) return false;
 	
+#ifdef _WIN32
+	u_long arg = blocking ? 1 : 0;
+	return ioctlsocket(m_fd, FIONBIO, &arg);
+#else
 	const int flags = fcntl(m_fd, F_GETFL);
 	return fcntl(m_fd, F_SETFL, blocking ? (flags & ~O_NONBLOCK) : (flags | O_NONBLOCK)) >= 0;
+#endif
 }
 
 bool Socket::setReusable(const bool reusable)
@@ -147,26 +151,27 @@ bool Socket::close()
 
 ssize_t Socket::recv(void *const buffer, const size_t length, int flags)
 {
-	return ::recv(m_fd, buffer, length, flags);
+	return ::recv(m_fd, reinterpret_cast<char *>(buffer), length, flags);
 }
 
 ssize_t Socket::recvfrom(void *const buffer, const size_t length, Address &address, int flags)
 {
 	sockaddr_in rawAddress;
 	socklen_t rawAddressLength;
-	ssize_t ret = ::recvfrom(m_fd, buffer, length, flags, (sockaddr *)&rawAddress, &rawAddressLength);
+	ssize_t ret = ::recvfrom(m_fd, reinterpret_cast<char *>(buffer), length, flags,
+		(sockaddr *)&rawAddress, &rawAddressLength);
 	address = Address(rawAddress);
 	return ret;
 }
 
 ssize_t Socket::send(const void *const buffer, const size_t length, int flags)
 {
-	return ::send(m_fd, buffer, length, flags);
+	return ::send(m_fd, reinterpret_cast<const char *>(buffer), length, flags);
 }
 
 ssize_t Socket::sendto(const void *const buffer, const size_t length, const Address &dest, int flags)
 {
-	return ::sendto(m_fd, buffer, length, 0, dest.addr(), dest.addrLength());
+	return ::sendto(m_fd, reinterpret_cast<const char *>(buffer), length, 0, dest.addr(), dest.addrLength());
 }
 
 Socket Socket::udp()
@@ -182,3 +187,5 @@ Socket Socket::tcp()
 	ret.open(AF_INET, SOCK_STREAM, 0);
 	return ret;
 }
+
+#endif

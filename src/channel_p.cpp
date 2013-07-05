@@ -70,7 +70,7 @@ Camera::ObjectVector HsvChannelImpl::findObjects(const Config &config)
 		if(rect.width < 3 && rect.height < 3) continue;
 		
 		ret.push_back(::Camera::Object(Point2<unsigned>(m[i].m10 / m[i].m00, m[i].m01 / m[i].m00),
-			Rectangle<unsigned>(rect.x, rect.y, rect.width, rect.height), 1.0));
+			Rect<unsigned>(rect.x, rect.y, rect.width, rect.height), 1.0));
 	}
 	
 	return ret;
@@ -124,7 +124,7 @@ void BarcodeChannelImpl::update(const cv::Mat &image)
 		}
 		
 		ret.push_back(::Camera::Object(Point2<unsigned>((left + right) / 2, (top + bottom) / 2),
-			Rectangle<unsigned>(left, bottom, right - left, top - bottom),
+			Rect<unsigned>(left, bottom, right - left, top - bottom),
 			1.0, zbar_symbol_get_data(symbol),
 			zbar_symbol_get_data_length(symbol)));
 	}

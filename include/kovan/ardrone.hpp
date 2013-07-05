@@ -18,6 +18,8 @@
  *  If not, see <http://www.gnu.org/licenses/>.                           *
  **************************************************************************/
 
+#ifndef _WIN32
+
 #ifndef _ARDRONE_HPP_
 #define _ARDRONE_HPP_
 
@@ -156,5 +158,7 @@ namespace Camera
 		bool m_opened;
 	};
 }
+
+#endif
 
 #endif

@@ -1,14 +1,16 @@
 #ifndef _GRAPHICS_H_
 #define _GRAPHICS_H_
 
+#include <kovan/export.h>
+
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-int graphics_open(int width, int height);
-void graphics_close();
-void graphics_update();
-void graphics_clear();
+EXPORT_SYM int graphics_open(int width, int height);
+EXPORT_SYM void graphics_close();
+EXPORT_SYM void graphics_update();
+EXPORT_SYM void graphics_clear();
 
 typedef enum Encoding {
 	RGB,
@@ -17,25 +19,25 @@ typedef enum Encoding {
 
 
 
-void graphics_blit(const unsigned char *data, int x, int y, int width, int height);
-void graphics_blit_region(const unsigned char *data, int sx, int sy, int ex, int ey, int width, int height, int dx, int dy);
+EXPORT_SYM void graphics_blit(const unsigned char *data, int x, int y, int width, int height);
+EXPORT_SYM void graphics_blit_region(const unsigned char *data, int sx, int sy, int ex, int ey, int width, int height, int dx, int dy);
 
-void graphics_blit_enc (const unsigned char *data, Encoding enc, int x, int y, int width, int height);
-void graphics_blit_region_enc(const unsigned char *data, Encoding enc, int sx, int sy, int ex, int ey, int width, int height, int dx, int dy);
+EXPORT_SYM void graphics_blit_enc (const unsigned char *data, Encoding enc, int x, int y, int width, int height);
+EXPORT_SYM void graphics_blit_region_enc(const unsigned char *data, Encoding enc, int sx, int sy, int ex, int ey, int width, int height, int dx, int dy);
 
-void graphics_fill(int r, int g, int b);
+EXPORT_SYM void graphics_fill(int r, int g, int b);
 
-void graphics_pixel(int x, int y, int r, int g, int b);
-void graphics_line(int x1, int y1, int x2, int y2, int r, int g, int b);
+EXPORT_SYM void graphics_pixel(int x, int y, int r, int g, int b);
+EXPORT_SYM void graphics_line(int x1, int y1, int x2, int y2, int r, int g, int b);
 
-void graphics_circle(int cx, int cy, int radius, int r, int g, int b);
-void graphics_circle_fill(int cx, int cy, int radius, int r, int g, int b);
+EXPORT_SYM void graphics_circle(int cx, int cy, int radius, int r, int g, int b);
+EXPORT_SYM void graphics_circle_fill(int cx, int cy, int radius, int r, int g, int b);
 
-void graphics_rectangle(int x1, int y1, int x2, int y2, int r, int g, int b);
-void graphics_rectangle_fill(int x1, int y1, int x2, int y2, int r, int g, int b);
+EXPORT_SYM void graphics_rectangle(int x1, int y1, int x2, int y2, int r, int g, int b);
+EXPORT_SYM void graphics_rectangle_fill(int x1, int y1, int x2, int y2, int r, int g, int b);
 
-void graphics_triangle(int x1, int y1, int x2, int y2, int x3, int y3, int r, int g, int b);
-void graphics_triangle_fill(int x1, int y1, int x2, int y2, int x3, int y3, int r, int g, int b);
+EXPORT_SYM void graphics_triangle(int x1, int y1, int x2, int y2, int x3, int y3, int r, int g, int b);
+EXPORT_SYM void graphics_triangle_fill(int x1, int y1, int x2, int y2, int x3, int y3, int r, int g, int b);
 
 enum KeyCode
 {
@@ -150,12 +152,12 @@ enum KeyCode
 	KeyUndefined      = 0x0        ///< undefined key
 };
 
-int get_key_state(enum KeyCode key);
+EXPORT_SYM int get_key_state(enum KeyCode key);
 
-void get_mouse_position(int *x, int *y);
-int  get_mouse_middle_button();
-int  get_mouse_left_button();
-int  get_mouse_right_button();
+EXPORT_SYM void get_mouse_position(int *x, int *y);
+EXPORT_SYM int get_mouse_middle_button();
+EXPORT_SYM int get_mouse_left_button();
+EXPORT_SYM int get_mouse_right_button();
 
 #ifdef __cplusplus
 }

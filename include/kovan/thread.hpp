@@ -3,6 +3,9 @@
 
 #ifndef WIN32
 #include <pthread.h>
+#else
+#define WIN32_LEAN_AND_MEAN
+#include <windows.h>
 #endif
 
 #include "export.h"
@@ -43,7 +46,7 @@ private:
 #ifndef WIN32
 	pthread_t m_thread;
 #else
-	unsigned long m_thread;
+	HANDLE m_thread;
 #endif
 };
 
