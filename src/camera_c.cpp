@@ -144,7 +144,7 @@ bool check_channel_and_object(int i, int j)
 {
 	const Camera::ChannelPtrVector &channels = DeviceSingleton::instance()->channels();
 	if(i < 0 || i >= channels.size()) {
-		if(channels.size() < 1) std::cout << "Active configuration doesn't have any channels.";
+		if(!channels.size()) std::cout << "Active configuration doesn't have any channels.";
 		else std::cout << "Channel must be in the range 0 .. " << (channels.size() - 1);
 		std::cout << std::endl;
 		return false;
