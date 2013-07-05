@@ -121,7 +121,7 @@ namespace Camera
 	class EXPORT_SYM Channel
 	{
 	public:
-		Channel(Device *device, const Config config);
+		Channel(Device *device, const Config &config);
 		~Channel();
 		
 		void invalidate();

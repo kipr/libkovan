@@ -130,7 +130,7 @@ ChannelImpl *DefaultChannelImplManager::channelImpl(const std::string &name)
 
 // Channel //
 
-Camera::Channel::Channel(Device *device, const Config config)
+Camera::Channel::Channel(Device *device, const Config &config)
 	: m_device(device),
 	m_config(config),
 	m_impl(0),
