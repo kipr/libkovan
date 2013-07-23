@@ -1,2 +1,0 @@
-ADD_EXECUTABLE(shut_down_in shutdown_in.c)
-TARGET_LINK_LIBRARIES(shut_down_in kovan)

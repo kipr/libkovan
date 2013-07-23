@@ -7,16 +7,34 @@
 extern "C" {
 #endif
 
+/**
+ * Opens a KISS Graphics Window for drawing and input functions.
+ * 
+ * \param width The width of the graphics window
+ * \param height The height of the graphics window
+ */
 EXPORT_SYM int graphics_open(int width, int height);
+
+/**
+ * Closes the previously opened KISS Graphics Window
+ */
 EXPORT_SYM void graphics_close();
+
+/**
+ * Update must be called after drawing to the window for changes to be visible.
+ * This function also must be called for input to work.
+ */
 EXPORT_SYM void graphics_update();
+
+/**
+ * Fills the entire window with the color black
+ */
 EXPORT_SYM void graphics_clear();
 
 typedef enum Encoding {
 	RGB,
 	BGR
 } Encoding;
-
 
 
 EXPORT_SYM void graphics_blit(const unsigned char *data, int x, int y, int width, int height);
@@ -152,6 +170,13 @@ enum KeyCode
 	KeyUndefined      = 0x0        ///< undefined key
 };
 
+/**
+ * Gets the current state of a keyboard key.
+ * 
+ * \note A KISS Graphics Window must be open for input functions to work.
+ * \param key An ASCII key code or a Key value from the KeyCode enum.
+ * \return 1 for pressed, 0 for not pressed
+ */
 EXPORT_SYM int get_key_state(enum KeyCode key);
 
 EXPORT_SYM void get_mouse_position(int *x, int *y);

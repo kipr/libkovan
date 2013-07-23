@@ -87,7 +87,3 @@ install(FILES ${INCLUDES} DESTINATION include/kovan)
 install(TARGETS kovan LIBRARY DESTINATION lib)
 ENDIF(WIN32)
 
-IF(NOT WIN32)
-add_subdirectory(test)
-
-ENDIF(NOT WIN32)
