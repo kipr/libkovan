@@ -8,6 +8,7 @@
 #include "kovan/thread.hpp"
 #include "kovan/general.h"
 #include "kovan/create.hpp"
+#include "kovan/kovan_compat.hpp"
 
 #include <cstdlib>
 #include <iostream>
@@ -32,7 +33,7 @@ public:
 		std::cout << std::endl << "Shutdown after " << (end - start) << " seconds" << std::endl;
 		// Note: Might want to move this to botui in the future.
 		Create::instance()->stop();
-		_Exit(0);
+		EXITFUNC(0);
 	}
 	
 private:

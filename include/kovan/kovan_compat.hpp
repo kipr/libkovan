@@ -5,8 +5,10 @@
 #include <basetsd.h>
 typedef SSIZE_T ssize_t;
 #define PRETTYFUNC __FUNCSIG__
+#define EXITFUNC(x) _exit(x)
 #else
 #define PRETTYFUNC __PRETTY_FUNCTION__
+#define EXITFUNC(x) _Exit(x)
 #endif
 
 #endif
