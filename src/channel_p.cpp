@@ -112,7 +112,7 @@ void BarcodeChannelImpl::update(const cv::Mat &image)
 		int bottom = m_image.get_height();
 		int top = 0;
 		
-		zbar::Symbol::Symbol::PointIterator pit = symbol.point_begin();
+		zbar::Symbol::PointIterator pit = symbol.point_begin();
 		for(int i = 0; i < symbol.get_location_size(); ++i) {
 			const int &x = symbol.get_location_x(i);
 			if(x > right) right = x;
