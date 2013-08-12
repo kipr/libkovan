@@ -24,8 +24,9 @@
 #include <unistd.h>
 #include <sys/time.h>
 #else
-#include <time.h>
+#define NOMINMAX
 #include <winsock2.h>
+#include <time.h>
 #endif
 
 #include <errno.h>
