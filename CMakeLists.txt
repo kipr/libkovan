@@ -39,7 +39,7 @@ if(WIN32)
 	link_directories(${CMAKE_SOURCE_DIR}/../opencv/kiss-prefix/lib)
 	link_directories(${CMAKE_SOURCE_DIR}/../lib)
 	link_directories(${CMAKE_SOURCE_DIR}/../zbar-0.10/prefix/lib)
-endif(WIN32)
+endif()
 
 if(APPLE)
 	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -arch x86_64 -g")
@@ -54,24 +54,24 @@ endif()
 add_library(kovan SHARED ${SOURCES} ${OBJC_SOURCES})
 if(NOT WIN32)
 	target_link_libraries(kovan pthread opencv_core opencv_highgui opencv_imgproc zbar avcodec avformat avutil z swscale bz2)
-else(NOT WIN32)
+else()
 	# TODO: Make sure these are current
 	target_link_libraries(kovan pthread opencv_core249 opencv_highgui249 opencv_imgproc249 zbar)
 	link_directories(${DIRECTX})
 	target_link_libraries(kovan d3d9)
-endif(NOT WIN32)
+endif()
 
 if(APPLE)
 	find_library(OPENGL_LIBRARY OpenGL)
 	find_library(COCOA_LIBRARY Cocoa)
 	find_library(CORESERVICE_LIBRARY CoreServices)
 	target_link_libraries(kovan ${OPENGL_LIBRARY} ${COCOA_LIBRARY} ${CORESERVICE_LIBRARY})
-endif(APPLE)
+endif()
 
 if(KOVAN)
 	target_link_libraries(kovan i2c_wrapper)
 	add_definitions(-DKOVAN)
-endif(KOVAN)
+endif()
 
 # add_definitions(-DARDRONE_DEBUG)
 
@@ -81,8 +81,8 @@ install(FILES ${INCLUDES} DESTINATION ${CMAKE_SOURCE_DIR}/../prefix/include/kova
 install(TARGETS kovan
 	ARCHIVE DESTINATION ${CMAKE_SOURCE_DIR}/../prefix/lib
 	RUNTIME DESTINATION ${CMAKE_SOURCE_DIR}/../prefix/lib)
-else(WIN32)
+else()
 install(FILES ${INCLUDES} DESTINATION include/kovan)
 install(TARGETS kovan LIBRARY DESTINATION lib)
-endif(WIN32)
+endif()
 
