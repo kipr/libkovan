@@ -5,9 +5,9 @@
 #ifndef WIN32
 #include <fcntl.h>
 #include <pthread.h>
+#include <unistd.h>
 #endif
 
-#include <unistd.h>
 #include <cstring>
 
 #include <cstdio>

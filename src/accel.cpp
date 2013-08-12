@@ -1,7 +1,10 @@
 #include "kovan/accel.hpp"
 #include "i2c_p.hpp"
 
+#ifndef WIN32
 #include <unistd.h>
+#endif
+
 #include <string.h>
 
 #include <stdio.h> //FIXME: remove, only used to debug calib

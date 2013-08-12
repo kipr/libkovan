@@ -20,8 +20,13 @@
 
 #include "time_p.hpp"
 
+#ifndef WIN32
 #include <unistd.h>
 #include <sys/time.h>
+#else
+#include <time.h>
+#endif
+
 #include <errno.h>
 #include <string.h>
 #include <algorithm>

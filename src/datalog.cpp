@@ -3,7 +3,10 @@
 #include <iostream>
 #include <cstdio>
 #include <cstring>
+
+#ifndef WIN32
 #include <unistd.h>
+#endif
 
 void Category::append(const std::string& data)
 {

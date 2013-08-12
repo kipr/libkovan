@@ -37,12 +37,13 @@
 #include <cstdio>
 #include <cstdlib>
 #include <vector>
-#include <sys/time.h>
 
 #ifndef WIN32
+#include <sys/time.h>
 #include <termios.h>
 #include <pthread.h>
 #else
+#include <time.h>
 typedef unsigned int speed_t;
 #endif
 
@@ -442,7 +443,7 @@ private:
 		const long msecs = result.tv_sec * 1000 + result.tv_usec / 1000;
 		return msecs > m_refreshRate;
 	#else
-		#warning Create library not yet implemented for Windows
+		#pragma message	("Create library not yet implemented for Windows")
 	#endif
 	}
 
