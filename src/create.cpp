@@ -652,7 +652,7 @@ bool Create::write(const unsigned char *data, const size_t& len)
 	tcdrain(m_tty);
 	return ret == len;
 #else
-	#warning Create library not yet implemented for Windows
+	#pragma message	("Create library not yet implemented for Windows")
 #endif
 }
 
@@ -678,7 +678,7 @@ int Create::read(unsigned char *data, const size_t& len)
 #ifndef WIN32
 	ret = ::read(m_tty, data, len);
 #else
-	#warning Create library not yet implemented for Windows
+	#pragma message	("Create library not yet implemented for Windows")
 #endif
 	if(ret < 0 && errno != EAGAIN) perror("::read");
 	return ret;
@@ -985,7 +985,7 @@ bool Create::open()
 #ifndef WIN32
 	m_tty = ::open("/dev/ttyS2", O_RDWR | O_NOCTTY | O_NONBLOCK);
 #else
-	#warning Create library not yet implemented for Windows
+	#pragma message	("Create library not yet implemented for Windows")
 #endif
 	endAtomicOperation();
 	
