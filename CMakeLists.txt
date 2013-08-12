@@ -15,7 +15,7 @@ include_directories(${INCLUDE})
 file(GLOB INCLUDES ${INCLUDE}/kovan/*.h ${INCLUDE}/kovan/*.hpp)
 file(GLOB SOURCES ${SRC}/*.cpp ${PIXELTOASTER}/*.cpp)
 
-set(CMAKE_CXX_FLAGS "-Wall")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall")
 
 set(LIBRARY_OUTPUT_PATH ${CMAKE_SOURCE_DIR}/lib)
 
