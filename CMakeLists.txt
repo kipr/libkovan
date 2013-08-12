@@ -2,88 +2,88 @@
 #   libkovan CMake Build File   #
 #################################
 
-PROJECT(libkovan)
+project(libkovan)
 
-CMAKE_MINIMUM_REQUIRED(VERSION 2.8.0)
+cmake_minimum_required(VERSION 2.8.0)
 
-SET(INCLUDE ${libkovan_SOURCE_DIR}/include)
-SET(SRC ${libkovan_SOURCE_DIR}/src)
-SET(PIXELTOASTER ${SRC}/pixeltoaster)
+set(INCLUDE ${libkovan_SOURCE_DIR}/include)
+set(SRC ${libkovan_SOURCE_DIR}/src)
+set(PIXELTOASTER ${SRC}/pixeltoaster)
 
-INCLUDE_DIRECTORIES(${INCLUDE})
+include_directories(${INCLUDE})
 
-FILE(GLOB INCLUDES ${INCLUDE}/kovan/*.h ${INCLUDE}/kovan/*.hpp)
-FILE(GLOB SOURCES ${SRC}/*.cpp ${PIXELTOASTER}/*.cpp)
+file(GLOB INCLUDES ${INCLUDE}/kovan/*.h ${INCLUDE}/kovan/*.hpp)
+file(GLOB SOURCES ${SRC}/*.cpp ${PIXELTOASTER}/*.cpp)
 
-SET(CMAKE_CXX_FLAGS "-Wall")
+set(CMAKE_CXX_FLAGS "-Wall")
 
 set(LIBRARY_OUTPUT_PATH ${CMAKE_SOURCE_DIR}/lib)
 
 #############################
 #   PixelToaster settings   #
 #############################
-IF(APPLE)
-	FILE(GLOB OBJC_SOURCES ${PIXELTOASTER}/*.mm)
-ELSEIF(WIN32)
-	ADD_DEFINITIONS(-fno-check-new)
-	INCLUDE_DIRECTORIES(${DIRECTX}/Include)
-ENDIF()
+if(APPLE)
+	file(GLOB OBJC_SOURCES ${PIXELTOASTER}/*.mm)
+elseif(WIN32)
+	add_definitions(-fno-check-new)
+	include_directories(${DIRECTX}/Include)
+endif()
 
 ##################################
 # Windows kiss-platform nonsense #
 ##################################
-IF(WIN32)
-	INCLUDE_DIRECTORIES(${CMAKE_SOURCE_DIR}/../prefix/include)
-	INCLUDE_DIRECTORIES(${CMAKE_SOURCE_DIR}/../opencv/kiss-prefix/include)
-	INCLUDE_DIRECTORIES(${CMAKE_SOURCE_DIR}/../zbar-0.10/prefix/include)
-	LINK_DIRECTORIES(${CMAKE_SOURCE_DIR}/../opencv/kiss-prefix/lib)
-	LINK_DIRECTORIES(${CMAKE_SOURCE_DIR}/../lib)
-	LINK_DIRECTORIES(${CMAKE_SOURCE_DIR}/../zbar-0.10/prefix/lib)
-ENDIF(WIN32)
+if(WIN32)
+	include_directories(${CMAKE_SOURCE_DIR}/../prefix/include)
+	include_directories(${CMAKE_SOURCE_DIR}/../opencv/kiss-prefix/include)
+	include_directories(${CMAKE_SOURCE_DIR}/../zbar-0.10/prefix/include)
+	link_directories(${CMAKE_SOURCE_DIR}/../opencv/kiss-prefix/lib)
+	link_directories(${CMAKE_SOURCE_DIR}/../lib)
+	link_directories(${CMAKE_SOURCE_DIR}/../zbar-0.10/prefix/lib)
+endif(WIN32)
 
-IF(APPLE)
-	SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -arch x86_64 -g")
-ELSEIF(WIN32)
-	SET(CMAKE_CXX_FLAGS "-Wl,--enable-auto-import")
-	SET(SOURCES ${SOURCES} ${CMAKE_SOURCE_DIR}/compat/mingw.c)
-ELSEIF(UNIX)
-	SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fPIC")
-ENDIF()
+if(APPLE)
+	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -arch x86_64 -g")
+elseif(WIN32)
+	set(CMAKE_CXX_FLAGS "-Wl,--enable-auto-import")
+	set(SOURCES ${SOURCES} ${CMAKE_SOURCE_DIR}/compat/mingw.c)
+elseif(UNIX)
+	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fPIC")
+endif()
 
 # add_definitions(-O3)
 
-ADD_LIBRARY(kovan SHARED ${SOURCES} ${OBJC_SOURCES})
-IF(NOT WIN32)
-	TARGET_LINK_LIBRARIES(kovan pthread opencv_core opencv_highgui opencv_imgproc zbar avcodec avformat avutil z swscale bz2)
-ELSE(NOT WIN32)
+add_library(kovan SHARED ${SOURCES} ${OBJC_SOURCES})
+if(NOT WIN32)
+	target_link_libraries(kovan pthread opencv_core opencv_highgui opencv_imgproc zbar avcodec avformat avutil z swscale bz2)
+else(NOT WIN32)
 	# TODO: Make sure these are current
-	TARGET_LINK_LIBRARIES(kovan pthread opencv_core249 opencv_highgui249 opencv_imgproc249 zbar)
-	LINK_DIRECTORIES(${DIRECTX})
+	target_link_libraries(kovan pthread opencv_core249 opencv_highgui249 opencv_imgproc249 zbar)
+	link_directories(${DIRECTX})
 	target_link_libraries(kovan d3d9)
-ENDIF(NOT WIN32)
+endif(NOT WIN32)
 
-IF(APPLE)
-	FIND_LIBRARY(OPENGL_LIBRARY OpenGL)
-	FIND_LIBRARY(COCOA_LIBRARY Cocoa)
-	FIND_LIBRARY(CORESERVICE_LIBRARY CoreServices)
+if(APPLE)
+	find_library(OPENGL_LIBRARY OpenGL)
+	find_library(COCOA_LIBRARY Cocoa)
+	find_library(CORESERVICE_LIBRARY CoreServices)
 	target_link_libraries(kovan ${OPENGL_LIBRARY} ${COCOA_LIBRARY} ${CORESERVICE_LIBRARY})
-ENDIF(APPLE)
+endif(APPLE)
 
-IF(KOVAN)
-	TARGET_LINK_LIBRARIES(kovan i2c_wrapper)
-	ADD_DEFINITIONS(-DKOVAN)
-ENDIF(KOVAN)
+if(KOVAN)
+	target_link_libraries(kovan i2c_wrapper)
+	add_definitions(-DKOVAN)
+endif(KOVAN)
 
-# ADD_DEFINITIONS(-DARDRONE_DEBUG)
+# add_definitions(-DARDRONE_DEBUG)
 
-IF(WIN32)
+if(WIN32)
 target_link_libraries(kovan ws2_32)
 install(FILES ${INCLUDES} DESTINATION ${CMAKE_SOURCE_DIR}/../prefix/include/kovan)
-INSTALL(TARGETS kovan
+install(TARGETS kovan
 	ARCHIVE DESTINATION ${CMAKE_SOURCE_DIR}/../prefix/lib
 	RUNTIME DESTINATION ${CMAKE_SOURCE_DIR}/../prefix/lib)
-ELSE(WIN32)
+else(WIN32)
 install(FILES ${INCLUDES} DESTINATION include/kovan)
 install(TARGETS kovan LIBRARY DESTINATION lib)
-ENDIF(WIN32)
+endif(WIN32)
 
