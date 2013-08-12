@@ -35,6 +35,7 @@
 #include <sys/time.h>
 #else
 #include <time.h>
+#include <winsock2.h>
 #endif
 
 #include <opencv2/core/core.hpp>
