@@ -25,6 +25,7 @@
 #include <sys/time.h>
 #else
 #include <time.h>
+#include <winsock2.h>
 #endif
 
 #include <errno.h>

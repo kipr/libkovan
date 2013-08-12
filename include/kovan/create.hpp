@@ -44,6 +44,7 @@
 #include <pthread.h>
 #else
 #include <time.h>
+#include <winsock2.h>
 typedef unsigned int speed_t;
 #endif
 
