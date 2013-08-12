@@ -51,7 +51,7 @@ endif()
 
 # add_definitions(-O3)
 
-add_library(kovan SHARED ${SOURCES} ${OBJC_SOURCES})
+add_library(kovan SHARED ${SOURCES} ${OBJC_SOURCES} ${INCLUDES})
 if(NOT WIN32)
 	target_link_libraries(kovan pthread opencv_core opencv_highgui opencv_imgproc zbar avcodec avformat avutil z swscale bz2)
 else()
