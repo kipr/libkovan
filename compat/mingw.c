@@ -2,7 +2,7 @@
 #include <windows.h>
 #include <stdio.h>
 
-#include "kovan/kovan_compat.hpp"
+#include "kovan/compat.hpp"
 
 // Derived from: https://github.com/jamescoxon/dl-fldigi/blob/master/src/compat/mingw.c
 INITIALIZER(wsa_init)
