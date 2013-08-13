@@ -52,13 +52,13 @@ endif()
 # add_definitions(-O3)
 
 add_library(kovan SHARED ${SOURCES} ${OBJC_SOURCES} ${INCLUDES})
-if(NOT WIN32)
-	target_link_libraries(kovan pthread opencv_core opencv_highgui opencv_imgproc zbar avcodec avformat avutil z swscale bz2)
-else()
+if(WIN32)
 	# TODO: Make sure these are current
 	target_link_libraries(kovan pthread opencv_core249 opencv_highgui249 opencv_imgproc249 zbar)
 	link_directories(${DIRECTX})
 	target_link_libraries(kovan d3d9)
+else()
+	target_link_libraries(kovan pthread opencv_core opencv_highgui opencv_imgproc zbar avcodec avformat avutil z swscale bz2)
 endif()
 
 if(APPLE)
