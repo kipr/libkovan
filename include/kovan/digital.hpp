@@ -43,7 +43,7 @@ class EXPORT_SYM Digital : public Sensor<bool>
 public:
 	Digital(const unsigned char& port);
 	
-	virtual bool setValue(const bool& value);
+	virtual void setValue(const bool& value);
 	
 	/*!
 	 * Gets the current value of the digital sensor

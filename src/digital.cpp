@@ -27,7 +27,7 @@ Digital::Digital(const unsigned char& port)
 	
 }
 
-bool Digital::setValue(const bool& value)
+void Digital::setValue(const bool& value)
 {
 	Private::Digital::instance()->setValue(m_port, value);
 }

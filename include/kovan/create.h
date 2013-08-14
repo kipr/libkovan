@@ -114,7 +114,7 @@ EXPORT_SYM void create_drive_straight (int speed);
 EXPORT_SYM void create_spin_CW (int speed);
 EXPORT_SYM void create_spin_CCW (int speed);
 EXPORT_SYM void create_drive_direct(int l_speed, int r_speed);
-EXPORT_SYM int create_spin_block(int speed, int angle);
+EXPORT_SYM void create_spin_block(int speed, int angle);
 EXPORT_SYM int _create_get_raw_encoders(long *lenc, long *renc);
 EXPORT_SYM void create_advance_led(int on) ;
 EXPORT_SYM void create_play_led(int on) ;

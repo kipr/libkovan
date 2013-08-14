@@ -445,6 +445,7 @@ private:
 		return msecs > m_refreshRate;
 	#else
 		#pragma message	("Create library not yet implemented for Windows")
+		return false;
 	#endif
 	}
 

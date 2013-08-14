@@ -136,7 +136,7 @@ int get_create_vwall()
 
 int get_create_overcurrents()
 {
-	
+	return 0;
 }
 
 int get_create_infrared()
@@ -191,12 +191,12 @@ int get_create_battery_charging_state()
 
 int get_create_battery_voltage()
 {
-	
+	return 0;
 }
 
 int get_create_battery_current()
 {
-
+	return 0;
 }
 
 int get_create_battery_temp()
@@ -241,47 +241,47 @@ int get_create_rcliff_amt()
 
 int get_create_bay_DI()
 {
-	
+	return 0;
 }
 
 int get_create_bay_AI()
 {
-	
+	return 0;
 }
 
 int get_create_song_number()
 {
-	
+	return 0;
 }
 
 int get_create_song_playing()
 {
-	
+	return 0;
 }
 
 int get_create_number_of_stream_packets()
 {
-	
+	return 0;
 }
 
 int get_create_requested_velocity()
 {
-	
+	return 0;
 }
 
 int get_create_requested_radius()
 {
-
+	return 0;
 }
 
 int get_create_requested_right_velocity()
 {
-	
+	return 0;
 }
 
 int get_create_requested_left_velocity()
 {
-	
+	return 0;
 }
 
 void create_stop()
@@ -314,14 +314,14 @@ void create_drive_direct(int l_speed, int r_speed)
 	Create::instance()->driveDirect(l_speed, r_speed);
 }
 
-int create_spin_block(int speed, int angle)
+void create_spin_block(int speed, int angle)
 {
 	Create::instance()->turn(speed, angle);
 }
 
 int _create_get_raw_encoders(long *lenc, long *renc)
 {
-	
+	return 0;
 }
 
 void create_advance_led(int on)
