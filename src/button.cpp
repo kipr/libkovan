@@ -20,9 +20,9 @@
 
 #include "kovan/button.hpp"
 #include "button_p.hpp"
+#include "kovan/compat.hpp"
 
 #include <cstring>
-#include <sched.h>
 
 IdButton Button::A(Button::Type::A, "A");
 IdButton Button::B(Button::Type::B, "B");
@@ -46,12 +46,12 @@ AbstractButton::~AbstractButton() {}
 
 void AbstractButton::waitUntilReleased() const
 {
-	while(isPressed()) sched_yield();
+	while(isPressed()) YIELDFUNC();
 }
 
 void AbstractButton::waitUntilPressed() const
 {
-	while(isNotPressed()) sched_yield();
+	while(isNotPressed()) YIELDFUNC();
 }
 
 void AbstractButton::waitUntilClicked() const

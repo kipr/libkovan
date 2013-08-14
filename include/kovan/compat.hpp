@@ -3,10 +3,11 @@
 
 #ifdef _MSC_VER
 
-#include <basetsd.h>
+#include <Windows.h>
 typedef SSIZE_T ssize_t;
 #define PRETTYFUNC __FUNCSIG__
 #define EXITFUNC(x) _exit(x)
+#define YIELDFUNC() Sleep(0);
 #pragma section(".CRT$XCU", read)
 #define INITIALIZER(f) \
    static void __cdecl f(void); \
@@ -15,8 +16,10 @@ typedef SSIZE_T ssize_t;
 
 #else
 
+#include <sched.h>
 #define PRETTYFUNC __PRETTY_FUNCTION__
 #define EXITFUNC(x) _Exit(x)
+#define YIELDFUNC() sched_yield()
 #define INITIALIZER(f) \
 	static void f(void) __attribute__((constructor)); \
 	static void f(void)
