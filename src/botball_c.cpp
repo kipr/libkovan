@@ -8,7 +8,7 @@
 #include "kovan/thread.hpp"
 #include "kovan/general.h"
 #include "kovan/create.hpp"
-#include "kovan/kovan_compat.hpp"
+#include "kovan/compat.hpp"
 
 #include <cstdlib>
 #include <iostream>
