@@ -7,10 +7,10 @@
 // Derived from: https://github.com/jamescoxon/dl-fldigi/blob/master/src/compat/mingw.c
 INITIALIZER(wsa_init)
 {
+	WSADATA wsa;
 	static int s_init = 0;
 	if (s_init) return;
 
-	WSADATA wsa;
 	if (WSAStartup(MAKEWORD(2, 2), &wsa)) {
 		fprintf(stderr, "ERROR: WSAStartup failed. Code: %d\n", WSAGetLastError());
 		fprintf(stderr, "ERROR: Network communication will not work.\n");
