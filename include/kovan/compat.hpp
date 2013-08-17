@@ -5,7 +5,7 @@
 
 #define NOMINMAX
 #include <winsock2.h>
-#include <Windows.h>
+#include <windows.h>
 typedef SSIZE_T ssize_t;
 #define PRETTYFUNC __FUNCSIG__
 #define EXITFUNC(x) _exit(x)
