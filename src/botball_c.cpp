@@ -33,7 +33,7 @@ public:
 		std::cout << std::endl << "Shutdown after " << (end - start) << " seconds" << std::endl;
 		// Note: Might want to move this to botui in the future.
 		Create::instance()->stop();
-		EXITFUNC(0);
+		_exit(0);
 	}
 	
 private:
