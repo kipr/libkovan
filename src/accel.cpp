@@ -1,5 +1,6 @@
 #include "kovan/accel.hpp"
 #include "i2c_p.hpp"
+#include "kovan/compat.hpp"
 
 #ifndef WIN32
 #include <unistd.h>
@@ -61,7 +62,7 @@ bool Acceleration::calibrate()
 		Private::I2C::instance()->write(i, 0x0, false);
 	}
 
-	usleep(5000);
+	MICROSLEEP(5000);
 
 	// read accel vals
 	signed char accel_bias_x = 0;
@@ -93,7 +94,7 @@ bool Acceleration::calibrate()
 		Private::I2C::instance()->write(R_YBIAS, -accel_bias_y, false);
 		Private::I2C::instance()->write(R_ZBIAS, -accel_bias_z, false);
 
-		usleep(5000);
+		MICROSLEEP(5000);
 	}
 
 	return false; // fail

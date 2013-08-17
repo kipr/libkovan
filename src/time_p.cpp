@@ -19,6 +19,7 @@
  **************************************************************************/
 
 #include "time_p.hpp"
+#include "kovan/compat.hpp"
 
 #ifndef WIN32
 #include <unistd.h>
@@ -40,7 +41,7 @@ void Private::Time::microsleep(unsigned long microsecs)
 	// This is the workaround.
 	while(microsecs) {
 		const unsigned long current = std::min(microsecs, 999999UL);
-		if(usleep(current)) {
+		if(MICROSLEEP(current)) {
 			perror("usleep");
 			return;
 		}
