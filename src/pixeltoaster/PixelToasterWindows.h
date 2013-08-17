@@ -10,10 +10,6 @@
 
 #include <d3d9.h>
 
-#ifndef __MINGW32__ 
-#include <d3dx9.h> 
-#endif
-
 #ifdef _MSC_VER
 #pragma comment( lib, "d3d9.lib" )
 #pragma comment( lib, "kernel32.lib" )
