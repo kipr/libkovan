@@ -1,11 +1,5 @@
 #include "kovan/thread.hpp"
 
-#ifdef WIN32
-#include <windows.h>
-#else
-#include <pthread.h>
-#endif
-
 Mutex::Mutex()
 {
 #ifdef WIN32
