@@ -34,6 +34,7 @@
 #ifndef WIN32
 #include <sys/time.h>
 #else
+#define NOMINMAX
 #include <time.h>
 #include <winsock2.h>
 #endif
