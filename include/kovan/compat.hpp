@@ -4,7 +4,7 @@
 #ifdef _MSC_VER
 
 #define NOMINMAX
-#include <winsock2.h>
+#define WIN32_LEAN_AND_MEAN
 #include <windows.h>
 typedef SSIZE_T ssize_t;
 #define PRETTYFUNC __FUNCSIG__
