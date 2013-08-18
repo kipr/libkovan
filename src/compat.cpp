@@ -1,5 +1,10 @@
 #include "kovan/compat.hpp"
 
+#ifndef _MSC_VER
+#include <unistd.h>
+#include <sched.h>
+#endif
+
 int compat::yield()
 {
 #ifdef _MSC_VER
