@@ -26,19 +26,21 @@ if(APPLE)
 	file(GLOB OBJC_SOURCES ${PIXELTOASTER}/*.mm)
 elseif(WIN32)
 	add_definitions(-fno-check-new)
-	include_directories(${DIRECTX}/Include)
 endif()
 
 ##################################
 # Windows kiss-platform nonsense #
 ##################################
 if(WIN32)
+	set(OPENCV_INSTALL_DIR ${CMAKE_SOURCE_DIR}/../opencv/build/)
+	set(ZBAR_INSTALL_DIR "C:/Program Files (x86)/ZBar")
+
 	include_directories(${CMAKE_SOURCE_DIR}/../prefix/include)
-	include_directories(${CMAKE_SOURCE_DIR}/../opencv/kiss-prefix/include)
-	include_directories(${CMAKE_SOURCE_DIR}/../zbar-0.10/prefix/include)
-	link_directories(${CMAKE_SOURCE_DIR}/../opencv/kiss-prefix/lib)
-	link_directories(${CMAKE_SOURCE_DIR}/../lib)
-	link_directories(${CMAKE_SOURCE_DIR}/../zbar-0.10/prefix/lib)
+	include_directories(${OPENCV_INSTALL_DIR}/include)
+	include_directories(${ZBAR_INSTALL_DIR}/include)
+	link_directories(${CMAKE_SOURCE_DIR}/../prefix/lib)
+	link_directories(${OPENCV_INSTALL_DIR}/x86/vc11/lib)
+	link_directories(${ZBAR_INSTALL_DIR}/lib)
 endif()
 
 if(APPLE)
@@ -54,8 +56,7 @@ endif()
 add_library(kovan SHARED ${SOURCES} ${OBJC_SOURCES} ${INCLUDES})
 if(WIN32)
 	# TODO: Make sure these are current
-	target_link_libraries(kovan opencv_core290 opencv_highgui290 opencv_imgproc290 zbar)
-	link_directories(${DIRECTX})
+	target_link_libraries(kovan opencv_core246 opencv_highgui246 opencv_imgproc246 libzbar-0)
 	target_link_libraries(kovan d3d9)
 else()
 	target_link_libraries(kovan pthread opencv_core opencv_highgui opencv_imgproc zbar avcodec avformat avutil z swscale bz2)
