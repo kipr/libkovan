@@ -54,7 +54,7 @@ endif()
 add_library(kovan SHARED ${SOURCES} ${OBJC_SOURCES} ${INCLUDES})
 if(WIN32)
 	# TODO: Make sure these are current
-	target_link_libraries(kovan opencv_core249 opencv_highgui249 opencv_imgproc249 zbar)
+	target_link_libraries(kovan opencv_core290 opencv_highgui290 opencv_imgproc290 zbar)
 	link_directories(${DIRECTX})
 	target_link_libraries(kovan d3d9)
 else()
