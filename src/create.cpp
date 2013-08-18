@@ -703,7 +703,7 @@ bool Create::blockingRead(unsigned char *data, const size_t& size, unsigned time
 		msecs = diff.tv_sec * 1000 + diff.tv_usec / 1000;
 #endif
 		// printf("msecs: %ld, %ld of %ld\n", msecs, total, size);
-		MICROSLEEP(5000);
+		compat::microsleep(5000);
 	} while(total < size && msecs < timeout);
 	return msecs < timeout;
 }
@@ -769,7 +769,7 @@ void Create::turn(const short& angle, const unsigned short& speed)
 	double timeToGoal = (deg2rad(angle + 360 / angle) * 258) / angularVelocity();
 	// printf("Time to Goal: %f (rad = %f, av = %d)\n", timeToGoal, deg2rad(angle), angularVelocity());
 	double startTime = timevalToFloat(timeOfDay());
-	MICROSLEEP(timeToGoal * 1000000L - 300);
+	compat::microsleep(timeToGoal * 1000000L - 300);
 	double elapsed = timevalToFloat(timeOfDay());
 	// printf("Diff: %lf\n", elapsed - startTime - timeToGoal);
 	spin(0);
@@ -783,7 +783,7 @@ void Create::move(const short& millimeters, const unsigned short& speed)
 	double timeToGoal = ((double)millimeters) / speed;
 	// printf("Time to Goal: %f (milli = %d, s = %d)\n", timeToGoal, millimeters, speed);
 	double startTime = timevalToFloat(timeOfDay());
-	MICROSLEEP(timeToGoal * 1000000L - 300);
+	compat::microsleep(timeToGoal * 1000000L - 300);
 	double elapsed = timevalToFloat(timeOfDay());
 	// printf("Diff: %lf\n", elapsed - startTime - timeToGoal);
 	driveDirect(0, 0);

@@ -62,7 +62,7 @@ bool Acceleration::calibrate()
 		Private::I2C::instance()->write(i, 0x0, false);
 	}
 
-	MICROSLEEP(5000);
+	compat::microsleep(5000);
 
 	// read accel vals
 	signed char accel_bias_x = 0;
@@ -94,7 +94,7 @@ bool Acceleration::calibrate()
 		Private::I2C::instance()->write(R_YBIAS, -accel_bias_y, false);
 		Private::I2C::instance()->write(R_ZBIAS, -accel_bias_z, false);
 
-		MICROSLEEP(5000);
+		compat::microsleep(5000);
 	}
 
 	return false; // fail

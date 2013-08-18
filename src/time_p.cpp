@@ -41,7 +41,7 @@ void Private::Time::microsleep(unsigned long microsecs)
 	// This is the workaround.
 	while(microsecs) {
 		const unsigned long current = std::min(microsecs, 999999UL);
-		if(MICROSLEEP(current)) {
+		if(compat::microsleep(current)) {
 			perror("usleep");
 			return;
 		}

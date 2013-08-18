@@ -46,12 +46,12 @@ AbstractButton::~AbstractButton() {}
 
 void AbstractButton::waitUntilReleased() const
 {
-	while(isPressed()) YIELDFUNC();
+	while(isPressed()) compat::yield();
 }
 
 void AbstractButton::waitUntilPressed() const
 {
-	while(isNotPressed()) YIELDFUNC();
+	while(isNotPressed()) compat::yield();
 }
 
 void AbstractButton::waitUntilClicked() const
