@@ -32,23 +32,23 @@ endif()
 # Windows kiss-platform nonsense #
 ##################################
 if(WIN32)
-	set(OPENCV_INSTALL_DIR ${CMAKE_SOURCE_DIR}/../opencv/build/)
-	set(ZBAR_INSTALL_DIR "C:/Program Files (x86)/ZBar")
+  set(OPENCV_INSTALL_DIR ${CMAKE_SOURCE_DIR}/../opencv/build/)
+  set(ZBAR_INSTALL_DIR "C:/Program Files (x86)/ZBar")
 
-	include_directories(${CMAKE_SOURCE_DIR}/../prefix/include)
-	include_directories(${OPENCV_INSTALL_DIR}/include)
-	include_directories(${ZBAR_INSTALL_DIR}/include)
-	link_directories(${CMAKE_SOURCE_DIR}/../prefix/lib)
-	link_directories(${OPENCV_INSTALL_DIR}/x86/vc11/lib)
-	link_directories(${ZBAR_INSTALL_DIR}/lib)
+  include_directories(${CMAKE_SOURCE_DIR}/../prefix/include)
+  include_directories(${OPENCV_INSTALL_DIR}/include)
+  include_directories(${ZBAR_INSTALL_DIR}/include)
+  link_directories(${CMAKE_SOURCE_DIR}/../prefix/lib)
+  link_directories(${OPENCV_INSTALL_DIR}/x86/vc11/lib)
+  link_directories(${ZBAR_INSTALL_DIR}/lib)
 endif()
 
 if(APPLE)
-	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -arch x86_64 -g")
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -arch x86_64 -g")
 elseif(WIN32)
 	set(SOURCES ${SOURCES} ${CMAKE_SOURCE_DIR}/compat/mingw.cpp)
 elseif(UNIX)
-	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fPIC")
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fPIC")
 endif()
 
 # add_definitions(-O3)
@@ -59,19 +59,19 @@ if(WIN32)
 	target_link_libraries(kovan opencv_core246 opencv_highgui246 opencv_imgproc246 libzbar-0)
 	target_link_libraries(kovan d3d9)
 else()
-	target_link_libraries(kovan pthread opencv_core opencv_highgui opencv_imgproc zbar avcodec avformat avutil z swscale bz2)
+  target_link_libraries(kovan pthread opencv_core opencv_highgui opencv_imgproc zbar avcodec avformat avutil z swscale bz2)
 endif()
 
 if(APPLE)
-	find_library(OPENGL_LIBRARY OpenGL)
-	find_library(COCOA_LIBRARY Cocoa)
-	find_library(CORESERVICE_LIBRARY CoreServices)
-	target_link_libraries(kovan ${OPENGL_LIBRARY} ${COCOA_LIBRARY} ${CORESERVICE_LIBRARY})
+  find_library(OPENGL_LIBRARY OpenGL)
+  find_library(COCOA_LIBRARY Cocoa)
+  find_library(CORESERVICE_LIBRARY CoreServices)
+  target_link_libraries(kovan ${OPENGL_LIBRARY} ${COCOA_LIBRARY} ${CORESERVICE_LIBRARY})
 endif()
 
 if(KOVAN)
-	target_link_libraries(kovan i2c_wrapper)
-	add_definitions(-DKOVAN)
+  target_link_libraries(kovan i2c_wrapper)
+  add_definitions(-DKOVAN)
 endif()
 
 # add_definitions(-DARDRONE_DEBUG)
@@ -80,10 +80,26 @@ if(WIN32)
 target_link_libraries(kovan ws2_32)
 install(FILES ${INCLUDES} DESTINATION ${CMAKE_SOURCE_DIR}/../prefix/include/kovan)
 install(TARGETS kovan
-	ARCHIVE DESTINATION ${CMAKE_SOURCE_DIR}/../prefix/lib
-	RUNTIME DESTINATION ${CMAKE_SOURCE_DIR}/../prefix/lib)
+  ARCHIVE DESTINATION ${CMAKE_SOURCE_DIR}/../prefix/lib
+  RUNTIME DESTINATION ${CMAKE_SOURCE_DIR}/../prefix/lib)
 else()
 install(FILES ${INCLUDES} DESTINATION include/kovan)
 install(TARGETS kovan LIBRARY DESTINATION lib)
+endif()
+
+option(BUILD_DOCUMENTATION "Use Doxygen to create the HTML based API documentation" ON)
+if(BUILD_DOCUMENTATION)
+  FIND_PACKAGE(Doxygen)
+  if(NOT DOXYGEN_FOUND)
+    message(FATAL_ERROR "Doxygen is needed to build the documentation. Please install it correctly")
+  endif()
+  add_custom_target (Docs++ ALL 
+    COMMAND ${DOXYGEN_EXECUTABLE} ${PROJECT_SOURCE_DIR}/doxygen/Doxyfile++
+    SOURCES ${PROJECT_SOURCE_DIR}/doxygen/Doxyfile++
+    WORKING_DIRECTORY ${PROJECT_SOURCE_DIR})
+  add_custom_target (Docs ALL 
+    COMMAND ${DOXYGEN_EXECUTABLE} ${PROJECT_SOURCE_DIR}/doxygen/Doxyfile
+    SOURCES ${PROJECT_SOURCE_DIR}/doxygen/Doxyfile
+    WORKING_DIRECTORY ${PROJECT_SOURCE_DIR})
 endif()
 
