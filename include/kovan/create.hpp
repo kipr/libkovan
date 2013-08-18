@@ -430,9 +430,20 @@ private:
 	
 	inline timeval timeOfDay() const
 	{
+#ifdef _MSC_VER
+		FILETIME ft;
+		GetSystemTimeAsFileTime(&ft);
+		unsigned long t = (ULONGLONG)ft.dwLowDateTime + ((ULONGLONG)(ft.dwHighDateTime) << 32);
+
+		timeval tv;
+		tv.tv_usec = t % 1000L;
+		tv.tv_sec = (t - tv.tv_usec) / 1000L;
+		return tv;
+#else
 		timeval ret;
 		gettimeofday(&ret, NULL);
 		return ret;
+#endif
 	}
 	
 	inline bool hasRequiredTimePassed(const timeval& timestamp) const
