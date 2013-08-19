@@ -21,6 +21,14 @@
 #ifndef _CAMERA_H_
 #define _CAMERA_H_
 
+/*!
+ * \file battery.h
+ * \brief Methods for determining the device's power level
+ * \author Braden McDorman
+ * \copyright KISS Insitute for Practical Robotics
+ * \defgroup camera Camera
+ */
+
 #include "geom.h"
 #include "export.h"
 
@@ -52,6 +60,7 @@ enum Resolution
  * \return 1 on success, 0 on failure
  * \see camera_open_device
  * \see camera_close
+ * \ingroup camera
  */
 EXPORT_SYM int camera_open(enum Resolution res);
 
@@ -65,6 +74,7 @@ EXPORT_SYM int camera_open(enum Resolution res);
  * \return 1 on success, 0 on failure
  * \see camera_open
  * \see camera_close
+ * \ingroup camera
  */
 EXPORT_SYM int camera_open_device(int number, enum Resolution res);
 
@@ -73,18 +83,21 @@ EXPORT_SYM int camera_open_device(int number, enum Resolution res);
  * \param name The configuration to load. Configuration file names are case sensitive.
  * \note You must include the config file extension ".conf" in the name parameter.
  * \return 1 on success, 0 on failure.
+ * \ingroup camera
  */
 EXPORT_SYM int camera_load_config(const char *name);
 
 /**
  * Sets the camera's x resolution.
  * \param width The width in pixels
+ * \ingroup camera
  */
 EXPORT_SYM void set_camera_width(int width);
 
 /**
  * Sets the camera's y resolution.
  * \param width The height in pixels
+ * \ingroup camera
  */
 EXPORT_SYM void set_camera_height(int height);
 
@@ -92,6 +105,7 @@ EXPORT_SYM void set_camera_height(int height);
  * Gets the camera's x resolution.
  * \attention This value might be different than the previously set x resolution. Never assume the x resolution.
  * \return The camera's x resolution, in pixels.
+ * \ingroup camera
  */
 EXPORT_SYM int get_camera_width(void);
 
@@ -99,12 +113,14 @@ EXPORT_SYM int get_camera_width(void);
  * Gets the camera's y resolution.
  * \attention This value might be different than the previously set y resolution. Never assume the y resolution.
  * \return The camera's y resolution, in pixels.
+ * \ingroup camera
  */
 EXPORT_SYM int get_camera_height(void);
 
 /**
  * Pulls a new image from the camera for processing.
  * \return 1 on success, 0 on failure.
+ * \ingroup camera
  */
 EXPORT_SYM int camera_update(void);
 
@@ -112,12 +128,14 @@ EXPORT_SYM int camera_update(void);
  * \param p The point at which the pixel lies.
  * \return The rgb value of the pixel located at point p.
  * \note A (r, g, b) value of (-1, -1, -1) will be returned for points that are out of range.
+ * \ingroup camera
  */
 EXPORT_SYM pixel get_camera_pixel(point2 p);
 
 /**
  * \return Number of channels in the current configuration.
  * \see get_object_count
+ * \ingroup camera
  */
 EXPORT_SYM int get_channel_count(void);
 
@@ -126,6 +144,7 @@ EXPORT_SYM int get_channel_count(void);
  * \note Objects are sorted by area, largest first.
  * \return Number of objects in the given channel, -1 if channel doesn't exist.
  * \see get_channel_count
+ * \ingroup camera
  */
 EXPORT_SYM int get_object_count(int channel);
 
@@ -135,6 +154,7 @@ EXPORT_SYM int get_object_count(int channel);
  * \note This data is not guaranteed to be null terminated.
  * \note This string pointer will be invalid after a call to camera_update()
  * \see get_object_data_length
+ * \ingroup camera
  */
 EXPORT_SYM const char *get_object_data(int channel, int object);
 
@@ -148,32 +168,38 @@ EXPORT_SYM int get_code_num(int channel, int object);
  * \return The length of the string data associated with a given object on a given channel.
  * If there is no data associated, 0 is returned. If the channel or object is invalid, 0 is returned.
  * \see get_object_data
+ * \ingroup camera
  */
 EXPORT_SYM int get_object_data_length(int channel, int object);
 
 /**
  * \return The confidence, between 0.0 and 1.0, that given object on the given channel is significant.
  * If the channel or object doesn't exist, 0.0 is returned.
+ * \ingroup camera
  */
 EXPORT_SYM double get_object_confidence(int channel, int object);
 
 /**
  * \return The object's bounding box area. -1 is returned if the channel or object doesn't exist.
+ * \ingroup camera
  */
 EXPORT_SYM int get_object_area(int channel, int object);
 
 /**
  * \return The bounding box of the given object on the given channel.
+ * \ingroup camera
  */
 EXPORT_SYM rectangle get_object_bbox(int channel, int object);
 
 /**
  * \return The (x, y) centroid of the given object on the given channel.
+ * \ingroup camera
  */
 EXPORT_SYM point2 get_object_centroid(int channel, int object);
 
 /**
  * \return The (x, y) center of the given object on the given channel.
+ * \ingroup camera
  */
 EXPORT_SYM point2 get_object_center(int channel, int object);
 
@@ -181,12 +207,14 @@ EXPORT_SYM point2 get_object_center(int channel, int object);
  * Cleanup the current camera instance.
  * \see camera_open
  * \see camera_open_device
+ * \ingroup camera
  */
 EXPORT_SYM void camera_close();
 
 /**
  * Sets the path in which to look for camera configurations.
  * \param path the absolute directory path in which to look for camera configurations.
+ * \ingroup camera
  */
 EXPORT_SYM void set_camera_config_base_path(const char *const path);
 
@@ -195,9 +223,17 @@ EXPORT_SYM void set_camera_config_base_path(const char *const path);
  * pointer is invalid after camera_update() is called again.
  * 
  * \return the current BGR888 camera frame row.
+ * \ingroup camera
  */
 EXPORT_SYM const unsigned char *get_camera_frame_row(unsigned row);
 
+/**
+ * Retrieves the current camera frame as a BGR (BGR888) array. The returned
+ * pointer is invalid after camera_update() is called again.
+ * 
+ * \return the current BGR888 camera frame.
+ * \ingroup camera
+ */
 EXPORT_SYM const unsigned char *get_camera_frame();
 
 EXPORT_SYM unsigned get_camera_element_size();

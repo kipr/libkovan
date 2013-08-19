@@ -93,13 +93,14 @@ if(BUILD_DOCUMENTATION)
   if(NOT DOXYGEN_FOUND)
     message(FATAL_ERROR "Doxygen is needed to build the documentation. Please install it correctly")
   endif()
+  set(DOXYGEN_DIR ${PROJECT_SOURCE_DIR}/doxygen)
   add_custom_target (Docs++ ALL 
-    COMMAND ${DOXYGEN_EXECUTABLE} ${PROJECT_SOURCE_DIR}/doxygen/Doxyfile++
-    SOURCES ${PROJECT_SOURCE_DIR}/doxygen/Doxyfile++
+    COMMAND ${DOXYGEN_EXECUTABLE} ${DOXYGEN_DIR}/Doxyfile++ SOURCES ${DOXYGEN_DIR}/Doxyfile++
     WORKING_DIRECTORY ${PROJECT_SOURCE_DIR})
   add_custom_target (Docs ALL 
-    COMMAND ${DOXYGEN_EXECUTABLE} ${PROJECT_SOURCE_DIR}/doxygen/Doxyfile
-    SOURCES ${PROJECT_SOURCE_DIR}/doxygen/Doxyfile
+    COMMAND ${DOXYGEN_EXECUTABLE} ${DOXYGEN_DIR}/Doxyfile SOURCES ${DOXYGEN_DIR}/Doxyfile
     WORKING_DIRECTORY ${PROJECT_SOURCE_DIR})
+  add_custom_target(DocMetadata ALL
+    COMMAND ${CMAKE_COMMAND} -E copy ${DOXYGEN_DIR}/metadata.ini ${PROJECT_SOURCE_DIR}/doc)
 endif()
 
