@@ -49,10 +49,46 @@ typedef enum Encoding {
 } Encoding;
 
 
+/**
+* This function is equivalent to calling graphics_blit_enc() with an encoding of RGB
+* \see graphics_blit_enc
+*/
 EXPORT_SYM void graphics_blit(const unsigned char *data, int x, int y, int width, int height);
+
+/**
+ * This function is equivalent to calling graphics_blit_region_enc() with an encoding of RGB
+ * \see graphics_blit_region_enc
+ */
 EXPORT_SYM void graphics_blit_region(const unsigned char *data, int sx, int sy, int ex, int ey, int width, int height, int dx, int dy);
 
+/**
+ * Blits a pixel array onto the graphics context
+ * 
+ * \param data the 1D array of pixel data to blit
+ * \param enc RGB for a Red-Green-Blue encoding or BGR for a Blue-Green-Red encoding
+ * \param x The destination x coordinate of the blit (target)
+ * \param y The destination y coordinate of the blit (target)
+ * \param width The width of the area to blit
+ * \param height The height of the area to blit
+ * \ingroup graphics
+ */
 EXPORT_SYM void graphics_blit_enc (const unsigned char *data, Encoding enc, int x, int y, int width, int height);
+
+/**
+ * Blits a pixel array region onto the graphics context
+ * 
+ * \param data the 1D array of pixel data to blit
+ * \param enc RGB for a Red-Green-Blue encoding or BGR for a Blue-Green-Red encoding
+ * \param sx The start x coordinate of the blit (source)
+ * \param sy The start y coordinate of the blit (source)
+ * \param ex The end x coordinate of the blit (source)
+ * \param ey The end y coordinate of the blit (source)
+ * \param width The width of the area to blit
+ * \param height The height of the area to blit
+ * \param dx The destination x coordinate of the blit (target)
+ * \param dy The destination y coordinate of the blit (target)
+ * \ingroup graphics
+ */ 
 EXPORT_SYM void graphics_blit_region_enc(const unsigned char *data, Encoding enc, int sx, int sy, int ex, int ey, int width, int height, int dx, int dy);
 
 /**
