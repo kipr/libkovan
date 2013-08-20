@@ -159,7 +159,7 @@ void graphics_update()
 
 void graphics_clear()
 {
-	g_graphics.pixels.clear();
+    graphics_fill(0, 0, 0);
 }
 
 void graphics_blit(const unsigned char *data, int x, int y, int width, int height)
