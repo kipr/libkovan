@@ -54,7 +54,7 @@ unsigned long Private::Time::systime()
 #ifdef _MSC_VER
 	FILETIME ft;
 	GetSystemTimeAsFileTime(&ft);
-	return (ULONGLONG)ft.dwLowDateTime + ((ULONGLONG)(ft.dwHighDateTime) << 32);
+	return ((ULONGLONG)ft.dwLowDateTime + ((ULONGLONG)ft.dwHighDateTime << 32)) / 10000UL;
 #else
 	timeval t;
 	gettimeofday(&t, 0);
