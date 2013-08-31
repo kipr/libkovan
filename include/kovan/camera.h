@@ -22,8 +22,8 @@
 #define _CAMERA_H_
 
 /*!
- * \file battery.h
- * \brief Methods for determining the device's power level
+ * \file camera.h
+ * \brief Methods for working with the system camera.
  * \author Braden McDorman
  * \copyright KISS Insitute for Practical Robotics
  * \defgroup camera Camera

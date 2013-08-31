@@ -21,6 +21,14 @@
 #ifndef _CAMERA_HPP_
 #define _CAMERA_HPP_
 
+ /*!
+ * \file camera.hpp
+ * \brief Classes for working with the system camera.
+ * \author Braden McDorman
+ * \copyright KISS Insitute for Practical Robotics
+ * \defgroup camera Camera
+ */
+
 #include "geom.hpp"
 #include "color.hpp"
 #include "config.hpp"

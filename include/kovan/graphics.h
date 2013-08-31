@@ -3,7 +3,7 @@
 
 /*!
  * \file graphics.h
- * \brief Provides classes for working with motors.
+ * \brief Methods for displaying graphics to the screen.
  * \author Braden McDorman
  * \copyright KISS Insitute for Practical Robotics
  * \defgroup graphics Graphics

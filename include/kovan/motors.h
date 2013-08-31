@@ -20,7 +20,7 @@
 
 /*!
  * \file motors.h
- * \brief Provides classes for working with motors.
+ * \brief Provides methods for working with motors.
  * \author Braden McDorman
  * \copyright KISS Insitute for Practical Robotics
  * \defgroup motor Motors
