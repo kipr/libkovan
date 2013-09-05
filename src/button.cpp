@@ -106,6 +106,16 @@ void IdButton::resetText()
 	setText(m_defaultText);
 }
 
+inline void ExtraButtons::show()
+{
+	setShown(true);
+}
+
+inline void ExtraButtons::hide()
+{
+	setShown(false);
+}
+
 void ExtraButtons::setShown(const bool& shown)
 {
 	Private::Button::instance()->setExtraShown(shown);

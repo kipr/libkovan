@@ -299,12 +299,8 @@ public:
 
 	void drive(const short& velocity, const short& radius);
 	void driveDirect(const short& left, const short& right);
-	inline void driveStraight(const short& speed) { driveDirect(speed, speed); }
-	inline void stop()
-	{
-		flush();
-		driveStraight(0);
-	}
+	void driveStraight(const short& speed);
+	void stop();
 	
 	/*!
 	 * A very accurate turn method based on time rather than the create's own readings, which are often less than accurate.
@@ -335,8 +331,8 @@ public:
 	 */
 	short angularVelocity() const;
 	
-	inline void spinClockwise(const short& speed) { spin(-speed); }
-	inline void spinCounterClockwise(const short& speed) { spin(speed); }
+	void spinClockwise(const short& speed);
+	void spinCounterClockwise(const short& speed);
 	
 	bool setBaudRate(const unsigned char& baudCode);
 	
@@ -430,7 +426,7 @@ private:
 	
 	inline timeval timeOfDay() const
 	{
-#ifdef _MSC_VER
+#ifdef _WIN32
 		FILETIME ft;
 		GetSystemTimeAsFileTime(&ft);
 		unsigned long t = (ULONGLONG)ft.dwLowDateTime + ((ULONGLONG)(ft.dwHighDateTime) << 32);
@@ -455,7 +451,6 @@ private:
 		const long msecs = result.tv_sec * 1000 + result.tv_usec / 1000;
 		return msecs > m_refreshRate;
 	#else
-		#pragma message	("Create library not yet implemented for Windows")
 		return false;
 	#endif
 	}

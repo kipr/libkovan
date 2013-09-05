@@ -165,14 +165,14 @@ public:
 	 * \see setShown
 	 * \see hide
 	 */
-	static inline void show() { setShown(true); }
+	static void show();
 	
 	/*!
 	 * Hides the X, Y, and Z buttons.
 	 * \see setShown
 	 * \see show
 	 */
-	static inline void hide() { setShown(false); }
+	static void hide();
 	
 	/*!
 	 * Sets whether or not the X, Y, and Z buttons are to be displayed.

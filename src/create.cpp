@@ -761,6 +761,17 @@ void Create::driveDirect(const short& left, const short& right)
 	endAtomicOperation();
 }
 
+inline void Create::driveStraight(const short& speed)
+{
+	driveDirect(speed, speed);
+}
+
+inline void Create::stop()
+{
+	flush();
+	driveStraight(0);
+}
+
 void Create::turn(const short& angle, const unsigned short& speed)
 {
 	if(!isConnected()) return;
@@ -801,6 +812,16 @@ void Create::spin(const short& speed)
 short Create::angularVelocity() const
 {
 	return m_state.rightVelocity - m_state.leftVelocity;
+}
+
+inline void Create::spinClockwise(const short& speed)
+{
+	spin(-speed);
+}
+
+inline void Create::spinCounterClockwise(const short& speed)
+{
+	spin(speed);
 }
 
 bool Create::setBaudRate(const unsigned char& baudCode)
