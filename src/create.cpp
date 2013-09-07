@@ -761,12 +761,12 @@ void Create::driveDirect(const short& left, const short& right)
 	endAtomicOperation();
 }
 
-inline void Create::driveStraight(const short& speed)
+void Create::driveStraight(const short& speed)
 {
 	driveDirect(speed, speed);
 }
 
-inline void Create::stop()
+void Create::stop()
 {
 	flush();
 	driveStraight(0);
@@ -814,12 +814,12 @@ short Create::angularVelocity() const
 	return m_state.rightVelocity - m_state.leftVelocity;
 }
 
-inline void Create::spinClockwise(const short& speed)
+void Create::spinClockwise(const short& speed)
 {
 	spin(-speed);
 }
 
-inline void Create::spinCounterClockwise(const short& speed)
+void Create::spinCounterClockwise(const short& speed)
 {
 	spin(speed);
 }

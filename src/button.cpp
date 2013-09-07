@@ -106,12 +106,12 @@ void IdButton::resetText()
 	setText(m_defaultText);
 }
 
-inline void ExtraButtons::show()
+void ExtraButtons::show()
 {
 	setShown(true);
 }
 
-inline void ExtraButtons::hide()
+void ExtraButtons::hide()
 {
 	setShown(false);
 }
