@@ -7,6 +7,7 @@
 #include <iostream>
 
 #include <string.h>
+#include <math.h>
 
 using namespace PixelToaster;
 using namespace std;
@@ -335,9 +336,11 @@ void graphics_triangle(int x1, int y1, int x2, int y2, int x3, int y3, int r, in
 
 void graphics_triangle_fill(int x1, int y1, int x2, int y2, int x3, int y3, int r, int g, int b)
 {
-	graphics_line(x1, y1, x2, y2, r, g, b);
-	graphics_line(x2, y2, x3, y3, r, g, b);
-	graphics_line(x1, y1, x3, y3, r, g, b);
+	const double l = sqrt(pow(x2 - x1, 2) + pow(y2 - y1, 2));
+	const double dx = (x2 - x1) / l;
+	const double dy = (y2 - y1) / l;
+
+	for(int i = 0; i <= l; ++i) graphics_line(x3, y3, x1 + i * dx, y1 + i * dy, r, g, b);
 }
 
 int get_key_state(enum KeyCode key)
