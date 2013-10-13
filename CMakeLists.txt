@@ -63,6 +63,7 @@ else()
 endif()
 
 if(APPLE)
+# set(CMAKE_OSX_SYSROOT "${OSX_DEVELOPER_ROOT}/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.7.sdk")
   find_library(OPENGL_LIBRARY OpenGL)
   find_library(COCOA_LIBRARY Cocoa)
   find_library(CORESERVICE_LIBRARY CoreServices)

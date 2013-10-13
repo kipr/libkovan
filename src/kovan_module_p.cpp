@@ -109,7 +109,7 @@ bool KovanModule::send(const CommandVector& commands)
 	if(packet == NULL) { //As createPacket now can return NULL, we have to check for this
 	    return false;
 	}
-
+  
 	memcpy(packet->commands, &commands[0], commands.size() * sizeof(Command));
 	bool ret = true;
 	while(sendto(m_sock, reinterpret_cast<const char *>(packet), packetSize, 0,
