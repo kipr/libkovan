@@ -1258,7 +1258,7 @@
 
 				if( display->output() == Output::Fullscreen )
 				{
-					CGMouseDelta deltaX, deltaY;
+					int32_t deltaX, deltaY;
 					CGGetLastMouseDelta(&deltaX, &deltaY);
 				
 					fullscreenMouseX += deltaX;

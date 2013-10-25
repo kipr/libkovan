@@ -45,6 +45,8 @@ endif()
 
 if(APPLE)
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -arch x86_64 -g")
+  include_directories(/usr/local/include)
+  link_directories(/usr/local/lib)
 elseif(WIN32)
 	set(SOURCES ${SOURCES} ${CMAKE_SOURCE_DIR}/compat/mingw.cpp)
 elseif(UNIX)

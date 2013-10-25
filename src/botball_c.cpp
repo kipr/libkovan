@@ -12,6 +12,7 @@
 
 #include <cstdlib>
 #include <iostream>
+#include <unistd.h>
 
 class ShutDownIn : public Thread
 {

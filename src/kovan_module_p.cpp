@@ -7,6 +7,7 @@
 
 #include <cstdio>
 #include <cstdlib>
+#include <unistd.h>
 #include <errno.h>
 
 #define TIMEDIV (1.0 / 13000000) // 13 MHz clock

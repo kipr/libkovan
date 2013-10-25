@@ -271,12 +271,12 @@ bool UsbInputProvider::isOpen() const
 
 void UsbInputProvider::setWidth(const unsigned width)
 {
-	m_capture->set(CV_CAP_PROP_FRAME_WIDTH, width);
+	m_capture->set(cv::CAP_PROP_FRAME_WIDTH, width);
 }
 
 void UsbInputProvider::setHeight(const unsigned height)
 {
-	m_capture->set(CV_CAP_PROP_FRAME_HEIGHT, height);
+	m_capture->set(cv::CAP_PROP_FRAME_HEIGHT, height);
 }
 
 bool UsbInputProvider::next(cv::Mat &image)
