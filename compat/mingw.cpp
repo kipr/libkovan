@@ -1,3 +1,4 @@
+#define NOMINMAX
 #include <winsock.h>
 #include <windows.h>
 #include <stdio.h>

@@ -33,6 +33,7 @@
 #include <netinet/in.h>
 #else
 #define _WIN32_WINNT 0x0501
+#define NOMINMAX
 #include <winsock2.h>
 #include <winsock.h>
 #include <ws2tcpip.h>
