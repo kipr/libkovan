@@ -20,6 +20,7 @@
 
 #include "kovan/create.h"
 #include "kovan/create.hpp"
+#include "nyi.h"
 
 #include <climits>
 
@@ -56,22 +57,22 @@ void create_full()
 
 void create_spot()
 {
-	
+  THIS_IS_NYI
 }
 
 void create_cover()
 {
-	
+  THIS_IS_NYI
 }
 
 void create_demo(int d)
 {
-	
+  THIS_IS_NYI
 }
 
 void create_cover_dock()
 {
-	
+  THIS_IS_NYI
 }
 
 int get_create_mode()
@@ -136,7 +137,8 @@ int get_create_vwall()
 
 int get_create_overcurrents()
 {
-	return 0;
+  THIS_IS_NYI
+  return 0;
 }
 
 int get_create_infrared()
@@ -191,12 +193,14 @@ int get_create_battery_charging_state()
 
 int get_create_battery_voltage()
 {
-	return 0;
+  THIS_IS_NYI
+  return 0;
 }
 
 int get_create_battery_current()
 {
-	return 0;
+  THIS_IS_NYI
+  return 0;
 }
 
 int get_create_battery_temp()
@@ -241,46 +245,55 @@ int get_create_rcliff_amt()
 
 int get_create_bay_DI()
 {
+  THIS_IS_NYI
 	return 0;
 }
 
 int get_create_bay_AI()
 {
+  THIS_IS_NYI
 	return 0;
 }
 
 int get_create_song_number()
 {
+  THIS_IS_NYI
 	return 0;
 }
 
 int get_create_song_playing()
 {
+  THIS_IS_NYI
 	return 0;
 }
 
 int get_create_number_of_stream_packets()
 {
+  THIS_IS_NYI
 	return 0;
 }
 
 int get_create_requested_velocity()
 {
+  THIS_IS_NYI
 	return 0;
 }
 
 int get_create_requested_radius()
 {
+  THIS_IS_NYI
 	return 0;
 }
 
 int get_create_requested_right_velocity()
 {
+  THIS_IS_NYI
 	return 0;
 }
 
 int get_create_requested_left_velocity()
 {
+  THIS_IS_NYI
 	return 0;
 }
 
@@ -326,42 +339,42 @@ int _create_get_raw_encoders(long *lenc, long *renc)
 
 void create_advance_led(int on)
 {
-	
+  THIS_IS_NYI
 }
 
 void create_play_led(int on)
 {
-	
+  THIS_IS_NYI
 }
 
 void create_power_led(int color, int brightness)
 {
-	
+  THIS_IS_NYI
 }
 
 void create_digital_output(int bits)
 {
-	
+  THIS_IS_NYI
 }
 
 void create_pwm_low_side_drivers(int pwm2, int pwm1, int pwm0)
 {
-	
+  THIS_IS_NYI
 }
 
 void create_low_side_drivers(int pwm2, int pwm1, int pwm0)
 {
-	
+  THIS_IS_NYI
 }
 
 void create_load_song(int num)
 {
-	
+  THIS_IS_NYI
 }
 
 void create_play_song(int num)
 {
-	
+  THIS_IS_NYI
 }
 
 int create_read_block(char *data, int count)
