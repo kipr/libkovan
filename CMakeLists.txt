@@ -32,7 +32,7 @@ endif()
 # Windows kiss-platform nonsense #
 ##################################
 if(WIN32)
-  set(OPENCV_INSTALL_DIR ${CMAKE_SOURCE_DIR}/../opencv/build/)
+  set(OPENCV_INSTALL_DIR ${CMAKE_SOURCE_DIR}/../opencv/build/install)
   set(ZBAR_INSTALL_DIR "C:/Program Files (x86)/ZBar")
 
   include_directories(${CMAKE_SOURCE_DIR}/../prefix/include)
@@ -58,7 +58,7 @@ endif()
 add_library(kovan SHARED ${SOURCES} ${OBJC_SOURCES} ${INCLUDES})
 if(WIN32)
 	# TODO: Make sure these are current
-	target_link_libraries(kovan opencv_core246 opencv_highgui246 opencv_imgproc246 libzbar-0)
+	target_link_libraries(kovan opencv_core300 opencv_highgui300 opencv_imgproc300 libzbar-0)
 	target_link_libraries(kovan d3d9)
 else()
   target_link_libraries(kovan pthread opencv_core opencv_highgui opencv_imgproc zbar avcodec avformat avutil z swscale bz2)
