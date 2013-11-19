@@ -12,7 +12,10 @@
 
 #include <cstdlib>
 #include <iostream>
+
+#ifndef WIN32
 #include <unistd.h>
+#endif
 
 class ShutDownIn : public Thread
 {

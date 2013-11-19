@@ -7,8 +7,11 @@
 
 #include <cstdio>
 #include <cstdlib>
-#include <unistd.h>
 #include <errno.h>
+
+#ifndef WIN32
+#include <unistd.h>
+#endif
 
 #define TIMEDIV (1.0 / 13000000) // 13 MHz clock
 #define PWM_PERIOD_RAW 0.02F
