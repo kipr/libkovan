@@ -21,7 +21,6 @@
 
 #include "libkipr_link_depth_sensor/OpenNI2DepthImage.hpp"
 #include "libkipr_link_depth_sensor/Exception.hpp"
-#include "libkipr_link_depth_sensor/PointCloud2D.hpp"
 
 using namespace libkipr_link_depth_sensor;
 using namespace openni;
@@ -93,36 +92,3 @@ Point* OpenNI2DepthImage::getPointAt(const DepthImageCoordinate& coordinate) con
   }
 }
 
-PointCloud* OpenNI2DepthImage::getPointCloud(Filter filter) const
-{
-  PointCloud* point_cloud = new PointCloud2D(size_);
-  
-  int depth_x, depth_y, depth_value;
-  float world_x, world_y, world_z;
-  
-  for(depth_y = 0; depth_y < (int) size_.height; depth_y++)
-  {
-    for(depth_x = 0; depth_x < (int) size_.width; depth_x++)
-    {
-      DepthImageCoordinate depth_coord(depth_x, depth_y);
-      depth_value = getDepthAt(depth_coord);
-      
-      if((depth_value != 0) && filter(this, depth_coord, depth_value))
-      {
-        Status rc = CoordinateConverter::convertDepthToWorld(stream_, 
-          depth_coord.x, depth_coord.y, depth_value, &world_x, &world_y, &world_z);
-        if(rc != STATUS_OK)
-        {
-          throw Exception(std::string("Coordinate conversion failed with ")
-            + OpenNI::getExtendedError());
-        }
-        
-        point_cloud->addPoint(new Point(
-          WorldCoordinate((int32_t) world_x, (int32_t) world_y, (int32_t) world_z),
-          depth_coord, depth_value));
-      }
-    }
-  }
-  
-  return point_cloud;
-}

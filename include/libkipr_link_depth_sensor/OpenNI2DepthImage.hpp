@@ -32,6 +32,7 @@
 
 #include "libkipr_link_depth_sensor/DepthImage.hpp"
 #include "libkipr_link_depth_sensor/DepthImageSize.hpp"
+#include "libkipr_link_depth_sensor/Point.hpp"
 
 namespace libkipr_link_depth_sensor
 {
@@ -84,22 +85,6 @@ namespace libkipr_link_depth_sensor
      * \return The point or nullptr if there no point at this coordinate
      */
     virtual Point* getPointAt(const DepthImageCoordinate& coordinate) const;
-    
-    /**
-     * Returns a PointCloud object of this depth image
-     *
-     * The filter function is used to add only points to the point cloud
-     * which meet the filter criteria. In addition it can be used to modify the
-     * depth value (e.g. average over the surrounding pixel) before put them
-     * into the point cloud. The _this parameter of the filter can be used to
-     * get the depth of the surrounding pixel via getDepthAt()
-     *
-     * \note Creating a point cloud is very expensive. Therefore the filter
-     * should filter out as much as possible.
-     *
-     * \return A PointCloud object
-     */
-    virtual PointCloud* getPointCloud(Filter filter) const;
   
   private:
     openni::VideoFrameRef video_frame_ref_;
