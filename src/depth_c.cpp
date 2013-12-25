@@ -24,7 +24,7 @@
 #include <memory>
 
 #include "libkipr_link_depth_sensor/Exception.hpp"
-#include "libkipr_link_depth_sensor/DepthDriver.hpp"
+#include "libkipr_link_depth_sensor/depth_driver.hpp"
 #include "libkipr_link_depth_sensor/depth.h"
 
 namespace libkipr_link_depth_sensor

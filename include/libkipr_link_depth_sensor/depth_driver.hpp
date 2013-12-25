@@ -20,7 +20,7 @@
 *******************************************************************************/
 
 /**
- * \file DepthDriver.hpp
+ * \file depth_driver.hpp
  * \brief C++ interface for depth driver used by libkipr_link_depth_sensor
  * \author Stefan Zeltner
  */
