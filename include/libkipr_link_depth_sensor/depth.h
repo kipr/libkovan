@@ -38,7 +38,7 @@
 
 #include <libkipr_link_depth_sensor/DepthCameraResolution.h>
 #include <libkipr_link_depth_sensor/DepthCameraOrientation.h>
-#include <libkipr_link_depth_sensor/Library.h>
+#include <kovan/export.h>
 
 #ifdef __cplusplus
 extern "C" {
@@ -55,13 +55,13 @@ extern "C" {
  *
  * \return 1 on success, 0 otherwise
  */
-LIBRARY_API int depth_open();
+EXPORT_SYM int depth_open();
 
 /**
  * Closes the depth sensor
  * \return 1 on success, 0 otherwise
  */
-LIBRARY_API int depth_close();
+EXPORT_SYM int depth_close();
 
 /** \} */
 
@@ -82,7 +82,7 @@ LIBRARY_API int depth_close();
  * \see set_depth_camera_resolution
  * \see depth_update
  */
-LIBRARY_API DepthCameraResolution get_depth_camera_resolution();
+EXPORT_SYM DepthCameraResolution get_depth_camera_resolution();
 
 /**
  * Set the current depth camera resolution.
@@ -93,7 +93,7 @@ LIBRARY_API DepthCameraResolution get_depth_camera_resolution();
  * \see get_depth_image_resolution
  * \see depth_update
  */
-LIBRARY_API int set_depth_camera_resolution(DepthCameraResolution resolution);
+EXPORT_SYM int set_depth_camera_resolution(DepthCameraResolution resolution);
 
 /** \} */
 
@@ -109,14 +109,14 @@ LIBRARY_API int set_depth_camera_resolution(DepthCameraResolution resolution);
  *
  * \return 1 on success, 0 otherwise
  */
-LIBRARY_API int set_depth_camera_orientation(DepthCameraOrientation orientation);
+EXPORT_SYM int set_depth_camera_orientation(DepthCameraOrientation orientation);
 
 /**
  * Gets the depth camera orientation
  *
  * \return Depth camera orientation or DEPTH_CAMERA_INVALID_ORIENTATION
  */
-LIBRARY_API DepthCameraOrientation get_depth_camera_orientation();
+EXPORT_SYM DepthCameraOrientation get_depth_camera_orientation();
 
 /** \} */
 
@@ -131,7 +131,7 @@ LIBRARY_API DepthCameraOrientation get_depth_camera_orientation();
  *
  * \return 1 on success, 0 otherwise
  */
-LIBRARY_API int depth_update();
+EXPORT_SYM int depth_update();
 
 /** \} */
 
@@ -160,7 +160,7 @@ LIBRARY_API int depth_update();
  *
  * \return Height of the depth image in pixel or 0 if no depth image was saved
  */
-LIBRARY_API int depth_image_get_height();
+EXPORT_SYM int depth_image_get_height();
 
 /**
  * Returns the width of the depth image stored by depth_update in pixel
@@ -169,7 +169,7 @@ LIBRARY_API int depth_image_get_height();
  *
  * \return Width of the depth image in pixel or 0 if no depth image was saved
  */
-LIBRARY_API int depth_image_get_width();
+EXPORT_SYM int depth_image_get_width();
 
 
 static const int INVALID_COORDINATE = INT32_MIN;
@@ -186,7 +186,7 @@ static const int INVALID_COORDINATE = INT32_MIN;
  *         image was saved or if the depth value of (x, y) is not visible
  *         by the depth sensor
  */
-LIBRARY_API int get_depth_value(int x, int y);
+EXPORT_SYM int get_depth_value(int x, int y);
 
 /**
  * Returns the x coordinate of the specified point.
@@ -200,7 +200,7 @@ LIBRARY_API int get_depth_value(int x, int y);
 *          if no depth image was saved or if the depth value of (x, y) is not visible
 *          by the depth sensor
  */
-LIBRARY_API int get_world_x(int x, int y);
+EXPORT_SYM int get_world_x(int x, int y);
 
 /**
  * Returns the y coordinate of the specified point.
@@ -214,7 +214,7 @@ LIBRARY_API int get_world_x(int x, int y);
 *          if no depth image was saved or if the depth value of (x, y) is not visible
 *          by the depth sensor
  */
-LIBRARY_API int get_world_y(int x, int y);
+EXPORT_SYM int get_world_y(int x, int y);
 
 /**
  * Returns the z coordinate of the specified point.
@@ -228,7 +228,7 @@ LIBRARY_API int get_world_y(int x, int y);
 *          if no depth image was saved or if the depth value of (x, y) is not visible
 *          by the depth sensor
  */
-LIBRARY_API int get_world_z(int x, int y);
+EXPORT_SYM int get_world_z(int x, int y);
 
 /** \} */
 
