@@ -32,7 +32,6 @@
 
 #include "libkipr_link_depth_sensor/WorldCoordinate.hpp"
 #include "libkipr_link_depth_sensor/DepthImageCoordinate.hpp"
-#include "libkipr_link_depth_sensor/Color.hpp"
 
 namespace libkipr_link_depth_sensor
 {
@@ -40,9 +39,9 @@ namespace libkipr_link_depth_sensor
   {
   public:
     Point(WorldCoordinate world_coord, DepthImageCoordinate depth_coord,
-      int32_t depth, Color color = Color(0xFF, 0xFF, 0xFF))
+      int32_t depth)
       : world_coord_(world_coord), depth_coord_(depth_coord),
-        depth_(depth), color_(color)
+        depth_(depth)
     {
 
     }
@@ -77,33 +76,11 @@ namespace libkipr_link_depth_sensor
       return depth_;
     }
 
-    /**
-     * Returns the color of the point
-     *
-     * \return The color of the point
-     */
-    inline Color getColor() const
-    {
-      return color_;
-    }
-
-    /**
-     * Sets the color of the point
-     *
-     * \param color The color of the point
-     */
-    inline void setColor(const Color& color)
-    {
-      color_ = color;
-    }
-
   private:
     DepthImageCoordinate depth_coord_;
     int32_t depth_;
 
     WorldCoordinate world_coord_;
-
-    Color color_;
   };
 }
 
