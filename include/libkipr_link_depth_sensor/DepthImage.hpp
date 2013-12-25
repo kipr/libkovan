@@ -40,10 +40,6 @@ namespace libkipr_link_depth_sensor
   class DepthImage
   {
   public:
-    typedef bool (*Filter)(const DepthImage* _this,
-      const DepthImageCoordinate& depth_image_coordinate,
-      int32_t& depth);
-
     virtual ~DepthImage() {};
 
     /**
