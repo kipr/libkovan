@@ -28,7 +28,7 @@ using namespace openni;
 OpenNI2DepthImage::OpenNI2DepthImage(openni::VideoFrameRef video_frame_ref,
                                  const openni::VideoStream& stream)
   : video_frame_ref_(video_frame_ref), stream_(stream),
-    size_(video_frame_ref_.getWidth(), video_frame_ref_.getHeight()),
+    size_(0, 0, video_frame_ref_.getWidth(), video_frame_ref_.getHeight()),
     orientation_(0)
 {
 
@@ -48,24 +48,24 @@ int32_t OpenNI2DepthImage::getDepthAt(uint32_t row, uint32_t column) const
 {
   if(orientation_ == 0)
   {
-    return ((DepthPixel*)video_frame_ref_.getData())[(size_.width - column)
-      + row*size_.width];
+    return ((DepthPixel*)video_frame_ref_.getData())[(size_.width() - column)
+      + row*size_.width()];
   }
   else
   {
     return ((DepthPixel*)video_frame_ref_.getData())[column
-      + (size_.height -row)*size_.width];
+      + (size_.height() -row)*size_.width()];
   }
 }
 
 uint32_t OpenNI2DepthImage::getWidth() const
 {
-  return size_.width;
+  return size_.width();
 }
 
 uint32_t OpenNI2DepthImage::getHeight() const
 {
-  return size_.height;
+  return size_.height();
 }
 
 Point3<int32_t>* OpenNI2DepthImage::getPointAt(uint32_t row, uint32_t column) const
