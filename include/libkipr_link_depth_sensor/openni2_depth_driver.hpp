@@ -20,7 +20,7 @@
 *******************************************************************************/
 
 /**
- * \file OpenNI2DepthDriver.hpp
+ * \file openni2_depth_driver.hpp
  * \brief OpenNI2 implementation of the DepthDriver interface
  * \author Stefan Zeltner
  */

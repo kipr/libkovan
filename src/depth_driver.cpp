@@ -20,7 +20,7 @@
 *******************************************************************************/
 
 #include "libkipr_link_depth_sensor/depth_driver.hpp"
-#include "libkipr_link_depth_sensor/OpenNI2DepthDriver.hpp"
+#include "libkipr_link_depth_sensor/openni2_depth_driver.hpp"
 
 using namespace libkipr_link_depth_sensor;
 
