@@ -67,16 +67,16 @@ int depth_close()
   catchAllAndReturn(0);
 }
 
-DepthCameraResolution get_depth_camera_resolution()
+DepthResolution get_depth_camera_resolution()
 {
   try
   {
     return DepthDriver::instance().getDepthCameraResolution();
   }
-  catchAllAndReturn(DEPTH_CAMERA_INVALID_RESOLUTION);
+  catchAllAndReturn(DEPTH_INVALID_RESOLUTION);
 }
 
-int set_depth_camera_resolution(DepthCameraResolution resolution)
+int set_depth_camera_resolution(DepthResolution resolution)
 {
   try
   {

@@ -31,7 +31,7 @@
 #include <memory>
 
 #include <libkipr_link_depth_sensor/DepthImage.hpp>
-#include <libkipr_link_depth_sensor/DepthCameraResolution.h>
+#include <libkipr_link_depth_sensor/depth_resolution.h>
 
 namespace libkipr_link_depth_sensor
 {
@@ -57,14 +57,14 @@ namespace libkipr_link_depth_sensor
       *
       * \return The current depth camera resolution
       */
-    virtual DepthCameraResolution getDepthCameraResolution() const = 0;
+    virtual DepthResolution getDepthCameraResolution() const = 0;
 
     /**
       * Set the current depth camera resolution.
       *
       * \param resolution New depth camera resolution
       */
-    virtual void setDepthCameraResolution(DepthCameraResolution resolution) = 0;
+    virtual void setDepthCameraResolution(DepthResolution resolution) = 0;
 
     /**
       * Returns a Dept Image object containing the current depth values

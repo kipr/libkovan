@@ -25,22 +25,22 @@
  * \author Stefan Zeltner
  */
 
-#ifndef _DEPTH_CAMERA_RESOLUTION_H_
-#define _DEPTH_CAMERA_RESOLUTION_H_
+#ifndef _DEPTH_RESOLUTION_H_
+#define _DEPTH_RESOLUTION_H_
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-typedef enum DepthCameraResolution_
+typedef enum DepthResolution_
 {
-  DEPTH_CAMERA_INVALID_RESOLUTION,
-  DEPTH_CAMERA_RESOLUTION_320_240,
-  DEPTH_CAMERA_RESOLUTION_640_480
-} DepthCameraResolution;
+  DEPTH_INVALID_RESOLUTION,
+  DEPTH_RESOLUTION_320_240,
+  DEPTH_RESOLUTION_640_480
+} DepthResolution;
 
 #ifdef __cplusplus
 }
 #endif
 
-#endif /* _DEPTH_CAMERA_RESOLUTION_H_ */
+#endif /* _DEPTH_RESOLUTION_H_ */

@@ -36,7 +36,7 @@
 
 #include <stdint.h>
 
-#include <libkipr_link_depth_sensor/DepthCameraResolution.h>
+#include <libkipr_link_depth_sensor/depth_resolution.h>
 #include <kovan/export.h>
 
 #ifdef __cplusplus
@@ -81,7 +81,7 @@ EXPORT_SYM int depth_close();
  * \see set_depth_camera_resolution
  * \see depth_update
  */
-EXPORT_SYM DepthCameraResolution get_depth_camera_resolution();
+EXPORT_SYM DepthResolution get_depth_camera_resolution();
 
 /**
  * Set the current depth camera resolution.
@@ -92,7 +92,7 @@ EXPORT_SYM DepthCameraResolution get_depth_camera_resolution();
  * \see get_depth_image_resolution
  * \see depth_update
  */
-EXPORT_SYM int set_depth_camera_resolution(DepthCameraResolution resolution);
+EXPORT_SYM int set_depth_camera_resolution(DepthResolution resolution);
 
 /** \} */
 
