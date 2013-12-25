@@ -19,7 +19,7 @@
 
 *******************************************************************************/
 
-#include "libkipr_link_depth_sensor/Exception.hpp"
+#include "libkipr_link_depth_sensor/depth_exception.hpp"
 #include "libkipr_link_depth_sensor/openni2_depth_driver.hpp"
 
 using namespace libkipr_link_depth_sensor;

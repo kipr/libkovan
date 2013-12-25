@@ -20,13 +20,13 @@
 *******************************************************************************/
 
 /**
- * \file Exception.hpp
+ * \file depth_exception.hpp
  * \brief This file describes the class Exception
  * \author Stefan Zeltner
  */
 
-#ifndef _EXCEPTION_HPP_
-#define _EXCEPTION_HPP_
+#ifndef _DEPTH_EXCEPTION_HPP_
+#define _DEPTH_EXCEPTION_HPP_
 
 #include <string>
 #include <stdexcept>
@@ -41,4 +41,4 @@ namespace libkipr_link_depth_sensor
   };
 }
 
-#endif /* _EXCEPTION_HPP_ */
+#endif /* _DEPTH_EXCEPTION_HPP_ */

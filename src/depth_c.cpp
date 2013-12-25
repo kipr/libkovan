@@ -23,7 +23,7 @@
 #include <exception>
 #include <memory>
 
-#include "libkipr_link_depth_sensor/Exception.hpp"
+#include "libkipr_link_depth_sensor/depth_exception.hpp"
 #include "libkipr_link_depth_sensor/depth_driver.hpp"
 #include "libkipr_link_depth_sensor/depth.h"
 
