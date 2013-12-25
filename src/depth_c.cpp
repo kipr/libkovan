@@ -158,13 +158,13 @@ int depth_image_get_width()
   catchAllAndReturn(0);
 }
 
-int get_depth_value(int x, int y)
+int get_depth_value(int row, int column)
 {
   try
   {
     if(_depth_image)
     {
-      int value = _depth_image->getDepthAt(DepthImageCoordinate(x, y));
+      int value = _depth_image->getDepthAt(row, column);
       if(value == 0)
       {
         return INVALID_COORDINATE;
@@ -182,13 +182,13 @@ int get_depth_value(int x, int y)
   catchAllAndReturn(INVALID_COORDINATE);
 }
 
-int get_world_x(int x, int y)
+int get_world_x(int row, int column)
 {
   try
   {
     if(_depth_image)
     {
-      std::unique_ptr<Point3<int32_t>> p(_depth_image->getPointAt(DepthImageCoordinate(x, y)));
+      std::unique_ptr<Point3<int32_t>> p(_depth_image->getPointAt(row, column));
       if(p)
       {
         return p->x();
@@ -206,13 +206,13 @@ int get_world_x(int x, int y)
   catchAllAndReturn(INVALID_COORDINATE);
 }
 
-int get_world_y(int x, int y)
+int get_world_y(int row, int column)
 {
   try
   {
     if(_depth_image)
     {
-      std::unique_ptr<Point3<int32_t>> p(_depth_image->getPointAt(DepthImageCoordinate(x, y)));
+      std::unique_ptr<Point3<int32_t>> p(_depth_image->getPointAt(row, column));
       if(p)
       {
         return p->y();
@@ -230,13 +230,13 @@ int get_world_y(int x, int y)
   catchAllAndReturn(INVALID_COORDINATE);
 }
 
-int get_world_z(int x, int y)
+int get_world_z(int row, int column)
 {
   try
   {
     if(_depth_image)
     {
-      std::unique_ptr<Point3<int32_t>> p(_depth_image->getPointAt(DepthImageCoordinate(x, y)));
+      std::unique_ptr<Point3<int32_t>> p(_depth_image->getPointAt(row, column));
       if(p)
       {
         return p->z();

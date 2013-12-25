@@ -44,17 +44,17 @@ uint16_t OpenNI2DepthImage::getOrientation() const
   return orientation_;
 }
 
-int32_t OpenNI2DepthImage::getDepthAt(const DepthImageCoordinate& coordinate) const
+int32_t OpenNI2DepthImage::getDepthAt(uint32_t row, uint32_t column) const
 {
   if(orientation_ == 0)
   {
-    return ((DepthPixel*)video_frame_ref_.getData())[(size_.width - coordinate.x)
-      + coordinate.y*size_.width];
+    return ((DepthPixel*)video_frame_ref_.getData())[(size_.width - column)
+      + row*size_.width];
   }
   else
   {
-    return ((DepthPixel*)video_frame_ref_.getData())[coordinate.x
-      + (size_.height - coordinate.y)*size_.width];
+    return ((DepthPixel*)video_frame_ref_.getData())[column
+      + (size_.height -row)*size_.width];
   }
 }
 
@@ -68,15 +68,15 @@ uint32_t OpenNI2DepthImage::getHeight() const
   return size_.height;
 }
 
-Point3<int32_t>* OpenNI2DepthImage::getPointAt(const DepthImageCoordinate& coordinate) const
+Point3<int32_t>* OpenNI2DepthImage::getPointAt(uint32_t row, uint32_t column) const
 {
-  int depth_value = getDepthAt(coordinate);
+  int depth_value = getDepthAt(row, column);
   float world_x, world_y, world_z;
       
   if(depth_value != 0)
   {
     Status rc = CoordinateConverter::convertDepthToWorld(stream_, 
-      coordinate.x, coordinate.y, depth_value, &world_x, &world_y, &world_z);
+      (int) column, (int) row, depth_value, &world_x, &world_y, &world_z);
     if(rc != STATUS_OK)
     {
       throw Exception(std::string("Coordinate conversion failed with ")

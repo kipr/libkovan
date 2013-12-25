@@ -187,7 +187,7 @@ static const int INVALID_COORDINATE = INT32_MIN;
  *         image was saved or if the depth value of (x, y) is not visible
  *         by the depth sensor
  */
-EXPORT_SYM int get_depth_value(int x, int y);
+EXPORT_SYM int get_depth_value(int row, int column);
 
 /**
  * Returns the x coordinate of the specified point.
@@ -201,7 +201,7 @@ EXPORT_SYM int get_depth_value(int x, int y);
 *          if no depth image was saved or if the depth value of (x, y) is not visible
 *          by the depth sensor
  */
-EXPORT_SYM int get_world_x(int x, int y);
+EXPORT_SYM int get_world_x(int row, int column);
 
 /**
  * Returns the y coordinate of the specified point.
@@ -215,7 +215,7 @@ EXPORT_SYM int get_world_x(int x, int y);
 *          if no depth image was saved or if the depth value of (x, y) is not visible
 *          by the depth sensor
  */
-EXPORT_SYM int get_world_y(int x, int y);
+EXPORT_SYM int get_world_y(int row, int column);
 
 /**
  * Returns the z coordinate of the specified point.
@@ -229,7 +229,7 @@ EXPORT_SYM int get_world_y(int x, int y);
 *          if no depth image was saved or if the depth value of (x, y) is not visible
 *          by the depth sensor
  */
-EXPORT_SYM int get_world_z(int x, int y);
+EXPORT_SYM int get_world_z(int row, int column);
 
 /** \} */
 
