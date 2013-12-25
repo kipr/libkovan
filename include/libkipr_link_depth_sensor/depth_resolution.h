@@ -20,7 +20,7 @@
 *******************************************************************************/
 
 /**
- * \file DepthCameraResolution.h
+ * \file depth_resolution.h
  * \brief Contains the definiton of the enum DepthCameraResolution
  * \author Stefan Zeltner
  */
