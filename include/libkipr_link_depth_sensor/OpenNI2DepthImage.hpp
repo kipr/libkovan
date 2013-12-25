@@ -30,7 +30,7 @@
 
 #include <OpenNI.h>
 
-#include "libkipr_link_depth_sensor/DepthImage.hpp"
+#include "libkipr_link_depth_sensor/depth_image.hpp"
 #include "kovan/geom.hpp"
 
 namespace libkipr_link_depth_sensor

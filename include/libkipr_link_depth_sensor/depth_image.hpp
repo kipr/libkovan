@@ -20,7 +20,7 @@
 *******************************************************************************/
 
 /**
- * \file DepthImage.hpp
+ * \file depth_image.hpp
  * \brief The interface for a depth image
  * \author Stefan Zeltner
  */
