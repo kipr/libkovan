@@ -20,7 +20,7 @@
 *******************************************************************************/
 
 /**
- * \file OpenNI2DepthImage.hpp
+ * \file openni2_depth_image.hpp
  * \brief OpenNI2 implementation of the DepthImage interface
  * \author Stefan Zeltner
  */
