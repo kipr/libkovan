@@ -32,7 +32,6 @@
 
 #include "libkipr_link_depth_sensor/DepthImage.hpp"
 #include "libkipr_link_depth_sensor/DepthImageSize.hpp"
-#include "libkipr_link_depth_sensor/Point.hpp"
 
 namespace libkipr_link_depth_sensor
 {
@@ -84,7 +83,7 @@ namespace libkipr_link_depth_sensor
      * \param coordinate The coordinate of the point
      * \return The point or nullptr if there no point at this coordinate
      */
-    virtual Point* getPointAt(const DepthImageCoordinate& coordinate) const;
+    virtual Point3<int32_t>* getPointAt(const DepthImageCoordinate& coordinate) const;
   
   private:
     openni::VideoFrameRef video_frame_ref_;

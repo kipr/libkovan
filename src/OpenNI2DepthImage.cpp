@@ -68,7 +68,7 @@ uint32_t OpenNI2DepthImage::getHeight() const
   return size_.height;
 }
 
-Point* OpenNI2DepthImage::getPointAt(const DepthImageCoordinate& coordinate) const
+Point3<int32_t>* OpenNI2DepthImage::getPointAt(const DepthImageCoordinate& coordinate) const
 {
   int depth_value = getDepthAt(coordinate);
   float world_x, world_y, world_z;
@@ -83,12 +83,10 @@ Point* OpenNI2DepthImage::getPointAt(const DepthImageCoordinate& coordinate) con
         + OpenNI::getExtendedError());
     }
     
-    return new Point(WorldCoordinate((int32_t) world_x, (int32_t) world_y,
-      (int32_t) world_z), coordinate, depth_value);
+    return new Point3<int32_t>((int32_t) world_x, (int32_t) world_y, (int32_t) world_z);
   }
   else
   {
     return nullptr;
   }
 }
-

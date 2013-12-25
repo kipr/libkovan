@@ -33,7 +33,7 @@
 #include <memory>
 
 #include <libkipr_link_depth_sensor/DepthImageCoordinate.hpp>
-#include <libkipr_link_depth_sensor/Point.hpp>
+#include <kovan/geom.hpp>
 
 namespace libkipr_link_depth_sensor
 {
@@ -88,7 +88,7 @@ namespace libkipr_link_depth_sensor
      * \param coordinate The coordinate of the point
      * \return The point or nullptr if there no point at this coordinate
      */
-    virtual Point* getPointAt(const DepthImageCoordinate& coordinate) const = 0;
+    virtual Point3<int32_t>* getPointAt(const DepthImageCoordinate& coordinate) const = 0;
   };
 }
 

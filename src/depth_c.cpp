@@ -25,7 +25,6 @@
 
 #include "libkipr_link_depth_sensor/Exception.hpp"
 #include "libkipr_link_depth_sensor/DepthDriver.hpp"
-#include "libkipr_link_depth_sensor/Point.hpp"
 #include "libkipr_link_depth_sensor/depth.h"
 
 namespace libkipr_link_depth_sensor
@@ -189,10 +188,10 @@ int get_world_x(int x, int y)
   {
     if(_depth_image)
     {
-      std::unique_ptr<Point> p(_depth_image->getPointAt(DepthImageCoordinate(x, y)));
+      std::unique_ptr<Point3<int32_t>> p(_depth_image->getPointAt(DepthImageCoordinate(x, y)));
       if(p)
       {
-        return p->getWorldCoordinate().x;
+        return p->x();
       }
       else
       {
@@ -213,10 +212,10 @@ int get_world_y(int x, int y)
   {
     if(_depth_image)
     {
-      std::unique_ptr<Point> p(_depth_image->getPointAt(DepthImageCoordinate(x, y)));
+      std::unique_ptr<Point3<int32_t>> p(_depth_image->getPointAt(DepthImageCoordinate(x, y)));
       if(p)
       {
-        return p->getWorldCoordinate().y;
+        return p->y();
       }
       else
       {
@@ -237,10 +236,10 @@ int get_world_z(int x, int y)
   {
     if(_depth_image)
     {
-      std::unique_ptr<Point> p(_depth_image->getPointAt(DepthImageCoordinate(x, y)));
+      std::unique_ptr<Point3<int32_t>> p(_depth_image->getPointAt(DepthImageCoordinate(x, y)));
       if(p)
       {
-        return p->getWorldCoordinate().z;
+        return p->z();
       }
       else
       {
