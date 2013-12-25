@@ -34,45 +34,6 @@ namespace libkipr_link_depth_sensor
   {
     std::shared_ptr<DepthImage> _depth_image;
     uint16_t _orientation = 0;
-    
-    struct MinMaxFilterValue
-    {
-    private:
-      bool min_is_set;
-      int min;
-      bool max_is_set;
-      int max;
-      
-    public:
-      MinMaxFilterValue()
-        : min_is_set(false), max_is_set(false) {}
-      
-      void setMin(int value)
-      {
-        min_is_set = true;
-        min = value;
-      }
-      
-      void setMax(int value)
-      {
-        max_is_set = true;
-        max = value;
-      }
-      
-      bool filter(int value)
-      {
-        if(min_is_set && (min > value))
-        {
-          return false;
-        }
-        if(max_is_set && (max < value))
-        {
-          return false;
-        }
-        
-        return true;
-      }
-    } _filter_x, _filter_y, _filter_depth;
   }
 }
 
