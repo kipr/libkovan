@@ -29,24 +29,24 @@ OpenNI2DepthImage::OpenNI2DepthImage(openni::VideoFrameRef video_frame_ref,
                                  const openni::VideoStream& stream)
   : video_frame_ref_(video_frame_ref), stream_(stream),
     size_(video_frame_ref_.getWidth(), video_frame_ref_.getHeight()),
-    orientation_(DEPTH_CAMERA_ORIENTATION_DEFAULT)
+    orientation_(0)
 {
 
 }
 
-void OpenNI2DepthImage::setOrientation(DepthCameraOrientation orientation)
+void OpenNI2DepthImage::setOrientation(uint16_t orientation)
 {
   orientation_ = orientation;
 }
 
-DepthCameraOrientation OpenNI2DepthImage::getOrientation()
+uint16_t OpenNI2DepthImage::getOrientation() const
 {
   return orientation_;
 }
 
 int32_t OpenNI2DepthImage::getDepthAt(const DepthImageCoordinate& coordinate) const
 {
-  if(orientation_ == DEPTH_CAMERA_ORIENTATION_DEFAULT)
+  if(orientation_ == 0)
   {
     return ((DepthPixel*)video_frame_ref_.getData())[(size_.width - coordinate.x)
       + coordinate.y*size_.width];

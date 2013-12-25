@@ -41,20 +41,20 @@ namespace libkipr_link_depth_sensor
   public:
     OpenNI2DepthImage(openni::VideoFrameRef video_frame_ref,
                     const openni::VideoStream& stream);
-
+    
     /**
      * Sets the depth camera orientation
      *
-     * \param orientation Depth camera orientation
+     * \param orientation Depth camera orientation (0 or 180 degree)
      */
-    void setOrientation(DepthCameraOrientation orientation);
-
+    virtual void setOrientation(uint16_t orientation);
+    
     /**
      * Gets the depth camera orientation
      *
-     * \return Depth camera orientation or DEPTH_CAMERA_INVALID_ORIENTATION
+     * \return Depth camera orientation (0 - 359 degree)
      */
-    DepthCameraOrientation getOrientation();
+    virtual uint16_t getOrientation() const;
     
     /**
     * Returns the height of the depth image in pixel
@@ -92,7 +92,7 @@ namespace libkipr_link_depth_sensor
 
     DepthImageSize size_;
 
-    DepthCameraOrientation orientation_;
+    uint16_t orientation_;
   };
 }
 

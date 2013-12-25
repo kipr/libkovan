@@ -37,7 +37,6 @@
 #include <stdint.h>
 
 #include <libkipr_link_depth_sensor/DepthCameraResolution.h>
-#include <libkipr_link_depth_sensor/DepthCameraOrientation.h>
 #include <kovan/export.h>
 
 #ifdef __cplusplus
@@ -105,18 +104,20 @@ EXPORT_SYM int set_depth_camera_resolution(DepthCameraResolution resolution);
 /**
  * Sets the depth camera orientation
  *
+ * \note Only 0 and 180 degree are supported yet
+ *
  * \param orientation Depth camera orientation
  *
  * \return 1 on success, 0 otherwise
  */
-EXPORT_SYM int set_depth_camera_orientation(DepthCameraOrientation orientation);
+EXPORT_SYM int set_depth_camera_orientation(int orientation);
 
 /**
  * Gets the depth camera orientation
  *
- * \return Depth camera orientation or DEPTH_CAMERA_INVALID_ORIENTATION
+ * \return Depth camera orientation or 0xFFFF in case of an error
  */
-EXPORT_SYM DepthCameraOrientation get_depth_camera_orientation();
+EXPORT_SYM int get_depth_camera_orientation();
 
 /** \} */
 
