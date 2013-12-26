@@ -19,8 +19,8 @@
 
 *******************************************************************************/
 
-#include "libkipr_link_depth_sensor/depth_driver.hpp"
-#include "libkipr_link_depth_sensor/openni2_depth_driver.hpp"
+#include "kovan/depth_driver.hpp"
+#include "kovan/openni2_depth_driver.hpp"
 
 using namespace libkipr_link_depth_sensor;
 

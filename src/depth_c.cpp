@@ -23,9 +23,9 @@
 #include <exception>
 #include <memory>
 
-#include "libkipr_link_depth_sensor/depth_exception.hpp"
-#include "libkipr_link_depth_sensor/depth_driver.hpp"
-#include "libkipr_link_depth_sensor/depth.h"
+#include "kovan/depth_exception.hpp"
+#include "kovan/depth_driver.hpp"
+#include "kovan/depth.h"
 
 namespace libkipr_link_depth_sensor
 {

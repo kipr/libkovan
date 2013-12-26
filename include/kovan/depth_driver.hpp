@@ -30,8 +30,8 @@
 
 #include <memory>
 
-#include <libkipr_link_depth_sensor/depth_image.hpp>
-#include <libkipr_link_depth_sensor/depth_resolution.h>
+#include <kovan/depth_image.hpp>
+#include <kovan/depth_resolution.h>
 
 namespace libkipr_link_depth_sensor
 {

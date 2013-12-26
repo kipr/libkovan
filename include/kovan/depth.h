@@ -36,7 +36,7 @@
 
 #include <stdint.h>
 
-#include <libkipr_link_depth_sensor/depth_resolution.h>
+#include <kovan/depth_resolution.h>
 #include <kovan/export.h>
 
 #ifdef __cplusplus

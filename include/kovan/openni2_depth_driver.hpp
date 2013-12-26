@@ -31,8 +31,8 @@
 
 #include <OpenNI.h>
 
-#include "libkipr_link_depth_sensor/openni2_depth_image.hpp"
-#include "libkipr_link_depth_sensor/depth_driver.hpp"
+#include "kovan/openni2_depth_image.hpp"
+#include "kovan/depth_driver.hpp"
 
 namespace libkipr_link_depth_sensor
 {
