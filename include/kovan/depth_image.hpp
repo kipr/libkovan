@@ -83,7 +83,7 @@ namespace depth
      *
      * \param row The row index of the point
      * \param column The column index of the point
-     * \return The point or nullptr if there no point at this coordinate
+     * \return The point or 0 if there no point at this coordinate
      */
     virtual Point3<int32_t>* getPointAt(uint32_t row, uint32_t column) const = 0;
   };

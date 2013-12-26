@@ -86,6 +86,6 @@ Point3<int32_t>* OpenNI2DepthImage::getPointAt(uint32_t row, uint32_t column) co
   }
   else
   {
-    return nullptr;
+    return 0;
   }
 }
