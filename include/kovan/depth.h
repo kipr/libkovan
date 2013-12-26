@@ -23,12 +23,7 @@
  * \brief C API of the KIPR Link depth sensor interface
  * \author Stefan Zeltner
  * \copyright KISS Insitute for Practical Robotics
- *
- * This API is keept simple so even unexperienced C programmers are able to use
- * the KIPR Link dept sensor library.
- *
- * Object-oriented programmers should use the C++ API defined in
- * depth.hpp.
+ * \defgroup depth Depth Sensor
  */
 
 #ifndef _DEPTH_H_
@@ -43,35 +38,23 @@
 extern "C" {
 #endif
 
-/** \name Open/Close
- * Use these functions to open / close the depth sensor library in a clean way.
- */
-/** \{ */
-
 /**
  * Opens the depth sensor. This is the first function which has to be called
  * before any other function!
  *
  * \return 1 on success, 0 otherwise
+ *
+ * \ingroup depth
  */
 EXPORT_SYM int depth_open();
 
 /**
  * Closes the depth sensor
  * \return 1 on success, 0 otherwise
+ *
+ * \ingroup depth
  */
 EXPORT_SYM int depth_close();
-
-/** \} */
-
-
-/** \name Depth camera resolution
- * Use these functions to get and set the resolution of the depth camera.
- * A new depth image pulled by depth_update() has this resolution.
- *
- * \see depth_update
- */
-/** \{ */
 
 /**
  * Get the current depth camera resolution
@@ -80,6 +63,8 @@ EXPORT_SYM int depth_close();
  *
  * \see set_depth_camera_resolution
  * \see depth_update
+ *
+ * \ingroup depth
  */
 EXPORT_SYM DepthResolution get_depth_camera_resolution();
 
@@ -91,24 +76,21 @@ EXPORT_SYM DepthResolution get_depth_camera_resolution();
  *
  * \see get_depth_image_resolution
  * \see depth_update
+ *
+ * \ingroup depth
  */
 EXPORT_SYM int set_depth_camera_resolution(DepthResolution resolution);
-
-/** \} */
-
-
-/** \name Camera orientation
- */
-/** \{ */
 
 /**
  * Sets the depth camera orientation
  *
- * \note Only 0 and 180 degree are supported yet
- *
  * \param orientation Depth camera orientation
  *
  * \return 1 on success, 0 otherwise
+ *
+ * \note Only 0 and 180 degree are supported yet
+ *
+ * \ingroup depth
  */
 EXPORT_SYM int set_depth_camera_orientation(int orientation);
 
@@ -116,59 +98,39 @@ EXPORT_SYM int set_depth_camera_orientation(int orientation);
  * Gets the depth camera orientation
  *
  * \return Depth camera orientation or 0xFFFF in case of an error
+ *
+ * \ingroup depth
  */
 EXPORT_SYM int get_depth_camera_orientation();
-
-/** \} */
-
-
-
-/** \name Pull a depth image
- */
-/** \{ */
 
 /**
  * Pulls a new depth image from the depth sensor for future processing.
  *
  * \return 1 on success, 0 otherwise
+ *
+ * \ingroup depth
  */
 EXPORT_SYM int depth_update();
-
-/** \} */
-
-
-
-/** \name Access raw depth measurements
- * Use these functions to retrieve raw depth measurements of the saved depth image.
- * You have to call depth_update() before you can access the raw depth
- * measurements.
- *
- * \note All the raw depth functions use a different coordinate system than
- *       the point cloud functions:
- *       x and y are used to address a depth value within of the depth image.
- *       The range of x is between 0 and depth_image_get_width()-1, the range of
- *       y is between 0 and depth_image_get_height()-1.
- *       (0, 0) address the depth value in the upper left corner.
- *
- * \see depth_update
- */
-/** \{ */
 
 /**
  * Returns the height of the depth image stored by depth_update in pixel
  *
+ * \return Height of the depth image in pixel or 0 if no depth image was saved
+ *
  * \see depth_update
  *
- * \return Height of the depth image in pixel or 0 if no depth image was saved
+ * \ingroup depth
  */
 EXPORT_SYM int depth_image_get_height();
 
 /**
  * Returns the width of the depth image stored by depth_update in pixel
  *
+ * \return Width of the depth image in pixel or 0 if no depth image was saved
+ *
  * \see depth_update
  *
- * \return Width of the depth image in pixel or 0 if no depth image was saved
+ * \ingroup depth
  */
 EXPORT_SYM int depth_image_get_width();
 
@@ -176,62 +138,76 @@ EXPORT_SYM int depth_image_get_width();
 static const int INVALID_COORDINATE = INT32_MIN;
 
 /**
- * Returns the depth value of the specified point.
+ * Returns the depth value of a depth pixel.
+ *
+ * \param row Row index of the depth pixel
+ * \param column Column index of the depth pixel
+ * \return The depth value in millimeters or INVALID_COORDINATE if no depth
+ *         image was saved or if the depth value is not visible
+ *         by the depth sensor
+ *
+ * \note the row/column index starts with 0
  *
  * \see depth_image_get_height
  * \see depth_image_get_width
  *
- * \param x X coordinate of the depth value (depth coordinate system)
- * \param y Y coordinate of the depth value (depth coordinate system)
- * \return The depth value in millimeters or INVALID_COORDINATE if no depth
- *         image was saved or if the depth value of (x, y) is not visible
- *         by the depth sensor
+ * \ingroup depth
  */
 EXPORT_SYM int get_depth_value(int row, int column);
 
 /**
  * Returns the x coordinate of the specified point.
  *
+ * \param row Row index of the depth pixel
+ * \param column Column index of the depth pixel
+ * \return The x coordinate in millimeters or INVALID_COORDINATE if no depth
+ *         image was saved or if the depth value is not visible
+ *         by the depth sensor
+ *
+ * \note the row/column index starts with 0
+ *
  * \see get_world_y
  * \see get_world_z
  *
- * \param x X coordinate of the point (depth coordinate system)
- * \param y Y coordinate of the point (depth coordinate system)
- * \return The x value (world coordinate system) in millimeters or INVALID_COORDINATE
-*          if no depth image was saved or if the depth value of (x, y) is not visible
-*          by the depth sensor
+ * \ingroup depth
  */
 EXPORT_SYM int get_world_x(int row, int column);
 
 /**
  * Returns the y coordinate of the specified point.
  *
+ * \param row Row index of the depth pixel
+ * \param column Column index of the depth pixel
+ * \return The y coordinate in millimeters or INVALID_COORDINATE if no depth
+ *         image was saved or if the depth value is not visible
+ *         by the depth sensor
+ *
+ * \note the row/column index starts with 0
+ *
  * \see get_world_x
  * \see get_world_z
  *
- * \param x X coordinate of the point (depth coordinate system)
- * \param y Y coordinate of the point (depth coordinate system)
- * \return The y value (world coordinate system) in millimeters or INVALID_COORDINATE
-*          if no depth image was saved or if the depth value of (x, y) is not visible
-*          by the depth sensor
+ * \ingroup depth
  */
 EXPORT_SYM int get_world_y(int row, int column);
 
 /**
  * Returns the z coordinate of the specified point.
  *
+ * \param row Row index of the depth pixel
+ * \param column Column index of the depth pixel
+ * \return The z coordinate in millimeters or INVALID_COORDINATE if no depth
+ *         image was saved or if the depth value is not visible
+ *         by the depth sensor
+ *
+ * \note the row/column index starts with 0
+ *
  * \see get_world_x
  * \see get_world_y
  *
- * \param x X coordinate of the point (depth coordinate system)
- * \param y Y coordinate of the point (depth coordinate system)
- * \return The z value (world coordinate system) in millimeters or INVALID_COORDINATE
-*          if no depth image was saved or if the depth value of (x, y) is not visible
-*          by the depth sensor
+ * \ingroup depth
  */
 EXPORT_SYM int get_world_z(int row, int column);
-
-/** \} */
 
 #ifdef __cplusplus
 }
