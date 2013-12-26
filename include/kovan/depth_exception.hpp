@@ -31,7 +31,7 @@
 #include <string>
 #include <stdexcept>
 
-namespace libkipr_link_depth_sensor
+namespace depth
 {
   class Exception : public std::runtime_error
   {

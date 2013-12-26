@@ -33,7 +33,7 @@
 #include <kovan/depth_image.hpp>
 #include <kovan/depth_resolution.h>
 
-namespace libkipr_link_depth_sensor
+namespace depth
 {
   class DepthDriver
   {

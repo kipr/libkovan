@@ -34,7 +34,7 @@
 #include "kovan/openni2_depth_image.hpp"
 #include "kovan/depth_driver.hpp"
 
-namespace libkipr_link_depth_sensor
+namespace depth
 {
   class OpenNI2DepthDriver : public DepthDriver,
                              public openni::OpenNI::DeviceConnectedListener,

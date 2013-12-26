@@ -34,7 +34,7 @@
 
 #include <kovan/geom.hpp>
 
-namespace libkipr_link_depth_sensor
+namespace depth
 {
   class DepthImage
   {

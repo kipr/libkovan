@@ -22,7 +22,7 @@
 #include "kovan/depth_exception.hpp"
 #include "kovan/openni2_depth_driver.hpp"
 
-using namespace libkipr_link_depth_sensor;
+using namespace depth;
 using namespace openni;
 
 OpenNI2DepthDriver& OpenNI2DepthDriver::instance()

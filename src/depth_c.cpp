@@ -27,7 +27,7 @@
 #include "kovan/depth_driver.hpp"
 #include "kovan/depth.h"
 
-namespace libkipr_link_depth_sensor
+namespace depth
 {
   namespace c_api
   {
@@ -36,8 +36,8 @@ namespace libkipr_link_depth_sensor
   }
 }
 
-using namespace libkipr_link_depth_sensor;
-using namespace libkipr_link_depth_sensor::c_api;
+using namespace depth;
+using namespace depth::c_api;
 
 #define catchAllAndReturn(return_value) \
   catch(std::exception& e) { std::cerr << e.what() << std::endl; } \

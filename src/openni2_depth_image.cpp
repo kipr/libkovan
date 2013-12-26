@@ -22,7 +22,7 @@
 #include "kovan/openni2_depth_image.hpp"
 #include "kovan/depth_exception.hpp"
 
-using namespace libkipr_link_depth_sensor;
+using namespace depth;
 using namespace openni;
 
 OpenNI2DepthImage::OpenNI2DepthImage(openni::VideoFrameRef video_frame_ref,

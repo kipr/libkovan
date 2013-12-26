@@ -33,7 +33,7 @@
 #include "kovan/depth_image.hpp"
 #include "kovan/geom.hpp"
 
-namespace libkipr_link_depth_sensor
+namespace depth
 {
   class OpenNI2DepthImage : public DepthImage
   {
