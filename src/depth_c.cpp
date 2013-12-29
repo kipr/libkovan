@@ -28,7 +28,7 @@
 
 namespace depth
 {
-  namespace c_api
+  namespace Private
   {
     std::shared_ptr<DepthImage> _depth_image;
     uint16_t _orientation = 0;
@@ -36,7 +36,7 @@ namespace depth
 }
 
 using namespace depth;
-using namespace depth::c_api;
+using namespace depth::Private;
 
 #define catchAllAndReturn(return_value) \
   catch(std::exception& e) { std::cerr << e.what() << std::endl; } \
