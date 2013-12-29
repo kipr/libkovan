@@ -134,7 +134,6 @@ EXPORT_SYM int depth_image_get_height();
  */
 EXPORT_SYM int depth_image_get_width();
 
-
 static const int INVALID_COORDINATE = INT32_MIN;
 
 /**
@@ -208,6 +207,137 @@ EXPORT_SYM int get_world_y(int row, int column);
  * \ingroup depth
  */
 EXPORT_SYM int get_world_z(int row, int column);
+
+static const int INVALID_DEPTH = INT32_MAX;
+
+/**
+ * Returns the minimum depth of a scan line
+ *
+ * \param row Row index of the depth pixel
+ * \return The minimum depth of a scan line or INVALID_DEPTH if no depth
+ *         image was saved or if the scan line contains no visible
+ *         depth values
+ *
+ * \note the row index starts with 0
+ *
+ * \see depth_scan_line_min_mask
+ * \see depth_scan_line_max
+ * \see depth_scan_line_mean
+ *
+ * \ingroup depth
+ */
+EXPORT_SYM int depth_scan_line_min(int row);
+
+/**
+ * Returns the minimum depth of a scan line
+ *
+ * This version allows to specify a distance mask.
+ * Only depth values between min_distance and max_distance
+ * are considered. This helps to mask out too near or too
+ * far (background) points.
+ *
+ * \param min_distance Row index of the depth pixel
+ * \param max_distance Row index of the depth pixel
+ * \param row Row index of the depth pixel
+ * \return The minimum depth of a scan line or INVALID_DEPTH if no depth
+ *         image was saved or if the scan line contains no visible
+ *         depth values
+ *
+ * \note the row index starts with 0
+ *
+ * \see depth_scan_line_min
+ * \see depth_scan_line_max
+ * \see depth_scan_line_mean
+ *
+ * \ingroup depth
+ */
+EXPORT_SYM int depth_scan_line_min_mask(int row, int min_distance, int max_distance);
+
+/**
+ * Returns the maximum depth of a scan line
+ *
+ * \param row Row index of the depth pixel
+ * \return The maximum depth of a scan line or INVALID_DEPTH if no depth
+ *         image was saved or if the scan line contains no visible
+ *         depth values
+ *
+ * \note the row index starts with 0
+ *
+ * \see depth_scan_line_max_mask
+ * \see depth_scan_line_min
+ * \see depth_scan_line_mean
+ *
+ * \ingroup depth
+ */
+EXPORT_SYM int depth_scan_line_max(int row);
+
+/**
+ * Returns the maximum depth of a scan line
+ *
+ * This version allows to specify a distance mask.
+ * Only depth values between min_distance and max_distance
+ * are considered. This helps to mask out too near or too
+ * far (background) points.
+ *
+ * \param min_distance Row index of the depth pixel
+ * \param max_distance Row index of the depth pixel
+ * \param row Row index of the depth pixel
+ * \return The maximum depth of a scan line or INVALID_DEPTH if no depth
+ *         image was saved or if the scan line contains no visible
+ *         depth values
+ *
+ * \note the row index starts with 0
+ *
+ * \see depth_scan_line_min
+ * \see depth_scan_line_max
+ * \see depth_scan_line_mean
+ *
+ * \ingroup depth
+ */
+EXPORT_SYM int depth_scan_line_max_mask(int row, int min_distance, int max_distance);
+
+/**
+ * Returns the mean depth of a scan line
+ *
+ * \param row Row index of the depth pixel
+ * \return The mean depth of a scan line or INVALID_DEPTH if no depth
+ *         image was saved or if the scan line contains no visible
+ *         depth values
+ *
+ * \note the row index starts with 0
+ *
+ * \see depth_scan_line_max
+ * \see depth_scan_line_min
+ * \see depth_scan_line_mean_mask
+ *
+ * \ingroup depth
+ */
+EXPORT_SYM int depth_scan_line_mean(int row);
+
+/**
+ * Returns the mean depth of a scan line
+ *
+ * This version allows to specify a distance mask.
+ * Only depth values between min_distance and max_distance
+ * are considered. This helps to mask out too near or too
+ * far (background) points.
+ *
+ * \param min_distance Row index of the depth pixel
+ * \param max_distance Row index of the depth pixel
+ * \param row Row index of the depth pixel
+ * \return The mean depth of a scan line or INVALID_DEPTH if no depth
+ *         image was saved or if the scan line contains no visible
+ *         depth values
+ *
+ * \note the row index starts with 0
+ *
+ * \see depth_scan_line_min
+ * \see depth_scan_line_max
+ * \see depth_scan_line_mean
+ *
+ * \ingroup depth
+ */
+EXPORT_SYM int depth_scan_line_mean_mask(int row, int min_distance, int max_distance);
 
 #ifdef __cplusplus
 }
