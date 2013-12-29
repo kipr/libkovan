@@ -57,34 +57,34 @@ EXPORT_SYM int depth_open();
 EXPORT_SYM int depth_close();
 
 /**
- * Get the current depth camera resolution
+ * Get the current depth image resolution
  *
- * \return The current depth camera resolution
+ * \return The current depth image resolution
  *
- * \see set_depth_camera_resolution
+ * \see set_depth_resolution
  * \see depth_update
  *
  * \ingroup depth
  */
-EXPORT_SYM DepthResolution get_depth_camera_resolution();
+EXPORT_SYM DepthResolution get_depth_resolution();
 
 /**
- * Set the current depth camera resolution.
+ * Set the current depth image resolution.
  *
- * \param resolution New depth camera resolution
+ * \param resolution New depth image resolution
  * \return 1 on success, 0 otherwise
  *
- * \see get_depth_image_resolution
+ * \see get_depth_resolution
  * \see depth_update
  *
  * \ingroup depth
  */
-EXPORT_SYM int set_depth_camera_resolution(DepthResolution resolution);
+EXPORT_SYM int set_depth_resolution(DepthResolution resolution);
 
 /**
- * Sets the depth camera orientation
+ * Sets the depth image orientation
  *
- * \param orientation Depth camera orientation
+ * \param orientation Depth image orientation
  *
  * \return 1 on success, 0 otherwise
  *
@@ -92,16 +92,16 @@ EXPORT_SYM int set_depth_camera_resolution(DepthResolution resolution);
  *
  * \ingroup depth
  */
-EXPORT_SYM int set_depth_camera_orientation(int orientation);
+EXPORT_SYM int set_depth_orientation(int orientation);
 
 /**
- * Gets the depth camera orientation
+ * Gets the depth image orientation
  *
- * \return Depth camera orientation or 0xFFFF in case of an error
+ * \return Depth image orientation or 0xFFFF in case of an error
  *
  * \ingroup depth
  */
-EXPORT_SYM int get_depth_camera_orientation();
+EXPORT_SYM int get_depth_orientation();
 
 /**
  * Pulls a new depth image from the depth sensor for future processing.

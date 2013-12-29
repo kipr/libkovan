@@ -66,7 +66,7 @@ int depth_close()
   catchAllAndReturn(0);
 }
 
-DepthResolution get_depth_camera_resolution()
+DepthResolution get_depth_resolution()
 {
   try
   {
@@ -75,7 +75,7 @@ DepthResolution get_depth_camera_resolution()
   catchAllAndReturn(DEPTH_INVALID_RESOLUTION);
 }
 
-int set_depth_camera_resolution(DepthResolution resolution)
+int set_depth_resolution(DepthResolution resolution)
 {
   try
   {
@@ -86,7 +86,7 @@ int set_depth_camera_resolution(DepthResolution resolution)
   catchAllAndReturn(0);
 }
 
-int set_depth_camera_orientation(uint16_t orientation)
+int set_depth_orientation(uint16_t orientation)
 {
   try
   {
@@ -97,7 +97,7 @@ int set_depth_camera_orientation(uint16_t orientation)
   catchAllAndReturn(0);
 }
 
-int get_depth_camera_orientation()
+int get_depth_orientation()
 {
   try
   {
