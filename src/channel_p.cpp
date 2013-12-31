@@ -60,13 +60,13 @@ Camera::ObjectVector HsvChannelImpl::findObjects(const Config &config)
   cv::findContours(only, c, CV_RETR_EXTERNAL, CV_CHAIN_APPROX_TC89_L1);
 	
 	std::vector<cv::Moments> m(c.size());
-	for(std::vector<Moments>::size_type i = 0; i < c.size(); ++i) {
+	for(std::vector<cv::Moments>::size_type i = 0; i < c.size(); ++i) {
 		m[i] = cv::moments(c[i], false);
 	}
 	
 	::Camera::ObjectVector ret;
 	for(::Camera::ObjectVector::size_type i = 0; i < c.size(); ++i) {
-		const cv::Rect rect = boundingRect(c[i]);
+		const cv::Rect rect = cv::boundingRect(c[i]);
 		if(rect.width < 3 && rect.height < 3) continue;
 		
 		ret.push_back(::Camera::Object(Point2<unsigned>(m[i].m10 / m[i].m00, m[i].m01 / m[i].m00),
