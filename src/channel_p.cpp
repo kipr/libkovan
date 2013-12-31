@@ -18,11 +18,7 @@ void HsvChannelImpl::update(const cv::Mat &image)
 		m_image = cv::Mat();
 		return;
 	}
-#if CV_VERSION_MAJOR == 3
-	cv::cvtColor(image, m_image, cv::COLOR_BGR2HSV);
-#else
   cv::cvtColor(image, m_image, CV_BGR2HSV);
-#endif
 	
 }
 
@@ -63,11 +59,7 @@ Camera::ObjectVector HsvChannelImpl::findObjects(const Config &config)
 	inRange(fixed, bottom, top, only);
 	
 	std::vector<std::vector<cv::Point> > c;
-#if CV_VERSION_MAJOR == 3
-	findContours(only, c, RETR_EXTERNAL, CHAIN_APPROX_TC89_L1);
-#else
   findContours(only, c, CV_RETR_EXTERNAL, CV_CHAIN_APPROX_TC89_L1);
-#endif
 	
 	std::vector<Moments> m(c.size());
 	for(std::vector<Moments>::size_type i = 0; i < c.size(); ++i) {
@@ -99,11 +91,7 @@ void BarcodeChannelImpl::update(const cv::Mat &image)
 		m_gray = cv::Mat();
 		return;
 	}
-#if CV_VERSION_MAJOR == 3
-  cv::cvtColor(image, m_gray, cv::COLOR_BGR2GRAY);
-#else
   cv::cvtColor(image, m_gray, CV_BGR2GRAY);
-#endif
 	m_image.set_data(m_gray.data, m_gray.cols * m_gray.rows);
 	m_image.set_size(m_gray.cols, m_gray.rows);
 }
