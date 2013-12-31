@@ -1,7 +1,9 @@
 #ifndef _NYI_HPP_
 #define _NYI_HPP_
 
-#define THIS_IS_NYI nyi(__func__);
+#include "kovan/compat.hpp"
+
+#define THIS_IS_NYI nyi(PRETTYFUNC);
 
 #ifdef __cplusplus
 extern "C" {
