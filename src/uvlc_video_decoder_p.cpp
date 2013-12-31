@@ -6,7 +6,6 @@
 #include <cstdio>
 #include "bits_p.hpp"
 
-
 using namespace Private;
 
 const static int kPictureFormatCIF = 1;

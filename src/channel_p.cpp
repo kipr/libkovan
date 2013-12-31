@@ -18,24 +18,30 @@ void HsvChannelImpl::update(const cv::Mat &image)
 		m_image = cv::Mat();
 		return;
 	}
+#if CV_VERSION_MAJOR == 3
 	cv::cvtColor(image, m_image, cv::COLOR_BGR2HSV);
+#else
+  cv::cvtColor(image, m_image, CV_BGR2HSV);
+#endif
+	
 }
 
 Camera::ObjectVector HsvChannelImpl::findObjects(const Config &config)
 {
 	if(m_image.empty()) return ::Camera::ObjectVector();
 	
-	
+	using namespace cv;
+  
 	// TODO: This lookup is really slow compared to the rest of
 	// the algorithm.
-	cv::Vec3b top(config.intValue("th"),
+	Vec3b top(config.intValue("th"),
 		config.intValue("ts"), config.intValue("tv"));
-	cv::Vec3b bottom(config.intValue("bh"),
+	Vec3b bottom(config.intValue("bh"),
 		config.intValue("bs"), config.intValue("bv"));
 	
 	// std::cout << "top: <" << top[0] << ", " << top[1] << ", " << top[2] << ">" << std::endl;
 	
-	cv::Mat fixed = m_image;
+	Mat fixed = m_image;
 	if(bottom[0] > top[0]) {
 		// Modulo 180
 		// TODO: Optimize for ARM?
@@ -48,25 +54,29 @@ Camera::ObjectVector HsvChannelImpl::findObjects(const Config &config)
 			}
 		}
 		
-		cv::Vec3b adj(adjH, 0, 0);
-		bottom = cv::Vec3b(0, bottom[1], bottom[2]);
-		cv::add(adj, top, top);
+		Vec3b adj(adjH, 0, 0);
+		bottom = Vec3b(0, bottom[1], bottom[2]);
+		add(adj, top, top);
 	}
 	
-	cv::Mat only;
-	cv::inRange(fixed, bottom, top, only);
+	Mat only;
+	inRange(fixed, bottom, top, only);
 	
 	std::vector<std::vector<cv::Point> > c;
-	cv::findContours(only, c, cv::RETR_EXTERNAL, cv::CHAIN_APPROX_TC89_L1);
+#if CV_VERSION_MAJOR == 3
+	findContours(only, c, RETR_EXTERNAL, CHAIN_APPROX_TC89_L1);
+#else
+  findContours(only, c, CV_RETR_EXTERNAL, CV_CHAIN_APPROX_TC89_L1);
+#endif
 	
-	std::vector<cv::Moments> m(c.size());
-	for(std::vector<cv::Moments>::size_type i = 0; i < c.size(); ++i) {
+	std::vector<Moments> m(c.size());
+	for(std::vector<Moments>::size_type i = 0; i < c.size(); ++i) {
 		m[i] = moments(c[i], false);
 	}
 	
 	::Camera::ObjectVector ret;
 	for(::Camera::ObjectVector::size_type i = 0; i < c.size(); ++i) {
-		const cv::Rect rect = cv::boundingRect(c[i]);
+		const cv::Rect rect = boundingRect(c[i]);
 		if(rect.width < 3 && rect.height < 3) continue;
 		
 		ret.push_back(::Camera::Object(Point2<unsigned>(m[i].m10 / m[i].m00, m[i].m01 / m[i].m00),
@@ -89,8 +99,11 @@ void BarcodeChannelImpl::update(const cv::Mat &image)
 		m_gray = cv::Mat();
 		return;
 	}
-	
-	cv::cvtColor(image, m_gray, cv::COLOR_BGR2GRAY);
+#if CV_VERSION_MAJOR == 3
+  cv::cvtColor(image, m_gray, cv::COLOR_BGR2GRAY);
+#else
+  cv::cvtColor(image, m_gray, CV_BGR2GRAY);
+#endif
 	m_image.set_data(m_gray.data, m_gray.cols * m_gray.rows);
 	m_image.set_size(m_gray.cols, m_gray.rows);
 }

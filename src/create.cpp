@@ -644,6 +644,8 @@ bool Create::write(const unsigned char& c)
 bool Create::write(const unsigned char *data, const size_t& len)
 {
 	if(!m_tty) return false;
+#ifndef CREATE_NETWORK
+  // Create serial
 #ifndef WIN32
 	int ret = ::write(m_tty, data, len);
 	if(ret != len) {
@@ -654,6 +656,9 @@ bool Create::write(const unsigned char *data, const size_t& len)
 	return ret == len;
 #else
 	#pragma message	("Create library not yet implemented for Windows")
+#endif
+#else
+  // Create network
 #endif
 }
 
