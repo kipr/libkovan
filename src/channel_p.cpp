@@ -25,19 +25,17 @@ void HsvChannelImpl::update(const cv::Mat &image)
 Camera::ObjectVector HsvChannelImpl::findObjects(const Config &config)
 {
 	if(m_image.empty()) return ::Camera::ObjectVector();
-	
-	using namespace cv;
   
 	// TODO: This lookup is really slow compared to the rest of
 	// the algorithm.
-	Vec3b top(config.intValue("th"),
+	cv::Vec3b top(config.intValue("th"),
 		config.intValue("ts"), config.intValue("tv"));
-	Vec3b bottom(config.intValue("bh"),
+	cv::Vec3b bottom(config.intValue("bh"),
 		config.intValue("bs"), config.intValue("bv"));
 	
 	// std::cout << "top: <" << top[0] << ", " << top[1] << ", " << top[2] << ">" << std::endl;
 	
-	Mat fixed = m_image;
+	cv::Mat fixed = m_image;
 	if(bottom[0] > top[0]) {
 		// Modulo 180
 		// TODO: Optimize for ARM?
@@ -50,20 +48,20 @@ Camera::ObjectVector HsvChannelImpl::findObjects(const Config &config)
 			}
 		}
 		
-		Vec3b adj(adjH, 0, 0);
-		bottom = Vec3b(0, bottom[1], bottom[2]);
-		add(adj, top, top);
+		cv::Vec3b adj(adjH, 0, 0);
+		bottom = cv::Vec3b(0, bottom[1], bottom[2]);
+		cv::add(adj, top, top);
 	}
 	
-	Mat only;
-	inRange(fixed, bottom, top, only);
+	cv::Mat only;
+	cv::inRange(fixed, bottom, top, only);
 	
 	std::vector<std::vector<cv::Point> > c;
-  findContours(only, c, CV_RETR_EXTERNAL, CV_CHAIN_APPROX_TC89_L1);
+  cv::findContours(only, c, CV_RETR_EXTERNAL, CV_CHAIN_APPROX_TC89_L1);
 	
-	std::vector<Moments> m(c.size());
+	std::vector<cv::Moments> m(c.size());
 	for(std::vector<Moments>::size_type i = 0; i < c.size(); ++i) {
-		m[i] = moments(c[i], false);
+		m[i] = cv::moments(c[i], false);
 	}
 	
 	::Camera::ObjectVector ret;
