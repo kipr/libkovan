@@ -45,6 +45,53 @@ private:
 };
 
 template<typename T>
+class EXPORT_SYM Point3
+{
+public:
+	Point3(const T& x, const T &y, const T &z)
+		: m_x(x),
+		m_y(y),
+    m_z(z)
+	{
+	}
+	
+	const T &x() const
+	{
+		return m_x;
+	}
+	
+	const T &y() const
+	{
+		return m_y;
+	}
+	
+	const T &z() const
+	{
+		return m_z;
+	}
+	
+	void setX(const T &x)
+	{
+		m_x = x;
+	}
+	
+	void setY(const T &y)
+	{
+		m_y = y;
+	}
+	
+	void setZ(const T &z)
+	{
+		m_z = z;
+	}
+	
+private:
+	T m_x;
+	T m_y;
+	T m_z;
+};
+
+template<typename T>
 class EXPORT_SYM Rect
 {
 public:

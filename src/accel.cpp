@@ -55,7 +55,7 @@ void Acceleration::setupI2C()
 bool Acceleration::calibrate()
 {
 	setupI2C();
-	if(!s_setup) return 0xFFFF;
+	if(!s_setup) return false;
 
 	// set biases to zero
 	for(int i = 0x10; i < 0x16; i++) {
