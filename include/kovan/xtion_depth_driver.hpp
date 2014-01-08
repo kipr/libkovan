@@ -19,88 +19,74 @@
  **************************************************************************/
 
 /**
- * \file openni2_depth_driver.hpp
+ * \file xtion_depth_driver.hpp
  * \brief OpenNI2 implementation of the DepthDriver interface
  * \author Stefan Zeltner
  * \copyright KISS Insitute for Practical Robotics
  */
 
-#ifndef _OPENNI2_DEPTH_DRIVER_HPP_
-#define _OPENNI2_DEPTH_DRIVER_HPP_
+#ifndef _XTION_DEPTH_DRIVER_HPP_
+#define _XTION_DEPTH_DRIVER_HPP_
 
-
-#include <OpenNI.h>
-
-#include "kovan/openni2_depth_image.hpp"
+#include "kovan/xtion_depth_image.hpp"
 #include "kovan/depth_driver.hpp"
 
 namespace depth
 {
-  class OpenNI2DepthDriver : public DepthDriver,
-                             public openni::OpenNI::DeviceConnectedListener,
-                             public openni::OpenNI::DeviceDisconnectedListener,
-                             public openni::OpenNI::DeviceStateChangedListener,
-                             public openni::VideoStream::NewFrameListener
+  class XtionDepthDriverImpl;
+  
+  class XtionDepthDriver : public DepthDriver
   {
   public:
-    static OpenNI2DepthDriver& instance();
+    static XtionDepthDriver &instance();
 
     /**
-      * Opens the OpenNI2 depth driver
+      * Opens the Xtion depth driver
       */
     virtual void open();
 
     /**
-      * Closes the OpenNI2 depth driver
+      * Closes the Xtion depth driver
       */
     virtual void close();
+    
+    /**
+     * Checks if the Xtion depth driver is currently open
+     * \return true if open, false otherwise
+     */
+    virtual bool isOpen() const;
 
     /**
       * Get the current depth camera resolution
       *
       * \return The current depth camera resolution
       */
-    virtual DepthResolution getDepthCameraResolution() const;
+    virtual DepthResolution depthCameraResolution() const;
 
     /**
       * Set the current depth camera resolution.
       *
       * \param resolution New depth camera resolution
       */
-    virtual void setDepthCameraResolution(DepthResolution resolution);
+    virtual void setDepthCameraResolution(const DepthResolution resolution);
 
     /**
       * Returns a Dept Image object containing the current depth values
       *
       * \return DepthImage object
       */
-    virtual std::shared_ptr<DepthImage> getDepthImage();
+    virtual DepthImage *depthImage() const;
 
-    ~OpenNI2DepthDriver();
+    ~XtionDepthDriver();
 
   private:
-    openni::Device device_;
-    openni::VideoStream depth_stream_;
-    
-    std::shared_ptr<OpenNI2DepthImage> last_captured_depth_image_;
+    XtionDepthDriverImpl *_impl;
 
-    // OpenNI2DepthDriver is a singleton
-    OpenNI2DepthDriver();
-    OpenNI2DepthDriver(OpenNI2DepthDriver const&);
-    void operator=(OpenNI2DepthDriver const&);
-
-    // Implement OpenNI::DeviceConnectedListener::onDeviceConnected()
-    virtual void onDeviceConnected(const openni::DeviceInfo* pInfo);
-
-    // Implement OpenNI::DeviceDisconnectedListener::onDeviceDisconnected()
-    virtual void onDeviceDisconnected(const openni::DeviceInfo* pInfo);
-
-    // Implement OpenNI::DeviceStateChangedListener::onDeviceStateChanged()
-    virtual void onDeviceStateChanged(const openni::DeviceInfo* pInfo, openni::DeviceState state);
-
-    // Implement VideoStream::NewFrameListener::onNewFrame()
-    virtual void onNewFrame(openni::VideoStream& stream);
+    // XtionDepthDriver is a singleton
+    XtionDepthDriver();
+    XtionDepthDriver(const XtionDepthDriver &);
+    void operator =(const XtionDepthDriver &);
   };
 }
 
-#endif /* _OPENNI2_DEPTH_DRIVER_HPP_ */
+#endif

@@ -33,6 +33,13 @@ typedef struct point2
 	int y;
 } point2;
 
+typedef struct point3
+{
+	int x;
+	int y;
+	int z;
+} point3;
+
 typedef struct rectangle
 {
 	int ulx;
@@ -42,6 +49,7 @@ typedef struct rectangle
 } rectangle;
 
 EXPORT_SYM point2 create_point2(int x, int y);
+EXPORT_SYM point3 create_point3(int x, int y, int z);
 EXPORT_SYM rectangle create_rectangle(int ulx, int uly, int width, int height);
 
 #ifdef __cplusplus

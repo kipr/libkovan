@@ -43,6 +43,16 @@ if(WIN32)
   link_directories(${CMAKE_SOURCE_DIR}/../prefix/lib)
   link_directories(${OPENCV_INSTALL_DIR}/x86/vc11/lib)
   link_directories(${ZBAR_INSTALL_DIR}/lib)
+  
+else()
+  set(OpenNI2_INSTALL_DIR "${CMAKE_SOURCE_DIR}/../OpenNI2")
+  
+endif()
+
+include_directories(${OpenNI2_INSTALL_DIR}/Include)
+if(APPLE)
+  link_directories(${OpenNI2_INSTALL_DIR}/Bin/x64-Release)
+elseif(WIN32)
   link_directories(${OpenNI2_INSTALL_DIR}/Lib)
 endif()
 
@@ -64,7 +74,7 @@ if(WIN32)
 	target_link_libraries(kovan opencv_core300 opencv_highgui300 opencv_imgproc300 libzbar-0 OpenNI2)
 	target_link_libraries(kovan d3d9)
 else()
-  target_link_libraries(kovan pthread opencv_core opencv_highgui opencv_imgproc zbar avcodec avformat avutil z swscale bz2)
+  target_link_libraries(kovan pthread opencv_core opencv_highgui opencv_imgproc zbar avcodec avformat avutil z swscale bz2 OpenNI2)
 endif()
 
 if(APPLE)

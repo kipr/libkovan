@@ -19,12 +19,21 @@
  **************************************************************************/
 
 #include "kovan/depth_driver.hpp"
-#include "kovan/openni2_depth_driver.hpp"
+#include "kovan/xtion_depth_driver.hpp"
 
 using namespace depth;
 
 DepthDriver& DepthDriver::instance()
 {
-  return OpenNI2DepthDriver::instance(); // currently we have only one driver
-                                         //  --> no need for more complex things
+  return XtionDepthDriver::instance(); // currently we have only one driver
+                                       //  --> no need for more complex things
+}
+
+
+__attribute__((destructor))
+static void closeDepthDriver()
+{
+  try {
+    DepthDriver::instance().close();
+  } catch(...) {}
 }

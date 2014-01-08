@@ -29,45 +29,42 @@
 #define _DEPTH_IMAGE_HPP_
 
 #include <stdint.h>
-#include <functional>
-#include <memory>
-
-#include <kovan/geom.hpp>
+#include "geom.hpp"
 
 namespace depth
 {
   class DepthImage
   {
   public:
-    virtual ~DepthImage() {};
+    virtual ~DepthImage();
 
     /**
      * Sets the depth camera orientation
      *
      * \param orientation Depth camera orientation (0 - 359 degree)
      */
-    virtual void setOrientation(uint16_t orientation) = 0;
+    virtual void setOrientation(const uint16_t orientation) = 0;
 
     /**
      * Gets the depth camera orientation
      *
      * \return Depth camera orientation (0 or 180 degree)
      */
-    virtual uint16_t getOrientation() const = 0;
+    virtual uint16_t orientation() const = 0;
     
     /**
      * Returns the height of the depth image in pixel
      *
      * \return Height of the depth image in pixel
      */
-    virtual uint32_t getHeight() const = 0;
+    virtual uint32_t height() const = 0;
 
     /**
      * Returns the width of the depth image in pixel
      *
      * \return Width of the depth image in pixel
      */
-    virtual uint32_t getWidth() const = 0;
+    virtual uint32_t width() const = 0;
 
     /**
      * Returns the depth value of the specified point.
@@ -76,7 +73,10 @@ namespace depth
      * \param column The column index of the point
      * \return The depth value
      */
-    virtual int32_t getDepthAt(uint32_t row, uint32_t column) const = 0;
+    virtual uint16_t depthAt(const uint32_t row, const uint32_t column) const = 0;
+    
+    
+    virtual void depth(uint16_t *const data, const uint32_t offset, const uint32_t size) const = 0;
 
     /**
      * Returns the specified point.
@@ -85,8 +85,8 @@ namespace depth
      * \param column The column index of the point
      * \return The point or 0 if there no point at this coordinate
      */
-    virtual Point3<int32_t>* getPointAt(uint32_t row, uint32_t column) const = 0;
+    virtual Point3<int32_t> pointAt(const uint32_t row, const uint32_t column) const = 0;
   };
 }
 
-#endif /* _DEPTH_IMAGE_HPP_ */
+#endif

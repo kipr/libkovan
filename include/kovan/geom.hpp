@@ -84,6 +84,11 @@ public:
 	{
 		m_z = z;
 	}
+  
+	point3 toCPoint3() const
+	{
+		return create_point3(m_x, m_y, m_z);
+	}
 	
 private:
 	T m_x;

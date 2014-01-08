@@ -134,8 +134,6 @@ EXPORT_SYM int depth_image_get_height();
  */
 EXPORT_SYM int depth_image_get_width();
 
-static const int INVALID_COORDINATE = INT32_MIN;
-
 /**
  * Returns the depth value of a depth pixel.
  *
@@ -155,58 +153,19 @@ static const int INVALID_COORDINATE = INT32_MIN;
 EXPORT_SYM int get_depth_value(int row, int column);
 
 /**
- * Returns the x coordinate of the specified point.
+ * Returns the world coordinates of the specified point.
  *
  * \param row Row index of the depth pixel
  * \param column Column index of the depth pixel
- * \return The x coordinate in millimeters or INVALID_COORDINATE if no depth
+ * \return The world coordinates in millimeters or (-1, -1, -1) if no depth
  *         image was saved or if the depth value is not visible
  *         by the depth sensor
  *
  * \note the row/column index starts with 0
  *
- * \see get_world_y
- * \see get_world_z
- *
  * \ingroup depth
  */
-EXPORT_SYM int get_world_x(int row, int column);
-
-/**
- * Returns the y coordinate of the specified point.
- *
- * \param row Row index of the depth pixel
- * \param column Column index of the depth pixel
- * \return The y coordinate in millimeters or INVALID_COORDINATE if no depth
- *         image was saved or if the depth value is not visible
- *         by the depth sensor
- *
- * \note the row/column index starts with 0
- *
- * \see get_world_x
- * \see get_world_z
- *
- * \ingroup depth
- */
-EXPORT_SYM int get_world_y(int row, int column);
-
-/**
- * Returns the z coordinate of the specified point.
- *
- * \param row Row index of the depth pixel
- * \param column Column index of the depth pixel
- * \return The z coordinate in millimeters or INVALID_COORDINATE if no depth
- *         image was saved or if the depth value is not visible
- *         by the depth sensor
- *
- * \note the row/column index starts with 0
- *
- * \see get_world_x
- * \see get_world_y
- *
- * \ingroup depth
- */
-EXPORT_SYM int get_world_z(int row, int column);
+EXPORT_SYM point3 get_world_point(int row, int column);
 
 static const int INVALID_DEPTH = INT32_MAX;
 
