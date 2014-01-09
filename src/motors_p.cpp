@@ -152,8 +152,8 @@ void Private::Motor::setPidVelocity(port_t port, const int &ticks)
   const unsigned highVal = (ticks & 0xFFFF0000) >> 16;
   
   // Same values? Don't write again
-  if(lowVal == kovan->currentState()[goalSpeedLowRegisters[port]]
-    && highVal == kovan->currentState()[goalSpeedHighRegisters[port]]) return;
+  if(lowVal == kovan->currentState().t[goalSpeedLowRegisters[port]]
+    && highVal == kovan->currentState().t[goalSpeedHighRegisters[port]]) return;
   
 	kovan->enqueueCommand(createWriteCommand(goalSpeedLowRegisters[port], lowVal), false);
 	kovan->enqueueCommand(createWriteCommand(goalSpeedHighRegisters[port], highVal));
@@ -177,8 +177,8 @@ void Private::Motor::setPidGoalPos(port_t port, int pos)
   const unsigned highVal = (pos & 0xFFFF0000) >> 16;
   
   // Same values? Don't write again
-  if(lowVal == kovan->currentState()[goalPosLowRegisters[port]]
-    && highVal == kovan->currentState()[goalPosHighRegisters[port]]) return;
+  if(lowVal == kovan->currentState().t[goalPosLowRegisters[port]]
+    && highVal == kovan->currentState().t[goalPosHighRegisters[port]]) return;
   
 	kovan->enqueueCommand(createWriteCommand(goalPosLowRegisters[port], lowVal), false);
 	kovan->enqueueCommand(createWriteCommand(goalPosHighRegisters[port], highVal));
