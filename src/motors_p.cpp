@@ -146,8 +146,17 @@ void Private::Motor::setPidVelocity(port_t port, const int &ticks)
 {
 	Private::Kovan *kovan = Private::Kovan::instance();
 	port = fixPort(port);
-	kovan->enqueueCommand(createWriteCommand(goalSpeedLowRegisters[port], ticks & 0x0000FFFF), false);
-	kovan->enqueueCommand(createWriteCommand(goalSpeedHighRegisters[port], (ticks & 0xFFFF0000) >> 16));
+  
+  Private::Kovan::instance()->autoUpdate();
+  const unsigned lowVal = ticks & 0x0000FFFF;
+  const unsigned highVal = (ticks & 0xFFFF0000) >> 16;
+  
+  // Same values? Don't write again
+  if(lowVal == kovan->currentState()[goalSpeedLowRegisters[port]]
+    && highVal == kovan->currentState()[goalSpeedHighRegisters[port]]) return;
+  
+	kovan->enqueueCommand(createWriteCommand(goalSpeedLowRegisters[port], lowVal), false);
+	kovan->enqueueCommand(createWriteCommand(goalSpeedHighRegisters[port], highVal));
 }
 
 int Private::Motor::pidVelocity(port_t port) const
@@ -162,8 +171,17 @@ void Private::Motor::setPidGoalPos(port_t port, int pos)
 	Private::Kovan *kovan = Private::Kovan::instance();
 	port = fixPort(port);
 	pos += m_cleared[port];
-	kovan->enqueueCommand(createWriteCommand(goalPosLowRegisters[port], pos & 0x0000FFFF), false);
-	kovan->enqueueCommand(createWriteCommand(goalPosHighRegisters[port], (pos & 0xFFFF0000) >> 16));
+  
+  Private::Kovan::instance()->autoUpdate();
+  const unsigned lowVal = pos & 0x0000FFFF;
+  const unsigned highVal = (pos & 0xFFFF0000) >> 16;
+  
+  // Same values? Don't write again
+  if(lowVal == kovan->currentState()[goalPosLowRegisters[port]]
+    && highVal == kovan->currentState()[goalPosHighRegisters[port]]) return;
+  
+	kovan->enqueueCommand(createWriteCommand(goalPosLowRegisters[port], lowVal), false);
+	kovan->enqueueCommand(createWriteCommand(goalPosHighRegisters[port], highVal));
 }
 
 int Private::Motor::pidGoalPos(port_t port) const
