@@ -167,7 +167,11 @@ EXPORT_SYM int get_depth_value(int row, int column);
  */
 EXPORT_SYM point3 get_world_point(int row, int column);
 
+#ifdef __linux__
+static const int INVALID_DEPTH = INT_MAX;
+#else
 static const int INVALID_DEPTH = INT32_MAX;
+#endif
 
 /**
  * Returns the minimum depth of a scan line
