@@ -30,9 +30,7 @@ extern "C" {
 typedef struct point2
 {
 	int x;
-  int column;
 	int y;
-  int row;
 } point2;
 
 typedef struct point3

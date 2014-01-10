@@ -26,6 +26,11 @@ int analog(int port)
 	return Private::Analog::instance()->value(static_cast<unsigned char>(port));
 }
 
+int analog10(int port)
+{
+	return analog(port);
+}
+
 int analog8(int port)
 {
 	return analog(port) >> 2;

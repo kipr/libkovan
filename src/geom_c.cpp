@@ -4,9 +4,7 @@ point2 create_point2(int x, int y)
 {
 	point2 ret;
 	ret.x = x;
-  ret.column = x;
 	ret.y = y;
-  ret.row = y;
 	return ret;
 }
 

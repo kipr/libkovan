@@ -54,17 +54,28 @@ enum Resolution
 };
 
 /**
- * Opens the default system camera for use.
+ * Opens the default system camera for use at LOW_RES (160x120).
+ * \return 1 on success, 0 on failure
+ * \see camera_open_at_res
+ * \see camera_open_device
+ * \see camera_close
+ * \ingroup camera
+ */
+EXPORT_SYM int camera_open();
+
+/**
+ * Opens the default system camera for use at a given resolution.
  * \param res The resolution the camera should operate at. This can be:
  *   - LOW_RES (160x120)
  *   - MED_RES (320x240)
  *   - HIGH_RES (640x480)
  * \return 1 on success, 0 on failure
+ * \see camera_open
  * \see camera_open_device
  * \see camera_close
  * \ingroup camera
  */
-EXPORT_SYM int camera_open(enum Resolution res);
+EXPORT_SYM int camera_open_at_res(enum Resolution res);
 
 /**
  * Opens a camera for use.
@@ -195,6 +206,8 @@ EXPORT_SYM rectangle get_object_bbox(int channel, int object);
 
 EXPORT_SYM int get_object_bbox_ulx(int channel, int object);
 EXPORT_SYM int get_object_bbox_uly(int channel, int object);
+EXPORT_SYM int get_object_bbox_brx(int channel, int object);
+EXPORT_SYM int get_object_bbox_bry(int channel, int object);
 EXPORT_SYM int get_object_bbox_width(int channel, int object);
 EXPORT_SYM int get_object_bbox_height(int channel, int object);
 
@@ -205,7 +218,9 @@ EXPORT_SYM int get_object_bbox_height(int channel, int object);
 EXPORT_SYM point2 get_object_centroid(int channel, int object);
 
 EXPORT_SYM int get_object_centroid_column(int channel, int object);
+EXPORT_SYM int get_object_centroid_x(int channel, int object);
 EXPORT_SYM int get_object_centroid_row(int channel, int object);
+EXPORT_SYM int get_object_centroid_y(int channel, int object);
 
 /**
  * \return The (x, y) center of the given object on the given channel.
@@ -214,7 +229,9 @@ EXPORT_SYM int get_object_centroid_row(int channel, int object);
 EXPORT_SYM point2 get_object_center(int channel, int object);
 
 EXPORT_SYM int get_object_center_column(int channel, int object);
+EXPORT_SYM int get_object_center_x(int channel, int object);
 EXPORT_SYM int get_object_center_row(int channel, int object);
+EXPORT_SYM int get_object_center_y(int channel, int object);
 
 /**
  * Cleanup the current camera instance.

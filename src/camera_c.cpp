@@ -217,6 +217,18 @@ int get_object_bbox_uly(int channel, int object)
   return get_object_bbox(channel, object).uly;
 }
 
+int get_object_bbox_brx(int channel, int object)
+{
+  const rectangle r = get_object_bbox(channel, object);
+  return r.ulx + r.width;
+}
+
+int get_object_bbox_bry(int channel, int object)
+{
+  const rectangle r = get_object_bbox(channel, object);
+  return r.uly + r.height;
+}
+
 int get_object_bbox_width(int channel, int object)
 {
   return get_object_bbox(channel, object).width;
@@ -236,12 +248,22 @@ point2 get_object_centroid(int channel, int object)
 
 int get_object_centroid_column(int channel, int object)
 {
-  return get_object_centroid(channel, object).column;
+  return get_object_centroid(channel, object).x;
+}
+
+int get_object_centroid_x(int channel, int object)
+{
+  return get_object_centroid(channel, object).x;
 }
 
 int get_object_centroid_row(int channel, int object)
 {
-  return get_object_centroid(channel, object).row;
+  return get_object_centroid(channel, object).y;
+}
+
+int get_object_centroid_y(int channel, int object)
+{
+  return get_object_centroid(channel, object).y;
 }
 
 point2 get_object_center(int channel, int object)
@@ -253,12 +275,22 @@ point2 get_object_center(int channel, int object)
 
 int get_object_center_column(int channel, int object)
 {
-  return get_object_center(channel, object).column;
+  return get_object_center(channel, object).x;
+}
+
+int get_object_center_x(int channel, int object)
+{
+  return get_object_center(channel, object).x;
 }
 
 int get_object_center_row(int channel, int object)
 {
-  return get_object_center(channel, object).row;
+  return get_object_center(channel, object).y;
+}
+
+int get_object_center_y(int channel, int object)
+{
+  return get_object_center(channel, object).y;
 }
 
 void camera_close()

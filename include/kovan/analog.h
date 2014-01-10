@@ -36,6 +36,8 @@ extern "C" {
  */
 EXPORT_SYM int analog(int port);
 
+EXPORT_SYM int analog10(int port);
+
 /*!
  * Gets the 8-bit analog value of a port.
  * \param[in] port A value between 0 and 7 specifying the sensor to read from.
