@@ -29,7 +29,7 @@ namespace depth
 {
   namespace Private
   {
-    static DepthImage *_depth_image;
+    static DepthImage *_depth_image = 0;
     static uint16_t _orientation = 0;
   }
 }
