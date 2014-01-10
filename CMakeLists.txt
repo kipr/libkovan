@@ -103,7 +103,7 @@ install(FILES ${INCLUDES} DESTINATION include/kovan)
 install(TARGETS kovan LIBRARY DESTINATION lib)
 endif()
 
-option(BUILD_DOCUMENTATION "Use Doxygen to create the HTML based API documentation" ON)
+option(BUILD_DOCUMENTATION "Use Doxygen to create the HTML based API documentation" OFF)
 if(BUILD_DOCUMENTATION)
   FIND_PACKAGE(Doxygen)
   if(NOT DOXYGEN_FOUND)
@@ -119,4 +119,5 @@ if(BUILD_DOCUMENTATION)
   add_custom_target(DocMetadata ALL
     COMMAND ${CMAKE_COMMAND} -E copy ${DOXYGEN_DIR}/metadata.ini ${PROJECT_SOURCE_DIR}/doc)
 endif()
+
 

@@ -167,296 +167,73 @@ EXPORT_SYM int get_depth_value(int row, int column);
  */
 EXPORT_SYM point3 get_depth_world_point(int row, int column);
 
+/**
+ * Returns the x world coordinate of the specified point.
+ *
+ * \param row Row index of the depth pixel
+ * \param column Column index of the depth pixel
+ * \return The x world coordinate in millimeters or -1 if no depth
+ *         image was saved or if the depth value is not visible
+ *         by the depth sensor
+ *
+ * \note the row/column index starts with 0
+ *
+ * \ingroup depth
+ */
+EXPORT_SYM int get_depth_world_point_x(int row, int column);
+
+/**
+ * Returns the y world coordinate of the specified point.
+ *
+ * \param row Row index of the depth pixel
+ * \param column Column index of the depth pixel
+ * \return The y world coordinate in millimeters or -1 if no depth
+ *         image was saved or if the depth value is not visible
+ *         by the depth sensor
+ *
+ * \note the row/column index starts with 0
+ *
+ * \ingroup depth
+ */
+EXPORT_SYM int get_depth_world_point_y(int row, int column);
+
+/**
+ * Returns the z world coordinate of the specified point.
+ *
+ * \param row Row index of the depth pixel
+ * \param column Column index of the depth pixel
+ * \return The z world coordinate in millimeters or -1 if no depth
+ *         image was saved or if the depth value is not visible
+ *         by the depth sensor
+ *
+ * \note the row/column index starts with 0
+ *
+ * \ingroup depth
+ */
+EXPORT_SYM int get_depth_world_point_z(int row, int column);
+
 #ifdef __linux__
 static const int INVALID_DEPTH = 2147483647;
 #else
 static const int INVALID_DEPTH = INT32_MAX;
 #endif
 
-/**
- * Returns the minimum depth of a scan line
- *
- * \param row Row index of the depth pixel
- * \return The minimum depth of a scan line or INVALID_DEPTH if no depth
- *         image was saved or if the scan line contains no visible
- *         depth values
- *
- * \note the row index starts with 0
- *
- * \see depth_scan_line_min_mask
- * \see depth_scan_line_max
- * \see depth_scan_line_mean
- *
- * \ingroup depth
- */
-EXPORT_SYM int depth_scan_line_min(int row);
 
-/**
- * Returns the minimum depth of a scan line
- *
- * This version allows to specify a distance mask.
- * Only depth values between min_distance and max_distance
- * are considered. This helps to mask out too near or too
- * far (background) points.
- *
- * \param min_distance Row index of the depth pixel
- * \param max_distance Row index of the depth pixel
- * \param row Row index of the depth pixel
- * \return The minimum depth of a scan line or INVALID_DEPTH if no depth
- *         image was saved or if the scan line contains no visible
- *         depth values
- *
- * \note the row index starts with 0
- *
- * \see depth_scan_line_min
- * \see depth_scan_line_max
- * \see depth_scan_line_mean
- *
- * \ingroup depth
- */
-EXPORT_SYM int depth_scan_line_min_mask(int row, int min_distance, int max_distance);
+EXPORT_SYM int depth_scanline_update(int row);
 
-/**
- * Returns the maximum depth of a scan line
- *
- * \param row Row index of the depth pixel
- * \return The maximum depth of a scan line or INVALID_DEPTH if no depth
- *         image was saved or if the scan line contains no visible
- *         depth values
- *
- * \note the row index starts with 0
- *
- * \see depth_scan_line_max_mask
- * \see depth_scan_line_min
- * \see depth_scan_line_mean
- *
- * \ingroup depth
- */
-EXPORT_SYM int depth_scan_line_max(int row);
+EXPORT_SYM int get_depth_scanline_count();
 
-/**
- * Returns the maximum depth of a scan line
- *
- * This version allows to specify a distance mask.
- * Only depth values between min_distance and max_distance
- * are considered. This helps to mask out too near or too
- * far (background) points.
- *
- * \param min_distance Row index of the depth pixel
- * \param max_distance Row index of the depth pixel
- * \param row Row index of the depth pixel
- * \return The maximum depth of a scan line or INVALID_DEPTH if no depth
- *         image was saved or if the scan line contains no visible
- *         depth values
- *
- * \note the row index starts with 0
- *
- * \see depth_scan_line_min
- * \see depth_scan_line_max
- * \see depth_scan_line_mean
- *
- * \ingroup depth
- */
-EXPORT_SYM int depth_scan_line_max_mask(int row, int min_distance, int max_distance);
+EXPORT_SYM point3 get_depth_scanline_object_point(int object_num);
 
-/**
- * Returns the mean depth of a scan line
- *
- * \param row Row index of the depth pixel
- * \return The mean depth of a scan line or INVALID_DEPTH if no depth
- *         image was saved or if the scan line contains no visible
- *         depth values
- *
- * \note the row index starts with 0
- *
- * \see depth_scan_line_max
- * \see depth_scan_line_min
- * \see depth_scan_line_mean_mask
- *
- * \ingroup depth
- */
-EXPORT_SYM int depth_scan_line_mean(int row);
+EXPORT_SYM int get_depth_scanline_object_x(int object_num);
 
-/**
- * Returns the mean depth of a scan line
- *
- * This version allows to specify a distance mask.
- * Only depth values between min_distance and max_distance
- * are considered. This helps to mask out too near or too
- * far (background) points.
- *
- * \param min_distance Row index of the depth pixel
- * \param max_distance Row index of the depth pixel
- * \param row Row index of the depth pixel
- * \return The mean depth of a scan line or INVALID_DEPTH if no depth
- *         image was saved or if the scan line contains no visible
- *         depth values
- *
- * \note the row index starts with 0
- *
- * \see depth_scan_line_min
- * \see depth_scan_line_max
- * \see depth_scan_line_mean
- *
- * \ingroup depth
- */
-EXPORT_SYM int depth_scan_line_mean_mask(int row, int min_distance, int max_distance);
+EXPORT_SYM int get_depth_scanline_object_y(int object_num);
 
-/**
- * Returns the minimum depth of a bounding box
- *
- * \param row_from Bounding box starting from this row index 
- * \param row_to Bounding box until this row index 
- * \param column_from Bounding box until this column index
- * \param column_to Bounding box starting from this column index
- * \return The minimum depth of a bounding box or INVALID_DEPTH if no depth
- *         image was saved or if the bounding box contains no visible
- *         depth values
- *
- * \note the row index starts with 0
- *
- * \see depth_bounding_box_min_mask
- * \see depth_bounding_box_max
- * \see depth_bounding_box_mean
- *
- * \ingroup depth
- */
-EXPORT_SYM int depth_bounding_box_min(int row_from, int row_to,
-                                      int column_from, int column_to);
+EXPORT_SYM int get_depth_scanline_object_z(int object_num);
 
-/**
- * Returns the minimum depth of a bounding box
- *
- * This version allows to specify a distance mask.
- * Only depth values between min_distance and max_distance
- * are considered. This helps to mask out too near or too
- * far (background) points.
- *
- * \param min_distance Row index of the depth pixel
- * \param max_distance Row index of the depth pixel
- * \param row_from Bounding box starting from this row index 
- * \param row_to Bounding box until this row index 
- * \param column_from Bounding box until this column index
- * \param column_to Bounding box starting from this column index
- * \return The minimum depth of a bounding box or INVALID_DEPTH if no depth
- *         image was saved or if the bounding box contains no visible
- *         depth values
- *
- * \note the row index starts with 0
- *
- * \see depth_bounding_box_min
- * \see depth_bounding_box_max
- * \see depth_bounding_box_mean
- *
- * \ingroup depth
- */
-EXPORT_SYM int depth_bounding_box_min_mask(int row_from, int row_to,
-                                           int column_from, int column_to,
-                                           int min_distance, int max_distance);
+EXPORT_SYM int get_depth_scanline_object_size(int object_num);
 
-/**
- * Returns the maximum depth of a bounding box
- *
- * \param row_from Bounding box starting from this row index 
- * \param row_to Bounding box until this row index 
- * \param column_from Bounding box until this column index
- * \param column_to Bounding box starting from this column index
- * \return The minimum depth of a bounding box or INVALID_DEPTH if no depth
- *         image was saved or if the bounding box contains no visible
- *         depth values
- *
- * \note the row index starts with 0
- *
- * \see depth_bounding_box_max_mask
- * \see depth_bounding_box_min
- * \see depth_bounding_box_mean
- *
- * \ingroup depth
- */
-EXPORT_SYM int depth_bounding_box_max(int row_from, int row_to,
-                                      int column_from, int column_to);
-
-/**
- * Returns the maximum depth of a bounding box
- *
- * This version allows to specify a distance mask.
- * Only depth values between min_distance and max_distance
- * are considered. This helps to mask out too near or too
- * far (background) points.
- *
- * \param min_distance Row index of the depth pixel
- * \param max_distance Row index of the depth pixel
- * \param row_from Bounding box starting from this row index 
- * \param row_to Bounding box until this row index 
- * \param column_from Bounding box until this column index
- * \param column_to Bounding box starting from this column index
- * \return The minimum depth of a bounding box or INVALID_DEPTH if no depth
- *         image was saved or if the bounding box contains no visible
- *         depth values
- *
- * \note the row index starts with 0
- *
- * \see depth_bounding_box_min
- * \see depth_bounding_box_max
- * \see depth_bounding_box_mean
- *
- * \ingroup depth
- */
-EXPORT_SYM int depth_bounding_box_max_mask(int row_from, int row_to,
-                                           int column_from, int column_to,
-                                           int min_distance, int max_distance);
-
-/**
- * Returns the mean depth of a bounding box
- *
- * \param row_from Bounding box starting from this row index 
- * \param row_to Bounding box until this row index 
- * \param column_from Bounding box until this column index
- * \param column_to Bounding box starting from this column index
- * \return The minimum depth of a bounding box or INVALID_DEPTH if no depth
- *         image was saved or if the bounding box contains no visible
- *         depth values
- *
- * \note the row index starts with 0
- *
- * \see depth_bounding_box_max
- * \see depth_bounding_box_min
- * \see depth_bounding_box_mean_mask
- *
- * \ingroup depth
- */
-EXPORT_SYM int depth_bounding_box_mean(int row_from, int row_to,
-                                       int column_from, int column_to);
-
-/**
- * Returns the mean depth of a bounding box
- *
- * This version allows to specify a distance mask.
- * Only depth values between min_distance and max_distance
- * are considered. This helps to mask out too near or too
- * far (background) points.
- *
- * \param min_distance Row index of the depth pixel
- * \param max_distance Row index of the depth pixel
- * \param row_from Bounding box starting from this row index 
- * \param row_to Bounding box until this row index 
- * \param column_from Bounding box until this column index
- * \param column_to Bounding box starting from this column index
- * \return The minimum depth of a bounding box or INVALID_DEPTH if no depth
- *         image was saved or if the bounding box contains no visible
- *         depth values
- *
- * \note the row index starts with 0
- *
- * \see depth_bounding_box_min
- * \see depth_bounding_box_max
- * \see depth_bounding_box_mean
- *
- * \ingroup depth
- */
-EXPORT_SYM int depth_bounding_box_mean_mask(int row_from, int row_to,
-                                            int column_from, int column_to,
-                                            int min_distance, int max_distance);
+EXPORT_SYM int get_depth_scanline_object_angle(int object_num);
 
 #ifdef __cplusplus
 }

@@ -77,6 +77,9 @@ namespace depth
     
     
     virtual void depth(uint16_t *const data, const uint32_t offset, const uint32_t size) const = 0;
+    
+    
+    void segment();
 
     /**
      * Returns the specified point.

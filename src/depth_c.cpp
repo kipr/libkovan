@@ -20,11 +20,13 @@
 
 #include "kovan/depth_exception.hpp"
 #include "kovan/depth_driver.hpp"
+#include "kovan/colinear_segmenter.hpp"
 #include "kovan/depth.h"
 #include "kovan/general.h"
 #include "kovan/util.h"
 
 #include <iostream>
+#include <math.h>
 #include <exception>
 
 namespace depth
@@ -33,6 +35,8 @@ namespace depth
   {
     static DepthImage *_depth_image = 0;
     static uint16_t _orientation = 0;
+    static int scanRow;
+    static std::vector<Segment> segments;
   }
 }
 
@@ -59,6 +63,7 @@ int depth_open()
 int depth_close()
 {
   try {
+    _depth_image = 0;
     DepthDriver::instance().close();
     return 1;
   }
@@ -102,6 +107,8 @@ int get_depth_orientation()
 int depth_update()
 {
   try {
+    segments.clear();
+    scanRow = -1;
     _depth_image = DepthDriver::instance().depthImage();
     if(!_depth_image) return 0;
     _depth_image->setOrientation(_orientation);
@@ -145,309 +152,118 @@ point3 get_depth_world_point(int row, int column)
   catchAllAndReturn(create_point3(-1, -1, -1));
 }
 
-int depth_scan_line_min(int row)
+int get_depth_world_point_x(int row, int column)
 {
-  try {
-    if(!_depth_image) throw Exception("Depth image is not valid");
-    
-    const uint32_t width = _depth_image->width();
-    uint32_t min = INVALID_DEPTH;
-
-    for(uint32_t c = 0; c < width; ++c) {
-      const uint32_t depth = _depth_image->depthAt(row, c);
-      if(!depth || depth >= min) continue;
-      
-      min = depth;
-    }
-
-    return min;
-  }
-  catchAllAndReturn(INVALID_DEPTH);
+  return get_depth_world_point(row, column).x;
 }
 
-int depth_scan_line_min_mask(int row, int min_distance, int max_distance)
+int get_depth_world_point_y(int row, int column)
 {
-  try {
-    if(!_depth_image) throw Exception("Depth image is not valid");
-    const uint32_t width = _depth_image->width();
-    uint32_t min = INVALID_DEPTH;
-
-    for(uint32_t c = 0; c < width; ++c) {
-      const uint32_t depth = _depth_image->depthAt(row, c);
-
-      if(depth && (depth < min) && (depth >= min_distance) && (depth <= max_distance)) {
-        min = depth;
-      }
-    }
-
-    return min;
-
-  }
-  catchAllAndReturn(INVALID_DEPTH);
+  return get_depth_world_point(row, column).y;
 }
 
-int depth_scan_line_max(int row)
+int get_depth_world_point_z(int row, int column)
 {
-  try {
-    if(!_depth_image) throw Exception("Depth image is not valid");
-    
-    uint32_t width = _depth_image->width();
-    uint32_t max = 0;
-
-    for(uint32_t c = 0; c < width; ++c) {
-      const uint32_t depth = _depth_image->depthAt(row, c);
-      if(!depth || depth <= max) continue;
-      
-      max = depth;
-    }
-
-    return max ? max : INVALID_DEPTH;
-  }
-  catchAllAndReturn(INVALID_DEPTH);
+  return get_depth_world_point(row, column).z;
 }
 
-int depth_scan_line_max_mask(int row, int min_distance, int max_distance)
+int findMin(const Segment &seg)
 {
-  try {
-    if(!_depth_image) throw Exception("Depth image is not valid");
-    
-    const uint32_t width = _depth_image->width();
-    uint32_t max = 0;
-
-    for(uint32_t c = 0; c < width; ++c) {
-      const uint32_t depth = _depth_image->depthAt(row, c);
-
-      if(depth && (depth > max) && (depth >= min_distance) && (depth <= max_distance)) {
-        max = depth;
-      }
+  if(scanRow < 0) return -1;
+  int min = -1;
+  int minVal = 0xFFFFFFF;
+  for(int i = seg.start; i < seg.end; ++i) {
+    if(_depth_image->depthAt(scanRow, i) < minVal) {
+      min = i;
+      minVal = _depth_image->depthAt(scanRow, i);
     }
-
-    return max ? max : INVALID_DEPTH;
   }
-  catchAllAndReturn(INVALID_DEPTH);
+  return min;
 }
 
-int depth_scan_line_mean(int row)
+int depth_scanline_update(int row)
 {
-  try {
-    if(!_depth_image) throw Exception("Depth image is not valid");
-    
-    const uint32_t width = _depth_image->width();
-    uint32_t mean_sum = 0;
-    uint32_t mean_cnt = 0;
-
-    for(uint32_t c = 0; c < width; ++c) {
-      const uint32_t depth = _depth_image->depthAt(row, c);
-      if(!depth) continue;
-      
-      mean_sum += depth;
-      mean_cnt++;
-    }
-
-    return mean_sum / mean_cnt;
+  if(row < 0 || row >= get_depth_image_height()) {
+    std::cerr << "depth_scanline_update needs a valid row" << std::endl;
+    return 0;
   }
-  catchAllAndReturn(INVALID_DEPTH);
+  scanRow = row;
+  int *const data = new int[get_depth_image_width()];
+  for(unsigned i = 0; i < get_depth_image_width(); ++i) {
+    data[i] = get_depth_value(scanRow, i);
+  }
+  
+  ColinearSegmenter segmenter(5);
+  segments = coalesceSegments(segmenter.findSegments(data, get_depth_image_width()));
+  
+  delete[] data;
+  return 1;
 }
 
-int depth_scan_line_mean_mask(int row, int min_distance, int max_distance)
+int get_depth_scanline_count()
 {
-  try {
-    if(!_depth_image) throw Exception("Depth image is not valid");
-    
-    const uint32_t width = _depth_image->width();
-    uint32_t mean_sum = 0;
-    uint32_t mean_cnt = 0;
-
-    for(uint32_t c = 0; c < width; ++c) {
-      const uint32_t depth = _depth_image->depthAt(row, c);
-
-      if(depth && (depth >= min_distance) && (depth <= max_distance)) {
-        mean_sum += depth;
-        mean_cnt++;
-      }
-    }
-
-    return mean_cnt ? (mean_sum / mean_cnt) : INVALID_DEPTH;
-  }
-  catchAllAndReturn(INVALID_DEPTH);
+  return segments.size();
 }
 
-int depth_bounding_box_min(int row_from, int row_to,
-                           int column_from, int column_to)
+point3 get_depth_scanline_object_point(int object_num)
 {
-  try
-  {
-    if(!_depth_image) throw Exception("Depth image is not valid");
-    
-    uint32_t min = INVALID_DEPTH;
-    
-    if(row_from < 0) row_from = 0;
-    if(row_to > _depth_image->width()) row_to = _depth_image->width();
-    
-    if(column_from < 0) column_from = 0;
-    if(column_to > _depth_image->height()) column_to = _depth_image->height();
-
-    for(uint32_t r = row_from; r < row_to; ++r) {
-      for(uint32_t c = column_from; c < column_to; ++c) {
-        uint32_t depth = _depth_image->depthAt(r, c);
-        if(!depth || depth >= min) continue;
-        
-        min = depth;
-      }
-
-      return min;
-    }
+  if(!_depth_image) return create_point3(-1, -1, -1);
+  if(scanRow < 0) {
+    std::cerr << "Must call depth_scanline_update first" << std::endl;
+    return create_point3(-1, -1, -1);
   }
-  catchAllAndReturn(INVALID_DEPTH);
+  if(object_num < 0 || object_num >= segments.size()) {
+    std::cerr << "object_num " << object_num << " is invalid!" << std::endl;
+    return create_point3(-1, -1, -1);
+  }
+  return get_depth_world_point(scanRow, findMin(segments[object_num]));
 }
 
-int depth_bounding_box_min_mask(int row_from, int row_to,
-                                int column_from, int column_to,
-                                int min_distance, int max_distance)
+int get_depth_scanline_object_x(int object_num)
 {
-  try {
-    if(!_depth_image) throw Exception("Depth image is not valid");
-    
-    uint32_t min = INVALID_DEPTH;
-    
-    if(row_from < 0) row_from = 0;
-    if(row_to > _depth_image->width()) row_to = _depth_image->width();
-    
-    if(column_from < 0) column_from = 0;
-    if(column_to > _depth_image->height()) column_to = _depth_image->height();
-    
-
-    for(uint32_t r = row_from; r < row_to; ++r) {
-      for(uint32_t c = column_from; c < column_to; ++c) {
-        const uint32_t depth = _depth_image->depthAt(r, c);
-
-        if(depth && (depth < min) && (depth >= min_distance) && (depth <= max_distance)) {
-          min = depth;
-        }
-      }
-
-      return min;
-    }
-  }
-  catchAllAndReturn(INVALID_DEPTH);
+  return get_depth_scanline_object_point(object_num).x;
 }
 
-int depth_bounding_box_max(int row_from, int row_to,
-                           int column_from, int column_to)
+int get_depth_scanline_object_y(int object_num)
 {
-  try {
-    if(!_depth_image) throw Exception("Depth image is not valid");
-    
-    uint32_t max = 0;
-    
-    if(row_from < 0) row_from = 0;
-    if(row_to > _depth_image->width()) row_to = _depth_image->width();
-    
-    if(column_from < 0) column_from = 0;
-    if(column_to > _depth_image->height()) column_to = _depth_image->height();
-    
-    for(uint32_t r = row_from; r < row_to; ++r) {
-      for(uint32_t c = column_from; c < column_to; ++c) {
-        const uint32_t depth = _depth_image->depthAt(r, c);
-        if(!depth || depth <= max) continue;
-        
-        max = depth;
-      }
-    }
-    
-    return max ? max : INVALID_DEPTH;
-  }
-  catchAllAndReturn(INVALID_DEPTH);
+  return get_depth_scanline_object_point(object_num).y;
 }
 
-int depth_bounding_box_max_mask(int row_from, int row_to,
-                                int column_from, int column_to,
-                                int min_distance, int max_distance)
+int get_depth_scanline_object_z(int object_num)
 {
-  try {
-    if(!_depth_image) throw Exception("Depth image is not valid");
-    
-    uint32_t max = 0;
-    
-    if(row_from < 0) row_from = 0;
-    if(row_to > _depth_image->width()) row_to = _depth_image->width();
-    
-    if(column_from < 0) column_from = 0;
-    if(column_to > _depth_image->height()) column_to = _depth_image->height();
-
-    for(uint32_t r = row_from; r < row_to; ++r) {
-      for(uint32_t c = column_from; c < column_to; ++c) {
-        const uint32_t depth = _depth_image->depthAt(r, c);
-
-        if(depth && (depth > max) && (depth >= min_distance) && (depth <= max_distance)) {
-          max = depth;
-        }
-      }
-
-      return max ? max : INVALID_DEPTH;
-    }
-  }
-  catchAllAndReturn(INVALID_DEPTH);
+  return get_depth_scanline_object_point(object_num).z;
 }
 
-int depth_bounding_box_mean(int row_from, int row_to,
-                            int column_from, int column_to)
+int get_depth_scanline_object_size(int object_num)
 {
-  try {
-    if(!_depth_image) throw Exception("Depth image is not valid");
-    
-    uint32_t mean_sum = 0;
-    uint32_t mean_cnt = 0;
-    
-    if(row_from < 0) row_from = 0;
-    if(row_to > _depth_image->width()) row_to = _depth_image->width();
-    
-    if(column_from < 0) column_from = 0;
-    if(column_to > _depth_image->height()) column_to = _depth_image->height();
-    
-    for(uint32_t r = row_from; r < row_to; ++r) {
-      for(uint32_t c = column_from; c < column_to; ++c) {
-        const uint32_t depth = _depth_image->depthAt(r, c);
-        if(!depth) continue;
-        
-        mean_sum += depth;
-        mean_cnt++;
-      }
-    }
-    return mean_cnt ? (mean_sum / mean_cnt) : INVALID_DEPTH;
+  if(scanRow < 0) {
+    std::cerr << "Must call depth_scanline_update first" << std::endl;
+    return -1;
   }
-  catchAllAndReturn(INVALID_DEPTH);
+  if(object_num < 0 || object_num >= segments.size()) {
+    std::cerr << "object_num " << object_num << " is invalid!" << std::endl;
+    return -1;
+  }
+  
+  const point3 start = get_depth_world_point(scanRow, segments[object_num].start);
+  const point3 end = get_depth_world_point(scanRow, segments[object_num].end);
+  
+  return abs(end.x - start.x);
 }
 
-int depth_bounding_box_mean_mask(int row_from, int row_to,
-                                 int column_from, int column_to,
-                                 int min_distance, int max_distance)
+int get_depth_scanline_object_angle(int object_num)
 {
-  try {
-    if(!_depth_image) throw Exception("Depth image is not valid");
-    
-    uint32_t mean_sum = 0;
-    uint32_t mean_cnt = 0;
-    
-    if(row_from < 0) row_from = 0;
-    if(row_to > _depth_image->width()) row_to = _depth_image->width();
-    
-    if(column_from < 0) column_from = 0;
-    if(column_to > _depth_image->height()) column_to = _depth_image->height();
-    
-
-    for(uint32_t r = row_from; r < row_to; ++r) {
-      for(uint32_t c = column_from; c < column_to; ++c) {
-        const uint32_t depth = _depth_image->depthAt(r, c);
-
-        if(depth && (depth >= min_distance) && (depth <= max_distance)) {
-          mean_sum += depth;
-          mean_cnt++;
-        }
-      }
-    }
-    
-    return mean_cnt ? (mean_sum / mean_cnt) : INVALID_DEPTH;
+  if(scanRow < 0) {
+    std::cerr << "Must call depth_scanline_update first" << std::endl;
+    return -1;
   }
-  catchAllAndReturn(INVALID_DEPTH);
+  if(object_num < 0 || object_num >= segments.size()) {
+    std::cerr << "object_num " << object_num << " is invalid!" << std::endl;
+    return -1;
+  }
+  
+  const point3 start = get_depth_world_point(scanRow, segments[object_num].start);
+  const point3 end = get_depth_world_point(scanRow, segments[object_num].end);
+  
+  return atan2(end.z - start.z, end.x - start.x);
 }
