@@ -1,5 +1,6 @@
 #include <kovan/segment.hpp>
 #include <iostream>
+#include <math.h>
 
 std::vector<Segment> coalesceSegments(const std::vector<Segment> &segments)
 {
