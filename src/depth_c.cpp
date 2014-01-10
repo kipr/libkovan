@@ -130,7 +130,7 @@ int get_depth_value(int row, int column)
   catchAllAndReturn(-1);
 }
 
-point3 get_world_point(int row, int column)
+point3 get_depth_world_point(int row, int column)
 {
   try {
     if(!_depth_image) throw Exception("Depth image is not valid");
