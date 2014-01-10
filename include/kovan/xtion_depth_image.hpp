@@ -88,6 +88,8 @@ namespace depth
      * \return The point or 0 if there no point at this coordinate
      */
     virtual Point3<int32_t> pointAt(const uint32_t row, const uint32_t column) const;
+    
+    const void *data() const;
   
   private:
     const void *_data;

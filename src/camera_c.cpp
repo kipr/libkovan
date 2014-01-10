@@ -207,6 +207,26 @@ rectangle get_object_bbox(int channel, int object)
 	return o.boundingBox().toCRectangle();
 }
 
+int get_object_bbox_ulx(int channel, int object)
+{
+  return get_object_bbox(channel, object).ulx;
+}
+
+int get_object_bbox_uly(int channel, int object)
+{
+  return get_object_bbox(channel, object).uly;
+}
+
+int get_object_bbox_width(int channel, int object)
+{
+  return get_object_bbox(channel, object).width;
+}
+
+int get_object_bbox_height(int channel, int object)
+{
+  return get_object_bbox(channel, object).height;
+}
+
 point2 get_object_centroid(int channel, int object)
 {
 	if(!check_channel_and_object(channel, object)) return create_point2(-1, -1);
@@ -214,11 +234,31 @@ point2 get_object_centroid(int channel, int object)
 	return o.centroid().toCPoint2();
 }
 
+int get_object_centroid_column(int channel, int object)
+{
+  return get_object_centroid(channel, object).column;
+}
+
+int get_object_centroid_row(int channel, int object)
+{
+  return get_object_centroid(channel, object).row;
+}
+
 point2 get_object_center(int channel, int object)
 {
 	if(!check_channel_and_object(channel, object)) return create_point2(-1, -1);
 	const Camera::Object &o = (*DeviceSingleton::instance()->channels()[channel]->objects())[object];
 	return o.boundingBox().center().toCPoint2();
+}
+
+int get_object_center_column(int channel, int object)
+{
+  return get_object_center(channel, object).column;
+}
+
+int get_object_center_row(int channel, int object)
+{
+  return get_object_center(channel, object).row;
 }
 
 void camera_close()

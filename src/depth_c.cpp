@@ -21,6 +21,8 @@
 #include "kovan/depth_exception.hpp"
 #include "kovan/depth_driver.hpp"
 #include "kovan/depth.h"
+#include "kovan/general.h"
+#include "kovan/util.h"
 
 #include <iostream>
 #include <exception>
@@ -47,7 +49,9 @@ int depth_open()
 {
   try {
     DepthDriver::instance().open();
-    return 1;
+    const double begin = seconds();
+    while(!depth_update() && seconds() < begin + 2.0) msleep(5);
+    return depth_update();
   }
   catchAllAndReturn(0);
 }
@@ -101,6 +105,7 @@ int depth_update()
     _depth_image = DepthDriver::instance().depthImage();
     if(!_depth_image) return 0;
     _depth_image->setOrientation(_orientation);
+    return 1;
   }
   catchAllAndReturn(0);
 }

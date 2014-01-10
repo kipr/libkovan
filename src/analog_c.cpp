@@ -21,14 +21,14 @@
 #include "kovan/analog.h"
 #include "analog_p.hpp"
 
-int analog10(int port)
+int analog(int port)
 {
 	return Private::Analog::instance()->value(static_cast<unsigned char>(port));
 }
 
-int analog(int port)
+int analog8(int port)
 {
-	return analog10(port) >> 2;
+	return analog(port) >> 2;
 }
 
 void set_analog_pullup(int port, int pullup)

@@ -94,3 +94,8 @@ Point3<int32_t> XtionDepthImage::pointAt(const uint32_t row, const uint32_t colu
   
   return Point3<int32_t>(worldX, worldY, worldZ);
 }
+
+const void *XtionDepthImage::data() const
+{
+  return _data;
+}

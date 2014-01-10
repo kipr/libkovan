@@ -34,7 +34,7 @@ extern "C" {
  * \see analog
  * \ingroup sensor
  */
-EXPORT_SYM int analog10(int port);
+EXPORT_SYM int analog(int port);
 
 /*!
  * Gets the 8-bit analog value of a port.
@@ -43,7 +43,7 @@ EXPORT_SYM int analog10(int port);
  * \see analog10
  * \ingroup sensor
  */
-EXPORT_SYM int analog(int port);
+EXPORT_SYM int analog8(int port);
 
 EXPORT_SYM void set_analog_pullup(int port, int pullup);
 EXPORT_SYM int get_analog_pullup(int port);

@@ -70,11 +70,11 @@ void wait_for_light(int light_port_)
 		display_printf (0, 0, "CALIBRATE: sensor port #%d", light_port_);
 		display_printf(0, 1, "   press button when light is on");
 		while(b_button_clicked() == 0) {
-			l_on_ = analog10 (light_port_);
+			l_on_ = analog (light_port_);
 			display_printf(0,1,"   light on value is = %d        ", l_on_);
 			msleep(50);
 		}
-		l_on_ = analog10(light_port_); /* sensor value when light is on */
+		l_on_ = analog(light_port_); /* sensor value when light is on */
 
 		set_b_button_text("Light is Off");
 
@@ -84,11 +84,11 @@ void wait_for_light(int light_port_)
 
 		display_printf(0,2,"   press button when light off");
 		while(b_button_clicked() == 0) {
-			l_off_ = analog10(light_port_);
+			l_off_ = analog(light_port_);
 			display_printf(0,3,"   light off value is = %d         ", l_off_);
 			msleep(50);
 		}
-		l_off_ = analog10(light_port_); /* sensor value when light is off */
+		l_off_ = analog(light_port_); /* sensor value when light is off */
 
 		display_printf(0,3,"   light off value is = %d         ", l_off_);
 		msleep(200);
@@ -98,7 +98,7 @@ void wait_for_light(int light_port_)
 			l_mid_ = (l_on_ + l_off_) / 2;
 			display_printf(0, 5, "Good Calibration!");
 			display_printf(0, 7, "Diff = %d:  WAITING", l_off_ - l_on_);
-			while(analog10(light_port_) > l_mid_);
+			while(analog(light_port_) > l_mid_);
 		} else {
 			s = seconds();
 			display_printf(0,7,"BAD CALIBRATION");

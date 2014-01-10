@@ -18,20 +18,40 @@ public:
 	{
 		return m_x;
 	}
+  
+  const T &row() const
+  {
+    return m_y;
+  }
 	
 	const T &y() const
 	{
 		return m_y;
 	}
+  
+  const T &column() const
+  {
+    return m_x;
+  }
 	
 	void setX(const T &x)
 	{
 		m_x = x;
 	}
+  
+	void setColumn(const T &column)
+	{
+		m_x = column;
+	}
 	
 	void setY(const T &y)
 	{
 		m_y = y;
+	}
+  
+	void setRow(const T &row)
+	{
+		m_y = row;
 	}
 	
 	point2 toCPoint2() const

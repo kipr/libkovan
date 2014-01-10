@@ -144,7 +144,7 @@ void XtionDepthDriverImpl::setDepthCameraResolution(const DepthResolution resolu
 
 XtionDepthImage *XtionDepthDriverImpl::lastCaptured()
 {
-  return &_lastCaptured;
+  return _lastCaptured.data() ? &_lastCaptured : 0;
 }
 
 const openni::VideoStream &XtionDepthDriverImpl::stream() const

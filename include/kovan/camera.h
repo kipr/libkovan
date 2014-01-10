@@ -1,4 +1,6 @@
 /**************************************************************************
+
+
  *  Copyright 2012 KISS Institute for Practical Robotics                  *
  *                                                                        *
  *  This file is part of libkovan.                                        *
@@ -191,17 +193,28 @@ EXPORT_SYM int get_object_area(int channel, int object);
  */
 EXPORT_SYM rectangle get_object_bbox(int channel, int object);
 
+EXPORT_SYM int get_object_bbox_ulx(int channel, int object);
+EXPORT_SYM int get_object_bbox_uly(int channel, int object);
+EXPORT_SYM int get_object_bbox_width(int channel, int object);
+EXPORT_SYM int get_object_bbox_height(int channel, int object);
+
 /**
  * \return The (x, y) centroid of the given object on the given channel.
  * \ingroup camera
  */
 EXPORT_SYM point2 get_object_centroid(int channel, int object);
 
+EXPORT_SYM int get_object_centroid_column(int channel, int object);
+EXPORT_SYM int get_object_centroid_row(int channel, int object);
+
 /**
  * \return The (x, y) center of the given object on the given channel.
  * \ingroup camera
  */
 EXPORT_SYM point2 get_object_center(int channel, int object);
+
+EXPORT_SYM int get_object_center_column(int channel, int object);
+EXPORT_SYM int get_object_center_row(int channel, int object);
 
 /**
  * Cleanup the current camera instance.
