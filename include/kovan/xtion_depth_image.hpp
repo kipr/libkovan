@@ -90,7 +90,7 @@ namespace depth
     virtual Point3<int32_t> pointAt(const uint32_t row, const uint32_t column) const;
   
   private:
-    void *_data;
+    const void *_data;
     uint32_t _size;
     uint32_t _width;
     uint32_t _height;

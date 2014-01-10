@@ -27,20 +27,17 @@ using namespace openni;
 
 XtionDepthImage::XtionDepthImage(const void *const data, const uint32_t size, const uint32_t width,
     const uint32_t height, const uint16_t orientation, XtionDepthDriverImpl *const impl)
-  : _data(0)
+  : _data(data)
   , _size(size)
   , _width(width)
   , _height(height)
   , _orientation(orientation)
   , _impl(impl)
 {
-  _data = new DepthPixel[size];
-  memcpy(_data, data, size);
 }
 
 XtionDepthImage::~XtionDepthImage()
 {
-  delete[] reinterpret_cast<DepthPixel *>(_data);
 }
 
 void XtionDepthImage::setOrientation(const uint16_t orientation)
@@ -57,16 +54,16 @@ uint16_t XtionDepthImage::orientation() const
 uint16_t XtionDepthImage::depthAt(const uint32_t row, const uint32_t column) const
 {
   if(_orientation == 0) {
-    return reinterpret_cast<DepthPixel *>(_data)[(_width - column) + row * _width];
+    return reinterpret_cast<const DepthPixel *>(_data)[(_width - column) + row * _width];
   }
   
-  return reinterpret_cast<DepthPixel *>(_data)[column + (_height - row) * _width];
+  return reinterpret_cast<const DepthPixel *>(_data)[column + (_height - row) * _width];
 }
 
 void XtionDepthImage::depth(uint16_t *const data, const uint32_t offset, const uint32_t size) const
 {
   const uint32_t clip = std::max(_width * _height - offset, size);
-  memcpy(data, reinterpret_cast<DepthPixel *>(_data) + offset, size * sizeof(DepthPixel));
+  memcpy(data, reinterpret_cast<const DepthPixel *>(_data) + offset, size * sizeof(DepthPixel));
 }
 
 uint32_t XtionDepthImage::width() const
