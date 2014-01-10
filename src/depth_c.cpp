@@ -28,6 +28,7 @@
 #include <iostream>
 #include <math.h>
 #include <exception>
+#include <stdlib.h>
 
 namespace depth
 {
