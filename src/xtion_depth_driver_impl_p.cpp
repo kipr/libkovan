@@ -85,6 +85,8 @@ bool XtionDepthDriverImpl::isOpen() const
 
 void XtionDepthDriverImpl::close()
 {
+  if(!isOpen()) return;
+  
   _stream.removeNewFrameListener(this);
 
   _stream.stop();

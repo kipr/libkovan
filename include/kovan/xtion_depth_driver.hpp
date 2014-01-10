@@ -77,7 +77,7 @@ namespace depth
       */
     virtual DepthImage *depthImage() const;
 
-    ~XtionDepthDriver();
+    virtual ~XtionDepthDriver();
 
   private:
     XtionDepthDriverImpl *_impl;

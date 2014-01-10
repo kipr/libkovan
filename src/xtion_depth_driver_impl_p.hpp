@@ -14,7 +14,7 @@ namespace depth
   {
   public:
     XtionDepthDriverImpl();
-    ~XtionDepthDriverImpl();
+    virtual ~XtionDepthDriverImpl();
     
     void open();
     bool isOpen() const;

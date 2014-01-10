@@ -40,7 +40,7 @@ namespace depth
   public:
     XtionDepthImage(const void *const data, const uint32_t size, const uint32_t width,
       const uint32_t height, const uint16_t orientation, XtionDepthDriverImpl *const impl);
-    ~XtionDepthImage();
+    virtual ~XtionDepthImage();
     /**
      * Sets the depth camera orientation
      *

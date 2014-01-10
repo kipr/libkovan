@@ -59,5 +59,7 @@
 #include "config.hpp"
 #include "accel.hpp"
 #include "thread.hpp"
+#include "depth_driver.hpp"
+#include "depth_image.hpp"
 
 #endif

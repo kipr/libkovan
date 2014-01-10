@@ -48,5 +48,6 @@
 #include "accel.h"
 #include "thread.h"
 #include "botball.h"
+#include "depth.h"
 
 #endif

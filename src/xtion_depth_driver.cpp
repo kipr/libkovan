@@ -52,7 +52,6 @@ void XtionDepthDriver::close()
   _impl->close();
 }
 
-
 bool XtionDepthDriver::isOpen() const
 {
   return _impl->isOpen();
