@@ -121,7 +121,7 @@ EXPORT_SYM int depth_update();
  *
  * \ingroup depth
  */
-EXPORT_SYM int depth_image_get_height();
+EXPORT_SYM int get_depth_image_height();
 
 /**
  * Returns the width of the depth image stored by depth_update in pixel
@@ -132,7 +132,7 @@ EXPORT_SYM int depth_image_get_height();
  *
  * \ingroup depth
  */
-EXPORT_SYM int depth_image_get_width();
+EXPORT_SYM int get_depth_image_width();
 
 /**
  * Returns the depth value of a depth pixel.
@@ -165,7 +165,7 @@ EXPORT_SYM int get_depth_value(int row, int column);
  *
  * \ingroup depth
  */
-EXPORT_SYM point3 get_world_point(int row, int column);
+EXPORT_SYM point3 get_depth_world_point(int row, int column);
 
 #ifdef __linux__
 static const int INVALID_DEPTH = 2147483647;

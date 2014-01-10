@@ -18,12 +18,12 @@
  *  If not, see <http://www.gnu.org/licenses/>.                           *
  **************************************************************************/
 
-#include <iostream>
-#include <exception>
-
 #include "kovan/depth_exception.hpp"
 #include "kovan/depth_driver.hpp"
 #include "kovan/depth.h"
+
+#include <iostream>
+#include <exception>
 
 namespace depth
 {
@@ -71,10 +71,8 @@ DepthResolution get_depth_resolution()
 
 int set_depth_resolution(DepthResolution resolution)
 {
-  try
-  {
+  try {
     DepthDriver::instance().setDepthCameraResolution(resolution);
-
     return 1;
   }
   catchAllAndReturn(0);
@@ -101,29 +99,24 @@ int depth_update()
 {
   try {
     _depth_image = DepthDriver::instance().depthImage();
-
     if(!_depth_image) return 0;
     _depth_image->setOrientation(_orientation);
   }
   catchAllAndReturn(0);
 }
 
-int depth_image_get_height()
+int get_depth_image_height()
 {
-  try
-  {
-    if(!_depth_image) return 0;
-    return _depth_image->height();
+  try {
+    return _depth_image ? _depth_image->height() : 0;
   }
   catchAllAndReturn(0);
 }
 
-int depth_image_get_width()
+int get_depth_image_width()
 {
-  try
-  {
-    if(!_depth_image) return 0;
-    return _depth_image->width();
+  try {
+    return _depth_image ? _depth_image->width() : 0;
   }
   catchAllAndReturn(0);
 }
@@ -131,207 +124,139 @@ int depth_image_get_width()
 int get_depth_value(int row, int column)
 {
   try {
-    if(_depth_image) {
-      return _depth_image->depthAt(row, column);
-    } else {
-        throw Exception("Depth image is not valid");
-    }
+    if(!_depth_image) throw Exception("Depth image is not valid");
+    return _depth_image->depthAt(row, column);
   }
   catchAllAndReturn(-1);
 }
 
 point3 get_world_point(int row, int column)
 {
-  try
-  {
-    if(_depth_image)
-    {
-      Point3<int32_t> p(_depth_image->pointAt(row, column));
-      return p.toCPoint3();
-    }
-    else
-    {
-        throw Exception("Depth image is not valid");
-    }
+  try {
+    if(!_depth_image) throw Exception("Depth image is not valid");
+    Point3<int32_t> p(_depth_image->pointAt(row, column));
+    return p.toCPoint3();
   }
   catchAllAndReturn(create_point3(-1, -1, -1));
 }
 
 int depth_scan_line_min(int row)
 {
-  try
-  {
-    if(_depth_image)
-    {
-      uint32_t c;
-      uint32_t width = _depth_image->width();
-      uint32_t min = INVALID_DEPTH;
-      uint32_t depth;
+  try {
+    if(!_depth_image) throw Exception("Depth image is not valid");
+    
+    const uint32_t width = _depth_image->width();
+    uint32_t min = INVALID_DEPTH;
 
-      for(c = 0; c < width; c++)
-      {
-        depth = _depth_image->depthAt(row, c);
-
-        if(depth && (depth < min))
-        {
-          min = depth;
-        }
-      }
-
-      return min;
+    for(uint32_t c = 0; c < width; ++c) {
+      const uint32_t depth = _depth_image->depthAt(row, c);
+      if(!depth || depth >= min) continue;
+      
+      min = depth;
     }
-    else
-    {
-        throw Exception("Depth image is not valid");
-    }
+
+    return min;
   }
   catchAllAndReturn(INVALID_DEPTH);
 }
 
 int depth_scan_line_min_mask(int row, int min_distance, int max_distance)
 {
-  try
-  {
-    if(_depth_image)
-    {
-      uint32_t c;
-      uint32_t width = _depth_image->width();
-      uint32_t min = INVALID_DEPTH;
-      uint32_t depth;
+  try {
+    if(!_depth_image) throw Exception("Depth image is not valid");
+    const uint32_t width = _depth_image->width();
+    uint32_t min = INVALID_DEPTH;
 
-      for(c = 0; c < width; c++)
-      {
-        depth = _depth_image->depthAt(row, c);
+    for(uint32_t c = 0; c < width; ++c) {
+      const uint32_t depth = _depth_image->depthAt(row, c);
 
-        if(depth && (depth < min) && (depth >= min_distance) && (depth <= max_distance))
-        {
-          min = depth;
-        }
+      if(depth && (depth < min) && (depth >= min_distance) && (depth <= max_distance)) {
+        min = depth;
       }
+    }
 
-      return min;
-    }
-    else
-    {
-        throw Exception("Depth image is not valid");
-    }
+    return min;
+
   }
   catchAllAndReturn(INVALID_DEPTH);
 }
 
 int depth_scan_line_max(int row)
 {
-  try
-  {
-    if(_depth_image)
-    {
-      uint32_t c;
-      uint32_t width = _depth_image->width();
-      uint32_t max = 0;
-      uint32_t depth;
+  try {
+    if(!_depth_image) throw Exception("Depth image is not valid");
+    
+    uint32_t width = _depth_image->width();
+    uint32_t max = 0;
 
-      for(c = 0; c < width; c++)
-      {
-        depth = _depth_image->depthAt(row, c);
-
-        if(depth && (depth > max))
-        {
-          max = depth;
-        }
-      }
-
-      return max ? max : INVALID_DEPTH;
+    for(uint32_t c = 0; c < width; ++c) {
+      const uint32_t depth = _depth_image->depthAt(row, c);
+      if(!depth || depth <= max) continue;
+      
+      max = depth;
     }
-    else
-    {
-        throw Exception("Depth image is not valid");
-    }
+
+    return max ? max : INVALID_DEPTH;
   }
   catchAllAndReturn(INVALID_DEPTH);
 }
 
 int depth_scan_line_max_mask(int row, int min_distance, int max_distance)
 {
-  try
-  {
-    if(_depth_image)
-    {
-      uint32_t c;
-      uint32_t width = _depth_image->width();
-      uint32_t max = 0;
-      uint32_t depth;
+  try {
+    if(!_depth_image) throw Exception("Depth image is not valid");
+    
+    const uint32_t width = _depth_image->width();
+    uint32_t max = 0;
 
-      for(c = 0; c < width; c++)
-      {
-        depth = _depth_image->depthAt(row, c);
+    for(uint32_t c = 0; c < width; ++c) {
+      const uint32_t depth = _depth_image->depthAt(row, c);
 
-        if(depth && (depth > max) && (depth >= min_distance) && (depth <= max_distance))
-        {
-          max = depth;
-        }
+      if(depth && (depth > max) && (depth >= min_distance) && (depth <= max_distance)) {
+        max = depth;
       }
+    }
 
-      return max ? max : INVALID_DEPTH;
-    }
-    else
-    {
-        throw Exception("Depth image is not valid");
-    }
+    return max ? max : INVALID_DEPTH;
   }
   catchAllAndReturn(INVALID_DEPTH);
 }
 
 int depth_scan_line_mean(int row)
 {
-  try
-  {
-    if(_depth_image)
-    {
-      uint32_t c;
-      uint32_t width = _depth_image->width();
-      uint32_t mean_sum = 0;
-      uint32_t mean_cnt = 0;
-      uint32_t depth;
+  try {
+    if(!_depth_image) throw Exception("Depth image is not valid");
+    
+    const uint32_t width = _depth_image->width();
+    uint32_t mean_sum = 0;
+    uint32_t mean_cnt = 0;
 
-      for(c = 0; c < width; c++)
-      {
-        depth = _depth_image->depthAt(row, c);
-
-        if(depth)
-        {
-          mean_sum += depth;
-          mean_cnt++;
-        }
-      }
-
-      return mean_sum / mean_cnt;
+    for(uint32_t c = 0; c < width; ++c) {
+      const uint32_t depth = _depth_image->depthAt(row, c);
+      if(!depth) continue;
+      
+      mean_sum += depth;
+      mean_cnt++;
     }
-    else
-    {
-        throw Exception("Depth image is not valid");
-    }
+
+    return mean_sum / mean_cnt;
   }
   catchAllAndReturn(INVALID_DEPTH);
 }
 
 int depth_scan_line_mean_mask(int row, int min_distance, int max_distance)
 {
-  try
-  {
-    if(!_depth_image) {
-      throw Exception("Depth image is not valid");
-    }
+  try {
+    if(!_depth_image) throw Exception("Depth image is not valid");
     
     const uint32_t width = _depth_image->width();
     uint32_t mean_sum = 0;
     uint32_t mean_cnt = 0;
 
-    for(uint32_t c = 0; c < width; c++)
-    {
-      uint32_t depth = _depth_image->depthAt(row, c);
+    for(uint32_t c = 0; c < width; ++c) {
+      const uint32_t depth = _depth_image->depthAt(row, c);
 
-      if(depth && (depth >= min_distance) && (depth <= max_distance))
-      {
+      if(depth && (depth >= min_distance) && (depth <= max_distance)) {
         mean_sum += depth;
         mean_cnt++;
       }
@@ -347,32 +272,22 @@ int depth_bounding_box_min(int row_from, int row_to,
 {
   try
   {
-    if(!_depth_image) {
-      throw Exception("Depth image is not valid");
-    }
+    if(!_depth_image) throw Exception("Depth image is not valid");
     
     uint32_t min = INVALID_DEPTH;
     
-    if(row_from < 0) {
-      row_from = 0;
-    }
-    if(row_to > _depth_image->width()) {
-      row_to = _depth_image->width();
-    }
+    if(row_from < 0) row_from = 0;
+    if(row_to > _depth_image->width()) row_to = _depth_image->width();
     
-    if(column_from < 0) {
-      column_from = 0;
-    }
-    if(column_to > _depth_image->height()) {
-      column_to = _depth_image->height();
-    }
+    if(column_from < 0) column_from = 0;
+    if(column_to > _depth_image->height()) column_to = _depth_image->height();
 
     for(uint32_t r = row_from; r < row_to; ++r) {
       for(uint32_t c = column_from; c < column_to; ++c) {
         uint32_t depth = _depth_image->depthAt(r, c);
-        if(depth && (depth < min)) {
-          min = depth;
-        }
+        if(!depth || depth >= min) continue;
+        
+        min = depth;
       }
 
       return min;
@@ -385,25 +300,17 @@ int depth_bounding_box_min_mask(int row_from, int row_to,
                                 int column_from, int column_to,
                                 int min_distance, int max_distance)
 {
-  try
-  {
-    if(!_depth_image) {
-      throw Exception("Depth image is not valid");
-    }
+  try {
+    if(!_depth_image) throw Exception("Depth image is not valid");
+    
     uint32_t min = INVALID_DEPTH;
     
-    if(row_from < 0) {
-      row_from = 0;
-    }
-    if(row_to > _depth_image->width()) {
-      row_to = _depth_image->width();
-    }
-    if(column_from < 0) {
-      column_from = 0;
-    }
-    if(column_to > _depth_image->height()) {
-      column_to = _depth_image->height();
-    }
+    if(row_from < 0) row_from = 0;
+    if(row_to > _depth_image->width()) row_to = _depth_image->width();
+    
+    if(column_from < 0) column_from = 0;
+    if(column_to > _depth_image->height()) column_to = _depth_image->height();
+    
 
     for(uint32_t r = row_from; r < row_to; ++r) {
       for(uint32_t c = column_from; c < column_to; ++c) {
@@ -423,38 +330,27 @@ int depth_bounding_box_min_mask(int row_from, int row_to,
 int depth_bounding_box_max(int row_from, int row_to,
                            int column_from, int column_to)
 {
-  try
-  {
-    if(!_depth_image) {
-      throw Exception("Depth image is not valid");
-    }
+  try {
+    if(!_depth_image) throw Exception("Depth image is not valid");
     
     uint32_t max = 0;
     
-    if(row_from < 0) {
-      row_from = 0;
-    }
-    if(row_to > _depth_image->width()) {
-      row_to = _depth_image->width();
-    }
-    if(column_from < 0) {
-      column_from = 0;
-    }
-    if(column_to > _depth_image->height()) {
-      column_to = _depth_image->height();
-    }
-
+    if(row_from < 0) row_from = 0;
+    if(row_to > _depth_image->width()) row_to = _depth_image->width();
+    
+    if(column_from < 0) column_from = 0;
+    if(column_to > _depth_image->height()) column_to = _depth_image->height();
+    
     for(uint32_t r = row_from; r < row_to; ++r) {
       for(uint32_t c = column_from; c < column_to; ++c) {
         const uint32_t depth = _depth_image->depthAt(r, c);
-
-        if(depth && (depth > max)) {
-          max = depth;
-        }
+        if(!depth || depth <= max) continue;
+        
+        max = depth;
       }
-
-      return max ? max : INVALID_DEPTH;
     }
+    
+    return max ? max : INVALID_DEPTH;
   }
   catchAllAndReturn(INVALID_DEPTH);
 }
@@ -463,25 +359,16 @@ int depth_bounding_box_max_mask(int row_from, int row_to,
                                 int column_from, int column_to,
                                 int min_distance, int max_distance)
 {
-  try
-  {
-    if(!_depth_image) {
-      throw Exception("Depth image is not valid");
-    }
+  try {
+    if(!_depth_image) throw Exception("Depth image is not valid");
+    
     uint32_t max = 0;
     
-    if(row_from < 0) {
-      row_from = 0;
-    }
-    if(row_to > _depth_image->width()) {
-      row_to = _depth_image->width();
-    }
-    if(column_from < 0) {
-      column_from = 0;
-    }
-    if(column_to > _depth_image->height()) {
-      column_to = _depth_image->height();
-    }
+    if(row_from < 0) row_from = 0;
+    if(row_to > _depth_image->width()) row_to = _depth_image->width();
+    
+    if(column_from < 0) column_from = 0;
+    if(column_to > _depth_image->height()) column_to = _depth_image->height();
 
     for(uint32_t r = row_from; r < row_to; ++r) {
       for(uint32_t c = column_from; c < column_to; ++c) {
@@ -501,52 +388,28 @@ int depth_bounding_box_max_mask(int row_from, int row_to,
 int depth_bounding_box_mean(int row_from, int row_to,
                             int column_from, int column_to)
 {
-  try
-  {
-    if(_depth_image)
-    {
-      uint32_t c, r;
-      uint32_t mean_sum = 0;
-      uint32_t mean_cnt = 0;
-      uint32_t depth;
-      
-      if(row_from < 0)
-      {
-        row_from = 0;
-      }
-      if(row_to > _depth_image->width())
-      {
-        row_to = _depth_image->width();
-      }
-      if(column_from < 0)
-      {
-        column_from = 0;
-      }
-      if(column_to > _depth_image->height())
-      {
-        column_to = _depth_image->height();
-      }
-
-      for(r = row_from; r < row_to; r++)
-      {
-        for(c = column_from; c < column_to; c++)
-        {
-          depth = _depth_image->depthAt(r, c);
-
-          if(depth)
-          {
-            mean_sum += depth;
-            mean_cnt++;
-          }
-        }
-
-        return mean_cnt ? (mean_sum / mean_cnt) : INVALID_DEPTH;
+  try {
+    if(!_depth_image) throw Exception("Depth image is not valid");
+    
+    uint32_t mean_sum = 0;
+    uint32_t mean_cnt = 0;
+    
+    if(row_from < 0) row_from = 0;
+    if(row_to > _depth_image->width()) row_to = _depth_image->width();
+    
+    if(column_from < 0) column_from = 0;
+    if(column_to > _depth_image->height()) column_to = _depth_image->height();
+    
+    for(uint32_t r = row_from; r < row_to; ++r) {
+      for(uint32_t c = column_from; c < column_to; ++c) {
+        const uint32_t depth = _depth_image->depthAt(r, c);
+        if(!depth) continue;
+        
+        mean_sum += depth;
+        mean_cnt++;
       }
     }
-    else
-    {
-        throw Exception("Depth image is not valid");
-    }
+    return mean_cnt ? (mean_sum / mean_cnt) : INVALID_DEPTH;
   }
   catchAllAndReturn(INVALID_DEPTH);
 }
@@ -555,52 +418,31 @@ int depth_bounding_box_mean_mask(int row_from, int row_to,
                                  int column_from, int column_to,
                                  int min_distance, int max_distance)
 {
-  try
-  {
-    if(_depth_image)
-    {
-      uint32_t c, r;
-      uint32_t mean_sum = 0;
-      uint32_t mean_cnt = 0;
-      uint32_t depth;
-      
-      if(row_from < 0)
-      {
-        row_from = 0;
-      }
-      if(row_to > _depth_image->width())
-      {
-        row_to = _depth_image->width();
-      }
-      if(column_from < 0)
-      {
-        column_from = 0;
-      }
-      if(column_to > _depth_image->height())
-      {
-        column_to = _depth_image->height();
-      }
+  try {
+    if(!_depth_image) throw Exception("Depth image is not valid");
+    
+    uint32_t mean_sum = 0;
+    uint32_t mean_cnt = 0;
+    
+    if(row_from < 0) row_from = 0;
+    if(row_to > _depth_image->width()) row_to = _depth_image->width();
+    
+    if(column_from < 0) column_from = 0;
+    if(column_to > _depth_image->height()) column_to = _depth_image->height();
+    
 
-      for(r = row_from; r < row_to; r++)
-      {
-        for(c = column_from; c < column_to; c++)
-        {
-          depth = _depth_image->depthAt(r, c);
+    for(uint32_t r = row_from; r < row_to; ++r) {
+      for(uint32_t c = column_from; c < column_to; ++c) {
+        const uint32_t depth = _depth_image->depthAt(r, c);
 
-          if(depth && (depth >= min_distance) && (depth <= max_distance))
-          {
-            mean_sum += depth;
-            mean_cnt++;
-          }
+        if(depth && (depth >= min_distance) && (depth <= max_distance)) {
+          mean_sum += depth;
+          mean_cnt++;
         }
-
-        return mean_cnt ? (mean_sum / mean_cnt) : INVALID_DEPTH;
       }
     }
-    else
-    {
-        throw Exception("Depth image is not valid");
-    }
+    
+    return mean_cnt ? (mean_sum / mean_cnt) : INVALID_DEPTH;
   }
   catchAllAndReturn(INVALID_DEPTH);
 }
