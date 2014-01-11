@@ -40,7 +40,7 @@ namespace depth
     static uint16_t _orientation = 0;
     static int scanRow = -1;
     static std::vector<Segment> segments;
-    static SortMethod sortMethod;
+    static SortMethod sortMethod = SORT_NEAREST;
   }
 }
 
