@@ -430,7 +430,7 @@ int get_depth_scanline_object_angle(int object_num)
   return atan2(end.z - start.z, end.x - start.x) * 180.0 / M_PI;
 }
 
-int set_depth_scanline_sorting_method(SortMethod method)
+void set_depth_scanline_sorting_method(SortMethod method)
 {
   sortMethod = method;
 }
