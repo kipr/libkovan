@@ -35,7 +35,7 @@ int analog10(int port)
 int analog_et(int port)
 {
   set_analog_pullup(port, 0);
-  return analog(port);
+  return Private::Analog::instance()->value(static_cast<unsigned char>(port));
 }
 
 int analog8(int port)
