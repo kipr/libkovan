@@ -36,7 +36,7 @@ namespace depth
   {
     static DepthImage *_depth_image = 0;
     static uint16_t _orientation = 0;
-    static int scanRow;
+    static int scanRow = -1;
     static std::vector<Segment> segments;
   }
 }
