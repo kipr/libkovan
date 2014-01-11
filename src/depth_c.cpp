@@ -419,5 +419,5 @@ int get_depth_scanline_object_angle(int object_num)
   const point3 start = get_depth_world_point(scanRow, segments[object_num].start);
   const point3 end = get_depth_world_point(scanRow, segments[object_num].end);
   
-  return atan2(end.z - start.z, end.x - start.x);
+  return atan2(end.z - start.z, end.x - start.x) * 180.0 / M_PI;
 }
