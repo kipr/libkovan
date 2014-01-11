@@ -225,11 +225,23 @@ EXPORT_SYM int get_depth_scanline_object_count();
 
 EXPORT_SYM point3 get_depth_scanline_object_point(int object_num);
 
-EXPORT_SYM int get_depth_scanline_object_x(int object_num);
+EXPORT_SYM int get_depth_scanline_object_center_x(int object_num);
 
-EXPORT_SYM int get_depth_scanline_object_y(int object_num);
+EXPORT_SYM int get_depth_scanline_object_center_y(int object_num);
 
-EXPORT_SYM int get_depth_scanline_object_z(int object_num);
+EXPORT_SYM int get_depth_scanline_object_center_z(int object_num);
+
+EXPORT_SYM int get_depth_scanline_object_nearest_x(int object_num);
+
+EXPORT_SYM int get_depth_scanline_object_nearest_y(int object_num);
+
+EXPORT_SYM int get_depth_scanline_object_nearest_z(int object_num);
+
+EXPORT_SYM int get_depth_scanline_object_farthest_x(int object_num);
+
+EXPORT_SYM int get_depth_scanline_object_farthest_y(int object_num);
+
+EXPORT_SYM int get_depth_scanline_object_farthest_z(int object_num);
 
 EXPORT_SYM int get_depth_scanline_object_size(int object_num);
 

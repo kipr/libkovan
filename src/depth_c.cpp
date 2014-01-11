@@ -31,29 +31,6 @@
 #include <algorithm>
 #include <stdlib.h>
 
-class SegmentSizeFunctor
-{
-public:
-  SegmentSizeFunctor(int row, depth::DepthImage *const image)
-    : _row(row)
-    , _image(image)
-  {
-    
-  }
-  
-  bool operator()(const Segment &a, const Segment &b) const
-  {
-    return _image->pointAt(_row, middle(a)).z() < _image->pointAt(_row, middle(b)).z();
-  }
-private:
-  unsigned middle(const Segment &s) const
-  {
-    return (s.start + s.end) >> 1;
-  }
-  
-  const int _row;
-  depth::DepthImage *const _image;
-};
 
 namespace depth
 {
@@ -68,6 +45,96 @@ namespace depth
 
 using namespace depth;
 using namespace depth::Private;
+
+int findMin(const Segment &seg)
+{
+  if(scanRow < 0) return -1;
+  int min = -1;
+  int minVal = 0xFFFFFFF;
+  for(int i = seg.start; i < seg.end; ++i) {
+    if(_depth_image->depthAt(scanRow, i) < minVal) {
+      min = i;
+      minVal = _depth_image->depthAt(scanRow, i);
+    }
+  }
+  return min;
+}
+
+int findMax(const Segment &seg)
+{
+  if(scanRow < 0) return -1;
+  int max = -1;
+  int maxVal = 0;
+  for(int i = seg.start; i < seg.end; ++i) {
+    if(_depth_image->depthAt(scanRow, i) > maxVal) {
+      max = i;
+      maxVal = _depth_image->depthAt(scanRow, i);
+    }
+  }
+  return max;
+}
+
+
+class SegmentNearestFunctor
+{
+public:
+  SegmentNearestFunctor(int row, depth::DepthImage *const image)
+    : _row(row)
+    , _image(image)
+  {
+    
+  }
+  
+  bool operator()(const Segment &a, const Segment &b) const
+  {
+    return _image->pointAt(_row, findMin(a)).z() < _image->pointAt(_row, findMin(b)).z();
+  }
+private:
+
+  const int _row;
+  depth::DepthImage *const _image;
+};
+
+class SegmentFarthestFunctor
+{
+public:
+  SegmentFarthestFunctor(int row, depth::DepthImage *const image)
+    : _row(row)
+    , _image(image)
+  {
+    
+  }
+  
+  bool operator()(const Segment &a, const Segment &b) const
+  {
+    return _image->pointAt(_row, findMax(a)).z() < _image->pointAt(_row, findMax(b)).z();
+  }
+private:
+
+  const int _row;
+  depth::DepthImage *const _image;
+};
+
+class SegmentCenterFunctor
+{
+public:
+  SegmentCenterFunctor(int row, depth::DepthImage *const image)
+    : _row(row)
+    , _image(image)
+  {
+    
+  }
+  
+  bool operator()(const Segment &a, const Segment &b) const
+  {
+    return _image->pointAt(_row, (a.start + a.end) >> 1).z()
+      < _image->pointAt(_row, (b.start + b.end) >> 1).z();
+  }
+private:
+
+  const int _row;
+  depth::DepthImage *const _image;
+};
 
 #define catchAllAndReturn(return_value) \
   catch(std::exception& e) { std::cerr << e.what() << std::endl; } \
@@ -193,19 +260,7 @@ int get_depth_world_point_z(int row, int column)
   return get_depth_world_point(row, column).z;
 }
 
-int findMin(const Segment &seg)
-{
-  if(scanRow < 0) return -1;
-  int min = -1;
-  int minVal = 0xFFFFFFF;
-  for(int i = seg.start; i < seg.end; ++i) {
-    if(_depth_image->depthAt(scanRow, i) < minVal) {
-      min = i;
-      minVal = _depth_image->depthAt(scanRow, i);
-    }
-  }
-  return min;
-}
+
 
 int depth_scanline_update(int row)
 {
@@ -219,9 +274,18 @@ int depth_scanline_update(int row)
     data[i] = get_depth_value(scanRow, i);
   }
   
+  using namespace std;
   ColinearSegmenter segmenter(5);
-  segments = coalesceSegments(segmenter.findSegments(data, get_depth_image_width()));
-  std::sort(segments.begin(), segments.end(), SegmentSizeFunctor(scanRow, _depth_image));
+  vector<Segment> pre = coalesceSegments(segmenter.findSegments(data, get_depth_image_width()));
+  segments.clear();
+  vector<Segment>::const_iterator it = pre.begin();
+  for(; it != pre.end(); ++it) {
+    if(data[(*it).start] == 0 || data[(*it).end] == 0) continue;
+    if((*it).end - (*it).start < 10) continue;
+    segments.push_back(*it);
+  }
+
+  std::sort(segments.begin(), segments.end(), SegmentNearestFunctor(scanRow, _depth_image));
   
   delete[] data;
   return 1;
@@ -234,7 +298,7 @@ int get_depth_scanline_object_count()
   return segments.size();
 }
 
-point3 get_depth_scanline_object_point(int object_num)
+point3 get_depth_scanline_object_center(int object_num)
 {
   if(!_depth_image) return create_point3(-1, -1, -1);
   if(scanRow < 0) {
@@ -245,22 +309,83 @@ point3 get_depth_scanline_object_point(int object_num)
     std::cerr << "object_num " << object_num << " is invalid!" << std::endl;
     return create_point3(-1, -1, -1);
   }
-  return get_depth_world_point(scanRow, findMin(segments[object_num]));
+  return get_depth_world_point(scanRow,
+    (segments[object_num].start + segments[object_num].end) >> 1);
 }
 
-int get_depth_scanline_object_x(int object_num)
+point3 get_depth_scanline_object_nearest(int object_num)
 {
-  return get_depth_scanline_object_point(object_num).x;
+  if(!_depth_image) return create_point3(-1, -1, -1);
+  if(scanRow < 0) {
+    std::cerr << "Must call depth_scanline_update first" << std::endl;
+    return create_point3(-1, -1, -1);
+  }
+  if(object_num < 0 || object_num >= segments.size()) {
+    std::cerr << "object_num " << object_num << " is invalid!" << std::endl;
+    return create_point3(-1, -1, -1);
+  }
+  return get_depth_world_point(scanRow,
+    findMin(segments[object_num]));
 }
 
-int get_depth_scanline_object_y(int object_num)
+point3 get_depth_scanline_object_farthest(int object_num)
 {
-  return get_depth_scanline_object_point(object_num).y;
+  if(!_depth_image) return create_point3(-1, -1, -1);
+  if(scanRow < 0) {
+    std::cerr << "Must call depth_scanline_update first" << std::endl;
+    return create_point3(-1, -1, -1);
+  }
+  if(object_num < 0 || object_num >= segments.size()) {
+    std::cerr << "object_num " << object_num << " is invalid!" << std::endl;
+    return create_point3(-1, -1, -1);
+  }
+  return get_depth_world_point(scanRow,
+    findMax(segments[object_num]));
 }
 
-int get_depth_scanline_object_z(int object_num)
+int get_depth_scanline_object_center_x(int object_num)
 {
-  return get_depth_scanline_object_point(object_num).z;
+  return get_depth_scanline_object_center(object_num).x;
+}
+
+int get_depth_scanline_object_center_y(int object_num)
+{
+  return get_depth_scanline_object_center(object_num).y;
+}
+
+int get_depth_scanline_object_center_z(int object_num)
+{
+  return get_depth_scanline_object_center(object_num).z;
+}
+
+int get_depth_scanline_object_nearest_x(int object_num)
+{
+  return get_depth_scanline_object_nearest(object_num).x;
+}
+
+int get_depth_scanline_object_nearest_y(int object_num)
+{
+  return get_depth_scanline_object_nearest(object_num).y;
+}
+
+int get_depth_scanline_object_nearest_z(int object_num)
+{
+  return get_depth_scanline_object_nearest(object_num).z;
+}
+
+int get_depth_scanline_object_farthest_x(int object_num)
+{
+  return get_depth_scanline_object_farthest(object_num).x;
+}
+
+int get_depth_scanline_object_farthest_y(int object_num)
+{
+  return get_depth_scanline_object_farthest(object_num).y;
+}
+
+int get_depth_scanline_object_farthest_z(int object_num)
+{
+  return get_depth_scanline_object_farthest(object_num).z;
 }
 
 int get_depth_scanline_object_size(int object_num)
@@ -277,7 +402,7 @@ int get_depth_scanline_object_size(int object_num)
   const point3 start = get_depth_world_point(scanRow, segments[object_num].start);
   const point3 end = get_depth_world_point(scanRow, segments[object_num].end);
   
-  return abs(end.x - start.x);
+  return sqrt(pow(end.x - start.x, 2) + pow(end.z - start.z, 2));
 }
 
 int get_depth_scanline_object_angle(int object_num)

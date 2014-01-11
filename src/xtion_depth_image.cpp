@@ -92,7 +92,7 @@ Point3<int32_t> XtionDepthImage::pointAt(const uint32_t row, const uint32_t colu
       + OpenNI::getExtendedError());
   }
   
-  return Point3<int32_t>(worldX, worldY, worldZ);
+  return Point3<int32_t>(worldX - 90, worldY, worldZ);
 }
 
 const void *XtionDepthImage::data() const
