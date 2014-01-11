@@ -30,6 +30,14 @@
 #include <exception>
 #include <stdlib.h>
 
+struct SegmentSizeFunctor
+{
+  bool operator()(const Segment &a, const Segment &b) const
+  {
+    return (a.end - a.start) < (b.end - b.start);
+  }
+};
+
 namespace depth
 {
   namespace Private
@@ -196,6 +204,7 @@ int depth_scanline_update(int row)
   
   ColinearSegmenter segmenter(5);
   segments = coalesceSegments(segmenter.findSegments(data, get_depth_image_width()));
+  std::sort(segments.begin(), segments.end(), SegmentSizeFunctor());
   
   delete[] data;
   return 1;
