@@ -28,6 +28,7 @@
 #include <iostream>
 #include <math.h>
 #include <exception>
+#include <algorithm>
 #include <stdlib.h>
 
 class SegmentSizeFunctor
