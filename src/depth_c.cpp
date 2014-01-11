@@ -30,12 +30,28 @@
 #include <exception>
 #include <stdlib.h>
 
-struct SegmentSizeFunctor
+class SegmentSizeFunctor
 {
+public:
+  SegmentSizeFunctor(int row, depth::DepthImage *const image)
+    : _row(row)
+    , _image(image)
+  {
+    
+  }
+  
   bool operator()(const Segment &a, const Segment &b) const
   {
-    return (a.end - a.start) < (b.end - b.start);
+    return _image->pointAt(_row, middle(a)).z() < _image->pointAt(_row, middle(b)).z();
   }
+private:
+  unsigned middle(const Segment &s) const
+  {
+    return (s.start + s.end) >> 1;
+  }
+  
+  const int _row;
+  depth::DepthImage *const _image;
 };
 
 namespace depth
@@ -204,7 +220,7 @@ int depth_scanline_update(int row)
   
   ColinearSegmenter segmenter(5);
   segments = coalesceSegments(segmenter.findSegments(data, get_depth_image_width()));
-  std::sort(segments.begin(), segments.end(), SegmentSizeFunctor());
+  std::sort(segments.begin(), segments.end(), SegmentSizeFunctor(scanRow, _depth_image));
   
   delete[] data;
   return 1;
