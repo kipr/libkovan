@@ -92,7 +92,8 @@ Point3<int32_t> XtionDepthImage::pointAt(const uint32_t row, const uint32_t colu
       + OpenNI::getExtendedError());
   }
   
-  return Point3<int32_t>(worldX - 90, worldY, worldZ);
+  // Center of Xtion offset is 44 mm
+  return Point3<int32_t>(worldX - 44, worldY, worldZ);
 }
 
 const void *XtionDepthImage::data() const
