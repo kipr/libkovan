@@ -227,7 +227,7 @@ int depth_scanline_update(int row)
   return 1;
 }
 
-int get_depth_scanline_count()
+int get_depth_scanline_object_count()
 {
   if(!_depth_image) return -1;
   if(scanRow < 0) return -1;

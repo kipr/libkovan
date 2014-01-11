@@ -31,7 +31,7 @@ Analog::~Analog()
 
 void Analog::setPullup(const unsigned char& port, const bool& pullup)
 {
-	if(port >= 8) return;
+	if(port >= 8 || pullup == Analog::pullup(port)) return;
 	Private::Kovan *kovan = Private::Kovan::instance();
 	unsigned short &pullups = kovan->currentState().t[AN_PULLUPS];
 	

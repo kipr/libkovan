@@ -31,12 +31,28 @@ extern "C" {
  * Gets the 10-bit analog value of a port.
  * \param[in] port A value between 0 and 7 specifying the sensor to read from.
  * \return The latest 10-bit value of the port (a value in the range 0 to 1023).
- * \see analog
+ * \see analog10
  * \ingroup sensor
  */
 EXPORT_SYM int analog(int port);
 
+/*!
+ * Gets the 10-bit analog value of a port.
+ * \param[in] port A value between 0 and 7 specifying the sensor to read from.
+ * \return The latest 10-bit value of the port (a value in the range 0 to 1023).
+ * \see analog
+ * \ingroup sensor
+ */
 EXPORT_SYM int analog10(int port);
+
+/*!
+ * Gets the 10-bit analog value of an ET sensor on the given port.
+ * \param[in] port A value between 0 and 7 specifying the ET sensor to read from.
+ * \return The latest 10-bit value of the port (a value in the range 0 to 1023).
+ * \see analog
+ * \ingroup sensor
+ */
+EXPORT_SYM int analog_et(int port);
 
 /*!
  * Gets the 8-bit analog value of a port.
@@ -47,8 +63,8 @@ EXPORT_SYM int analog10(int port);
  */
 EXPORT_SYM int analog8(int port);
 
-EXPORT_SYM void set_analog_pullup(int port, int pullup);
-EXPORT_SYM int get_analog_pullup(int port);
+void set_analog_pullup(int port, int pullup);
+int get_analog_pullup(int port);
 
 #ifdef __cplusplus
 }
