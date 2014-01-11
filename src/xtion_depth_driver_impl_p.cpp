@@ -7,7 +7,17 @@ using namespace openni;
 XtionDepthDriverImpl::XtionDepthDriverImpl()
   : _lastCaptured(0, 0, 0, 0, 0, 0)
 {
-  const Status rc = OpenNI::initialize();
+}
+
+XtionDepthDriverImpl::~XtionDepthDriverImpl()
+{
+}
+
+void XtionDepthDriverImpl::open()
+{
+  if(_device.isValid()) return;
+  
+  Status rc = OpenNI::initialize();
   if(rc != STATUS_OK) {
     throw Exception(std::string("Initialize failed with ")
       + OpenNI::getExtendedError());
@@ -15,21 +25,8 @@ XtionDepthDriverImpl::XtionDepthDriverImpl()
   OpenNI::addDeviceConnectedListener(this);
   OpenNI::addDeviceDisconnectedListener(this);
   OpenNI::addDeviceStateChangedListener(this);
-}
 
-XtionDepthDriverImpl::~XtionDepthDriverImpl()
-{
-  OpenNI::removeDeviceConnectedListener(this);
-  OpenNI::removeDeviceDisconnectedListener(this);
-  OpenNI::removeDeviceStateChangedListener(this);
-  OpenNI::shutdown();
-}
-
-void XtionDepthDriverImpl::open()
-{
-  if(_device.isValid()) return;
-
-  Status rc = _device.open(ANY_DEVICE);
+  rc = _device.open(ANY_DEVICE);
   if(rc != STATUS_OK) {
     throw Exception(std::string("Open the device failed with\n")
       + OpenNI::getExtendedError());
@@ -93,6 +90,11 @@ void XtionDepthDriverImpl::close()
   _stream.destroy();
 
   _device.close();
+  
+  OpenNI::removeDeviceConnectedListener(this);
+  OpenNI::removeDeviceDisconnectedListener(this);
+  OpenNI::removeDeviceStateChangedListener(this);
+  OpenNI::shutdown();
 }
 
 DepthResolution XtionDepthDriverImpl::depthCameraResolution() const
