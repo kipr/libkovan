@@ -228,6 +228,8 @@ int depth_scanline_update(int row)
 
 int get_depth_scanline_count()
 {
+  if(!_depth_image) return -1;
+  if(scanRow < 0) return -1;
   return segments.size();
 }
 
