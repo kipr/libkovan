@@ -40,6 +40,7 @@ namespace depth
     static uint16_t _orientation = 0;
     static int scanRow = -1;
     static std::vector<Segment> segments;
+    static SortMethod sortMethod;
   }
 }
 
@@ -285,7 +286,13 @@ int depth_scanline_update(int row)
     segments.push_back(*it);
   }
 
-  std::sort(segments.begin(), segments.end(), SegmentNearestFunctor(scanRow, _depth_image));
+  if(sortMethod == SORT_NEAREST) {
+    std::sort(segments.begin(), segments.end(), SegmentNearestFunctor(scanRow, _depth_image));
+  } else if(sortMethod == SORT_CENTER) {
+    std::sort(segments.begin(), segments.end(), SegmentCenterFunctor(scanRow, _depth_image));
+  } else if(sortMethod == SORT_FARTHEST) {
+    std::sort(segments.begin(), segments.end(), SegmentFarthestFunctor(scanRow, _depth_image));
+  }
   
   delete[] data;
   return 1;
@@ -411,6 +418,7 @@ int get_depth_scanline_object_angle(int object_num)
     std::cerr << "Must call depth_scanline_update first" << std::endl;
     return -1;
   }
+  
   if(object_num < 0 || object_num >= segments.size()) {
     std::cerr << "object_num " << object_num << " is invalid!" << std::endl;
     return -1;
@@ -420,4 +428,14 @@ int get_depth_scanline_object_angle(int object_num)
   const point3 end = get_depth_world_point(scanRow, segments[object_num].end);
   
   return atan2(end.z - start.z, end.x - start.x) * 180.0 / M_PI;
+}
+
+int set_depth_scanline_sorting_method(SortMethod method)
+{
+  sortMethod = method;
+}
+
+SortMethod get_depth_scanline_sorting_method()
+{
+  return sortMethod;
 }

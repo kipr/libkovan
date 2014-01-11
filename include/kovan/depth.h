@@ -247,6 +247,16 @@ EXPORT_SYM int get_depth_scanline_object_size(int object_num);
 
 EXPORT_SYM int get_depth_scanline_object_angle(int object_num);
 
+typedef enum
+{
+  SORT_NEAREST = 0,
+  SORT_CENTER,
+  SORT_FARTHEST,
+} SortMethod;
+
+EXPORT_SYM int set_depth_scanline_sorting_method(SortMethod method);
+EXPORT_SYM SortMethod get_depth_scanline_sorting_method();
+
 #ifdef __cplusplus
 }
 #endif
