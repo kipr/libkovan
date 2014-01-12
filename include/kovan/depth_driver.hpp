@@ -33,7 +33,7 @@
 
 namespace depth
 {
-  class DepthDriver
+  class EXPORT_SYM DepthDriver
   {
   public:
     static DepthDriver &instance();

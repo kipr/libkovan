@@ -35,7 +35,7 @@ namespace depth
 {
   class XtionDepthDriverImpl;
   
-  class XtionDepthImage : public DepthImage
+  class EXPORT_SYM XtionDepthImage : public DepthImage
   {
   public:
     XtionDepthImage(const void *const data, const uint32_t size, const uint32_t width,

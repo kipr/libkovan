@@ -18,6 +18,7 @@
  *  If not, see <http://www.gnu.org/licenses/>.                           *
  **************************************************************************/
 
+#define NOMINMAX
 #include "kovan/xtion_depth_image.hpp"
 #include "xtion_depth_driver_impl_p.hpp"
 #include "kovan/depth_exception.hpp"

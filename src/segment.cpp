@@ -13,7 +13,7 @@ std::vector<Segment> coalesceSegments(const std::vector<Segment> &segments)
   std::vector<Segment>::iterator last = ret.begin();
   std::vector<Segment>::iterator it = last + 1;
   for(; it != ret.end(); ++it) {
-    const unsigned depth = abs((long)(*it).startValue - (*last).endValue);
+    const unsigned depth = abs((long)((*it).startValue - (*last).endValue));
     const int lastDiff = (int)(*last).startValue - (int)(*last).endValue;
     const int itDiff = (int)(*it).startValue - (int)(*it).endValue;
     if((*it).start - (*last).end <= 5 && depth < 10 && lastDiff > itDiff) {
