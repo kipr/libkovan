@@ -30,7 +30,6 @@ DepthDriver& DepthDriver::instance()
 }
 
 
-__attribute__((destructor))
 static void closeDepthDriver()
 {
   try {
