@@ -35,16 +35,34 @@
 extern "C" {
 #endif
 
+/**
+ * \ingroup servo
+ */
 EXPORT_SYM void enable_servo(int port);
 
+/**
+ * \ingroup servo
+ */
 EXPORT_SYM void disable_servo(int port);
 
+/**
+ * \ingroup servo
+ */
 EXPORT_SYM void enable_servos();
 
+/**
+ * \ingroup servo
+ */
 EXPORT_SYM void disable_servos();
 
+/**
+ * \ingroup servo
+ */
 EXPORT_SYM void set_servo_enabled(int port, int enabled);
 
+/**
+ * \ingroup servo
+ */
 EXPORT_SYM int get_servo_enabled(int port);
 
 

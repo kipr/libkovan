@@ -219,32 +219,128 @@ static const int INVALID_DEPTH = INT32_MAX;
 #endif
 
 
+/**
+ * Selects a row for further processing by get_depth_scanline functions.
+ *
+ * \return 1 on success, 0 otherwise
+ *
+ * \note the row/column index starts with 0
+ * \note Calls the depth_update() will invalidate the scanline selection.
+ *
+ * \ingroup depth
+ */
 EXPORT_SYM int depth_scanline_update(int row);
 
+/**
+ * Retrieve the number of objects detected on the selected scanline.
+ *
+ * \return The number of objects detected, or -1 on error
+ *
+ * \ingroup depth
+ */
 EXPORT_SYM int get_depth_scanline_object_count();
 
 EXPORT_SYM point3 get_depth_scanline_object_point(int object_num);
 
+/**
+ * Retrieve the given object's center x offset from the camera.
+ *
+ * \return The x offset from the center of the Xtion sensor, or -1 on error.
+ *
+ * \ingroup depth
+ */
 EXPORT_SYM int get_depth_scanline_object_center_x(int object_num);
 
+/**
+ * Retrieve the given object's center y offset from the camera.
+ *
+ * \return The object's center y offset from the center of the Xtion sensor, or -1 on error.
+ *
+ * \ingroup depth
+ */
 EXPORT_SYM int get_depth_scanline_object_center_y(int object_num);
 
+/**
+ * Retrieve the given object's center z offset from the camera.
+ *
+ * \return The object's center z offset from the center of the Xtion sensor, or -1 on error.
+ *
+ * \ingroup depth
+ */
 EXPORT_SYM int get_depth_scanline_object_center_z(int object_num);
 
+/**
+ * Retrieve the given object's nearest x offset from the camera.
+ *
+ * \return The object's nearest x offset from the center of the Xtion sensor, or -1 on error.
+ *
+ * \ingroup depth
+ */
 EXPORT_SYM int get_depth_scanline_object_nearest_x(int object_num);
 
+/**
+ * Retrieve the given object's nearest y offset from the camera.
+ *
+ * \return The object's nearest y offset from the center of the Xtion sensor, or -1 on error.
+ *
+ * \ingroup depth
+ */
 EXPORT_SYM int get_depth_scanline_object_nearest_y(int object_num);
 
+/**
+ * Retrieve the given object's nearest z offset from the camera.
+ *
+ * \return The object's nearest z offset from the center of the Xtion sensor, or -1 on error.
+ *
+ * \ingroup depth
+ */
 EXPORT_SYM int get_depth_scanline_object_nearest_z(int object_num);
 
+/**
+ * Retrieve the given object's farthest x offset from the camera.
+ *
+ * \return The object's farthest x offset from the center of the Xtion sensor, or -1 on error.
+ *
+ * \ingroup depth
+ */
 EXPORT_SYM int get_depth_scanline_object_farthest_x(int object_num);
 
+/**
+ * Retrieve the given object's farthest y offset from the camera.
+ *
+ * \return The object's farthest y offset from the center of the Xtion sensor, or -1 on error.
+ *
+ * \ingroup depth
+ */
 EXPORT_SYM int get_depth_scanline_object_farthest_y(int object_num);
 
+/**
+ * Retrieve the given object's farthest z offset from the camera.
+ *
+ * \return The object's farthest z offset from the center of the Xtion sensor, or -1 on error.
+ *
+ * \ingroup depth
+ */
 EXPORT_SYM int get_depth_scanline_object_farthest_z(int object_num);
 
+/**
+ * Retrieve the given object's size in mm.
+ *
+ * \return The object's size in mm, or -1 on error.
+ *
+ * \ingroup depth
+ */
 EXPORT_SYM int get_depth_scanline_object_size(int object_num);
 
+/**
+ * Retrieve the given object's angle in degrees.
+ *
+ * \return The object's angle from the camera, or -1 on error.
+ *
+ * \note An object angle of 0 degrees is parallel to the camera.
+ *
+ * \ingroup depth
+ */
 EXPORT_SYM int get_depth_scanline_object_angle(int object_num);
 
 typedef enum SortMethod_
