@@ -33,7 +33,7 @@
 
 namespace depth
 {
-  class DepthImage
+  class EXPORT_SYM DepthImage
   {
   public:
     virtual ~DepthImage();

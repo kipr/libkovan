@@ -35,7 +35,7 @@ namespace depth
 {
   class XtionDepthDriverImpl;
   
-  class XtionDepthDriver : public DepthDriver
+  class EXPORT_SYM XtionDepthDriver : public DepthDriver
   {
   public:
     static XtionDepthDriver &instance();
