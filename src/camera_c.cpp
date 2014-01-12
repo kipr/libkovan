@@ -8,7 +8,12 @@
 
 using namespace Private;
 
-int camera_open(enum Resolution res)
+int camera_open()
+{
+  return camera_open_at_res(LOW_RES);
+}
+
+int camera_open_at_res(enum Resolution res)
 {
 	DeviceSingleton::setInputProvider(new Camera::UsbInputProvider);
 	bool ret = DeviceSingleton::instance()->open();
