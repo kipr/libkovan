@@ -6,15 +6,31 @@ libkovan is a user library that can read sensor values, move motors, and draw gr
 Requirements
 ============
 
-* CMake 2.6.0 or higher
+* CMake 2.8.0 or higher
+* OpenCV 2.4.8
+* OpenNI2
+* ZBar
+* libav
 * i2c_wrapper
+* doxygen (optional, for documentation)
+
+Building (OS X and Linux)
+=========================
+
+  cd libkovan
+  mkdir build
+  cd build
+  cmake ..
+  make
+  make install
 
 Authors
 =======
 
 * Braden McDorman
+* Nafis Zaman
 
 License
 =======
 
-This project is released under the terms of the GPLv3. For more information, read the LICENSE file included in the project.
+libkovan is released under the terms of the GPLv3 license. For more information, see the LICENSE file in the root of this project.
