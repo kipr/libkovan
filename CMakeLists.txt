@@ -50,10 +50,10 @@ else()
 endif()
 
 include_directories(${OpenNI2_INSTALL_DIR}/Include)
-if(APPLE)
-  link_directories(${OpenNI2_INSTALL_DIR}/Bin/x64-Release)
-elseif(WIN32)
+if(WIN32)
   link_directories(${OpenNI2_INSTALL_DIR}/Lib)
+else()
+  link_directories(${OpenNI2_INSTALL_DIR}/Bin/x64-Release)
 endif()
 
 if(APPLE)
