@@ -17,12 +17,12 @@ Requirements
 Building (OS X and Linux)
 =========================
 
-  cd libkovan
-  mkdir build
-  cd build
-  cmake ..
-  make
-  make install
+    cd libkovan
+    mkdir build
+    cd build
+    cmake ..
+    make
+    make install
 
 Authors
 =======
