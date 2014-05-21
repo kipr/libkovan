@@ -72,14 +72,14 @@ endif()
 ################################
 
 include_directories(${OPENNI2_INCLUDE})
-link_directories(${OPENNI2_LIB_DIR})
+link_directories(${OPENNI2_LIB})
 if(WIN32)
   include_directories(${CMAKE_SOURCE_DIR}/../prefix/include)
-  include_directories(${OPENCV_INCLUDE_DIR})
+  include_directories(${OPENCV_INCLUDE})
   include_directories(${ZBAR_DIR}/include)
 
   link_directories(${CMAKE_SOURCE_DIR}/../prefix/lib)
-  link_directories(${OPENCV_LIB_DIR})
+  link_directories(${OPENCV_LIB})
   link_directories(${ZBAR_DIR}/lib)  
 endif()
 
