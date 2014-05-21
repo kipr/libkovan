@@ -109,6 +109,7 @@ if(BUILD_DOCUMENTATION)
   if(NOT DOXYGEN_FOUND)
     message(FATAL_ERROR "Doxygen is needed to build the documentation. Please install it correctly")
   endif()
+  file(MAKE_DIRECTORY doc)
   set(DOXYGEN_DIR ${PROJECT_SOURCE_DIR}/doxygen)
   add_custom_target (Docs++ ALL 
     COMMAND ${DOXYGEN_EXECUTABLE} ${DOXYGEN_DIR}/Doxyfile++ SOURCES ${DOXYGEN_DIR}/Doxyfile++
