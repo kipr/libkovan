@@ -33,43 +33,54 @@ endif()
 #   Resolve external library directories   #
 ############################################
 
-if(DEFINED ENV{OPENNI2_DIR})
-  set(OPENNI2_INSTALL_DIR $ENV{OPENNI2_DIR})
+if(DEFINED ENV{OPENNI2_INCLUDE_DIR})
+  set(OPENNI2_INCLUDE $ENV{OPENNI2_INCLUDE_DIR})
 elseif(WIN32)
-  set(OPENNI2_INSTALL_DIR "C:/Program Files (x86)/OpenNI2")
+  set(OPENNI2_INCLUDE "C:/Program Files (x86)/OpenNI2/Include")
 else()
-  set(OPENNI2_INSTALL_DIR "${CMAKE_SOURCE_DIR}/../OpenNI2")
+  set(OPENNI2_INCLUDE "${CMAKE_SOURCE_DIR}/../OpenNI2/Include")
 endif()
-message(STATUS “OPENNI2_INSTALL_DIR: “ ${OPENNI2_INSTALL_DIR})
 
-if(DEFINED ENV{OPENCV_DIR})
-  set(OPENCV_INSTALL_DIR $ENV{OPENCV_DIR})
+if(DEFINED ENV{OPENNI2_LIB_DIR})
+  set(OPENNI2_LIB $ENV{OPENNI2_LIB_DIR})
 elseif(WIN32)
-  set(OPENCV_INSTALL_DIR ${CMAKE_SOURCE_DIR}/../opencv/build/install)
+  set(OPENNI2_LIB "C:/Program Files (x86)/OpenNI2/Lib")
+else()
+  set(OPENNI2_LIB "${CMAKE_SOURCE_DIR}/../OpenNI2/Bin/x64-Release")
+endif()
+
+if(DEFINED ENV{OPENCV_INCLUDE_DIR})
+  set(OPENCV_INCLUDE $ENV{OPENCV_INCLUDE_DIR})
+elseif(WIN32)
+  set(OPENCV_INCLUDE ${CMAKE_SOURCE_DIR}/../opencv/build/install/include)
+endif()
+
+if(DEFINED ENV{OPENCV_LIB_DIR})
+  set(OPENCV_LIB $ENV{OPENCV_LIB_DIR})
+elseif(WIN32)
+  set(OPENCV_LIB ${CMAKE_SOURCE_DIR}/../opencv/build/install/x86/vc11/lib)
 endif()
 
 if(DEFINED ENV{ZBAR_DIR})
-  set(ZBAR_INSTALL_DIR $ENV{ZBAR_DIR})
+  set(ZBAR_DIR $ENV{ZBAR_DIR})
 elseif(WIN32)
-  set(ZBAR_INSTALL_DIR "C:/Program Files (x86)/ZBar")
+  set(ZBAR_DIR "C:/Program Files (x86)/ZBar")
 endif()
 
 ################################
 #   Include/link directories   #
 ################################
 
-include_directories(${OPENNI2_INSTALL_DIR}/Include)
+include_directories(${OPENNI2_INCLUDE})
+link_directories(${OPENNI2_LIB_DIR})
 if(WIN32)
   include_directories(${CMAKE_SOURCE_DIR}/../prefix/include)
-  include_directories(${OPENCV_INSTALL_DIR}/include)
-  include_directories(${ZBAR_INSTALL_DIR}/include)
+  include_directories(${OPENCV_INCLUDE_DIR})
+  include_directories(${ZBAR_DIR}/include)
 
   link_directories(${CMAKE_SOURCE_DIR}/../prefix/lib)
-  link_directories(${OPENCV_INSTALL_DIR}/x86/vc11/lib)
-  link_directories(${ZBAR_INSTALL_DIR}/lib)  
-  link_directories(${OPENNI2_INSTALL_DIR}/Lib)
-else()
-  link_directories(${OPENNI2_INSTALL_DIR}/Bin/x64-Release)
+  link_directories(${OPENCV_LIB_DIR})
+  link_directories(${ZBAR_DIR}/lib)  
 endif()
 
 if(APPLE)
