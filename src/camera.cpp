@@ -364,14 +364,14 @@ bool Camera::Device::close()
 
 bool Camera::Device::update()
 {
+	// No need to update channels if there are none.
+	if(m_channels.empty()) return true;
+	
 	// Get new image
 	if(!m_inputProvider->next(m_image)) {
 		m_image = cv::Mat();
 		return false;
 	}
-	
-	// No need to update channels if there are none.
-	if(m_channels.empty()) return true;
 	
 	// Dirty all channel impls
 	m_channelImplManager->setImage(m_image);
