@@ -240,8 +240,6 @@ EXPORT_SYM int depth_scanline_update(int row);
  */
 EXPORT_SYM int get_depth_scanline_object_count();
 
-EXPORT_SYM point3 get_depth_scanline_object_point(int object_num);
-
 /**
  * Retrieve the given object's center x offset from the camera.
  *

@@ -9,6 +9,7 @@ cmake_minimum_required(VERSION 2.8.0)
 set(INCLUDE ${libkovan_SOURCE_DIR}/include)
 set(SRC ${libkovan_SOURCE_DIR}/src)
 set(PIXELTOASTER ${SRC}/pixeltoaster)
+set(BINDINGS ${CMAKE_SOURCE_DIR}/bindings)
 
 include_directories(${INCLUDE})
 
@@ -68,7 +69,38 @@ endif()
 
 # add_definitions(-O3)
 
-add_library(kovan SHARED ${SOURCES} ${OBJC_SOURCES} ${INCLUDES})
+option(build_python "Build python bindings" ON)
+
+if(build_python)
+  find_package(SWIG REQUIRED)
+  find_package(PythonLibs REQUIRED)
+  list(APPEND BINDINGS_SOURCES ${CMAKE_BINARY_DIR}/kovan_wrap_py.cxx)
+  list(APPEND BINDINGS_LIBRARIES ${PYTHON_LIBRARY})
+  include_directories(${PYTHON_INCLUDE_DIR})
+  add_custom_command(COMMAND ${SWIG_EXECUTABLE} -Wall -python -c++ -I${INCLUDE} -outdir ${LIBRARY_OUTPUT_PATH} -o ${CMAKE_BINARY_DIR}/kovan_wrap_py.cxx ${BINDINGS}/kovan.i
+    DEPENDS ${BINDINGS}/kovan.i
+    OUTPUT ${CMAKE_BINARY_DIR}/kovan_wrap_py.cxx)
+endif()
+
+option(build_java "Build java bindings" ON)
+
+if(build_java)
+  find_package(SWIG REQUIRED)
+  find_package(JNI REQUIRED)
+  file(GLOB JAVA_SWIG_SOURCES ${BINDINGS}/java/*.i)
+  list(APPEND BINDINGS_SOURCES ${CMAKE_BINARY_DIR}/kovan_wrap_java.cxx)
+  list(APPEND BINDINGS_LIBRARIES ${JNI_LIBRARIES})
+  include_directories(${JAVA_INCLUDE_PATH} ${JAVA_INCLUDE_PATH2} ${BINDINGS})
+  set(JAVA_OUT_PATH ${LIBRARY_OUTPUT_PATH}/java/org/kipr/kovan)
+  file(REMOVE_RECURSE ${JAVA_OUT_PATH})
+  file(MAKE_DIRECTORY ${JAVA_OUT_PATH})
+  add_custom_command(COMMAND ${SWIG_EXECUTABLE} -Wall -java -package org.kipr.kovan -c++ -I${INCLUDE} -outdir ${JAVA_OUT_PATH} -o ${CMAKE_BINARY_DIR}/kovan_wrap_java.cxx ${BINDINGS}/kovan.i
+    DEPENDS ${BINDINGS}/kovan.i ${JAVA_SWIG_SOURCES}
+    OUTPUT ${CMAKE_BINARY_DIR}/kovan_wrap_java.cxx)
+endif()
+
+add_library(kovan SHARED ${SOURCES} ${OBJC_SOURCES} ${INCLUDES} ${BINDINGS_SOURCES})
+
 if(WIN32)
 	# TODO: Make sure these are current
 	target_link_libraries(kovan opencv_core300 opencv_highgui300 opencv_imgproc300 libzbar-0 OpenNI2)
@@ -76,6 +108,8 @@ if(WIN32)
 else()
   target_link_libraries(kovan pthread opencv_core opencv_highgui opencv_imgproc zbar avcodec avformat avutil z swscale bz2 OpenNI2)
 endif()
+
+target_link_libraries(kovan ${BINDINGS_LIBRARIES})
 
 if(APPLE)
 # set(CMAKE_OSX_SYSROOT "${OSX_DEVELOPER_ROOT}/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.7.sdk")
@@ -120,7 +154,9 @@ if(BUILD_DOCUMENTATION)
     COMMAND ${CMAKE_COMMAND} -E copy ${DOXYGEN_DIR}/metadata.ini ${PROJECT_SOURCE_DIR}/doc)
 endif()
 
-add_executable(test_depth ${CMAKE_SOURCE_DIR}/test.cpp)
-target_link_libraries(test_depth kovan)
+if(build_tests)
+  add_executable(test_depth ${CMAKE_SOURCE_DIR}/test.cpp)
+  target_link_libraries(test_depth kovan)
+endif()
 
 

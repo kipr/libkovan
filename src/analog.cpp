@@ -32,6 +32,11 @@ unsigned short Analog::value() const
 	return Private::Analog::instance()->value(m_port);
 }
 
+unsigned char Analog::port() const
+{
+	return m_port;
+}
+
 void Analog::setPullup(bool pullup)
 {
 	return Private::Analog::instance()->setPullup(m_port, pullup);
@@ -48,3 +53,4 @@ unsigned short Analog8::value() const
 {
 	return Analog::value() >> 2;
 }
+

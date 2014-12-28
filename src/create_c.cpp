@@ -55,6 +55,11 @@ void create_full()
 	Create::instance()->setFullMode();
 }
 
+void create_start()
+{
+  THIS_IS_NYI
+}
+
 void create_spot()
 {
   THIS_IS_NYI

@@ -55,7 +55,7 @@ public:
 	void moveRelativePosition(const short& speed, const int& deltaPos);
 	
 	void setPidGains(const short& p, const short& i, const short& d, const short& pd, const short& id, const short& dd);
-	void pidGains(short& p, short& i, short& d, short& pd, short& id, short& dd);
+	void pidGains(short& p, short& i, short& d, short& pd, short& id, short& dd) const;
 	
 	void freeze();
 	

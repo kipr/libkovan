@@ -61,7 +61,7 @@ void Motor::setPidGains(const short& p, const short& i, const short& d, const sh
 	Private::Motor::instance()->setPidGains(m_port, p, i, d, pd, id, dd);
 }
 
-void Motor::pidGains(short& p, short& i, short& d, short& pd, short& id, short& dd)
+void Motor::pidGains(short& p, short& i, short& d, short& pd, short& id, short& dd) const
 {
 	Private::Motor::instance()->pidGains(m_port,p, i, d, pd, id, dd);
 }

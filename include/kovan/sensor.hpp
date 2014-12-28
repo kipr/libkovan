@@ -39,7 +39,11 @@
  * \ingroup sensor
  */
 template<typename T>
+#ifdef SWIG
+class Sensor
+#else
 class EXPORT_SYM Sensor
+#endif
 {
 public:
 	virtual ~Sensor() {}

@@ -182,7 +182,7 @@ int set_depth_resolution(DepthResolution resolution)
   catchAllAndReturn(0);
 }
 
-int set_depth_orientation(uint16_t orientation)
+int set_depth_orientation(int orientation)
 {
   try {
     _orientation = orientation;
