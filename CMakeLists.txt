@@ -23,38 +23,65 @@ set(LIBRARY_OUTPUT_PATH ${CMAKE_SOURCE_DIR}/lib)
 #############################
 #   PixelToaster settings   #
 #############################
+
 if(APPLE)
 	file(GLOB OBJC_SOURCES ${PIXELTOASTER}/*.mm)
 elseif(WIN32)
 	add_definitions(-fno-check-new)
 endif()
 
-##################################
-# Windows kiss-platform nonsense #
-##################################
-if(WIN32)
-  set(OPENCV_INSTALL_DIR ${CMAKE_SOURCE_DIR}/../opencv/build/install)
-  set(ZBAR_INSTALL_DIR "C:/Program Files (x86)/ZBar")
-  set(OpenNI2_INSTALL_DIR "C:/Program Files (x86)/OpenNI2")
+############################################
+#   Resolve external library directories   #
+############################################
 
-  include_directories(${CMAKE_SOURCE_DIR}/../prefix/include)
-  include_directories(${OPENCV_INSTALL_DIR}/include)
-  include_directories(${ZBAR_INSTALL_DIR}/include)
-  include_directories(${OpenNI2_INSTALL_DIR}/Include)
-  link_directories(${CMAKE_SOURCE_DIR}/../prefix/lib)
-  link_directories(${OPENCV_INSTALL_DIR}/x86/vc11/lib)
-  link_directories(${ZBAR_INSTALL_DIR}/lib)
-  
+if(DEFINED ENV{OPENNI2_INCLUDE_DIR})
+  set(OPENNI2_INCLUDE $ENV{OPENNI2_INCLUDE_DIR})
+elseif(WIN32)
+  set(OPENNI2_INCLUDE "C:/Program Files (x86)/OpenNI2/Include")
 else()
-  set(OpenNI2_INSTALL_DIR "${CMAKE_SOURCE_DIR}/../OpenNI2")
-  
+  set(OPENNI2_INCLUDE "${CMAKE_SOURCE_DIR}/../OpenNI2/Include")
 endif()
 
-include_directories(${OpenNI2_INSTALL_DIR}/Include)
-if(APPLE)
-  link_directories(${OpenNI2_INSTALL_DIR}/Bin/x64-Release)
+if(DEFINED ENV{OPENNI2_LIB_DIR})
+  set(OPENNI2_LIB $ENV{OPENNI2_LIB_DIR})
 elseif(WIN32)
-  link_directories(${OpenNI2_INSTALL_DIR}/Lib)
+  set(OPENNI2_LIB "C:/Program Files (x86)/OpenNI2/Lib")
+else()
+  set(OPENNI2_LIB "${CMAKE_SOURCE_DIR}/../OpenNI2/Bin/x64-Release")
+endif()
+
+if(DEFINED ENV{OPENCV_INCLUDE_DIR})
+  set(OPENCV_INCLUDE $ENV{OPENCV_INCLUDE_DIR})
+elseif(WIN32)
+  set(OPENCV_INCLUDE ${CMAKE_SOURCE_DIR}/../opencv/build/install/include)
+endif()
+
+if(DEFINED ENV{OPENCV_LIB_DIR})
+  set(OPENCV_LIB $ENV{OPENCV_LIB_DIR})
+elseif(WIN32)
+  set(OPENCV_LIB ${CMAKE_SOURCE_DIR}/../opencv/build/install/x86/vc11/lib)
+endif()
+
+if(DEFINED ENV{ZBAR_DIR})
+  set(ZBAR_DIR $ENV{ZBAR_DIR})
+elseif(WIN32)
+  set(ZBAR_DIR "C:/Program Files (x86)/ZBar")
+endif()
+
+################################
+#   Include/link directories   #
+################################
+
+include_directories(${OPENNI2_INCLUDE})
+link_directories(${OPENNI2_LIB})
+if(WIN32)
+  include_directories(${CMAKE_SOURCE_DIR}/../prefix/include)
+  include_directories(${OPENCV_INCLUDE})
+  include_directories(${ZBAR_DIR}/include)
+
+  link_directories(${CMAKE_SOURCE_DIR}/../prefix/lib)
+  link_directories(${OPENCV_LIB})
+  link_directories(${ZBAR_DIR}/lib)  
 endif()
 
 if(APPLE)
@@ -62,7 +89,7 @@ if(APPLE)
   include_directories(/usr/local/include)
   link_directories(/usr/local/lib)
 elseif(WIN32)
-	set(SOURCES ${SOURCES} ${CMAKE_SOURCE_DIR}/compat/mingw.cpp)
+  set(SOURCES ${SOURCES} ${CMAKE_SOURCE_DIR}/compat/mingw.cpp)
 elseif(UNIX)
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fPIC")
 endif()
@@ -102,9 +129,9 @@ endif()
 add_library(kovan SHARED ${SOURCES} ${OBJC_SOURCES} ${INCLUDES} ${BINDINGS_SOURCES})
 
 if(WIN32)
-	# TODO: Make sure these are current
-	target_link_libraries(kovan opencv_core300 opencv_highgui300 opencv_imgproc300 libzbar-0 OpenNI2)
-	target_link_libraries(kovan d3d9)
+  # TODO: Make sure these are current
+  target_link_libraries(kovan opencv_core300 opencv_highgui300 opencv_imgproc300 libzbar-0 OpenNI2)
+  target_link_libraries(kovan d3d9)
 else()
   target_link_libraries(kovan pthread opencv_core opencv_highgui opencv_imgproc zbar avcodec avformat avutil z swscale bz2 OpenNI2)
 endif()
@@ -127,22 +154,27 @@ endif()
 # add_definitions(-DARDRONE_DEBUG)
 
 if(WIN32)
-target_link_libraries(kovan ws2_32)
-install(FILES ${INCLUDES} DESTINATION ${CMAKE_SOURCE_DIR}/../prefix/include/kovan)
-install(TARGETS kovan
-  ARCHIVE DESTINATION ${CMAKE_SOURCE_DIR}/../prefix/lib
-  RUNTIME DESTINATION ${CMAKE_SOURCE_DIR}/../prefix/lib)
+  target_link_libraries(kovan ws2_32)
+  install(FILES ${INCLUDES} DESTINATION ${CMAKE_SOURCE_DIR}/../prefix/include/kovan)
+  install(TARGETS kovan
+          ARCHIVE DESTINATION ${CMAKE_SOURCE_DIR}/../prefix/lib
+          RUNTIME DESTINATION ${CMAKE_SOURCE_DIR}/../prefix/lib)
 else()
-install(FILES ${INCLUDES} DESTINATION include/kovan)
-install(TARGETS kovan LIBRARY DESTINATION lib)
+  install(FILES ${INCLUDES} DESTINATION include/kovan)
+  install(TARGETS kovan LIBRARY DESTINATION lib)
 endif()
 
-option(BUILD_DOCUMENTATION "Use Doxygen to create the HTML based API documentation" OFF)
+########################################
+#   Doxygen documentation (optional)   #
+########################################
+
+option(BUILD_DOCUMENTATION "Use Doxygen to create the HTML based API documentation" ON)
 if(BUILD_DOCUMENTATION)
   FIND_PACKAGE(Doxygen)
   if(NOT DOXYGEN_FOUND)
     message(FATAL_ERROR "Doxygen is needed to build the documentation. Please install it correctly")
   endif()
+  file(MAKE_DIRECTORY doc)
   set(DOXYGEN_DIR ${PROJECT_SOURCE_DIR}/doxygen)
   add_custom_target (Docs++ ALL 
     COMMAND ${DOXYGEN_EXECUTABLE} ${DOXYGEN_DIR}/Doxyfile++ SOURCES ${DOXYGEN_DIR}/Doxyfile++
@@ -154,9 +186,18 @@ if(BUILD_DOCUMENTATION)
     COMMAND ${CMAKE_COMMAND} -E copy ${DOXYGEN_DIR}/metadata.ini ${PROJECT_SOURCE_DIR}/doc)
 endif()
 
+<<<<<<< HEAD
 if(build_tests)
   add_executable(test_depth ${CMAKE_SOURCE_DIR}/test.cpp)
   target_link_libraries(test_depth kovan)
 endif()
+=======
+##################
+#   Depth test   #
+##################
+
+add_executable(test_depth ${CMAKE_SOURCE_DIR}/test.cpp)
+target_link_libraries(test_depth kovan)
+>>>>>>> 37b8388210141295c8d17f7894ab08c7faa01618
 
 
