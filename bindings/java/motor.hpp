@@ -1,8 +1,8 @@
 struct PidGains
 {
-  short pn;
-  short in;
-  short dn;
+  short p;
+  short i;
+  short d;
   short pd;
   short id;
   short dd;

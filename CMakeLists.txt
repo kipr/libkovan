@@ -186,18 +186,7 @@ if(BUILD_DOCUMENTATION)
     COMMAND ${CMAKE_COMMAND} -E copy ${DOXYGEN_DIR}/metadata.ini ${PROJECT_SOURCE_DIR}/doc)
 endif()
 
-<<<<<<< HEAD
 if(build_tests)
   add_executable(test_depth ${CMAKE_SOURCE_DIR}/test.cpp)
   target_link_libraries(test_depth kovan)
 endif()
-=======
-##################
-#   Depth test   #
-##################
-
-add_executable(test_depth ${CMAKE_SOURCE_DIR}/test.cpp)
-target_link_libraries(test_depth kovan)
->>>>>>> 37b8388210141295c8d17f7894ab08c7faa01618
-
-
