@@ -271,7 +271,7 @@ bool UsbInputProvider::isOpen() const
 
 void UsbInputProvider::setWidth(const unsigned width)
 {
-#if 1
+#if CV_VERSION_EPOCH >= 3
   m_capture->set(cv::CAP_PROP_FRAME_WIDTH, width);
 #else
   m_capture->set(CV_CAP_PROP_FRAME_WIDTH, width);
@@ -280,7 +280,7 @@ void UsbInputProvider::setWidth(const unsigned width)
 
 void UsbInputProvider::setHeight(const unsigned height)
 {
-#if 1
+#if CV_VERSION_EPOCH >= 3
   m_capture->set(cv::CAP_PROP_FRAME_HEIGHT, height);
 #else
   m_capture->set(CV_CAP_PROP_FRAME_HEIGHT, height);
