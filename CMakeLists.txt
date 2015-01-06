@@ -68,6 +68,10 @@ elseif(WIN32)
   set(ZBAR_DIR "C:/Program Files (x86)/ZBar")
 endif()
 
+if(WIN32 AND CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
+set(CMAKE_INSTALL_PREFIX ${CMAKE_SOURCE_DIR}/../prefix)
+endif()
+
 ################################
 #   Include/link directories   #
 ################################
@@ -75,11 +79,11 @@ endif()
 include_directories(${OPENNI2_INCLUDE})
 link_directories(${OPENNI2_LIB})
 if(WIN32)
-  include_directories(${CMAKE_SOURCE_DIR}/../prefix/include)
+  include_directories(${CMAKE_INSTALL_PREFIX}/include)
   include_directories(${OPENCV_INCLUDE})
   include_directories(${ZBAR_DIR}/include)
 
-  link_directories(${CMAKE_SOURCE_DIR}/../prefix/lib)
+  link_directories(${CMAKE_INSTALL_PREFIX}/lib)
   link_directories(${OPENCV_LIB})
   link_directories(${ZBAR_DIR}/lib)  
 endif()
@@ -130,7 +134,7 @@ add_library(kovan SHARED ${SOURCES} ${OBJC_SOURCES} ${INCLUDES} ${BINDINGS_SOURC
 
 if(WIN32)
   # TODO: Make sure these are current
-  target_link_libraries(kovan opencv_core300 opencv_highgui300 opencv_imgproc300 libzbar-0 OpenNI2)
+  target_link_libraries(kovan opencv_core2410 opencv_highgui2410 opencv_imgproc2410 libzbar-0 OpenNI2)
   target_link_libraries(kovan d3d9)
 else()
   target_link_libraries(kovan pthread opencv_core opencv_highgui opencv_imgproc zbar avcodec avformat avutil z swscale bz2 OpenNI2)
@@ -155,14 +159,10 @@ endif()
 
 if(WIN32)
   target_link_libraries(kovan ws2_32)
-  install(FILES ${INCLUDES} DESTINATION ${CMAKE_SOURCE_DIR}/../prefix/include/kovan)
-  install(TARGETS kovan
-          ARCHIVE DESTINATION ${CMAKE_SOURCE_DIR}/../prefix/lib
-          RUNTIME DESTINATION ${CMAKE_SOURCE_DIR}/../prefix/lib)
-else()
-  install(FILES ${INCLUDES} DESTINATION include/kovan)
-  install(TARGETS kovan LIBRARY DESTINATION lib)
 endif()
+
+install(FILES ${INCLUDES} DESTINATION include/kovan)
+install(TARGETS kovan DESTINATION lib)
 
 ########################################
 #   Doxygen documentation (optional)   #
