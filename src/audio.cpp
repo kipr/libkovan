@@ -1,8 +1,8 @@
-#include "kovan/audio.h"
+VH #include "kovan/audio.h"
 
 #include <cstdio>
 
-void beep(void)
+VI void beep()
 {
-	printf("\a");
+  printf("\a");
 }

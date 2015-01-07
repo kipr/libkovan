@@ -2,8 +2,8 @@
 #define _XTION_DEPTH_DRIVER_IMPL_P_HPP_
 
 #include <OpenNI.h>
-#include <kovan/depth_resolution.h>
-#include <kovan/xtion_depth_image.hpp>
+#include "kovan/depth_resolution.h"
+#include "kovan/xtion_depth_image.hpp"
 
 namespace depth
 {

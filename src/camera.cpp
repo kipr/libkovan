@@ -1,5 +1,5 @@
-#include "kovan/camera.hpp"
-#include "kovan/ardrone.hpp"
+VH #include "kovan/camera.hpp"
+VH #include "kovan/ardrone.hpp"
 #include "channel_p.hpp"
 #include "camera_c_p.hpp"
 #include "warn.hpp"

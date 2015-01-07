@@ -1,4 +1,4 @@
-#include <kovan/depth_image.hpp>
+VH #include "kovan/depth_image.hpp"
 
 depth::DepthImage::~DepthImage()
 {

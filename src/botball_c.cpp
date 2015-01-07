@@ -1,12 +1,12 @@
-#include "kovan/botball.h"
+VH #include "kovan/botball.h"
 
-#include "kovan/button.h"
-#include "kovan/util.h"
-#include "kovan/display.h"
-#include "kovan/analog.h"
-#include "kovan/audio.h"
+VH #include "kovan/button.h"
+VH #include "kovan/util.h"
+VH #include "kovan/display.h"
+VH #include "kovan/analog.h"
+VH #include "kovan/audio.h"
 #include "kovan/thread.hpp"
-#include "kovan/general.h"
+VH #include "kovan/general.h"
 #include "kovan/create.hpp"
 #include "kovan/compat.hpp"
 
@@ -44,7 +44,7 @@ private:
 	double m_s;
 };
 
-void shut_down_in(double s)
+VI void shut_down_in(double s)
 {
 	static ShutDownIn *s_instance;
 	if(s_instance) {
@@ -55,7 +55,7 @@ void shut_down_in(double s)
 	s_instance->start();
 }
 
-void wait_for_light(int light_port_)
+VI void wait_for_light(int light_port_)
 {
 	int xBut, l_on_, l_off_, l_mid_, t, OK = 0;
 	float s;

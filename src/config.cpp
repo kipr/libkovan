@@ -1,4 +1,4 @@
-#include "kovan/config.hpp"
+VH #include "kovan/config.hpp"
 
 #include <sstream>
 #include <fstream>

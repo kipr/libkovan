@@ -18,12 +18,13 @@
  *  If not, see <http://www.gnu.org/licenses/>.                           *
  **************************************************************************/
 
-#include "kovan/depth_exception.hpp"
-#include "kovan/depth_driver.hpp"
-#include "kovan/colinear_segmenter.hpp"
-#include "kovan/depth.h"
-#include "kovan/general.h"
-#include "kovan/util.h"
+VH #include "kovan/depth_exception.hpp"
+VH #include "kovan/depth_driver.hpp"
+VH #include "kovan/colinear_segmenter.hpp"
+VH #include "kovan/depth.h"
+VH #include "kovan/general.h"
+VH #include "kovan/util.h"
+VH #include "kovan/geom.h"
 
 #define _USE_MATH_DEFINES
 #include <iostream>
@@ -144,7 +145,7 @@ private:
   catch(...) {} \
   return (return_value)
 
-int depth_open()
+VI int depth_open()
 {
   try {
     DepthDriver::instance().open();
@@ -155,7 +156,7 @@ int depth_open()
   catchAllAndReturn(0);
 }
 
-int depth_close()
+VI int depth_close()
 {
   try {
     _depth_image = 0;
@@ -165,7 +166,7 @@ int depth_close()
   catchAllAndReturn(0);
 }
 
-DepthResolution get_depth_resolution()
+VI DepthResolution get_depth_resolution()
 {
   try {
     return DepthDriver::instance().depthCameraResolution();
@@ -173,7 +174,7 @@ DepthResolution get_depth_resolution()
   catchAllAndReturn(DEPTH_INVALID_RESOLUTION);
 }
 
-int set_depth_resolution(DepthResolution resolution)
+VI int set_depth_resolution(DepthResolution resolution)
 {
   try {
     DepthDriver::instance().setDepthCameraResolution(resolution);
@@ -182,7 +183,7 @@ int set_depth_resolution(DepthResolution resolution)
   catchAllAndReturn(0);
 }
 
-int set_depth_orientation(int orientation)
+VI int set_depth_orientation(int orientation)
 {
   try {
     _orientation = orientation;
@@ -191,7 +192,7 @@ int set_depth_orientation(int orientation)
   catchAllAndReturn(0);
 }
 
-int get_depth_orientation()
+VI int get_depth_orientation()
 {
   try {
     return _orientation;
@@ -199,7 +200,7 @@ int get_depth_orientation()
   catchAllAndReturn(0xFFFF);
 }
 
-int depth_update()
+VI int depth_update()
 {
   try {
     segments.clear();
@@ -212,7 +213,7 @@ int depth_update()
   catchAllAndReturn(0);
 }
 
-int get_depth_image_height()
+VI int get_depth_image_height()
 {
   try {
     return _depth_image ? _depth_image->height() : 0;
@@ -220,7 +221,7 @@ int get_depth_image_height()
   catchAllAndReturn(0);
 }
 
-int get_depth_image_width()
+VI int get_depth_image_width()
 {
   try {
     return _depth_image ? _depth_image->width() : 0;
@@ -228,7 +229,7 @@ int get_depth_image_width()
   catchAllAndReturn(0);
 }
 
-int get_depth_value(int row, int column)
+VI int get_depth_value(int row, int column)
 {
   try {
     if(!_depth_image) throw Exception("Depth image is not valid");
@@ -237,7 +238,7 @@ int get_depth_value(int row, int column)
   catchAllAndReturn(-1);
 }
 
-point3 get_depth_world_point(int row, int column)
+VI point3 get_depth_world_point(int row, int column)
 {
   try {
     if(!_depth_image) throw Exception("Depth image is not valid");
@@ -247,24 +248,24 @@ point3 get_depth_world_point(int row, int column)
   catchAllAndReturn(create_point3(-1, -1, -1));
 }
 
-int get_depth_world_point_x(int row, int column)
+VI int get_depth_world_point_x(int row, int column)
 {
   return get_depth_world_point(row, column).x;
 }
 
-int get_depth_world_point_y(int row, int column)
+VI int get_depth_world_point_y(int row, int column)
 {
   return get_depth_world_point(row, column).y;
 }
 
-int get_depth_world_point_z(int row, int column)
+VI int get_depth_world_point_z(int row, int column)
 {
   return get_depth_world_point(row, column).z;
 }
 
 
 
-int depth_scanline_update(int row)
+VI int depth_scanline_update(int row)
 {
   if(row < 0 || row >= get_depth_image_height()) {
     std::cerr << "depth_scanline_update needs a valid row" << std::endl;
@@ -299,14 +300,14 @@ int depth_scanline_update(int row)
   return 1;
 }
 
-int get_depth_scanline_object_count()
+VI int get_depth_scanline_object_count()
 {
   if(!_depth_image) return -1;
   if(scanRow < 0) return -1;
   return segments.size();
 }
 
-point3 get_depth_scanline_object_center(int object_num)
+VI point3 get_depth_scanline_object_center(int object_num)
 {
   if(!_depth_image) return create_point3(-1, -1, -1);
   if(scanRow < 0) {
@@ -321,7 +322,7 @@ point3 get_depth_scanline_object_center(int object_num)
     (segments[object_num].start + segments[object_num].end) >> 1);
 }
 
-point3 get_depth_scanline_object_nearest(int object_num)
+VI point3 get_depth_scanline_object_nearest(int object_num)
 {
   if(!_depth_image) return create_point3(-1, -1, -1);
   if(scanRow < 0) {
@@ -336,7 +337,7 @@ point3 get_depth_scanline_object_nearest(int object_num)
     findMin(segments[object_num]));
 }
 
-point3 get_depth_scanline_object_farthest(int object_num)
+VI point3 get_depth_scanline_object_farthest(int object_num)
 {
   if(!_depth_image) return create_point3(-1, -1, -1);
   if(scanRow < 0) {
@@ -351,52 +352,52 @@ point3 get_depth_scanline_object_farthest(int object_num)
     findMax(segments[object_num]));
 }
 
-int get_depth_scanline_object_center_x(int object_num)
+VI int get_depth_scanline_object_center_x(int object_num)
 {
   return get_depth_scanline_object_center(object_num).x;
 }
 
-int get_depth_scanline_object_center_y(int object_num)
+VI int get_depth_scanline_object_center_y(int object_num)
 {
   return get_depth_scanline_object_center(object_num).y;
 }
 
-int get_depth_scanline_object_center_z(int object_num)
+VI int get_depth_scanline_object_center_z(int object_num)
 {
   return get_depth_scanline_object_center(object_num).z;
 }
 
-int get_depth_scanline_object_nearest_x(int object_num)
+VI int get_depth_scanline_object_nearest_x(int object_num)
 {
   return get_depth_scanline_object_nearest(object_num).x;
 }
 
-int get_depth_scanline_object_nearest_y(int object_num)
+VI int get_depth_scanline_object_nearest_y(int object_num)
 {
   return get_depth_scanline_object_nearest(object_num).y;
 }
 
-int get_depth_scanline_object_nearest_z(int object_num)
+VI int get_depth_scanline_object_nearest_z(int object_num)
 {
   return get_depth_scanline_object_nearest(object_num).z;
 }
 
-int get_depth_scanline_object_farthest_x(int object_num)
+VI int get_depth_scanline_object_farthest_x(int object_num)
 {
   return get_depth_scanline_object_farthest(object_num).x;
 }
 
-int get_depth_scanline_object_farthest_y(int object_num)
+VI int get_depth_scanline_object_farthest_y(int object_num)
 {
   return get_depth_scanline_object_farthest(object_num).y;
 }
 
-int get_depth_scanline_object_farthest_z(int object_num)
+VI int get_depth_scanline_object_farthest_z(int object_num)
 {
   return get_depth_scanline_object_farthest(object_num).z;
 }
 
-int get_depth_scanline_object_size(int object_num)
+VI int get_depth_scanline_object_size(int object_num)
 {
   if(scanRow < 0) {
     std::cerr << "Must call depth_scanline_update first" << std::endl;
@@ -413,7 +414,7 @@ int get_depth_scanline_object_size(int object_num)
   return sqrt(pow(end.x - start.x, 2) + pow(end.z - start.z, 2));
 }
 
-int get_depth_scanline_object_angle(int object_num)
+VI int get_depth_scanline_object_angle(int object_num)
 {
   if(scanRow < 0) {
     std::cerr << "Must call depth_scanline_update first" << std::endl;
@@ -431,12 +432,12 @@ int get_depth_scanline_object_angle(int object_num)
   return atan2(end.z - start.z, end.x - start.x) * 180.0 / M_PI;
 }
 
-void set_depth_scanline_sorting_method(SortMethod method)
+VI void set_depth_scanline_sorting_method(SortMethod method)
 {
   sortMethod = method;
 }
 
-SortMethod get_depth_scanline_sorting_method()
+VI SortMethod get_depth_scanline_sorting_method()
 {
   return sortMethod;
 }

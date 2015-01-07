@@ -31,6 +31,8 @@
 
 #include "export.h"
 
+#include "vtable.h"
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -39,107 +41,107 @@ extern "C" {
  * \param[in] motor The motor port.
  * \ingroup motor
  */
-EXPORT_SYM int get_motor_position_counter(int motor);
+VF EXPORT_SYM int get_motor_position_counter(int motor);
 
 /*!
  * \param[in] motor The motor port.
  * \ingroup motor
  */
-EXPORT_SYM void clear_motor_position_counter(int motor);
+VF EXPORT_SYM void clear_motor_position_counter(int motor);
 
 /*!
  * \param[in] motor The motor port.
  * \ingroup motor
  */
-EXPORT_SYM int move_at_velocity(int motor, int velocity);
+VF EXPORT_SYM int move_at_velocity(int motor, int velocity);
 
 /*!
  * \param[in] motor The motor port.
  * \see move_at_velocity
  * \ingroup motor
  */
-EXPORT_SYM int mav(int motor, int velocity);
+VF EXPORT_SYM int mav(int motor, int velocity);
 
-EXPORT_SYM int move_to_position(int motor, int speed, int goal_pos);
+VF EXPORT_SYM int move_to_position(int motor, int speed, int goal_pos);
 
 /*!
  * \param[in] motor The motor port.
  * \see move_to_position
  * \ingroup motor
  */
-EXPORT_SYM int mtp(int motor, int speed, int goal_pos);
+VF EXPORT_SYM int mtp(int motor, int speed, int goal_pos);
 
-EXPORT_SYM int move_relative_position(int motor, int speed, int delta_pos);
+VF EXPORT_SYM int move_relative_position(int motor, int speed, int delta_pos);
 
 /*!
  * \param[in] motor The motor port.
  * \see move_relative_position
  * \ingroup motor
  */
-EXPORT_SYM int mrp(int motor, int speed, int delta_pos);
+VF EXPORT_SYM int mrp(int motor, int speed, int delta_pos);
 
 /*!
  * \param[in] motor The motor port.
  * \ingroup motor
  */
-EXPORT_SYM void set_pid_gains(int motor, short p, short i, short d, short pd, short id, short dd);
+VF EXPORT_SYM void set_pid_gains(int motor, short p, short i, short d, short pd, short id, short dd);
 
 /*!
  * \param[in] motor The motor port.
  * \ingroup motor
  */
-EXPORT_SYM void get_pid_gains(int motor, short *p, short *i, short *d, short *pd, short *id, short *dd);
+VF EXPORT_SYM void get_pid_gains(int motor, short *p, short *i, short *d, short *pd, short *id, short *dd);
 
 /*!
  * \param[in] motor The motor port.
  * \ingroup motor
  */
-EXPORT_SYM int freeze(int motor);
+VF EXPORT_SYM int freeze(int motor);
 
 /*!
  * \param[in] motor The motor port.
  * \ingroup motor
  */
-EXPORT_SYM int get_motor_done(int motor);
+VF EXPORT_SYM int get_motor_done(int motor);
 
 /*!
  * \param[in] motor The motor port.
  * \ingroup motor
  */
-EXPORT_SYM void block_motor_done(int motor);
+VF EXPORT_SYM void block_motor_done(int motor);
 
 /*!
  * \param[in] motor The motor port.
  * \see block_motor_done
  * \ingroup motor
  */
-EXPORT_SYM void bmd(int motor);
+VF EXPORT_SYM void bmd(int motor);
 
 /*!
  * \param[in] motor The motor port.
  * \ingroup motor
  */
-EXPORT_SYM int setpwm(int motor, int pwm);
+VF EXPORT_SYM int setpwm(int motor, int pwm);
 
 /*!
  * \param[in] motor The motor port.
  * \ingroup motor
  */
-EXPORT_SYM int getpwm(int motor);
+VF EXPORT_SYM int getpwm(int motor);
 
 /*!
  * Moves the given motor forward at full power
  * \param motor the motor's port.
  * \ingroup motor
  */
-EXPORT_SYM void fd(int motor);
+VF EXPORT_SYM void fd(int motor);
 
 /*!
  * Moves the given motor backward at full power
  * \param motor the motor's port.
  * \ingroup motor
  */
-EXPORT_SYM void bk(int motor);
+VF EXPORT_SYM void bk(int motor);
 
 /*!
  * Moves a motor at a percent power.
@@ -149,27 +151,29 @@ EXPORT_SYM void bk(int motor);
  *
  * \ingroup motor
  */
-EXPORT_SYM void motor(int motor, int percent);
+VF EXPORT_SYM void motor(int motor, int percent);
 
 /*!
  * Turns the specified motor off.
  * \param motor the motor's port.
  * \ingroup motor
  */
-EXPORT_SYM void off(int motor);
+VF EXPORT_SYM void off(int motor);
 
 /*!
  * Turns all motors off.
  * \see ao
  * \ingroup motor
  */
-EXPORT_SYM void alloff();
+VF EXPORT_SYM void alloff();
 
 /*!
  * Turns all motors off.
  * \ingroup motor
  */
-EXPORT_SYM void ao();
+VF EXPORT_SYM void ao();
+
+VFL
 
 
 #ifdef __cplusplus

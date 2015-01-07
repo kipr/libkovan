@@ -10,15 +10,54 @@ set(INCLUDE ${libkovan_SOURCE_DIR}/include)
 set(SRC ${libkovan_SOURCE_DIR}/src)
 set(PIXELTOASTER ${SRC}/pixeltoaster)
 set(BINDINGS ${CMAKE_SOURCE_DIR}/bindings)
+set(TOOLS ${CMAKE_SOURCE_DIR}/tools)
 
-include_directories(${INCLUDE})
+# include_directories(${INCLUDE})
 
 file(GLOB INCLUDES ${INCLUDE}/kovan/*.h ${INCLUDE}/kovan/*.hpp)
-file(GLOB SOURCES ${SRC}/*.cpp ${PIXELTOASTER}/*.cpp)
+file(GLOB SOURCES ${SRC}/*.cpp)
+file(GLOB PIXELTOASTER_SOURCES ${PIXELTOASTER}/*.cpp)
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall")
 
 set(LIBRARY_OUTPUT_PATH ${CMAKE_SOURCE_DIR}/lib)
+
+#########
+# Tools #
+#########
+
+add_executable(vtable_gen ${TOOLS}/vtable_gen.cpp)
+add_executable(vtable_impl ${TOOLS}/vtable_impl.cpp)
+
+function(run_vtable_gen INPUT NEW_INPUT)
+  get_filename_component(FILENAME ${INPUT} NAME)
+  set(NEW_INPUT_VAL ${CMAKE_CURRENT_BINARY_DIR}/${FILENAME})
+  set(${NEW_INPUT} ${NEW_INPUT_VAL} PARENT_SCOPE)
+  add_custom_command(OUTPUT ${NEW_INPUT_VAL}
+     COMMAND ${CMAKE_BINARY_DIR}/vtable_gen ${NEW_INPUT_VAL} ${INPUT}
+     DEPENDS vtable_gen ${INPUT})
+endfunction()
+
+function(run_vtable_impl INPUT NEW_INPUT)
+  get_filename_component(FILENAME ${INPUT} NAME)
+  set(NEW_INPUT_VAL ${CMAKE_CURRENT_BINARY_DIR}/vi_${FILENAME})
+  set(${NEW_INPUT} ${NEW_INPUT_VAL} PARENT_SCOPE)
+  add_custom_command(OUTPUT ${NEW_INPUT_VAL}
+     COMMAND ${CMAKE_BINARY_DIR}/vtable_impl ${NEW_INPUT_VAL} ${INPUT}
+     DEPENDS vtable_impl ${INPUT})
+endfunction()
+
+foreach(INCLUDE ${INCLUDES})
+  run_vtable_gen(${INCLUDE} VF_INCLUDE)
+  list(APPEND VF_INCLUDES ${VF_INCLUDE})
+endforeach()
+
+foreach(S ${SOURCES})
+  run_vtable_impl(${S} VI_SOURCE)
+  list(APPEND VI_SOURCES ${VI_SOURCE})
+endforeach()
+
+include_directories(${SRC})
 
 #############################
 #   PixelToaster settings   #
@@ -98,6 +137,8 @@ endif()
 
 option(build_python "Build python bindings" ON)
 
+file(GLOB SWIG_SOURCES ${BINDINGS}/*.i)
+
 if(build_python)
   find_package(SWIG REQUIRED)
   find_package(PythonLibs REQUIRED)
@@ -105,7 +146,7 @@ if(build_python)
   list(APPEND BINDINGS_LIBRARIES ${PYTHON_LIBRARY})
   include_directories(${PYTHON_INCLUDE_DIR})
   add_custom_command(COMMAND ${SWIG_EXECUTABLE} -Wall -python -c++ -I${INCLUDE} -outdir ${LIBRARY_OUTPUT_PATH} -o ${CMAKE_BINARY_DIR}/kovan_wrap_py.cxx ${BINDINGS}/kovan.i
-    DEPENDS ${BINDINGS}/kovan.i
+    DEPENDS ${SWIG_SOURCES}
     OUTPUT ${CMAKE_BINARY_DIR}/kovan_wrap_py.cxx)
 endif()
 
@@ -114,7 +155,6 @@ option(build_java "Build java bindings" ON)
 if(build_java)
   find_package(SWIG REQUIRED)
   find_package(JNI REQUIRED)
-  file(GLOB JAVA_SWIG_SOURCES ${BINDINGS}/java/*.i)
   list(APPEND BINDINGS_SOURCES ${CMAKE_BINARY_DIR}/kovan_wrap_java.cxx)
   list(APPEND BINDINGS_LIBRARIES ${JNI_LIBRARIES})
   include_directories(${JAVA_INCLUDE_PATH} ${JAVA_INCLUDE_PATH2} ${BINDINGS})
@@ -122,11 +162,11 @@ if(build_java)
   file(REMOVE_RECURSE ${JAVA_OUT_PATH})
   file(MAKE_DIRECTORY ${JAVA_OUT_PATH})
   add_custom_command(COMMAND ${SWIG_EXECUTABLE} -Wall -java -package org.kipr.kovan -c++ -I${INCLUDE} -outdir ${JAVA_OUT_PATH} -o ${CMAKE_BINARY_DIR}/kovan_wrap_java.cxx ${BINDINGS}/kovan.i
-    DEPENDS ${BINDINGS}/kovan.i ${JAVA_SWIG_SOURCES}
+    DEPENDS ${SWIG_SOURCES}
     OUTPUT ${CMAKE_BINARY_DIR}/kovan_wrap_java.cxx)
 endif()
 
-add_library(kovan SHARED ${SOURCES} ${OBJC_SOURCES} ${INCLUDES} ${BINDINGS_SOURCES})
+add_library(kovan SHARED ${VI_SOURCES} ${OBJC_SOURCES} ${VF_INCLUDES} ${PIXELTOASTER_SOURCES} ${BINDINGS_SOURCES})
 
 if(WIN32)
   # TODO: Make sure these are current
@@ -155,12 +195,12 @@ endif()
 
 if(WIN32)
   target_link_libraries(kovan ws2_32)
-  install(FILES ${INCLUDES} DESTINATION ${CMAKE_SOURCE_DIR}/../prefix/include/kovan)
+  install(FILES ${VF_INCLUDES} DESTINATION ${CMAKE_SOURCE_DIR}/../prefix/include/kovan)
   install(TARGETS kovan
           ARCHIVE DESTINATION ${CMAKE_SOURCE_DIR}/../prefix/lib
           RUNTIME DESTINATION ${CMAKE_SOURCE_DIR}/../prefix/lib)
 else()
-  install(FILES ${INCLUDES} DESTINATION include/kovan)
+  install(FILES ${VF_INCLUDES} DESTINATION include/kovan)
   install(TARGETS kovan LIBRARY DESTINATION lib)
 endif()
 
@@ -187,6 +227,7 @@ if(BUILD_DOCUMENTATION)
 endif()
 
 if(build_tests)
+  include_directories(${CMAKE_BINARY_DIR})
   add_executable(test_depth ${CMAKE_SOURCE_DIR}/test.cpp)
   target_link_libraries(test_depth kovan)
 endif()

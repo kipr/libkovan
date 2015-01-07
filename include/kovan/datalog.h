@@ -2,6 +2,7 @@
 #define _DATALOG_H_
 
 #include "export.h"
+#include "vtable.h"
 
 /*!
  * \file datalog.h
@@ -18,37 +19,39 @@ extern "C" {
 /*!
 * \ingroup datalog
 */
-EXPORT_SYM void datalog_remove_category(const char *name);
+VF EXPORT_SYM void datalog_remove_category(const char *name);
 
 /*!
  * \ingroup datalog
  */
-EXPORT_SYM void datalog_append_string(const char *text, const char *category);
+VF EXPORT_SYM void datalog_append_string(const char *text, const char *category);
 
 /*!
  * \ingroup datalog
  */
-EXPORT_SYM void datalog_append_number(double number, const char *category);
+VF EXPORT_SYM void datalog_append_number(double number, const char *category);
 
 /*!
  * \ingroup datalog
  */
-EXPORT_SYM void datalog_remove(int index, const char *category);
+VF EXPORT_SYM void datalog_remove(int index, const char *category);
 
 /*!
  * \ingroup datalog
  */
-EXPORT_SYM int datalog_write_plain(const char *path);
+VF EXPORT_SYM int datalog_write_plain(const char *path);
 
 /*!
  * \ingroup datalog
  */
-EXPORT_SYM int datalog_write_csv(const char *path);
+VF EXPORT_SYM int datalog_write_csv(const char *path);
 
 /*!
  * \ingroup datalog
  */
-EXPORT_SYM void datalog_clear();
+VF EXPORT_SYM void datalog_clear();
+
+VFL
 
 #ifdef __cplusplus
 }

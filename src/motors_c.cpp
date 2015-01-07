@@ -18,37 +18,37 @@
  *  If not, see <http://www.gnu.org/licenses/>.                           *
  **************************************************************************/
 
-#include "kovan/motors.h"
-#include "kovan/util.h"
+VH #include "kovan/motors.h"
+VH #include "kovan/util.h"
 #include "motors_p.hpp"
 
 #include <iostream>
 #include <cstdlib>
 #include <math.h>
 
-int get_motor_position_counter(int motor)
+VI int get_motor_position_counter(int motor)
 {
 	return Private::Motor::instance()->backEMF(motor);
 }
 
-void clear_motor_position_counter(int motor)
+VI void clear_motor_position_counter(int motor)
 {
 	Private::Motor::instance()->clearBemf(motor);
 }
 
-int move_at_velocity(int motor, int velocity)
+VI int move_at_velocity(int motor, int velocity)
 {
 	Private::Motor::instance()->setControlMode(motor, Private::Motor::Speed);
 	Private::Motor::instance()->setPidVelocity(motor, velocity);
 	return 0;
 }
 
-int mav(int motor, int velocity)
+VI int mav(int motor, int velocity)
 {
 	return move_at_velocity(motor, velocity);
 }
 
-int move_to_position(int motor, int speed, int goal_pos)
+VI int move_to_position(int motor, int speed, int goal_pos)
 {
 	short velocity = std::abs(speed);
 	const int sign = Private::Motor::instance()->backEMF(motor) > goal_pos ? -1 : 1;
@@ -59,41 +59,41 @@ int move_to_position(int motor, int speed, int goal_pos)
 	return 0;
 }
 
-int mtp(int motor, int speed, int goal_pos)
+VI int mtp(int motor, int speed, int goal_pos)
 {
 	return move_to_position(motor, speed, goal_pos);
 }
 
-int move_relative_position(int motor, int speed, int delta_pos)
+VI int move_relative_position(int motor, int speed, int delta_pos)
 {
 	if(motor < 0 || motor > 3) return -1;
 	move_to_position(motor, speed, Private::Motor::instance()->backEMF(motor) + delta_pos);
 	return 0;
 }
 
-int mrp(int motor, int speed, int delta_pos)
+VI int mrp(int motor, int speed, int delta_pos)
 {
 	return move_relative_position(motor, speed, delta_pos);
 }
 
-void set_pid_gains(int motor, short p, short i, short d, short pd, short id, short dd)
+VI void set_pid_gains(int motor, short p, short i, short d, short pd, short id, short dd)
 {
 	Private::Motor::instance()->setPidGains(motor, p, i, d, pd, id, dd);
 }
 
-void get_pid_gains(int motor, short *p, short *i, short *d, short *pd, short *id, short *dd)
+VI void get_pid_gains(int motor, short *p, short *i, short *d, short *pd, short *id, short *dd)
 {
 	Private::Motor::instance()->pidGains(motor, *p, *i, *d, *pd, *id, *dd);
 }
 
-int freeze(int motor)
+VI int freeze(int motor)
 {
 	Private::Motor::instance()->setPwm(motor, 100);
 	Private::Motor::instance()->setPwmDirection(motor, Private::Motor::ActiveStop);
 	return 0;
 }
 
-int get_motor_done(int motor)
+VI int get_motor_done(int motor)
 {
 	if(motor < 0 || motor > 3) return -1;
 	// This sleep is necessary to make sure the PID control loop has run
@@ -101,38 +101,38 @@ int get_motor_done(int motor)
 	return Private::Motor::instance()->isPidActive(motor) ? 0 : 1;
 }
 
-void block_motor_done(int motor)
+VI void block_motor_done(int motor)
 {
 	while(!get_motor_done(motor));
 }
 
-void bmd(int motor)
+VI void bmd(int motor)
 {
 	block_motor_done(motor);
 }
 
-int setpwm(int motor, int pwm)
+VI int setpwm(int motor, int pwm)
 {
 	Private::Motor::instance()->setPwm(motor, pwm);
 	return -1;
 }
 
-int getpwm(int motor)
+VI int getpwm(int motor)
 {
 	return -1;
 }
 
-void fd(int motor)
+VI void fd(int motor)
 {
 	::motor(motor, 100);
 }
 
-void bk(int motor)
+VI void bk(int motor)
 {
 	::motor(motor, -100);
 }
 
-void motor(int motor, int percent)
+VI void motor(int motor, int percent)
 {
 	Private::Motor::instance()->setPwm(motor, std::abs(percent));
 	
@@ -141,17 +141,17 @@ void motor(int motor, int percent)
 	else Private::Motor::instance()->setPwmDirection(motor, Private::Motor::PassiveStop);
 }
 
-void off(int motor)
+VI void off(int motor)
 {
 	Private::Motor::instance()->stop(motor);
 }
 
-void alloff()
+VI void alloff()
 {
 	ao();
 }
 
-void ao()
+VI void ao()
 {
 	for(unsigned char i = 0; i < 4; ++i) off(i);
 }

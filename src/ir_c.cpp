@@ -18,8 +18,8 @@
  *  If not, see <http://www.gnu.org/licenses/>.                           *
  **************************************************************************/
 
-#include "kovan/ir.h"
-#include "kovan/ir.hpp"
+VH #include "kovan/ir.h"
+VH #include "kovan/ir.hpp"
 
 void ir_read()
 {

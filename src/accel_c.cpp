@@ -1,26 +1,23 @@
-#include "kovan/accel.h"
+VH #include "kovan/accel.h"
 #include "kovan/accel.hpp"
 
-signed short accel_x()
+VI signed short accel_x()
 {
 	return Acceleration::x();
 }
 
-signed short accel_y()
+VI signed short accel_y()
 {
 	return Acceleration::y();
 }
 
-signed short accel_z()
+VI signed short accel_z()
 {
 	return Acceleration::z();
 }
 
-int accel_calibrate()
+VI int accel_calibrate()
 {
-	short success = (short) Acceleration::calibrate();
-
-	if (success) return 0;
-
-	return -1;
+	return Acceleration::calibrate() ? 0 : -1;
 }
+

@@ -1,4 +1,4 @@
-#include "kovan/thread.hpp"
+VH #include "kovan/thread.hpp"
 
 Mutex::Mutex()
 {

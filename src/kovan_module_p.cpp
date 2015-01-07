@@ -1,6 +1,6 @@
 #include "kovan_module_p.hpp"
 
-#include "kovan/compat.hpp"
+VH #include "kovan/compat.hpp"
 #include "kovan_regs_p.hpp"
 
 #include <iostream>

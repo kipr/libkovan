@@ -3,7 +3,7 @@
 #include "ardrone_emergency_stop_p.hpp"
 #include "kovan/ardrone.hpp"
 #include "kovan/button.hpp"
-#include "kovan/util.h"
+VH #include "kovan/util.h"
 
 using namespace Private;
 

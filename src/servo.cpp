@@ -18,7 +18,7 @@
  *  If not, see <http://www.gnu.org/licenses/>.                           *
  **************************************************************************/
 
-#include "kovan/servo.hpp"
+VH #include "kovan/servo.hpp"
 #include "servo_p.hpp"
 
 Servo::Servo(port_t port)

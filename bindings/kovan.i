@@ -6,13 +6,13 @@
   #include "kovan/colinear_segmenter.hpp"
   #include "kovan/xtion_depth_driver.hpp"
   
-  #ifdef SWIGJAVA
-  #include "java/motor.hpp"
-  #endif
+  #include "motor.hpp"
   
   #ifdef SWIGPYTHON
   #define _open open
   #endif
+  
+  #define CameraDevice Device
   
   using namespace depth;
 %}
@@ -22,6 +22,9 @@
 #ifdef SWIGPYTHON
 #define open _open
 #endif
+
+%include "button_prelude.i"
+%include "camera_prelude.i"
 
 %include "kovan/sensor.hpp"
 %template(IntSensor) Sensor<int>;
@@ -50,6 +53,7 @@
 %include "kovan/datalog.hpp"
 %include "kovan/colinear_segmenter.hpp"
 %include "kovan/digital.hpp"
+%include "kovan/graphics.h"
 
 #ifndef SWIGJAVA
 %include "kovan/thread.hpp"
@@ -73,8 +77,6 @@
 %include "kovan/digital.h"
 #endif
 
-// Include various fixups for java
-#ifdef SWIGJAVA
-// %include "java/camera.i"
-%include "java/motor.i"
-#endif
+%include "camera.i"
+%include "create.i"
+%include "motor.i"

@@ -1,6 +1,6 @@
-#include "kovan/geom.h"
+VH #include "kovan/geom.h"
 
-point2 create_point2(int x, int y)
+VI point2 create_point2(int x, int y)
 {
 	point2 ret;
 	ret.x = x;
@@ -8,7 +8,7 @@ point2 create_point2(int x, int y)
 	return ret;
 }
 
-point3 create_point3(int x, int y, int z)
+VI point3 create_point3(int x, int y, int z)
 {
 	point3 ret;
 	ret.x = x;
@@ -17,7 +17,7 @@ point3 create_point3(int x, int y, int z)
 	return ret;
 }
 
-rectangle create_rectangle(int ulx, int uly, int width, int height)
+VI rectangle create_rectangle(int ulx, int uly, int width, int height)
 {
 	rectangle ret;
 	ret.ulx = ulx;

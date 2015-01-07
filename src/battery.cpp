@@ -18,7 +18,7 @@
  *  If not, see <http://www.gnu.org/licenses/>.                           *
  **************************************************************************/
 
-#include "kovan/battery.hpp"
+VH #include "kovan/battery.hpp"
 #include "analog_p.hpp"
 
 #define BATTERY_ADC_CHAN 16

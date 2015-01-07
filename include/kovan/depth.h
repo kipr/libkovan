@@ -46,7 +46,7 @@ extern "C" {
  *
  * \ingroup depth
  */
-EXPORT_SYM int depth_open();
+VF EXPORT_SYM int depth_open();
 
 /**
  * Closes the depth sensor
@@ -54,7 +54,7 @@ EXPORT_SYM int depth_open();
  *
  * \ingroup depth
  */
-EXPORT_SYM int depth_close();
+VF EXPORT_SYM int depth_close();
 
 /**
  * Get the current depth image resolution
@@ -66,7 +66,7 @@ EXPORT_SYM int depth_close();
  *
  * \ingroup depth
  */
-EXPORT_SYM DepthResolution get_depth_resolution();
+VF EXPORT_SYM DepthResolution get_depth_resolution();
 
 /**
  * Set the current depth image resolution.
@@ -79,7 +79,7 @@ EXPORT_SYM DepthResolution get_depth_resolution();
  *
  * \ingroup depth
  */
-EXPORT_SYM int set_depth_resolution(DepthResolution resolution);
+VF EXPORT_SYM int set_depth_resolution(DepthResolution resolution);
 
 /**
  * Sets the depth image orientation
@@ -92,7 +92,7 @@ EXPORT_SYM int set_depth_resolution(DepthResolution resolution);
  *
  * \ingroup depth
  */
-EXPORT_SYM int set_depth_orientation(int orientation);
+VF EXPORT_SYM int set_depth_orientation(int orientation);
 
 /**
  * Gets the depth image orientation
@@ -101,7 +101,7 @@ EXPORT_SYM int set_depth_orientation(int orientation);
  *
  * \ingroup depth
  */
-EXPORT_SYM int get_depth_orientation();
+VF EXPORT_SYM int get_depth_orientation();
 
 /**
  * Pulls a new depth image from the depth sensor for future processing.
@@ -110,7 +110,7 @@ EXPORT_SYM int get_depth_orientation();
  *
  * \ingroup depth
  */
-EXPORT_SYM int depth_update();
+VF EXPORT_SYM int depth_update();
 
 /**
  * Returns the height of the depth image stored by depth_update in pixel
@@ -121,7 +121,7 @@ EXPORT_SYM int depth_update();
  *
  * \ingroup depth
  */
-EXPORT_SYM int get_depth_image_height();
+VF EXPORT_SYM int get_depth_image_height();
 
 /**
  * Returns the width of the depth image stored by depth_update in pixel
@@ -132,7 +132,7 @@ EXPORT_SYM int get_depth_image_height();
  *
  * \ingroup depth
  */
-EXPORT_SYM int get_depth_image_width();
+VF EXPORT_SYM int get_depth_image_width();
 
 /**
  * Returns the depth value of a depth pixel.
@@ -150,7 +150,7 @@ EXPORT_SYM int get_depth_image_width();
  *
  * \ingroup depth
  */
-EXPORT_SYM int get_depth_value(int row, int column);
+VF EXPORT_SYM int get_depth_value(int row, int column);
 
 /**
  * Returns the world coordinates of the specified point.
@@ -165,7 +165,7 @@ EXPORT_SYM int get_depth_value(int row, int column);
  *
  * \ingroup depth
  */
-EXPORT_SYM point3 get_depth_world_point(int row, int column);
+VF EXPORT_SYM point3 get_depth_world_point(int row, int column);
 
 /**
  * Returns the x world coordinate of the specified point.
@@ -180,7 +180,7 @@ EXPORT_SYM point3 get_depth_world_point(int row, int column);
  *
  * \ingroup depth
  */
-EXPORT_SYM int get_depth_world_point_x(int row, int column);
+VF EXPORT_SYM int get_depth_world_point_x(int row, int column);
 
 /**
  * Returns the y world coordinate of the specified point.
@@ -195,7 +195,7 @@ EXPORT_SYM int get_depth_world_point_x(int row, int column);
  *
  * \ingroup depth
  */
-EXPORT_SYM int get_depth_world_point_y(int row, int column);
+VF EXPORT_SYM int get_depth_world_point_y(int row, int column);
 
 /**
  * Returns the z world coordinate of the specified point.
@@ -210,7 +210,7 @@ EXPORT_SYM int get_depth_world_point_y(int row, int column);
  *
  * \ingroup depth
  */
-EXPORT_SYM int get_depth_world_point_z(int row, int column);
+VF EXPORT_SYM int get_depth_world_point_z(int row, int column);
 
 #ifdef __linux__
 static const int INVALID_DEPTH = 2147483647;
@@ -229,7 +229,7 @@ static const int INVALID_DEPTH = INT32_MAX;
  *
  * \ingroup depth
  */
-EXPORT_SYM int depth_scanline_update(int row);
+VF EXPORT_SYM int depth_scanline_update(int row);
 
 /**
  * Retrieve the number of objects detected on the selected scanline.
@@ -238,7 +238,16 @@ EXPORT_SYM int depth_scanline_update(int row);
  *
  * \ingroup depth
  */
-EXPORT_SYM int get_depth_scanline_object_count();
+VF EXPORT_SYM int get_depth_scanline_object_count();
+
+/**
+ * Retrieve the given object's center x offset from the camera.
+ *
+ * \return The offset from the center of the Xtion sensor, or (-1, -1, -1) on error.
+ *
+ * \ingroup depth
+ */
+VF EXPORT_SYM point3 get_depth_scanline_object_center(int object_num);
 
 /**
  * Retrieve the given object's center x offset from the camera.
@@ -247,7 +256,7 @@ EXPORT_SYM int get_depth_scanline_object_count();
  *
  * \ingroup depth
  */
-EXPORT_SYM int get_depth_scanline_object_center_x(int object_num);
+VF EXPORT_SYM int get_depth_scanline_object_center_x(int object_num);
 
 /**
  * Retrieve the given object's center y offset from the camera.
@@ -256,7 +265,7 @@ EXPORT_SYM int get_depth_scanline_object_center_x(int object_num);
  *
  * \ingroup depth
  */
-EXPORT_SYM int get_depth_scanline_object_center_y(int object_num);
+VF EXPORT_SYM int get_depth_scanline_object_center_y(int object_num);
 
 /**
  * Retrieve the given object's center z offset from the camera.
@@ -265,7 +274,16 @@ EXPORT_SYM int get_depth_scanline_object_center_y(int object_num);
  *
  * \ingroup depth
  */
-EXPORT_SYM int get_depth_scanline_object_center_z(int object_num);
+VF EXPORT_SYM int get_depth_scanline_object_center_z(int object_num);
+
+/**
+ * Retrieve the given object's nearest offset from the camera.
+ *
+ * \return The object's nearest offset from the center of the Xtion sensor, or (-1, -1, -1) on error.
+ *
+ * \ingroup depth
+ */
+VF EXPORT_SYM point3 get_depth_scanline_object_nearest(int object_num);
 
 /**
  * Retrieve the given object's nearest x offset from the camera.
@@ -274,7 +292,7 @@ EXPORT_SYM int get_depth_scanline_object_center_z(int object_num);
  *
  * \ingroup depth
  */
-EXPORT_SYM int get_depth_scanline_object_nearest_x(int object_num);
+VF EXPORT_SYM int get_depth_scanline_object_nearest_x(int object_num);
 
 /**
  * Retrieve the given object's nearest y offset from the camera.
@@ -283,16 +301,16 @@ EXPORT_SYM int get_depth_scanline_object_nearest_x(int object_num);
  *
  * \ingroup depth
  */
-EXPORT_SYM int get_depth_scanline_object_nearest_y(int object_num);
+VF EXPORT_SYM int get_depth_scanline_object_nearest_y(int object_num);
 
 /**
- * Retrieve the given object's nearest z offset from the camera.
+ * Retrieve the given object's nearest offset from the camera.
  *
- * \return The object's nearest z offset from the center of the Xtion sensor, or -1 on error.
+ * \return The object's nearest offset from the center of the Xtion sensor, or (-1, -1, -1) on error.
  *
  * \ingroup depth
  */
-EXPORT_SYM int get_depth_scanline_object_nearest_z(int object_num);
+VF EXPORT_SYM int get_depth_scanline_object_nearest_z(int object_num);
 
 /**
  * Retrieve the given object's farthest x offset from the camera.
@@ -301,7 +319,16 @@ EXPORT_SYM int get_depth_scanline_object_nearest_z(int object_num);
  *
  * \ingroup depth
  */
-EXPORT_SYM int get_depth_scanline_object_farthest_x(int object_num);
+VF EXPORT_SYM point3 get_depth_scanline_object_farthest(int object_num);
+
+/**
+ * Retrieve the given object's farthest x offset from the camera.
+ *
+ * \return The object's farthest x offset from the center of the Xtion sensor, or -1 on error.
+ *
+ * \ingroup depth
+ */
+VF EXPORT_SYM int get_depth_scanline_object_farthest_x(int object_num);
 
 /**
  * Retrieve the given object's farthest y offset from the camera.
@@ -310,7 +337,7 @@ EXPORT_SYM int get_depth_scanline_object_farthest_x(int object_num);
  *
  * \ingroup depth
  */
-EXPORT_SYM int get_depth_scanline_object_farthest_y(int object_num);
+VF EXPORT_SYM int get_depth_scanline_object_farthest_y(int object_num);
 
 /**
  * Retrieve the given object's farthest z offset from the camera.
@@ -319,7 +346,7 @@ EXPORT_SYM int get_depth_scanline_object_farthest_y(int object_num);
  *
  * \ingroup depth
  */
-EXPORT_SYM int get_depth_scanline_object_farthest_z(int object_num);
+VF EXPORT_SYM int get_depth_scanline_object_farthest_z(int object_num);
 
 /**
  * Retrieve the given object's size in mm.
@@ -328,7 +355,7 @@ EXPORT_SYM int get_depth_scanline_object_farthest_z(int object_num);
  *
  * \ingroup depth
  */
-EXPORT_SYM int get_depth_scanline_object_size(int object_num);
+VF EXPORT_SYM int get_depth_scanline_object_size(int object_num);
 
 /**
  * Retrieve the given object's angle in degrees.
@@ -339,7 +366,7 @@ EXPORT_SYM int get_depth_scanline_object_size(int object_num);
  *
  * \ingroup depth
  */
-EXPORT_SYM int get_depth_scanline_object_angle(int object_num);
+VF EXPORT_SYM int get_depth_scanline_object_angle(int object_num);
 
 typedef enum SortMethod_
 {
@@ -348,8 +375,11 @@ typedef enum SortMethod_
   SORT_FARTHEST
 } SortMethod;
 
-EXPORT_SYM void set_depth_scanline_sorting_method(SortMethod method);
-EXPORT_SYM SortMethod get_depth_scanline_sorting_method();
+VF EXPORT_SYM void set_depth_scanline_sorting_method(SortMethod method);
+
+VF EXPORT_SYM SortMethod get_depth_scanline_sorting_method();
+
+VFL
 
 #ifdef __cplusplus
 }

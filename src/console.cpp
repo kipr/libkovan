@@ -18,7 +18,7 @@
  *  If not, see <http://www.gnu.org/licenses/>.                           *
  **************************************************************************/
 
-#include "kovan/console.hpp"
+VH #include "kovan/console.hpp"
 #include <cstdio>
 
 void Console::clear()

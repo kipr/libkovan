@@ -18,8 +18,8 @@
  *  If not, see <http://www.gnu.org/licenses/>.                           *
  **************************************************************************/
 
-#include "kovan/depth_exception.hpp"
-#include "kovan/xtion_depth_driver.hpp"
+VH #include "kovan/depth_exception.hpp"
+VH #include "kovan/xtion_depth_driver.hpp"
 #include "xtion_depth_driver_impl_p.hpp"
 
 using namespace depth;

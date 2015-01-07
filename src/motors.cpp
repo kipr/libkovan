@@ -19,7 +19,7 @@
  **************************************************************************/
 
 #include "kovan/motors.hpp"
-#include "kovan/util.h"
+VH #include "kovan/util.h"
 #include "motors_p.hpp"
 #include <cstdlib>
 #include <math.h>

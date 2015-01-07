@@ -18,20 +18,20 @@
  *  If not, see <http://www.gnu.org/licenses/>.                           *
  **************************************************************************/
 
-#include "kovan/util.h"
+VH #include "kovan/util.h"
 #include "time_p.hpp"
 
-void msleep(long msecs)
+VI void msleep(long msecs)
 {
 	Private::Time::microsleep(msecs * 1000UL);
 }
 
-unsigned long systime()
+VI unsigned long systime()
 {
 	return Private::Time::systime();
 }
 
-double seconds()
+VI double seconds()
 {
 	return systime() / 1000.0;
 }

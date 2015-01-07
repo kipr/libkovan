@@ -1,6 +1,6 @@
-#include "kovan/accel.hpp"
+VH #include "kovan/accel.hpp"
 #include "i2c_p.hpp"
-#include "kovan/compat.hpp"
+VH #include "kovan/compat.hpp"
 
 #ifndef WIN32
 #include <unistd.h>

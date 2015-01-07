@@ -30,6 +30,7 @@
 #define _CREATE_H_
 
 #include "export.h"
+#include "vtable.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -42,7 +43,7 @@ extern "C" {
  * \see create_disconnect
  * \ingroup create
  */
-EXPORT_SYM int create_connect();
+VF EXPORT_SYM int create_connect();
 
 /*!
  * Attempts to establish a connection to the create.
@@ -50,359 +51,377 @@ EXPORT_SYM int create_connect();
  * \see create_disconnect
  * \ingroup create
  */
-EXPORT_SYM int create_connect_once();
+VF EXPORT_SYM int create_connect_once();
 
 /*!
  * Cleans up connection to the create.
  * \see create_connect
  * \ingroup create
  */
-EXPORT_SYM void create_disconnect();
+VF EXPORT_SYM void create_disconnect();
 
 /*!
  * \ingroup create
  */
-EXPORT_SYM void create_start();
+VF EXPORT_SYM void create_start();
 
 /*!
  * \ingroup create
  */
-EXPORT_SYM void create_passive();
+VF EXPORT_SYM void create_passive();
 
 /*!
  * \ingroup create
  */
-EXPORT_SYM void create_safe();
+VF EXPORT_SYM void create_safe();
 
 /*!
  * \ingroup create
  */
-EXPORT_SYM void create_full();
+VF EXPORT_SYM void create_full();
 
 /*!
  * \ingroup create
  */
-EXPORT_SYM void create_spot();
+VF EXPORT_SYM void create_spot();
 
 /*!
  * \ingroup create
  */
-EXPORT_SYM void create_cover();
+VF EXPORT_SYM void create_cover();
 
 /*!
  * \ingroup create
  */
-EXPORT_SYM void create_demo(int d);
+VF EXPORT_SYM void create_demo(int d);
 
 /*!
  * \ingroup create
  */
-EXPORT_SYM void create_cover_dock();
+VF EXPORT_SYM void create_cover_dock();
 
 /*!
  * \ingroup create
  */
-EXPORT_SYM int get_create_mode();
+VF EXPORT_SYM int get_create_mode();
 
 /*!
  * \ingroup create
  */
-EXPORT_SYM int get_create_lbump();
+VF EXPORT_SYM int get_create_lbump();
 
 /*!
  * \ingroup create
  */
-EXPORT_SYM int get_create_rbump();
+VF EXPORT_SYM int get_create_rbump();
 
 /*!
  * \ingroup create
  */
-EXPORT_SYM int get_create_lwdrop();
+VF EXPORT_SYM int get_create_lwdrop();
 
 /*!
  * \ingroup create
  */
-EXPORT_SYM int get_create_cwdrop();
+VF EXPORT_SYM int get_create_cwdrop();
 
 /*!
  * \ingroup create
  */
-EXPORT_SYM int get_create_rwdrop();
+VF EXPORT_SYM int get_create_rwdrop();
 
 /*!
  * \ingroup create
  */
-EXPORT_SYM int get_create_wall();
+VF EXPORT_SYM int get_create_wall();
 
 /*!
  * \ingroup create
  */
-EXPORT_SYM int get_create_lcliff();
+VF EXPORT_SYM int get_create_lcliff();
 
 /*!
  * \ingroup create
  */
-EXPORT_SYM int get_create_lfcliff();
+VF EXPORT_SYM int get_create_lfcliff();
 
 /*!
  * \ingroup create
  */
-EXPORT_SYM int get_create_rfcliff();
+VF EXPORT_SYM int get_create_rfcliff();
 
 /*!
  * \ingroup create
  */
-EXPORT_SYM int get_create_rcliff();
+VF EXPORT_SYM int get_create_rcliff();
 
 /*!
  * \ingroup create
  */
-EXPORT_SYM int get_create_vwall();
+VF EXPORT_SYM int get_create_vwall();
 
 /*!
  * \ingroup create
  */
-EXPORT_SYM int get_create_overcurrents();
+VF EXPORT_SYM int get_create_overcurrents();
 
 /*!
  * \ingroup create
  */
-EXPORT_SYM int get_create_infrared();
+VF EXPORT_SYM int get_create_infrared();
 
 /*!
  * \ingroup create
  */
-EXPORT_SYM int get_create_advance_button();
+VF EXPORT_SYM int get_create_advance_button();
 
 /*!
  * \ingroup create
  */
-EXPORT_SYM int get_create_play_button();
+VF EXPORT_SYM int get_create_play_button();
 
 /*!
  * \ingroup create
  */
-EXPORT_SYM int get_create_normalized_angle();
+VF EXPORT_SYM int get_create_normalized_angle();
 
 /*!
  * \ingroup create
  */
-EXPORT_SYM void set_create_normalized_angle(int angle);
+VF EXPORT_SYM void set_create_normalized_angle(int angle);
 
 /*!
  * \ingroup create
  */
-EXPORT_SYM int get_create_total_angle();
+VF EXPORT_SYM int get_create_total_angle();
 
 /*!
  * \ingroup create
  */
-EXPORT_SYM void set_create_total_angle(int angle);
+VF EXPORT_SYM void set_create_total_angle(int angle);
 
 /*!
  * \ingroup create
  */
-EXPORT_SYM int get_create_distance();
+VF EXPORT_SYM int get_create_distance();
 
 /*!
  * \ingroup create
  */
-EXPORT_SYM void set_create_distance(int dist);
+VF EXPORT_SYM void set_create_distance(int dist);
 
 /*!
  * \ingroup create
  */
-EXPORT_SYM int get_create_battery_charging_state();
+VF EXPORT_SYM int get_create_battery_charging_state();
 
 /*!
  * \ingroup create
  */
-EXPORT_SYM int get_create_battery_voltage();
+VF EXPORT_SYM int get_create_battery_voltage();
 
 /*!
  * \ingroup create
  */
-EXPORT_SYM int get_create_battery_current();
+VF EXPORT_SYM int get_create_battery_current();
 
 /*!
  * \ingroup create
  */
-EXPORT_SYM int get_create_battery_temp();
+VF EXPORT_SYM int get_create_battery_temp();
 
 /*!
  * \ingroup create
  */
-EXPORT_SYM int get_create_battery_charge();
+VF EXPORT_SYM int get_create_battery_charge();
 
 /*!
  * \ingroup create
  */
-EXPORT_SYM int get_create_battery_capacity();
+VF EXPORT_SYM int get_create_battery_capacity();
 
 /*!
  * \ingroup create
  */
-EXPORT_SYM int get_create_wall_amt();
+VF EXPORT_SYM int get_create_wall_amt();
 
 /*!
  * \ingroup create
  */
-EXPORT_SYM int get_create_lcliff_amt();
+VF EXPORT_SYM int get_create_lcliff_amt();
 
 /*!
  * \ingroup create
  */
-EXPORT_SYM int get_create_lfcliff_amt();
+VF EXPORT_SYM int get_create_lfcliff_amt();
 
 /*!
  * \ingroup create
  */
-EXPORT_SYM int get_create_rfcliff_amt();
+VF EXPORT_SYM int get_create_rfcliff_amt();
 
 /*!
  * \ingroup create
  */
-EXPORT_SYM int get_create_rcliff_amt();
+VF EXPORT_SYM int get_create_rcliff_amt();
 
 /*!
  * \ingroup create
  */
-EXPORT_SYM int get_create_bay_DI();
+VF EXPORT_SYM int get_create_bay_DI();
 
 /*!
  * \ingroup create
  */
-EXPORT_SYM int get_create_bay_AI();
+VF EXPORT_SYM int get_create_bay_AI();
 
 /*!
  * \ingroup create
  */
-EXPORT_SYM int get_create_song_number();
+VF EXPORT_SYM int get_create_song_number();
 
 /*!
  * \ingroup create
  */
-EXPORT_SYM int get_create_song_playing();
+VF EXPORT_SYM int get_create_song_playing();
 
 /*!
  * \ingroup create
  */
-EXPORT_SYM int get_create_number_of_stream_packets();
+VF EXPORT_SYM int get_create_number_of_stream_packets();
 
 /*!
  * \ingroup create
  */
-EXPORT_SYM int get_create_requested_velocity();
+VF EXPORT_SYM int get_create_requested_velocity();
 
 /*!
  * \ingroup create
  */
-EXPORT_SYM int get_create_requested_radius();
+VF EXPORT_SYM int get_create_requested_radius();
 
 /*!
  * \ingroup create
  */
-EXPORT_SYM int get_create_requested_right_velocity();
+VF EXPORT_SYM int get_create_requested_right_velocity();
 
 /*!
  * \ingroup create
  */
-EXPORT_SYM int get_create_requested_left_velocity();
+VF EXPORT_SYM int get_create_requested_left_velocity();
 
 /*!
  * \ingroup create
  */
-EXPORT_SYM void create_stop();
+VF EXPORT_SYM void create_stop();
 
 /*!
  * \ingroup create
  */
-EXPORT_SYM void create_drive (int speed, int radius);
+VF EXPORT_SYM void create_drive(int speed, int radius);
 
 /*!
  * \ingroup create
  */
-EXPORT_SYM void create_drive_straight (int speed);
+VF EXPORT_SYM void create_drive_straight(int speed);
 
 /*!
  * \ingroup create
  */
-EXPORT_SYM void create_spin_CW (int speed);
+VF EXPORT_SYM void create_spin_CW(int speed);
 
 /*!
  * \ingroup create
  */
-EXPORT_SYM void create_spin_CCW (int speed);
+VF EXPORT_SYM void create_spin_CCW(int speed);
 
 /*!
  * \ingroup create
  */
-EXPORT_SYM void create_drive_direct(int l_speed, int r_speed);
+VF EXPORT_SYM void create_drive_direct(int l_speed, int r_speed);
 
 /*!
  * \ingroup create
  */
-EXPORT_SYM void create_spin_block(int speed, int angle);
+VF EXPORT_SYM void create_spin_block(int speed, int angle);
 
 /*!
  * \ingroup create
  */
-EXPORT_SYM int _create_get_raw_encoders(long *lenc, long *renc);
+VF EXPORT_SYM int _create_get_raw_encoders(long *lenc, long *renc);
 
 /*!
  * \ingroup create
  */
-EXPORT_SYM void create_advance_led(int on) ;
+VF EXPORT_SYM void create_advance_led(int on);
 
 /*!
  * \ingroup create
  */
-EXPORT_SYM void create_play_led(int on) ;
+VF EXPORT_SYM void create_play_led(int on) ;
 
 /*!
  * \ingroup create
  */
-EXPORT_SYM void create_power_led(int color, int brightness) ;
+VF EXPORT_SYM void create_power_led(int color, int brightness);
 
 /*!
  * \ingroup create
  */
-EXPORT_SYM void create_digital_output(int bits);
+VF EXPORT_SYM void create_digital_output(int bits);
 
 /*!
  * \ingroup create
  */
-EXPORT_SYM void create_pwm_low_side_drivers(int pwm2, int pwm1, int pwm0);
+VF EXPORT_SYM void create_pwm_low_side_drivers(int pwm2, int pwm1, int pwm0);
 
 /*!
  * \ingroup create
  */
-EXPORT_SYM void create_low_side_drivers(int pwm2, int pwm1, int pwm0);
+VF EXPORT_SYM void create_low_side_drivers(int pwm2, int pwm1, int pwm0);
 
 /*!
  * \ingroup create
  */
-EXPORT_SYM void create_load_song(int num);
+VF EXPORT_SYM void create_load_song(int num);
 
 /*!
  * \ingroup create
  */
-EXPORT_SYM void create_play_song(int num);
+VF EXPORT_SYM void create_play_song(int num);
 
 /*!
  * \ingroup create
  */
-EXPORT_SYM int create_read_block(char *data, int count);
+VF EXPORT_SYM int create_read_block(char *data, int count);
 
 /*!
  * \ingroup create
  */
-EXPORT_SYM void create_write_byte(char byte);
+VF EXPORT_SYM void create_write_byte(char byte);
 
 /*!
  * \ingroup create
  */
-EXPORT_SYM void create_clear_serial_buffer();
+VF EXPORT_SYM void create_clear_serial_buffer();
+
+enum BaudRate
+{
+  Baud57600 = 0,
+  Baud115200 = 1
+};
+
+/*!
+ * \ingroup create
+ */
+VF EXPORT_SYM enum BaudRate get_create_baud_rate();
+
+/*!
+ * \ingroup create
+ */
+VF EXPORT_SYM void set_create_baud_rate(const enum BaudRate baudRate);
+
+VFL
 
 #ifdef __cplusplus
 }

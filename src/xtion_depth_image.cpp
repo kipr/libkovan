@@ -19,9 +19,9 @@
  **************************************************************************/
 
 #define NOMINMAX
-#include "kovan/xtion_depth_image.hpp"
+VH #include "kovan/xtion_depth_image.hpp"
 #include "xtion_depth_driver_impl_p.hpp"
-#include "kovan/depth_exception.hpp"
+VH #include "kovan/depth_exception.hpp"
 
 using namespace depth;
 using namespace openni;

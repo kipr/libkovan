@@ -18,381 +18,391 @@
  *  If not, see <http://www.gnu.org/licenses/>.                           *
  **************************************************************************/
 
-#include "kovan/create.h"
+VH #include "kovan/create.h"
 #include "kovan/create.hpp"
 #include "nyi.h"
 
 #include <climits>
 
-int create_connect()
+VI int create_connect()
 {
 	while(!create_connect_once());
 	return 0;
 }
 
-int create_connect_once()
+VI int create_connect_once()
 {
 	return Create::instance()->connect() ? 1 : 0;
 }
 
-void create_disconnect()
+VI void create_disconnect()
 {
 	Create::instance()->disconnect();
 }
 
-void create_passive()
+VI void create_passive()
 {
 	Create::instance()->setPassiveMode();
 }
 
-void create_safe()
+VI void create_safe()
 {
 	Create::instance()->setSafeMode();
 }
 
-void create_full()
+VI void create_full()
 {
 	Create::instance()->setFullMode();
 }
 
-void create_start()
+VI void create_start()
 {
   THIS_IS_NYI
 }
 
-void create_spot()
+VI void create_spot()
 {
   THIS_IS_NYI
 }
 
-void create_cover()
+VI void create_cover()
 {
   THIS_IS_NYI
 }
 
-void create_demo(int d)
+VI void create_demo(int d)
 {
   THIS_IS_NYI
 }
 
-void create_cover_dock()
+VI void create_cover_dock()
 {
   THIS_IS_NYI
 }
 
-int get_create_mode()
+VI int get_create_mode()
 {
 	return Create::instance()->mode();
 }
 
-int get_create_lbump()
+VI int get_create_lbump()
 {
 	return Create::instance()->bumpLeft()->value() ? 1 : 0;
 }
 
-int get_create_rbump()
+VI int get_create_rbump()
 {
 	return Create::instance()->bumpRight()->value() ? 1 : 0;
 }
 
-int get_create_lwdrop()
+VI int get_create_lwdrop()
 {
 	return Create::instance()->wheelDropLeft()->value() ? 1 : 0;
 }
 
-int get_create_cwdrop()
+VI int get_create_cwdrop()
 {
 	return Create::instance()->wheelDropCaster()->value() ? 1 : 0;
 }
 
-int get_create_rwdrop()
+VI int get_create_rwdrop()
 {
 	return Create::instance()->wheelDropRight()->value() ? 1 : 0;
 }
 
-int get_create_wall()
+VI int get_create_wall()
 {
 	return Create::instance()->wall()->value() ? 1 : 0;
 }
 
-int get_create_lcliff()
+VI int get_create_lcliff()
 {
 	return Create::instance()->cliffLeft()->value() ? 1 : 0;
 }
 
-int get_create_lfcliff()
+VI int get_create_lfcliff()
 {
 	return Create::instance()->cliffFrontLeft()->value() ? 1 : 0;
 }
 
-int get_create_rfcliff()
+VI int get_create_rfcliff()
 {
 	return Create::instance()->cliffFrontRight()->value() ? 1 : 0;
 }
 
-int get_create_rcliff()
+VI int get_create_rcliff()
 {
 	return Create::instance()->cliffRight()->value() ? 1 : 0;
 }
 
-int get_create_vwall()
+VI int get_create_vwall()
 {
 	return Create::instance()->virtualWall()->value();
 }
 
-int get_create_overcurrents()
+VI int get_create_overcurrents()
 {
   THIS_IS_NYI
   return 0;
 }
 
-int get_create_infrared()
+VI int get_create_infrared()
 {
 	return Create::instance()->ir()->value();
 }
 
-int get_create_advance_button()
+VI int get_create_advance_button()
 {
 	return Create::instance()->advanceButton()->value() ? 1 : 0;
 }
 
-int get_create_play_button()
+VI int get_create_play_button()
 {
 	return Create::instance()->playButton()->value() ? 1 : 0;
 }
 
-int get_create_normalized_angle()
+VI int get_create_normalized_angle()
 {
 	return Create::instance()->angle()->value() % 360;
 }
 
-void set_create_normalized_angle(int angle)
+VI void set_create_normalized_angle(int angle)
 {
 	set_create_total_angle(angle);
 }
 
-int get_create_total_angle()
+VI int get_create_total_angle()
 {
 	return Create::instance()->angle()->value();
 }
 
-void set_create_total_angle(int angle)
+VI void set_create_total_angle(int angle)
 {
 	Create::instance()->setAngle(angle);
 }
 
-int get_create_distance()
+VI int get_create_distance()
 {
 	return Create::instance()->distance()->value();
 }
 
-void set_create_distance(int dist)
+VI void set_create_distance(int dist)
 {
 	Create::instance()->setDistance(dist);
 }
 
-int get_create_battery_charging_state()
+VI int get_create_battery_charging_state()
 {
 	return Create::instance()->chargingState()->value();
 }
 
-int get_create_battery_voltage()
+VI int get_create_battery_voltage()
 {
   THIS_IS_NYI
   return 0;
 }
 
-int get_create_battery_current()
+VI int get_create_battery_current()
 {
   THIS_IS_NYI
   return 0;
 }
 
-int get_create_battery_temp()
+VI int get_create_battery_temp()
 {
 	return Create::instance()->batteryTemperature()->value();
 }
 
-int get_create_battery_charge()
+VI int get_create_battery_charge()
 {
 	return Create::instance()->batteryCharge()->value();
 }
 
-int get_create_battery_capacity()
+VI int get_create_battery_capacity()
 {
 	return Create::instance()->batteryCapacity()->value();
 }
 
-int get_create_wall_amt()
+VI int get_create_wall_amt()
 {
 	return Create::instance()->wallSignal()->value();
 }
 
-int get_create_lcliff_amt()
+VI int get_create_lcliff_amt()
 {
 	return Create::instance()->cliffLeftSignal()->value();
 }
 
-int get_create_lfcliff_amt()
+VI int get_create_lfcliff_amt()
 {
 	return Create::instance()->cliffFrontLeftSignal()->value();
 }
 
-int get_create_rfcliff_amt()
+VI int get_create_rfcliff_amt()
 {
 	return Create::instance()->cliffFrontRightSignal()->value();
 }
 
-int get_create_rcliff_amt()
+VI int get_create_rcliff_amt()
 {
 	return Create::instance()->cliffRightSignal()->value();
 }
 
-int get_create_bay_DI()
+VI int get_create_bay_DI()
 {
   THIS_IS_NYI
 	return 0;
 }
 
-int get_create_bay_AI()
+VI int get_create_bay_AI()
 {
   THIS_IS_NYI
 	return 0;
 }
 
-int get_create_song_number()
+VI int get_create_song_number()
 {
   THIS_IS_NYI
 	return 0;
 }
 
-int get_create_song_playing()
+VI int get_create_song_playing()
 {
   THIS_IS_NYI
 	return 0;
 }
 
-int get_create_number_of_stream_packets()
+VI int get_create_number_of_stream_packets()
 {
   THIS_IS_NYI
 	return 0;
 }
 
-int get_create_requested_velocity()
+VI int get_create_requested_velocity()
 {
   THIS_IS_NYI
 	return 0;
 }
 
-int get_create_requested_radius()
+VI int get_create_requested_radius()
 {
   THIS_IS_NYI
 	return 0;
 }
 
-int get_create_requested_right_velocity()
+VI int get_create_requested_right_velocity()
 {
   THIS_IS_NYI
 	return 0;
 }
 
-int get_create_requested_left_velocity()
+VI int get_create_requested_left_velocity()
 {
   THIS_IS_NYI
 	return 0;
 }
 
-void create_stop()
+VI void set_create_baud_rate(const enum BaudRate baudRate)
+{
+  Create::instance()->setDefaultBaudRate(static_cast<Create::BaudRate>(baudRate));
+}
+
+VI enum BaudRate get_create_baud_rate()
+{
+  return static_cast<BaudRate>(Create::instance()->defaultBaudRate());
+}
+
+VI void create_stop()
 {
 	Create::instance()->stop();
 }
 
-void create_drive(int speed, int radius)
+VI void create_drive(int speed, int radius)
 {
 	Create::instance()->drive(speed, radius);
 }
 
-void create_drive_straight(int speed)
+VI void create_drive_straight(int speed)
 {
 	Create::instance()->driveStraight(speed);
 }
 
-void create_spin_CW(int speed)
+VI void create_spin_CW(int speed)
 {
 	Create::instance()->spinClockwise(speed);
 }
 
-void create_spin_CCW(int speed)
+VI void create_spin_CCW(int speed)
 {
 	Create::instance()->spinCounterClockwise(speed);
 }
 
-void create_drive_direct(int l_speed, int r_speed)
+VI void create_drive_direct(int l_speed, int r_speed)
 {
 	Create::instance()->driveDirect(l_speed, r_speed);
 }
 
-void create_spin_block(int speed, int angle)
+VI void create_spin_block(int speed, int angle)
 {
 	Create::instance()->turn(speed, angle);
 }
 
-int _create_get_raw_encoders(long *lenc, long *renc)
+VI int _create_get_raw_encoders(long *lenc, long *renc)
 {
 	return 0;
 }
 
-void create_advance_led(int on)
+VI void create_advance_led(int on)
 {
   THIS_IS_NYI
 }
 
-void create_play_led(int on)
+VI void create_play_led(int on)
 {
   THIS_IS_NYI
 }
 
-void create_power_led(int color, int brightness)
+VI void create_power_led(int color, int brightness)
 {
   THIS_IS_NYI
 }
 
-void create_digital_output(int bits)
+VI void create_digital_output(int bits)
 {
   THIS_IS_NYI
 }
 
-void create_pwm_low_side_drivers(int pwm2, int pwm1, int pwm0)
+VI void create_pwm_low_side_drivers(int pwm2, int pwm1, int pwm0)
 {
   THIS_IS_NYI
 }
 
-void create_low_side_drivers(int pwm2, int pwm1, int pwm0)
+VI void create_low_side_drivers(int pwm2, int pwm1, int pwm0)
 {
   THIS_IS_NYI
 }
 
-void create_load_song(int num)
+VI void create_load_song(int num)
 {
   THIS_IS_NYI
 }
 
-void create_play_song(int num)
+VI void create_play_song(int num)
 {
   THIS_IS_NYI
 }
 
-int create_read_block(char *data, int count)
+VI int create_read_block(char *data, int count)
 {
 	return Create::instance()->blockingRead(reinterpret_cast<unsigned char *>(data), count, UINT_MAX);
 }
 
-void create_write_byte(char byte)
+VI void create_write_byte(char byte)
 {
 	Create::instance()->write(static_cast<unsigned char>(byte));
 }
 
-void create_clear_serial_buffer()
+VI void create_clear_serial_buffer()
 {
 	Create::instance()->flush();
 }

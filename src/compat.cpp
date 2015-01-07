@@ -1,4 +1,4 @@
-#include "kovan/compat.hpp"
+VH #include "kovan/compat.hpp"
 
 #ifndef _MSC_VER
 #include <unistd.h>

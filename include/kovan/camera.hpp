@@ -77,9 +77,11 @@ namespace Camera
 			const size_t &dataLength = 0);
 		Object(const Object &rhs);
 		~Object();
-		
+#ifndef SWIG
 		const Point2<unsigned> &centroid() const;
 		const Rect<unsigned> &boundingBox() const;
+#endif
+    
 		const double confidence() const;
 		const char *data() const;
 		const size_t dataLength() const;
@@ -141,8 +143,10 @@ namespace Camera
 		
 		void invalidate();
 		
+#ifndef SWIG
 		const ObjectVector *objects() const;
-		
+#endif
+    
 		Device *device() const;
 		
 		/**
@@ -220,9 +224,10 @@ namespace Camera
 		
 		unsigned width() const;
 		unsigned height() const;
-		
+#ifndef SWIG
 		const ChannelPtrVector &channels() const;
-		
+#endif
+    
 		InputProvider *inputProvider() const;
 		const cv::Mat &rawImage() const;
 		

@@ -22,6 +22,7 @@
 #define _ANALOG_H_
 
 #include "export.h"
+#include "vtable.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -34,7 +35,7 @@ extern "C" {
  * \see analog10
  * \ingroup sensor
  */
-EXPORT_SYM int analog(int port);
+VF EXPORT_SYM int analog(int port);
 
 /*!
  * Gets the 10-bit analog value of a port.
@@ -43,7 +44,7 @@ EXPORT_SYM int analog(int port);
  * \see analog
  * \ingroup sensor
  */
-EXPORT_SYM int analog10(int port);
+VF EXPORT_SYM int analog10(int port);
 
 /*!
  * Gets the 10-bit analog value of an ET sensor on the given port.
@@ -52,7 +53,7 @@ EXPORT_SYM int analog10(int port);
  * \see analog
  * \ingroup sensor
  */
-EXPORT_SYM int analog_et(int port);
+VF EXPORT_SYM int analog_et(int port);
 
 /*!
  * Gets the 8-bit analog value of a port.
@@ -61,10 +62,13 @@ EXPORT_SYM int analog_et(int port);
  * \see analog10
  * \ingroup sensor
  */
-EXPORT_SYM int analog8(int port);
+VF EXPORT_SYM int analog8(int port);
 
-void set_analog_pullup(int port, int pullup);
-int get_analog_pullup(int port);
+VF void set_analog_pullup(int port, int pullup);
+
+VF int get_analog_pullup(int port);
+
+VFL
 
 #ifdef __cplusplus
 }

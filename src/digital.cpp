@@ -18,7 +18,7 @@
  *  If not, see <http://www.gnu.org/licenses/>.                           *
  **************************************************************************/
 
-#include "kovan/digital.hpp"
+VH #include "kovan/digital.hpp"
 #include "digital_p.hpp"
 
 Digital::Digital(const unsigned char& port)

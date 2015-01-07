@@ -27,7 +27,7 @@
 #include "kovan/ardrone.hpp"
 #include "kovan/thread.hpp"
 #include "kovan/socket.hpp"
-#include "kovan/util.h"
+VH #include "kovan/util.h"
 #include "ardrone_constants_p.hpp"
 #include "ardrone_video_p.hpp"
 #include "network_interface_p.hpp"

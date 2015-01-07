@@ -30,6 +30,7 @@
 #define _DIGITAL_H_
 
 #include "export.h"
+#include "vtable.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -38,31 +39,35 @@ extern "C" {
 /*!
  * \see get_digital_value
  */
-EXPORT_SYM int digital(int port);
+VF EXPORT_SYM int digital(int port);
 
 /*!
  * Sets the value of the digital port in output mode.
  * \see get_digital_value
  */
-EXPORT_SYM void set_digital_value(int port, int value);
+VF EXPORT_SYM void set_digital_value(int port, int value);
 
 /*!
  * Gets the current value of the digital port.
  * \return 1 if the switch is closed, 0 if the switch is open
  * \see set_digital_value
  */
-EXPORT_SYM int get_digital_value(int port);
+VF EXPORT_SYM int get_digital_value(int port);
 
 /*!
  * Sets the digital mode.
  * \param port The port to modify.
  * \param out 1 for output mode, 0 for input mode.
  */
-EXPORT_SYM void set_digital_output(int port, int out);
-EXPORT_SYM int get_digital_output(int port);
+VF EXPORT_SYM void set_digital_output(int port, int out);
 
-EXPORT_SYM int get_digital_pullup(int port);
-EXPORT_SYM void set_digital_pullup(int port, int pullup);
+VF EXPORT_SYM int get_digital_output(int port);
+
+VF EXPORT_SYM int get_digital_pullup(int port);
+
+VF EXPORT_SYM void set_digital_pullup(int port, int pullup);
+
+VFL
 
 #ifdef __cplusplus
 }

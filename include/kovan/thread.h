@@ -10,6 +10,7 @@
  */
 
 #include "export.h"
+#include "vtable.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -30,47 +31,49 @@ typedef void (*thread_function)();
 /**
  * \ingroup thread
  */
-EXPORT_SYM mutex mutex_create(void);
+VF EXPORT_SYM mutex mutex_create();
 
 /**
  * \ingroup thread
  */
-EXPORT_SYM void mutex_lock(mutex m);
+VF EXPORT_SYM void mutex_lock(mutex m);
 
 /**
  * \ingroup thread
  */
-EXPORT_SYM int mutex_trylock(mutex m);
+VF EXPORT_SYM int mutex_trylock(mutex m);
 
 /**
  * \ingroup thread
  */
-EXPORT_SYM void mutex_unlock(mutex m);
+VF EXPORT_SYM void mutex_unlock(mutex m);
 
 /**
  * \ingroup thread
  */
-EXPORT_SYM void mutex_destroy(mutex m);
+VF EXPORT_SYM void mutex_destroy(mutex m);
 
 /**
  * \ingroup thread
  */
-EXPORT_SYM thread thread_create(thread_function func);
+VF EXPORT_SYM thread thread_create(thread_function func);
 
 /**
  * \ingroup thread
  */
-EXPORT_SYM void thread_start(thread id);
+VF EXPORT_SYM void thread_start(thread id);
 
 /**
  * \ingroup thread
  */
-EXPORT_SYM void thread_wait(thread id);
+VF EXPORT_SYM void thread_wait(thread id);
 
 /**
  * \ingroup thread
  */
-EXPORT_SYM void thread_destroy(thread id);
+VF EXPORT_SYM void thread_destroy(thread id);
+
+VFL
 
 #ifdef __cplusplus
 }

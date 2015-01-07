@@ -28,13 +28,17 @@
 #define _DISPLAY_H_
 
 #include "export.h"
+#include "vtable.h"
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-EXPORT_SYM void display_clear();  // clears console and sets display map to all spaces
+VF EXPORT_SYM void display_clear();  // clears console and sets display map to all spaces
+
 EXPORT_SYM void display_printf(int col, int row, const char *t, ...); // runs printf formatting to specified screen location
+
+VFL
 
 #ifdef __cplusplus
 }

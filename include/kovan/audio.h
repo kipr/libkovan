@@ -2,12 +2,15 @@
 #define _AUDIO_H_
 
 #include "export.h"
+#include "vtable.h"
 
 #ifdef __cplusplus
 extern "C" {
 #endif	
 
-EXPORT_SYM void beep(void);
+VF EXPORT_SYM void beep(void);
+
+VFL
 
 #ifdef __cplusplus
 }

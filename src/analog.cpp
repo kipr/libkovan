@@ -18,7 +18,7 @@
  *  If not, see <http://www.gnu.org/licenses/>.                           *
  **************************************************************************/
 
-#include "kovan/analog.hpp"
+VH #include "kovan/analog.hpp"
 #include "analog_p.hpp"
 
 Analog::Analog(const unsigned char& port)

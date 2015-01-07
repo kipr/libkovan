@@ -29,6 +29,7 @@
 #define _GENERAL_H_
 
 #include "export.h"
+#include "vtable.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -43,7 +44,7 @@ extern "C" {
  * requires publish() to be called before changes will be written to the system.
  * \ingroup general
  */
-EXPORT_SYM void set_auto_publish(int on);
+VF EXPORT_SYM void set_auto_publish(int on);
 
 /*!
  * \brief Explictly publishes new data to the system
@@ -51,9 +52,11 @@ EXPORT_SYM void set_auto_publish(int on);
  * This allows for batch execution of commands with automatic publishing turned off.
  * \ingroup general
  */
-EXPORT_SYM void publish();
+VF EXPORT_SYM void publish();
 
-EXPORT_SYM void halt();
+VF EXPORT_SYM void halt();
+
+VFL
 
 void freeze_halt();
 

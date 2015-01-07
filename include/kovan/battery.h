@@ -29,18 +29,21 @@
 #define _BATTERY_H_
 
 #include "export.h"
+#include "vtable.h"
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-EXPORT_SYM int battery_charging();
+VF EXPORT_SYM int battery_charging();
 
 /*!
  * The device's power level
  * \return The device's current voltage
  */
-EXPORT_SYM float power_level();
+VF EXPORT_SYM float power_level();
+
+VFL
 
 #ifdef __cplusplus
 }

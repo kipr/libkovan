@@ -30,6 +30,7 @@
 #define _CONSOLE_H_
 
 #include "export.h"
+#include "vtable.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -39,7 +40,9 @@ extern "C" {
  * Clears the UI's console.
  * \ingroup console
  */
-EXPORT_SYM void console_clear();
+VF EXPORT_SYM void console_clear();
+
+VFL
 
 #ifdef __cplusplus
 }

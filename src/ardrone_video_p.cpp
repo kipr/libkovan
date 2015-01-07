@@ -5,7 +5,7 @@
 
 #include "uvlc_video_decoder_p.hpp"
 
-#include "kovan/util.h"
+VH #include "kovan/util.h"
 #include "kovan/thread.hpp"
 
 // ARM Workaround for labav.

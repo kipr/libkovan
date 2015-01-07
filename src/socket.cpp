@@ -1,6 +1,6 @@
 #ifndef _WIN32
 
-#include "kovan/socket.hpp"
+VH #include "kovan/socket.hpp"
 
 #ifndef WIN32
 #include <arpa/inet.h>

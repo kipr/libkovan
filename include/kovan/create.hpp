@@ -234,6 +234,22 @@ public:
 	 * \see isConnected
 	 */
 	bool connect();
+
+
+  enum BaudRate
+  {
+    Baud57600 = 0,
+    Baud115200 = 1
+  };
+  
+  /*!
+   * Attempts to establish a connection to the create
+   * \param baudRate The desired communication speed with the Create 1 or 2
+   * \return true if connection succeeded, false if connection failed
+   * \see disconnect
+   * \see isConnected
+   */
+  bool connect(const BaudRate baudRate);
 	
 	/*!
 	 * Cleans up connection to the create
@@ -260,7 +276,10 @@ public:
 	void send(const CreateScript& script);
 	
 	bool write(const unsigned char& c);
+  
+#ifndef SWIG
 	bool write(const unsigned char *data, const size_t& len);
+#endif
 	
 	void flush();
 	
@@ -405,6 +424,9 @@ public:
 		pthread_mutex_unlock(&m_mutex);
 	#endif
 	}
+  
+  inline void setDefaultBaudRate(const BaudRate defaultBaudRate) { m_defaultBaudRate = defaultBaudRate; }
+  inline BaudRate defaultBaudRate() const { return m_defaultBaudRate; }
 	
 private:
 	Create();
@@ -530,6 +552,8 @@ private:
 #ifndef WIN32
 	pthread_mutex_t m_mutex;
 #endif
+  
+  BaudRate m_defaultBaudRate;
 };
 
 #endif

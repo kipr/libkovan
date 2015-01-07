@@ -1,5 +1,5 @@
 #include "xtion_depth_driver_impl_p.hpp"
-#include <kovan/depth_exception.hpp>
+VH #include "kovan/depth_exception.hpp"
 
 using namespace depth;
 using namespace openni;

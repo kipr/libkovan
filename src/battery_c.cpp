@@ -18,15 +18,15 @@
  *  If not, see <http://www.gnu.org/licenses/>.                           *
  **************************************************************************/
 
-#include "kovan/battery.h"
+VH #include "kovan/battery.h"
 #include "kovan/battery.hpp"
 
-int battery_charging()
+VI int battery_charging()
 {
 	return Battery::isCharging();
 }
 
-float power_level()
+VI float power_level()
 {
 	return Battery::powerLevel();
 }

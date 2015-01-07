@@ -1,4 +1,4 @@
-#include "kovan/camera.h"
+VH #include "kovan/camera.h"
 #include "kovan/camera.hpp"
 #include "nyi.h"
 #include "camera_c_p.hpp"
@@ -8,12 +8,12 @@
 
 using namespace Private;
 
-int camera_open()
+VI int camera_open()
 {
   return camera_open_at_res(LOW_RES);
 }
 
-int camera_open_at_res(enum Resolution res)
+VI int camera_open_at_res(enum Resolution res)
 {
 	DeviceSingleton::setInputProvider(new Camera::UsbInputProvider);
 	bool ret = DeviceSingleton::instance()->open();
@@ -40,7 +40,7 @@ int camera_open_at_res(enum Resolution res)
 	return 1;
 }
 
-int camera_open_device(int number, enum Resolution res)
+VI int camera_open_device(int number, enum Resolution res)
 {
 	bool ret = DeviceSingleton::instance()->open(number);
 	if(!ret) return 0;
@@ -65,7 +65,7 @@ int camera_open_device(int number, enum Resolution res)
 	return 1;
 }
 
-int camera_load_config(const char *name)
+VI int camera_load_config(const char *name)
 {
 	Config *config = Config::load(Camera::ConfigPath::path(name));
 	if(!config) return 0;
@@ -74,7 +74,7 @@ int camera_load_config(const char *name)
 	return 1;
 }
 
-void set_camera_width(int width)
+VI void set_camera_width(int width)
 {
 	if(width <= 0) {
 		std::cout << "Camera width must be greater than 0." << std::endl;
@@ -83,7 +83,7 @@ void set_camera_width(int width)
 	DeviceSingleton::instance()->setWidth(width);
 }
 
-void set_camera_height(int height)
+VI void set_camera_height(int height)
 {
 	if(height <= 0) {
 		std::cout << "Camera height must be greater than 0." << std::endl;
@@ -92,22 +92,22 @@ void set_camera_height(int height)
 	DeviceSingleton::instance()->setHeight(height);
 }
 
-int get_camera_width(void)
+VI int get_camera_width(void)
 {
 	return DeviceSingleton::instance()->width();
 }
 
-int get_camera_height(void)
+VI int get_camera_height(void)
 {
 	return DeviceSingleton::instance()->height();
 }
 
-int camera_update(void)
+VI int camera_update(void)
 {
 	return DeviceSingleton::instance()->update() ? 1 : 0;
 }
 
-pixel get_camera_pixel(point2 p)
+VI pixel get_camera_pixel(point2 p)
 {
 	const cv::Mat &mat = DeviceSingleton::instance()->rawImage();
 	if(mat.empty()) {
@@ -130,7 +130,7 @@ pixel get_camera_pixel(point2 p)
 	return ret;
 }
 
-int get_channel_count(void)
+VI int get_channel_count(void)
 {
 	return DeviceSingleton::instance()->channels().size();
 }
@@ -162,13 +162,13 @@ bool check_channel_and_object(int i, int j)
 	return true;
 }
 
-int get_object_count(int channel)
+VI int get_object_count(int channel)
 {
 	if(!check_channel(channel)) return -1;
 	return DeviceSingleton::instance()->channels()[channel]->objects()->size();
 }
 
-double get_object_confidence(int channel, int object)
+VI double get_object_confidence(int channel, int object)
 {
 	if(!check_channel_and_object(channel, object)) return 0.0;
 	const Camera::Object &o = (*DeviceSingleton::instance()->channels()[channel]->objects())[object];
@@ -176,14 +176,14 @@ double get_object_confidence(int channel, int object)
 }
 
 
-const char *get_object_data(int channel, int object)
+VI const char *get_object_data(int channel, int object)
 {
 	if(!check_channel_and_object(channel, object)) return 0;
 	const Camera::Object &o = (*DeviceSingleton::instance()->channels()[channel]->objects())[object];
 	return o.data();
 }
 
-int get_code_num(int channel, int object)
+VI int get_code_num(int channel, int object)
 {
 	if(!check_channel_and_object(channel, object)) return -1;
 	const char *data = get_object_data(channel, object);
@@ -191,134 +191,134 @@ int get_code_num(int channel, int object)
 	return atoi(data);
 }
 
-int get_object_data_length(int channel, int object)
+VI int get_object_data_length(int channel, int object)
 {
 	if(!check_channel_and_object(channel, object)) return 0;
 	const Camera::Object &o = (*DeviceSingleton::instance()->channels()[channel]->objects())[object];
 	return o.dataLength();
 }
 
-int get_object_area(int channel, int object)
+VI int get_object_area(int channel, int object)
 {
 	if(!check_channel_and_object(channel, object)) return -1;
 	const Camera::Object &o = (*DeviceSingleton::instance()->channels()[channel]->objects())[object];
 	return o.boundingBox().area();
 }
 
-rectangle get_object_bbox(int channel, int object)
+VI rectangle get_object_bbox(int channel, int object)
 {
 	if(!check_channel_and_object(channel, object)) return create_rectangle(-1, -1, 0, 0);
 	const Camera::Object &o = (*DeviceSingleton::instance()->channels()[channel]->objects())[object];
 	return o.boundingBox().toCRectangle();
 }
 
-int get_object_bbox_ulx(int channel, int object)
+VI int get_object_bbox_ulx(int channel, int object)
 {
   return get_object_bbox(channel, object).ulx;
 }
 
-int get_object_bbox_uly(int channel, int object)
+VI int get_object_bbox_uly(int channel, int object)
 {
   return get_object_bbox(channel, object).uly;
 }
 
-int get_object_bbox_brx(int channel, int object)
+VI int get_object_bbox_brx(int channel, int object)
 {
   const rectangle r = get_object_bbox(channel, object);
   return r.ulx + r.width;
 }
 
-int get_object_bbox_bry(int channel, int object)
+VI int get_object_bbox_bry(int channel, int object)
 {
   const rectangle r = get_object_bbox(channel, object);
   return r.uly + r.height;
 }
 
-int get_object_bbox_width(int channel, int object)
+VI int get_object_bbox_width(int channel, int object)
 {
   return get_object_bbox(channel, object).width;
 }
 
-int get_object_bbox_height(int channel, int object)
+VI int get_object_bbox_height(int channel, int object)
 {
   return get_object_bbox(channel, object).height;
 }
 
-point2 get_object_centroid(int channel, int object)
+VI point2 get_object_centroid(int channel, int object)
 {
 	if(!check_channel_and_object(channel, object)) return create_point2(-1, -1);
 	const Camera::Object &o = (*DeviceSingleton::instance()->channels()[channel]->objects())[object];
 	return o.centroid().toCPoint2();
 }
 
-int get_object_centroid_column(int channel, int object)
+VI int get_object_centroid_column(int channel, int object)
 {
   return get_object_centroid(channel, object).x;
 }
 
-int get_object_centroid_x(int channel, int object)
+VI int get_object_centroid_x(int channel, int object)
 {
   return get_object_centroid(channel, object).x;
 }
 
-int get_object_centroid_row(int channel, int object)
+VI int get_object_centroid_row(int channel, int object)
 {
   return get_object_centroid(channel, object).y;
 }
 
-int get_object_centroid_y(int channel, int object)
+VI int get_object_centroid_y(int channel, int object)
 {
   return get_object_centroid(channel, object).y;
 }
 
-point2 get_object_center(int channel, int object)
+VI point2 get_object_center(int channel, int object)
 {
 	if(!check_channel_and_object(channel, object)) return create_point2(-1, -1);
 	const Camera::Object &o = (*DeviceSingleton::instance()->channels()[channel]->objects())[object];
 	return o.boundingBox().center().toCPoint2();
 }
 
-int get_object_center_column(int channel, int object)
+VI int get_object_center_column(int channel, int object)
 {
   return get_object_center(channel, object).x;
 }
 
-int get_object_center_x(int channel, int object)
+VI int get_object_center_x(int channel, int object)
 {
   return get_object_center(channel, object).x;
 }
 
-int get_object_center_row(int channel, int object)
+VI int get_object_center_row(int channel, int object)
 {
   return get_object_center(channel, object).y;
 }
 
-int get_object_center_y(int channel, int object)
+VI int get_object_center_y(int channel, int object)
 {
   return get_object_center(channel, object).y;
 }
 
-void camera_close()
+VI void camera_close()
 {
 	DeviceSingleton::instance()->close();
 }
 
-void set_camera_config_base_path(const char *const path)
+VI void set_camera_config_base_path(const char *const path)
 {
 	Camera::ConfigPath::setBasePath(path);
 }
 
-const unsigned char *get_camera_frame_row(unsigned row)
+VI const unsigned char *get_camera_frame_row(unsigned row)
 {
 	return DeviceSingleton::instance()->rawImage().ptr(row);
 }
 
-const unsigned char *get_camera_frame()
+VI const unsigned char *get_camera_frame()
 {
 	return DeviceSingleton::instance()->bgr();
 }
 
-unsigned get_camera_element_size()
+VI unsigned get_camera_element_size()
 {
 	return DeviceSingleton::instance()->rawImage().elemSize();
 }

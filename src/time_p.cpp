@@ -19,7 +19,7 @@
  **************************************************************************/
 
 #include "time_p.hpp"
-#include "kovan/compat.hpp"
+VH #include "kovan/compat.hpp"
 
 #ifndef WIN32
 #include <unistd.h>

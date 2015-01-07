@@ -9,7 +9,8 @@
  * \defgroup graphics Graphics
  */
 
-#include <kovan/export.h>
+#include "export.h"
+#include "vtable.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -22,26 +23,26 @@ extern "C" {
  * \param height The height of the graphics window
  * \ingroup graphics
  */
-EXPORT_SYM int graphics_open(int width, int height);
+VF EXPORT_SYM int graphics_open(int width, int height);
 
 /**
  * Closes the previously opened KISS Graphics Window
  * \ingroup graphics
  */
-EXPORT_SYM void graphics_close();
+VF EXPORT_SYM void graphics_close();
 
 /**
  * Update must be called after drawing to the window for changes to be visible.
  * This function also must be called regularly for input to work.
  * \ingroup graphics
  */
-EXPORT_SYM void graphics_update();
+VF EXPORT_SYM void graphics_update();
 
 /**
  * Fills the entire window with the color black
  * \ingroup graphics
  */
-EXPORT_SYM void graphics_clear();
+VF EXPORT_SYM void graphics_clear();
 
 typedef enum Encoding {
 	RGB,
@@ -53,13 +54,13 @@ typedef enum Encoding {
 * This function is equivalent to calling graphics_blit_enc() with an encoding of RGB
 * \see graphics_blit_enc
 */
-EXPORT_SYM void graphics_blit(const unsigned char *data, int x, int y, int width, int height);
+VF EXPORT_SYM void graphics_blit(const unsigned char *data, int x, int y, int width, int height);
 
 /**
  * This function is equivalent to calling graphics_blit_region_enc() with an encoding of RGB
  * \see graphics_blit_region_enc
  */
-EXPORT_SYM void graphics_blit_region(const unsigned char *data, int sx, int sy, int ex, int ey, int width, int height, int dx, int dy);
+VF EXPORT_SYM void graphics_blit_region(const unsigned char *data, int sx, int sy, int ex, int ey, int width, int height, int dx, int dy);
 
 /**
  * Blits a pixel array onto the graphics context
@@ -72,7 +73,7 @@ EXPORT_SYM void graphics_blit_region(const unsigned char *data, int sx, int sy, 
  * \param height The height of the area to blit
  * \ingroup graphics
  */
-EXPORT_SYM void graphics_blit_enc (const unsigned char *data, Encoding enc, int x, int y, int width, int height);
+VF EXPORT_SYM void graphics_blit_enc(const unsigned char *data, Encoding enc, int x, int y, int width, int height);
 
 /**
  * Blits a pixel array region onto the graphics context
@@ -89,7 +90,7 @@ EXPORT_SYM void graphics_blit_enc (const unsigned char *data, Encoding enc, int 
  * \param dy The destination y coordinate of the blit (target)
  * \ingroup graphics
  */ 
-EXPORT_SYM void graphics_blit_region_enc(const unsigned char *data, Encoding enc, int sx, int sy, int ex, int ey, int width, int height, int dx, int dy);
+VF EXPORT_SYM void graphics_blit_region_enc(const unsigned char *data, Encoding enc, int sx, int sy, int ex, int ey, int width, int height, int dx, int dy);
 
 /**
  * Fill the graphics context with a color.
@@ -98,7 +99,7 @@ EXPORT_SYM void graphics_blit_region_enc(const unsigned char *data, Encoding enc
  * \param b the blue component of the drawing, from 0 to 255
  * \ingroup graphics
  */
-EXPORT_SYM void graphics_fill(int r, int g, int b);
+VF EXPORT_SYM void graphics_fill(int r, int g, int b);
 
 /**
  * Draw a pixel at (x, y)
@@ -107,7 +108,7 @@ EXPORT_SYM void graphics_fill(int r, int g, int b);
  * \param b the blue component of the drawing, from 0 to 255
  * \ingroup graphics
  */
-EXPORT_SYM void graphics_pixel(int x, int y, int r, int g, int b);
+VF EXPORT_SYM void graphics_pixel(int x, int y, int r, int g, int b);
 
 /**
  * Draw a line from the point (x1, y1) to (x2, y2)
@@ -116,7 +117,7 @@ EXPORT_SYM void graphics_pixel(int x, int y, int r, int g, int b);
  * \param b the blue component of the drawing, from 0 to 255
  * \ingroup graphics
  */
-EXPORT_SYM void graphics_line(int x1, int y1, int x2, int y2, int r, int g, int b);
+VF EXPORT_SYM void graphics_line(int x1, int y1, int x2, int y2, int r, int g, int b);
 
 /**
  * Draw an unfilled circle to the graphics window at the given coordinates and with the given radius.
@@ -125,7 +126,7 @@ EXPORT_SYM void graphics_line(int x1, int y1, int x2, int y2, int r, int g, int 
  * \param b the blue component of the drawing, from 0 to 255
  * \ingroup graphics
  */
-EXPORT_SYM void graphics_circle(int cx, int cy, int radius, int r, int g, int b);
+VF EXPORT_SYM void graphics_circle(int cx, int cy, int radius, int r, int g, int b);
 
 /**
  * Draw a filled circle to the graphics window at the given coordinates and with the given radius.
@@ -134,7 +135,7 @@ EXPORT_SYM void graphics_circle(int cx, int cy, int radius, int r, int g, int b)
  * \param b the blue component of the drawing, from 0 to 255
  * \ingroup graphics
  */
-EXPORT_SYM void graphics_circle_fill(int cx, int cy, int radius, int r, int g, int b);
+VF EXPORT_SYM void graphics_circle_fill(int cx, int cy, int radius, int r, int g, int b);
 
 /**
  * Draw an unfilled rectangle to the graphics window at the given coordinates.
@@ -147,7 +148,7 @@ EXPORT_SYM void graphics_circle_fill(int cx, int cy, int radius, int r, int g, i
  * \param b the blue component of the drawing, from 0 to 255
  * \ingroup graphics
  */
-EXPORT_SYM void graphics_rectangle(int x1, int y1, int x2, int y2, int r, int g, int b);
+VF EXPORT_SYM void graphics_rectangle(int x1, int y1, int x2, int y2, int r, int g, int b);
 
 /**
  * Draw a filled rectangle to the graphics window at the given coordinates.
@@ -160,7 +161,7 @@ EXPORT_SYM void graphics_rectangle(int x1, int y1, int x2, int y2, int r, int g,
  * \param b the blue component of the drawing, from 0 to 255
  * \ingroup graphics
  */
-EXPORT_SYM void graphics_rectangle_fill(int x1, int y1, int x2, int y2, int r, int g, int b);
+VF EXPORT_SYM void graphics_rectangle_fill(int x1, int y1, int x2, int y2, int r, int g, int b);
 
 /**
  * Draw an unfilled triangle to the graphics window at the given coordinates.
@@ -169,7 +170,7 @@ EXPORT_SYM void graphics_rectangle_fill(int x1, int y1, int x2, int y2, int r, i
  * \param b the blue component of the drawing, from 0 to 255
  * \ingroup graphics
  */
-EXPORT_SYM void graphics_triangle(int x1, int y1, int x2, int y2, int x3, int y3, int r, int g, int b);
+VF EXPORT_SYM void graphics_triangle(int x1, int y1, int x2, int y2, int x3, int y3, int r, int g, int b);
 
 /**
  * Draw a filled triangle to the graphics window at the given coordinates.
@@ -178,7 +179,7 @@ EXPORT_SYM void graphics_triangle(int x1, int y1, int x2, int y2, int x3, int y3
  * \param b the blue component of the drawing, from 0 to 255
  * \ingroup graphics
  */
-EXPORT_SYM void graphics_triangle_fill(int x1, int y1, int x2, int y2, int x3, int y3, int r, int g, int b);
+VF EXPORT_SYM void graphics_triangle_fill(int x1, int y1, int x2, int y2, int x3, int y3, int r, int g, int b);
 
 enum KeyCode
 {
@@ -301,34 +302,36 @@ enum KeyCode
  * \return 1 for pressed, 0 for not pressed
  * \ingroup graphics
  */
-EXPORT_SYM int get_key_state(enum KeyCode key);
+VF EXPORT_SYM int get_key_state(enum KeyCode key);
 
 /**
  * Returns the mouse's current position relative to the top left corner of the graphics window.
  * \ingroup graphics
  */
-EXPORT_SYM void get_mouse_position(int *x, int *y);
+VF EXPORT_SYM void get_mouse_position(int *x, int *y);
 
 /**
  * Returns the state of the mouse's middle button.
  * \return 1 for pressed, 0 for not pressed
  * \ingroup graphics
  */
-EXPORT_SYM int get_mouse_middle_button();
+VF EXPORT_SYM int get_mouse_middle_button();
 
 /**
  * Returns the state of the mouse's left button.
  * \return 1 for pressed, 0 for not pressed
  * \ingroup graphics
  */
-EXPORT_SYM int get_mouse_left_button();
+VF EXPORT_SYM int get_mouse_left_button();
 
 /**
  * Returns the state of the mouse's right button.
  * \return 1 for pressed, 0 for not pressed
  * \ingroup graphics
  */
-EXPORT_SYM int get_mouse_right_button();
+VF EXPORT_SYM int get_mouse_right_button();
+
+VFL
 
 #ifdef __cplusplus
 }

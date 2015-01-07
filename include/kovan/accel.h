@@ -2,16 +2,21 @@
 #define _ACCEL_H_
 
 #include "export.h"
+#include "vtable.h"
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-EXPORT_SYM short accel_x();
-EXPORT_SYM short accel_y();
-EXPORT_SYM short accel_z();
+VF EXPORT_SYM short accel_x();
 
-EXPORT_SYM int accel_calibrate();
+VF EXPORT_SYM short accel_y();
+
+VF EXPORT_SYM short accel_z();
+
+VF EXPORT_SYM int accel_calibrate();
+
+VFL
 
 #ifdef __cplusplus
 }

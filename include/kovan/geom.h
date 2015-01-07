@@ -22,6 +22,7 @@
 #define _GEOM_H_
 
 #include "export.h"
+#include "vtable.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -48,9 +49,11 @@ typedef struct rectangle
 	int height;
 } rectangle;
 
-EXPORT_SYM point2 create_point2(int x, int y);
-EXPORT_SYM point3 create_point3(int x, int y, int z);
-EXPORT_SYM rectangle create_rectangle(int ulx, int uly, int width, int height);
+VF EXPORT_SYM point2 create_point2(int x, int y);
+VF EXPORT_SYM point3 create_point3(int x, int y, int z);
+VF EXPORT_SYM rectangle create_rectangle(int ulx, int uly, int width, int height);
+
+VFL
 
 #ifdef __cplusplus
 }

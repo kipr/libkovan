@@ -18,40 +18,40 @@
  *  If not, see <http://www.gnu.org/licenses/>.                           *
  **************************************************************************/
 
-#include "kovan/digital.h"
+VH #include "kovan/digital.h"
 #include "digital_p.hpp"
 
-int digital(int port)
+VI int digital(int port)
 {
 	return !get_digital_value(port);
 }
 
-void set_digital_value(int port, int value)
+VI void set_digital_value(int port, int value)
 {
 	Private::Digital::instance()->setValue(port, value);
 }
 
-int get_digital_value(int port)
+VI int get_digital_value(int port)
 {
 	return Private::Digital::instance()->value(port);
 }
 
-void set_digital_output(int port, int out)
+VI void set_digital_output(int port, int out)
 {
 	Private::Digital::instance()->setDirection(port, out ? Private::Digital::Out : Private::Digital::In);
 }
 
-int get_digital_output(int port)
+VI int get_digital_output(int port)
 {
 	return Private::Digital::instance()->direction(port) == Private::Digital::Out;
 }
 
-int get_digital_pullup(int port)
+VI int get_digital_pullup(int port)
 {
 	return Private::Digital::instance()->pullup(port);
 }
 
-void set_digital_pullup(int port, int pullup)
+VI void set_digital_pullup(int port, int pullup)
 {
 	Private::Digital::instance()->setPullup(port, pullup);
 }

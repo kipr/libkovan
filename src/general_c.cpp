@@ -18,26 +18,26 @@
  *  If not, see <http://www.gnu.org/licenses/>.                           *
  **************************************************************************/
 
-#include "kovan/general.h"
+VH #include "kovan/general.h"
 #include "kovan_p.hpp"
 
-#include "kovan/motors.h"
-#include "kovan/servo.h"
-#include "kovan/analog.h"
-#include "kovan/create.h"
-#include "kovan/digital.h"
+VH #include "kovan/motors.h"
+VH #include "kovan/servo.h"
+VH #include "kovan/analog.h"
+VH #include "kovan/create.h"
+VH #include "kovan/digital.h"
 
-void set_auto_publish(int on)
+VI void set_auto_publish(int on)
 {
 	Private::Kovan::instance()->setAutoFlush(on);
 }
 
-void publish()
+VI void publish()
 {
 	Private::Kovan::instance()->flush();
 }
 
-void halt()
+VI void halt()
 {
 	freeze_halt();
 	disable_servos();

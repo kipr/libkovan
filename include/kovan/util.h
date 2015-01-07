@@ -30,6 +30,7 @@
 #define _UTIL_H_
 
 #include "export.h"
+#include "vtable.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -41,21 +42,23 @@ extern "C" {
  * \blocks
  * \ingroup util
  */
-EXPORT_SYM void msleep(long msecs);
+VF EXPORT_SYM void msleep(long msecs);
 
 /*!
  * Get the current system time in milliseconds.
  * \return the number of milliseconds since the UNIX epoch (January 1st, 1970)
  * \ingroup util
  */
-EXPORT_SYM unsigned long systime();
+VF EXPORT_SYM unsigned long systime();
 
 /*!
  * Get the current system time in seconds.
  * \return the number of seconds since the UNIX epoch (January 1st, 1970)
  * \ingroup util
  */
-EXPORT_SYM double seconds();
+VF EXPORT_SYM double seconds();
+
+VFL
 
 #ifdef __cplusplus
 }

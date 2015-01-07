@@ -517,14 +517,14 @@ set_interface_attribs (int fd, int speed, int parity)
 
 	tcflush (fd, TCIOFLUSH);
 
-	//get config from fd and put into options
+	// get config from fd and put into options
 	tcgetattr (fd, &options); 
-	//give raw data path
+	// give raw data path
 	cfmakeraw (&options);
-	//set baud
-	cfsetispeed (&options, B57600);                 
-	cfsetospeed (&options, B57600);
-	//send options back to fd
+	// set baud
+	cfsetispeed (&options, speed);                 
+	cfsetospeed (&options, speed);
+	// send options back to fd
 	tcsetattr (fd, TCSANOW, &options);
 #endif
 	return 0;
@@ -532,23 +532,29 @@ set_interface_attribs (int fd, int speed, int parity)
 
 bool Create::connect()
 {
+	return connect(m_defaultBaudRate);
+}
+
+bool Create::connect(const Create::BaudRate baudRate)
+{
 #ifdef WIN32
 	return false;
 #endif
+  
+  static int rates[2] = {
+    B57600,
+    B115200
+  };
 	
 	if(!open()) return false;
 #ifndef WIN32
-	if(set_interface_attribs(m_tty, B57600, 0) != 0) {
+	if(set_interface_attribs(m_tty, rates[static_cast<unsigned>(baudRate)], 0) != 0) {
 		close();
 		return false;
 	}
 #endif
 	
-	// setLocalBaudRate(baudCodeRate[10]); // This is the default rate
 	start();
-	
-	// Make the connection baud rate 115200
-	// setBaudRate(11);
 	
 	setMode(SafeMode);
 	if(mode() != SafeMode) {
@@ -616,13 +622,17 @@ Create::Mode Create::mode()
 	write(OI_SENSORS);
 	write(35);
 	short state = 0;
+  unsigned tries = 30;
 	do {
+    --tries;
 		blockingRead(reinterpret_cast<unsigned char *>(&state), 1);
 		if(state < 0) return OffMode;
-	} while(state == 0);
+	} while(state == 0 && tries);
 	endAtomicOperation();
+  
+  if(!tries) return OffMode;
 
-        switch(state) {
+  switch(state) {
 	case 0: return OffMode;
 	case 1: return PassiveMode;
 	case 2: return SafeMode;
@@ -647,13 +657,21 @@ bool Create::write(const unsigned char *data, const size_t& len)
 #ifndef CREATE_NETWORK
   // Create serial
 #ifndef WIN32
-	int ret = ::write(m_tty, data, len);
-	if(ret != len) {
-		printf("Only wrote %d of %ld bytes\n", ret, len);
-	}
-	if(ret < 0) perror("::write");
+  unsigned tries = 5;
+  size_t off = 0;
+  do {
+    --tries;
+    int ret = ::write(m_tty, data + off, len - off);
+	  if(ret < 0) {
+      if(errno != EAGAIN) {
+        perror("::write");
+        break;
+      } else continue;
+    }
+    off += ret;
+  } while(tries && off < len);
 	tcdrain(m_tty);
-	return ret == len;
+	return off == len;
 #else
 	#pragma message	("Create library not yet implemented for Windows")
 #endif
@@ -968,7 +986,8 @@ Create::Create()
 	m_bumpRight(0),
 	m_wheelDropLeft(0),
 	m_wheelDropRight(0),
-	m_wheelDropCaster(0)
+	m_wheelDropCaster(0),
+  m_defaultBaudRate(Baud57600)
 {
 #ifndef WIN32
 	pthread_mutex_init(&m_mutex, 0);
@@ -1010,7 +1029,7 @@ bool Create::open()
 	
 	beginAtomicOperation();
 #ifndef WIN32
-	m_tty = ::open("/dev/ttyS2", O_RDWR | O_NOCTTY | O_NONBLOCK);
+	m_tty = ::open("/dev/tty.usbserial-DA017OVH", O_RDWR | O_NOCTTY | O_NONBLOCK);
 #else
 	#pragma message	("Create library not yet implemented for Windows")
 #endif

@@ -18,7 +18,7 @@
  *  If not, see <http://www.gnu.org/licenses/>.                           *
  **************************************************************************/
 
-#include "kovan/port.hpp"
+VH #include "kovan/port.hpp"
 
 InvalidPort::InvalidPort(const std::string& what)
 	: std::logic_error(what)

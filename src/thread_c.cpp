@@ -1,4 +1,4 @@
-#include "kovan/thread.h"
+VH #include "kovan/thread.h"
 #include "kovan/thread.hpp"
 
 class FunctionThread : public Thread
@@ -42,47 +42,47 @@ thread threadStruct(FunctionThread *t)
 	return ret;
 }
 
-mutex mutex_create(void)
+VI mutex mutex_create(void)
 {
 	return mutexStruct(new Mutex());
 }
 
-void mutex_lock(mutex m)
+VI void mutex_lock(mutex m)
 {
 	mutexObject(m.data)->lock();
 }
 
-int mutex_trylock(mutex m)
+VI int mutex_trylock(mutex m)
 {
 	return mutexObject(m.data)->tryLock() ? 1 : 0;
 }
 
-void mutex_unlock(mutex m)
+VI void mutex_unlock(mutex m)
 {
 	mutexObject(m.data)->unlock();
 }
 
-void mutex_destroy(mutex m)
+VI void mutex_destroy(mutex m)
 {
 	delete mutexObject(m.data);
 }
 
-thread thread_create(thread_function func)
+VI thread thread_create(thread_function func)
 {
 	return threadStruct(new FunctionThread(func));
 }
 
-void thread_start(thread id)
+VI void thread_start(thread id)
 {
 	threadObject(id.data)->start();
 }
 
-void thread_wait(thread id)
+VI void thread_wait(thread id)
 {
 	threadObject(id.data)->join();
 }
 
-void thread_destroy(thread id)
+VI void thread_destroy(thread id)
 {
 	delete threadObject(id.data);
 }

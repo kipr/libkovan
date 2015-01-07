@@ -12,9 +12,9 @@
 //    maxw failing to prevent scroll bar display; simply needed a reduction by 1
 // stdarg.h provides macros for accessing a function's argument list ... see K&R
 
-#include "kovan/display.h"
-#include "kovan/button.h"
-#include "kovan/console.h"
+VH #include "kovan/display.h"
+VH #include "kovan/button.h"
+VH #include "kovan/console.h"
 
 #include <stdarg.h>
 #include <string.h>
@@ -25,7 +25,7 @@
 char _display_map[_MAPy][_MAPx];
 int _initialize_ = 1;   // flag to signal need to clear display on first use
 
-void display_clear() {  // clears console and sets display map to all spaces
+VI void display_clear() {  // clears console and sets display map to all spaces
 	int i,j;
 	console_clear();
 	for (i=0;i<_MAPy;i++) for(j=0;j<_MAPx;j++) _display_map[i][j]=' ';  //  initialize to spaces

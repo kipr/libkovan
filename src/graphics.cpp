@@ -1,4 +1,4 @@
-#include "kovan/graphics.h"
+VH #include "kovan/graphics.h"
 
 #include <vector>
 #include <algorithm>
@@ -138,7 +138,7 @@ inline Pixel fromTrueColor(Encoding enc, const int _0, const int _1, const int _
 	}
 }
 
-int graphics_open(int width, int height)
+VI int graphics_open(int width, int height)
 {
 	if(!g_graphics.display.open("KISS Graphics Window", width, height)) return false;
 	g_graphics.pixels.assign(g_graphics.size(), Pixel());
@@ -146,34 +146,34 @@ int graphics_open(int width, int height)
 	return true;
 }
 
-void graphics_close()
+VI void graphics_close()
 {
 	g_graphics.display.close();
 }
 
-void graphics_update()
+VI void graphics_update()
 {
 	if(!g_graphics.display.update(g_graphics.pixels)) {
 		cerr << "Warning: graphics_update failed." << endl;
 	}
 }
 
-void graphics_clear()
+VI void graphics_clear()
 {
     graphics_fill(0, 0, 0);
 }
 
-void graphics_blit(const unsigned char *data, int x, int y, int width, int height)
+VI void graphics_blit(const unsigned char *data, int x, int y, int width, int height)
 {
 	graphics_blit_enc(data, RGB, x, y, width, height);
 }
 
-void graphics_blit_region(const unsigned char *data, int sx, int sy, int ex, int ey, int width, int height, int dx, int dy)
+VI void graphics_blit_region(const unsigned char *data, int sx, int sy, int ex, int ey, int width, int height, int dx, int dy)
 {
 	graphics_blit_region_enc(data, RGB, sx, sy, ex, ey, width, height, dx, dy);
 }
 
-void graphics_blit_enc(const unsigned char *data, Encoding enc, int x, int y, int width, int height)
+VI void graphics_blit_enc(const unsigned char *data, Encoding enc, int x, int y, int width, int height)
 {
 	graphics_blit_region_enc(data, enc, 0, 0, width - 1, height - 1, width, height, x, y);
 }
@@ -193,7 +193,7 @@ void graphics_blit_section(const unsigned char *data, Encoding enc, const int in
 	}
 }
 
-void graphics_blit_region_enc(const unsigned char *data, Encoding enc, int sx, int sy, int ex, int ey, int width, int height, int dx, int dy)
+VI void graphics_blit_region_enc(const unsigned char *data, Encoding enc, int sx, int sy, int ex, int ey, int width, int height, int dx, int dy)
 {
 	if(sx >= ex || sy >= ey) return;
 	if(dx >= g_graphics.width() || dy >= g_graphics.height()) return;
@@ -212,18 +212,18 @@ void graphics_blit_region_enc(const unsigned char *data, Encoding enc, int sx, i
 	}
 }
 
-void graphics_fill(int r, int g, int b)
+VI void graphics_fill(int r, int g, int b)
 {
 	g_graphics.pixels.assign(g_graphics.size(), fromTrueColor(RGB, r, g, b));
 }
 
-void graphics_pixel(int x, int y, int r, int g, int b)
+VI void graphics_pixel(int x, int y, int r, int g, int b)
 {
 	if(!g_graphics.isValidPoint(x, y)) return;
 	g_graphics.pixels[y * g_graphics.width() + x] = fromTrueColor(RGB, r, g, b);
 }
 
-void graphics_line(int x1, int y1, int x2, int y2, int r, int g, int b)
+VI void graphics_line(int x1, int y1, int x2, int y2, int r, int g, int b)
 {
 	int steep = abs(y2 - y1) > abs(x2 - x1) ? 1 : 0;
 
@@ -255,7 +255,7 @@ void graphics_line(int x1, int y1, int x2, int y2, int r, int g, int b)
 	}
 }
 
-void graphics_circle(int cx, int cy, int radius, int r, int g, int b)
+VI void graphics_circle(int cx, int cy, int radius, int r, int g, int b)
 {
 	int f = 1 - radius;
 	int ddF_x = 0;
@@ -288,7 +288,7 @@ void graphics_circle(int cx, int cy, int radius, int r, int g, int b)
 	}
 }
 
-void graphics_circle_fill(int cx, int cy, int radius, int r, int g, int b)
+VI void graphics_circle_fill(int cx, int cy, int radius, int r, int g, int b)
 {
 	const long c_squared = (long)radius * (long)radius;
 	
@@ -307,7 +307,7 @@ void graphics_circle_fill(int cx, int cy, int radius, int r, int g, int b)
 	}
 }
 
-void graphics_rectangle(int x1, int y1, int x2, int y2, int r, int g, int b)
+VI void graphics_rectangle(int x1, int y1, int x2, int y2, int r, int g, int b)
 {
 	graphics_line(x1, y1, x1, y2, r, g, b);
 	graphics_line(x1, y1, x2, y1, r, g, b);
@@ -315,7 +315,7 @@ void graphics_rectangle(int x1, int y1, int x2, int y2, int r, int g, int b)
 	graphics_line(x2, y2, x1, y2, r, g, b);
 }
 
-void graphics_rectangle_fill(int x1, int y1, int x2, int y2, int r, int g, int b)
+VI void graphics_rectangle_fill(int x1, int y1, int x2, int y2, int r, int g, int b)
 {
 	if(x1 > x2) swap(x1, x2);
 	if(y1 > y2) swap(y1, y2);
@@ -327,14 +327,14 @@ void graphics_rectangle_fill(int x1, int y1, int x2, int y2, int r, int g, int b
 	}
 }
 
-void graphics_triangle(int x1, int y1, int x2, int y2, int x3, int y3, int r, int g, int b)
+VI void graphics_triangle(int x1, int y1, int x2, int y2, int x3, int y3, int r, int g, int b)
 {
 	graphics_line(x1, y1, x2, y2, r, g, b);
 	graphics_line(x2, y2, x3, y3, r, g, b);
 	graphics_line(x3, y3, x1, y1, r, g, b);
 }
 
-void graphics_triangle_fill(int x1, int y1, int x2, int y2, int x3, int y3, int r, int g, int b)
+VI void graphics_triangle_fill(int x1, int y1, int x2, int y2, int x3, int y3, int r, int g, int b)
 {
 	const double l = sqrt(pow(x2 - x1, 2) + pow(y2 - y1, 2));
 	const double dx = (x2 - x1) / l;
@@ -343,28 +343,28 @@ void graphics_triangle_fill(int x1, int y1, int x2, int y2, int x3, int y3, int 
 	for(int i = 0; i <= l; ++i) graphics_line(x3, y3, x1 + i * dx, y1 + i * dy, r, g, b);
 }
 
-int get_key_state(enum KeyCode key)
+VI int get_key_state(enum KeyCode key)
 {
 	return g_listener.isKeyPressed((int)key) ? 1 : 0;
 }
 
-void get_mouse_position(int *x, int *y)
+VI void get_mouse_position(int *x, int *y)
 {
 	*x = g_listener.mouseX();
 	*y = g_listener.mouseY();
 }
 
-int get_mouse_middle_button()
+VI int get_mouse_middle_button()
 {
 	return g_listener.isMiddleButtonDown();
 }
 
-int get_mouse_left_button()
+VI int get_mouse_left_button()
 {
 	return g_listener.isLeftButtonDown();
 }
 
-int get_mouse_right_button()
+VI int get_mouse_right_button()
 {
 	return g_listener.isRightButtonDown();
 }
