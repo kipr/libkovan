@@ -23,6 +23,8 @@ VH #include "kovan/xtion_depth_image.hpp"
 #include "xtion_depth_driver_impl_p.hpp"
 VH #include "kovan/depth_exception.hpp"
 
+#include <algorithm>
+
 using namespace depth;
 using namespace openni;
 
