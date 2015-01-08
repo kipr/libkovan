@@ -12,6 +12,8 @@ set(PIXELTOASTER ${SRC}/pixeltoaster)
 set(BINDINGS ${CMAKE_SOURCE_DIR}/bindings)
 set(TOOLS ${CMAKE_SOURCE_DIR}/tools)
 
+#include_directories(${INCLUDE})
+
 file(GLOB INCLUDES ${INCLUDE}/kovan/*.h ${INCLUDE}/kovan/*.hpp)
 file(GLOB SOURCES ${SRC}/*.cpp)
 file(GLOB PIXELTOASTER_SOURCES ${PIXELTOASTER}/*.cpp)
@@ -27,12 +29,18 @@ set(LIBRARY_OUTPUT_PATH ${CMAKE_SOURCE_DIR}/lib)
 add_executable(vtable_gen ${TOOLS}/vtable_gen.cpp)
 add_executable(vtable_impl ${TOOLS}/vtable_impl.cpp)
 
+if(WIN32)
+  set(TOOLS_BIN_DIR ${CMAKE_CURRENT_BINARY_DIR}/Release)
+else()
+  set(TOOLS_BIN_DIR ${CMAKE_CURRENT_BINARY_DIR})
+endif()
+
 function(run_vtable_gen INPUT NEW_INPUT)
   get_filename_component(FILENAME ${INPUT} NAME)
   set(NEW_INPUT_VAL ${CMAKE_CURRENT_BINARY_DIR}/${FILENAME})
   set(${NEW_INPUT} ${NEW_INPUT_VAL} PARENT_SCOPE)
   add_custom_command(OUTPUT ${NEW_INPUT_VAL}
-     COMMAND ${CMAKE_BINARY_DIR}/vtable_gen ${NEW_INPUT_VAL} ${INPUT}
+     COMMAND ${TOOLS_BIN_DIR}/vtable_gen ${NEW_INPUT_VAL} ${INPUT}
      DEPENDS vtable_gen ${INPUT})
 endfunction()
 
@@ -41,7 +49,7 @@ function(run_vtable_impl INPUT NEW_INPUT)
   set(NEW_INPUT_VAL ${CMAKE_CURRENT_BINARY_DIR}/vi_${FILENAME})
   set(${NEW_INPUT} ${NEW_INPUT_VAL} PARENT_SCOPE)
   add_custom_command(OUTPUT ${NEW_INPUT_VAL}
-     COMMAND ${CMAKE_BINARY_DIR}/vtable_impl ${NEW_INPUT_VAL} ${INPUT}
+     COMMAND ${TOOLS_BIN_DIR}/vtable_impl ${NEW_INPUT_VAL} ${INPUT}
      DEPENDS vtable_impl ${INPUT})
 endfunction()
 
