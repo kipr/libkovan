@@ -27,8 +27,8 @@
 #include <map>
 #include <string>
 
-#include "kovan/camera.hpp"
-#include "kovan/types.hpp"
+#include "camera.hpp"
+#include "types.hpp"
 
 class DroneController;
 
