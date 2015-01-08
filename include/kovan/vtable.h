@@ -8,6 +8,7 @@ extern "C" {
 #define VF
 #define VFL
 #define VI
+#define VIL
 #define VH
 
 #define VTABLE_FUNC_VOID(name, signature, args)                       \

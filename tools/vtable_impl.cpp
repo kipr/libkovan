@@ -66,7 +66,14 @@ static bool processFile(const char *const file, ostream &out)
       continue;
     }
     
-    if(line.substr(0, 2) == "VH") {
+    if(line.substr(0, 3) == "VIL") {
+      out << endl << endl;
+      for(vector<string>::const_iterator it = vis.begin(); it != vis.end(); ++it) {
+        out << *it << endl;
+      }
+      out << endl;
+      vis.clear();
+    } else if(line.substr(0, 2) == "VH") {
       out << vifyInclude(line) << endl;
       continue;
     } else if(line.substr(0, 2) != "VI") {
@@ -94,11 +101,14 @@ static bool processFile(const char *const file, ostream &out)
     out << "static " << line << endl;
   }
   
-  out << endl << endl;
-  for(vector<string>::const_iterator it = vis.begin(); it != vis.end(); ++it) {
-    out << *it << endl;
+  if(!vis.empty()) {
+    out << endl << endl;
+    for(vector<string>::const_iterator it = vis.begin(); it != vis.end(); ++it) {
+      out << *it << endl;
+    }
+    out << endl;
+    vis.clear();
   }
-  
   
   in.close();
   return true;
