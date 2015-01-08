@@ -24,16 +24,13 @@ set(LIBRARY_OUTPUT_PATH ${CMAKE_SOURCE_DIR}/lib)
 # Tools #
 #########
 
-add_executable(vtable_gen ${TOOLS}/vtable_gen.cpp)
-add_executable(vtable_impl ${TOOLS}/vtable_impl.cpp)
-
 function(run_vtable_gen INPUT NEW_INPUT)
   get_filename_component(FILENAME ${INPUT} NAME)
   set(NEW_INPUT_VAL ${CMAKE_CURRENT_BINARY_DIR}/${FILENAME})
   set(${NEW_INPUT} ${NEW_INPUT_VAL} PARENT_SCOPE)
   add_custom_command(OUTPUT ${NEW_INPUT_VAL}
-     COMMAND ${CMAKE_BINARY_DIR}/vtable_gen ${NEW_INPUT_VAL} ${INPUT}
-     DEPENDS vtable_gen ${INPUT})
+     COMMAND vtable_gen ${NEW_INPUT_VAL} ${INPUT}
+     DEPENDS ${INPUT})
 endfunction()
 
 function(run_vtable_impl INPUT NEW_INPUT)
@@ -41,8 +38,8 @@ function(run_vtable_impl INPUT NEW_INPUT)
   set(NEW_INPUT_VAL ${CMAKE_CURRENT_BINARY_DIR}/vi_${FILENAME})
   set(${NEW_INPUT} ${NEW_INPUT_VAL} PARENT_SCOPE)
   add_custom_command(OUTPUT ${NEW_INPUT_VAL}
-     COMMAND ${CMAKE_BINARY_DIR}/vtable_impl ${NEW_INPUT_VAL} ${INPUT}
-     DEPENDS vtable_impl ${INPUT})
+     COMMAND vtable_impl ${NEW_INPUT_VAL} ${INPUT}
+     DEPENDS ${INPUT})
 endfunction()
 
 foreach(INCLUDE ${INCLUDES})
@@ -181,7 +178,6 @@ endif()
 target_link_libraries(kovan ${BINDINGS_LIBRARIES})
 
 if(APPLE)
-# set(CMAKE_OSX_SYSROOT "${OSX_DEVELOPER_ROOT}/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.7.sdk")
   find_library(OPENGL_LIBRARY OpenGL)
   find_library(COCOA_LIBRARY Cocoa)
   find_library(CORESERVICE_LIBRARY CoreServices)
@@ -193,20 +189,7 @@ if(KOVAN)
   add_definitions(-DKOVAN)
 endif()
 
-# add_definitions(-DARDRONE_DEBUG)
-
-if(WIN32)
-  target_link_libraries(kovan ws2_32)
-  install(FILES ${VF_INCLUDES} DESTINATION ${CMAKE_SOURCE_DIR}/../prefix/include/kovan)
-  install(TARGETS kovan
-          ARCHIVE DESTINATION ${CMAKE_SOURCE_DIR}/../prefix/lib
-          RUNTIME DESTINATION ${CMAKE_SOURCE_DIR}/../prefix/lib)
-else()
-  install(FILES ${VF_INCLUDES} DESTINATION include/kovan)
-  install(TARGETS kovan LIBRARY DESTINATION lib)
-endif()
-
-install(FILES ${INCLUDES} DESTINATION include/kovan)
+install(FILES ${VF_INCLUDES} DESTINATION include/kovan)
 install(TARGETS kovan DESTINATION lib)
 
 ########################################
