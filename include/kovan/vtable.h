@@ -5,6 +5,8 @@
 extern "C" {
 #endif
 
+#include "export.h"
+
 #define VF
 #define VFL
 #define VI
@@ -13,15 +15,15 @@ extern "C" {
 
 #define VTABLE_FUNC_VOID(name, signature, args)                       \
   typedef void (*name##_func) signature;                              \
-  extern name##_func g_##name##_func;                                 \
-  extern const name##_func g_##name##_func_default;                   \
+  EXPORT_SYM extern name##_func g_##name##_func;                                 \
+  EXPORT_SYM extern const name##_func g_##name##_func_default;                   \
   static const char *const name##_signature = "void" #signature;      \
   static inline void name signature { (*g_##name##_func) args;  }
 
 #define VTABLE_FUNC(name, returnType, signature, args)                       \
   typedef returnType (*name##_func) signature;                               \
-  extern name##_func g_##name##_func;                                        \
-  extern const name##_func g_##name##_func_default;                          \
+  EXPORT_SYM extern name##_func g_##name##_func;                                        \
+  EXPORT_SYM extern const name##_func g_##name##_func_default;                          \
   static const char *const name##_signature = #returnType #signature;        \
   static inline returnType name signature { return (*g_##name##_func) args;  }
 
