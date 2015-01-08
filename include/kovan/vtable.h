@@ -25,8 +25,8 @@ extern "C" {
   static const char *const name##_signature = #returnType #signature;        \
   static inline returnType name signature { return (*g_##name##_func) args;  }
 
-#define VTABLE_SET_DEFAULT(name, impl)                   \
-  const name##_func g_##name##_func_default = &impl;     \
+#define VTABLE_SET_DEFAULT(name, impl)                  \
+  const name##_func g_##name##_func_default = &impl;    \
   name##_func g_##name##_func = g_##name##_func_default
 
 #ifdef __cplusplus
