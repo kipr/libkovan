@@ -540,14 +540,13 @@ bool Create::connect(const Create::BaudRate baudRate)
 #ifdef WIN32
 	return false;
 #endif
-  
-  static int rates[2] = {
-    B57600,
-    B115200
-  };
 	
 	if(!open()) return false;
 #ifndef WIN32
+	static int rates[2] = {
+		B57600,
+		B115200
+	};
 	if(set_interface_attribs(m_tty, rates[static_cast<unsigned>(baudRate)], 0) != 0) {
 		close();
 		return false;
