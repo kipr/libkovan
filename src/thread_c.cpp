@@ -1,5 +1,5 @@
 VH #include "kovan/thread.h"
-#include "kovan/thread.hpp"
+VH #include "kovan/thread.hpp"
 
 class FunctionThread : public Thread
 {

@@ -1,7 +1,7 @@
-#include "kovan/create.hpp"
-#include "kovan/create_codes.h"
-#include "kovan/util.hpp"
-#include "kovan/compat.hpp"
+VH #include "kovan/create.hpp"
+VH #include "kovan/create_codes.h"
+VH #include "kovan/util.hpp"
+VH #include "kovan/compat.hpp"
 
 #ifndef WIN32
 #include <fcntl.h>
@@ -540,14 +540,13 @@ bool Create::connect(const Create::BaudRate baudRate)
 #ifdef WIN32
 	return false;
 #endif
-  
-  static int rates[2] = {
-    B57600,
-    B115200
-  };
 	
 	if(!open()) return false;
 #ifndef WIN32
+	static int rates[2] = {
+		B57600,
+		B115200
+	};
 	if(set_interface_attribs(m_tty, rates[static_cast<unsigned>(baudRate)], 0) != 0) {
 		close();
 		return false;

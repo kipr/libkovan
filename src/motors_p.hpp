@@ -21,7 +21,7 @@
 #ifndef _MOTORS_P_HPP_
 #define _MOTORS_P_HPP_
 
-#include "kovan/port.hpp"
+VH #include "kovan/port.hpp"
 
 #include <stdint.h>
 

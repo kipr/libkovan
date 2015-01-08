@@ -2,7 +2,7 @@ VH #include "kovan/graphics.h"
 
 #include <vector>
 #include <algorithm>
-#include "pixeltoaster/PixelToaster.h"
+#include "PixelToaster.h"
 
 #include <iostream>
 

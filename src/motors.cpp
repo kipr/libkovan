@@ -18,7 +18,7 @@
  *  If not, see <http://www.gnu.org/licenses/>.                           *
  **************************************************************************/
 
-#include "kovan/motors.hpp"
+VH #include "kovan/motors.hpp"
 VH #include "kovan/util.h"
 #include "motors_p.hpp"
 #include <cstdlib>

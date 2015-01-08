@@ -159,4 +159,6 @@ VI int get_drone_emergency_stop_enabled(void)
 	return ARDrone::instance()->isEmergencyStopEnabled() ? 1 : 0;
 }
 
+VIL
+
 #endif

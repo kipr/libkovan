@@ -21,7 +21,7 @@
 #ifndef _SERVO_P_HPP_
 #define _SERVO_P_HPP_
 
-#include "kovan/port.hpp"
+VH #include "kovan/port.hpp"
 
 namespace Private
 {

@@ -2,7 +2,7 @@
 #define _WARN_HPP_
 
 #include <cstdio>
-#include "kovan/compat.hpp"
+VH #include "kovan/compat.hpp"
 
 #define MAX_MESSAGE_SIZE 256
 

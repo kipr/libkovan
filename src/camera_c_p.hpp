@@ -1,7 +1,7 @@
 #ifndef _CAMERA_C_P_HPP_
 #define _CAMERA_C_P_HPP_
 
-#include "kovan/camera.hpp"
+VH #include "kovan/camera.hpp"
 
 namespace Private
 {

@@ -1,7 +1,7 @@
 #ifndef _CHANNEL_P_HPP_
 #define _CHANNEL_P_HPP_
 
-#include "kovan/camera.hpp"
+VH #include "kovan/camera.hpp"
 #include <opencv2/core/core.hpp>
 #include <zbar.h>
 #include <map>

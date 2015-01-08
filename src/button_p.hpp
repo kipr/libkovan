@@ -21,7 +21,7 @@
 #ifndef _BUTTON_P_HPP_
 #define _BUTTON_P_HPP_
 
-#include "kovan/button_ids.hpp"
+VH #include "kovan/button_ids.hpp"
 
 #define MAX_BUTTON_TEXT_SIZE 16
 

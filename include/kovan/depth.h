@@ -31,8 +31,8 @@
 
 #include <stdint.h>
 
-#include <kovan/depth_resolution.h>
-#include <kovan/export.h>
+#include "depth_resolution.h"
+#include "export.h"
 
 #ifdef __cplusplus
 extern "C" {

@@ -1,5 +1,5 @@
 VH #include "kovan/camera.h"
-#include "kovan/camera.hpp"
+VH #include "kovan/camera.hpp"
 #include "nyi.h"
 #include "camera_c_p.hpp"
 
