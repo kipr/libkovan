@@ -6,7 +6,7 @@
 #include "uvlc_video_decoder_p.hpp"
 
 VH #include "kovan/util.h"
-#include "kovan/thread.hpp"
+VH #include "kovan/thread.hpp"
 
 // ARM Workaround for labav.
 // see: https://github.com/AutonomyLab/ardrone_autonomy/issues/1

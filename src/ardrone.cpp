@@ -24,16 +24,16 @@
 
 #ifndef _WIN32
 
-#include "kovan/ardrone.hpp"
-#include "kovan/thread.hpp"
-#include "kovan/socket.hpp"
+VH #include "kovan/ardrone.hpp"
+VH #include "kovan/thread.hpp"
+VH #include "kovan/socket.hpp"
 VH #include "kovan/util.h"
 #include "ardrone_constants_p.hpp"
 #include "ardrone_video_p.hpp"
 #include "network_interface_p.hpp"
 #include "ardrone_emergency_stop_p.hpp"
 
-#include "kovan/debug.h"
+VH #include "kovan/debug.h"
 
 #include <opencv2/opencv.hpp>
 

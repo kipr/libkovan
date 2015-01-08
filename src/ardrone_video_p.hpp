@@ -3,8 +3,8 @@
 #ifndef _ARDRONE_VIDEO_P_HPP_
 #define _ARDRONE_VIDEO_P_HPP_
 
-#include "kovan/ardrone.hpp"
-#include "kovan/socket.hpp"
+VH #include "kovan/ardrone.hpp"
+VH #include "kovan/socket.hpp"
 #include <opencv2/core/core.hpp>
 
 namespace Private

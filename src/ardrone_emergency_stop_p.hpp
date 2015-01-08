@@ -3,7 +3,7 @@
 #ifndef _ARDRONE_EMERGENCY_STOP_P_HPP_
 #define _ARDRONE_EMERGENCY_STOP_P_HPP_
 
-#include "kovan/thread.hpp"
+VH #include "kovan/thread.hpp"
 
 class ARDrone;
 

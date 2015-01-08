@@ -1,8 +1,8 @@
 #ifndef _WIN32
 
-#include "ardrone_emergency_stop_p.hpp"
-#include "kovan/ardrone.hpp"
-#include "kovan/button.hpp"
+VH #include "ardrone_emergency_stop_p.hpp"
+VH #include "kovan/ardrone.hpp"
+VH #include "kovan/button.hpp"
 VH #include "kovan/util.h"
 
 using namespace Private;
