@@ -6,10 +6,10 @@ VH #include "kovan/display.h"
 VH #include "kovan/analog.h"
 VH #include "kovan/audio.h"
 VH #include "kovan/graphics.h"
-#include "kovan/thread.hpp"
+VH #include "kovan/thread.hpp"
 VH #include "kovan/general.h"
-#include "kovan/create.hpp"
-#include "kovan/compat.hpp"
+VH #include "kovan/create.hpp"
+VH #include "kovan/compat.hpp"
 
 #include <cstdlib>
 #include <iostream>

@@ -19,7 +19,7 @@
  **************************************************************************/
 
 VH #include "kovan/console.h"
-#include "kovan/console.hpp"
+VH #include "kovan/console.hpp"
 
 VI void console_clear()
 {

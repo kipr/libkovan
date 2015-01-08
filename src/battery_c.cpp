@@ -19,7 +19,7 @@
  **************************************************************************/
 
 VH #include "kovan/battery.h"
-#include "kovan/battery.hpp"
+VH #include "kovan/battery.hpp"
 
 VI int battery_charging()
 {

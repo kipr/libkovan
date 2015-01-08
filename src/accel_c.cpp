@@ -1,5 +1,5 @@
 VH #include "kovan/accel.h"
-#include "kovan/accel.hpp"
+VH #include "kovan/accel.hpp"
 
 VI signed short accel_x()
 {

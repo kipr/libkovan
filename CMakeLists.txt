@@ -16,6 +16,7 @@ set(TOOLS ${CMAKE_SOURCE_DIR}/tools)
 
 file(GLOB INCLUDES ${INCLUDE}/kovan/*.h ${INCLUDE}/kovan/*.hpp)
 file(GLOB SOURCES ${SRC}/*.cpp)
+file(GLOB P_INCLUDES ${SRC}/*.h ${SRC}/*.hpp)
 file(GLOB PIXELTOASTER_SOURCES ${PIXELTOASTER}/*.cpp)
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall")
@@ -53,17 +54,34 @@ function(run_vtable_impl INPUT NEW_INPUT)
      DEPENDS vtable_impl ${INPUT})
 endfunction()
 
+function(run_vtable_impl_h INPUT NEW_INPUT)
+  get_filename_component(FILENAME ${INPUT} NAME)
+  set(NEW_INPUT_VAL ${CMAKE_CURRENT_BINARY_DIR}/${FILENAME})
+  set(${NEW_INPUT} ${NEW_INPUT_VAL} PARENT_SCOPE)
+  add_custom_command(OUTPUT ${NEW_INPUT_VAL}
+     COMMAND ${TOOLS_BIN_DIR}/vtable_impl ${NEW_INPUT_VAL} ${INPUT}
+     DEPENDS vtable_impl ${INPUT})
+endfunction()
+
 foreach(INCLUDE ${INCLUDES})
   run_vtable_gen(${INCLUDE} VF_INCLUDE)
   list(APPEND VF_INCLUDES ${VF_INCLUDE})
 endforeach()
+message(${VF_INCLUDES})
 
 foreach(S ${SOURCES})
   run_vtable_impl(${S} VI_SOURCE)
   list(APPEND VI_SOURCES ${VI_SOURCE})
 endforeach()
 
-include_directories(${SRC})
+foreach(S ${P_INCLUDES})
+  MESSAGE(${S})
+  run_vtable_impl_h(${S} VI_SOURCE)
+  list(APPEND VI_P_INCLUDES ${VI_SOURCE})
+endforeach()
+
+# REMOVE ME
+include_directories(${SRC}/pixeltoaster)
 
 #############################
 #   PixelToaster settings   #
@@ -115,6 +133,7 @@ endif()
 
 if(WIN32 AND CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
 set(CMAKE_INSTALL_PREFIX ${CMAKE_SOURCE_DIR}/../prefix)
+message("SETTING INSTALL PREFIX")
 endif()
 
 ################################
@@ -176,12 +195,13 @@ if(build_java)
     OUTPUT ${CMAKE_BINARY_DIR}/kovan_wrap_java.cxx)
 endif()
 
-add_library(kovan SHARED ${VI_SOURCES} ${OBJC_SOURCES} ${VF_INCLUDES} ${PIXELTOASTER_SOURCES} ${BINDINGS_SOURCES})
+add_library(kovan SHARED ${VI_SOURCES} ${VI_P_INCLUDES} ${OBJC_SOURCES} ${VF_INCLUDES} ${PIXELTOASTER_SOURCES} ${BINDINGS_SOURCES})
 
 if(WIN32)
   # TODO: Make sure these are current
   target_link_libraries(kovan opencv_core2410 opencv_highgui2410 opencv_imgproc2410 libzbar-0 OpenNI2)
   target_link_libraries(kovan d3d9)
+  target_link_libraries(kovan ws2_32)
 else()
   target_link_libraries(kovan pthread opencv_core opencv_highgui opencv_imgproc zbar avcodec avformat avutil z swscale bz2 OpenNI2)
 endif()
@@ -203,18 +223,7 @@ endif()
 
 # add_definitions(-DARDRONE_DEBUG)
 
-if(WIN32)
-  target_link_libraries(kovan ws2_32)
-  install(FILES ${VF_INCLUDES} DESTINATION ${CMAKE_SOURCE_DIR}/../prefix/include/kovan)
-  install(TARGETS kovan
-          ARCHIVE DESTINATION ${CMAKE_SOURCE_DIR}/../prefix/lib
-          RUNTIME DESTINATION ${CMAKE_SOURCE_DIR}/../prefix/lib)
-else()
-  install(FILES ${VF_INCLUDES} DESTINATION include/kovan)
-  install(TARGETS kovan LIBRARY DESTINATION lib)
-endif()
-
-install(FILES ${INCLUDES} DESTINATION include/kovan)
+install(FILES ${VF_INCLUDES} DESTINATION include/kovan)
 install(TARGETS kovan DESTINATION lib)
 
 ########################################

@@ -28,8 +28,8 @@
 #ifndef _XTION_DEPTH_DRIVER_HPP_
 #define _XTION_DEPTH_DRIVER_HPP_
 
-#include "kovan/xtion_depth_image.hpp"
-#include "kovan/depth_driver.hpp"
+#include "xtion_depth_image.hpp"
+#include "depth_driver.hpp"
 
 namespace depth
 {

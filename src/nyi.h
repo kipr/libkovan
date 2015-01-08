@@ -1,7 +1,7 @@
 #ifndef _NYI_HPP_
 #define _NYI_HPP_
 
-#include "kovan/compat.hpp"
+VH #include "kovan/compat.hpp"
 
 #define THIS_IS_NYI nyi(PRETTYFUNC);
 
