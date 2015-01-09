@@ -31,9 +31,9 @@ VI int get_motor_position_counter(int motor)
 	return Private::Motor::instance()->backEMF(motor);
 }
 
-VI void gmpc(int motor)
+VI int gmpc(int motor)
 {
-  get_motor_position_counter(motor);
+  return get_motor_position_counter(motor);
 }
 
 VI void clear_motor_position_counter(int motor)
