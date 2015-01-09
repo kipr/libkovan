@@ -47,7 +47,19 @@ VF EXPORT_SYM int get_motor_position_counter(int motor);
  * \param[in] motor The motor port.
  * \ingroup motor
  */
+VF EXPORT_SYM int gmpc(int motor);
+
+/*!
+ * \param[in] motor The motor port.
+ * \ingroup motor
+ */
 VF EXPORT_SYM void clear_motor_position_counter(int motor);
+
+/*!
+ * \param[in] motor The motor port.
+ * \ingroup motor
+ */
+VF EXPORT_SYM void cmpc(int motor);
 
 /*!
  * \param[in] motor The motor port.

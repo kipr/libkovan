@@ -31,9 +31,19 @@ VI int get_motor_position_counter(int motor)
 	return Private::Motor::instance()->backEMF(motor);
 }
 
+VI void gmpc(int motor)
+{
+  get_motor_position_counter(motor);
+}
+
 VI void clear_motor_position_counter(int motor)
 {
 	Private::Motor::instance()->clearBemf(motor);
+}
+
+VI void cmpc(int motor)
+{
+  clear_motor_position_counter(motor);
 }
 
 VI int move_at_velocity(int motor, int velocity)
