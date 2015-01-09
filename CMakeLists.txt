@@ -33,7 +33,7 @@ if(WIN32)
 elseif(KOVAN)
   set(TOOLS_BIN_DIR /usr/local/bin)
 else()
-  set(TOOLS_BIN_DIR ${CMAKE_CURRENT_BINARY_DIR})
+  set(TOOLS_BIN_DIR ${CMAKE_INSTALL_PREFIX}/bin)
 endif()
 
 function(run_vtable_gen INPUT NEW_INPUT)
