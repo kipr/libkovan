@@ -3,7 +3,7 @@ VH #include "kovan/button.h"
 VH #include "kovan/util.h"
 VH #include "kovan/digital.h"
 
-VI void wait_for_duration(long msecs)
+VI void wait_for_millseconds(long msecs)
 {
   msleep(msecs);
 }
