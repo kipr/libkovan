@@ -12,13 +12,13 @@ extern "C" {
  * Waits (blocks) for the given number of seconds.
  * \param duration the number of seconds to sleep
  */
-VF EXPORT_SYM void wait_for_duration(const double duration);
+VF EXPORT_SYM void wait_for_millseconds(long msecs);
 
 /**
  * Waits (blocks) until the digital sensor on the given port has been activated.
  * \param port The port to wait for activation on
  */
-VF EXPORT_SYM void wait_for_touch(const int port);
+VF EXPORT_SYM void wait_for_touch(int port);
 
 /**
  * Waits (blocks) until the a button has been pressed.

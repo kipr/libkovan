@@ -3,9 +3,9 @@ VH #include "kovan/button.h"
 VH #include "kovan/util.h"
 VH #include "kovan/digital.h"
 
-VI void wait_for_duration(double duration)
+VI void wait_for_duration(long msecs)
 {
-  msleep(duration * 1000.0);
+  msleep(msecs);
 }
 
 VI void wait_for_touch(int port)
