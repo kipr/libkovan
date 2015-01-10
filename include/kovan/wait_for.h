@@ -12,7 +12,7 @@ extern "C" {
  * Waits (blocks) for the given number of seconds.
  * \param duration the number of seconds to sleep
  */
-VF EXPORT_SYM void wait_for_millseconds(long msecs);
+VF EXPORT_SYM void wait_for_milliseconds(long msecs);
 
 /**
  * Waits (blocks) until the digital sensor on the given port has been activated.
