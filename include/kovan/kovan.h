@@ -49,5 +49,6 @@
 #include "thread.h"
 #include "botball.h"
 #include "depth.h"
+#include "wait_for.h"
 
 #endif
