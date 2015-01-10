@@ -27,10 +27,11 @@ set(LIBRARY_OUTPUT_PATH ${CMAKE_SOURCE_DIR}/lib)
 # Tools #
 #########
 
+if(WIN32 AND CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
+set(CMAKE_INSTALL_PREFIX ${CMAKE_SOURCE_DIR}/../prefix)
+endif()
 
-if(WIN32)
-  set(TOOLS_BIN_DIR ${CMAKE_CURRENT_BINARY_DIR}/Release)
-elseif(KOVAN)
+if(KOVAN)
   set(TOOLS_BIN_DIR /usr/local/bin)
 else()
   set(TOOLS_BIN_DIR ${CMAKE_INSTALL_PREFIX}/bin)
@@ -129,10 +130,6 @@ elseif(WIN32)
   set(ZBAR_DIR "C:/Program Files (x86)/ZBar")
 endif()
 
-if(WIN32 AND CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
-set(CMAKE_INSTALL_PREFIX ${CMAKE_SOURCE_DIR}/../prefix)
-message("SETTING INSTALL PREFIX")
-endif()
 
 ################################
 #   Include/link directories   #
