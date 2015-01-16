@@ -1,3 +1,7 @@
+// This code is a heavily modified version of Pongsak Suvanpong's C++ version (psksvp@robotvision2.com, psksvp@gmail.com)
+// based on JavaDrone http://code.google.com/p/javadrone/
+// and droneController http://dronecontroller.codeplex.com/
+
 #include "uvlc_video_decoder_p.hpp"
 
 #include <vector>

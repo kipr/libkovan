@@ -9,8 +9,8 @@ extern "C" {
 #endif
 
 /**
- * Waits (blocks) for the given number of seconds.
- * \param duration the number of seconds to sleep
+ * Waits (blocks) for the given number of milliseconds.
+ * \param msecs the number of milliseconds to sleep
  */
 VF EXPORT_SYM void wait_for_milliseconds(long msecs);
 
