@@ -147,6 +147,7 @@ VF EXPORT_SYM int black_button();
 
 /*!
  * Gets the A button's state (pressed or not pressed.)
+ * \blocksuntil the button is no longer pressed.
  * \return 1 for pressed, 0 for not pressed
  * \see a_button
  * \ingroup button
@@ -210,6 +211,11 @@ VF EXPORT_SYM int z_button_clicked();
  */
 VF EXPORT_SYM int side_button_clicked();
 
+/*!
+ * Determines whether or not any of the buttons are pressed.
+ * \return 1 for pressed, 0 for not pressed
+ * \ingroup button
+ */
 VF EXPORT_SYM int any_button();
 
 /*!
