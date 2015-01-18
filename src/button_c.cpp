@@ -140,7 +140,7 @@ VI int side_button_clicked()
 
 VI int any_button()
 {
-	for(unsigned char i = 0; i < 6; ++i) if(all[i]->isPressed()) return 1;
+	for(unsigned char i = 0; i < 7; ++i) if(all[i]->isPressed()) return 1;
 	return 0;
 }
 
