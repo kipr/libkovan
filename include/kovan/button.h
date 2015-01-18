@@ -227,7 +227,7 @@ VF EXPORT_SYM void extra_buttons_show();
 
 /*!
  * Hides the X, Y, and Z buttons. This is the default.
- * \see set_extra_buttons_visaible
+ * \see set_extra_buttons_visible
  * \ingroup button
  */
 VF EXPORT_SYM void extra_buttons_hide();
