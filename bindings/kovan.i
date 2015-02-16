@@ -38,11 +38,8 @@
 %include "port.hpp"
 %include "segment.hpp"
 %template(IntSegmenter) Segmenter<int>;
-%include "depth_driver.hpp"
-%include "depth_image.hpp"
 %include "servo.hpp"
 %include "util.hpp"
-%include "xtion_depth_driver.hpp"
 %include "create.hpp"
 %include "color.hpp"
 %include "battery.hpp"
