@@ -179,11 +179,14 @@ option(build_java "Build java bindings" ON)
 
 if(build_java)
   find_package(SWIG REQUIRED)
-  find_package(JNI)
-  find_package(Java REQUIRED)
-  if(NOT JNI_LIBRARIES)
-    message(FATAL_ERROR "Couldn't find JNI")
+  if(KOVAN)
+    find_package(JNI)
+    find_package(Java)
+  else()
+    find_package(JNI REQUIRED)
+    find_package(Java REQUIRED)
   endif()
+
   set(JAVA_BINDING_SOURCES ${CMAKE_BINARY_DIR}/kovan_wrap_java.cxx)
 if(APPLE)
   # This is a hack!
