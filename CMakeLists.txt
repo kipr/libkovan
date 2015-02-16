@@ -205,15 +205,15 @@ endif()
   file(MAKE_DIRECTORY ${JAVA_OUT_PATH})
   file(REMOVE_RECURSE ${JAVA_BIN_PATH})
   file(MAKE_DIRECTORY ${JAVA_BIN_PATH})
-  add_custom_target(swig_java
+  add_custom_command(OUTPUT ${JAVA_BINDING_SOURCES}
     COMMAND ${SWIG_EXECUTABLE} -Wall -java -package org.kipr.kovan -c++ -outdir ${JAVA_OUT_PATH} -o ${CMAKE_BINARY_DIR}/kovan_wrap_java.cxx ${BINDINGS}/kovan.i
-    DEPENDS ${SWIG_SOURCES})
+    DEPENDS ${SWIG_SOURCES} ${VF_INCLUDES})
   add_custom_target(java_compile
     COMMAND ${Java_JAVAC_EXECUTABLE} -d ${JAVA_BIN_PATH} -cp ${JAVA_BIN_PATH} ${JAVA_OUT_PATH}/*.java ${JAVA_EXTRAS_PATH}/*.java
-    DEPENDS swig_java)
+    DEPENDS ${JAVA_BINDING_SOURCES})
   add_custom_target(kovan_jar ALL
     COMMAND ${Java_JAR_EXECUTABLE} cf ${LIBRARY_OUTPUT_PATH}/libkovan.jar -C ${JAVA_BIN_PATH}/ .
-    DEPENDS swig_java java_compile)
+    DEPENDS ${JAVA_BINDING_SOURCES} java_compile)
 endif()
 
 add_library(kovan SHARED ${VI_SOURCES} ${VI_P_INCLUDES} ${OBJC_SOURCES} ${VF_INCLUDES} ${PIXELTOASTER_SOURCES})
