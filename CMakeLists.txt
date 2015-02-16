@@ -166,8 +166,9 @@ file(GLOB SWIG_SOURCES ${BINDINGS}/*.i)
 if(build_python)
   find_package(SWIG REQUIRED)
   find_package(PythonLibs REQUIRED)
-  list(APPEND BINDINGS_SOURCES ${CMAKE_BINARY_DIR}/kovan_wrap_py.cxx)
-  list(APPEND BINDINGS_LIBRARIES ${PYTHON_LIBRARY})
+  message("${PYTHON_LIBRARY}")
+  set(PYTHON_BINDING_SOURCES ${CMAKE_BINARY_DIR}/kovan_wrap_py.cxx)
+  set(PYTHON_BINDING_LIBRARIES ${PYTHON_LIBRARY})
   include_directories(${PYTHON_INCLUDE_DIR})
   add_custom_command(COMMAND ${SWIG_EXECUTABLE} -Wall -python -c++ -I${INCLUDE} -outdir ${LIBRARY_OUTPUT_PATH} -o ${CMAKE_BINARY_DIR}/kovan_wrap_py.cxx ${BINDINGS}/kovan.i
     DEPENDS ${SWIG_SOURCES}
@@ -179,18 +180,49 @@ option(build_java "Build java bindings" ON)
 if(build_java)
   find_package(SWIG REQUIRED)
   find_package(JNI REQUIRED)
-  list(APPEND BINDINGS_SOURCES ${CMAKE_BINARY_DIR}/kovan_wrap_java.cxx)
-  list(APPEND BINDINGS_LIBRARIES ${JNI_LIBRARIES})
+  find_package(Java REQUIRED)
+  set(JAVA_BINDING_SOURCES ${CMAKE_BINARY_DIR}/kovan_wrap_java.cxx)
+if(APPLE)
+  # This is a hack!
+  # By default, JNI_LIBRARIES contains libjawt and libjvm. Lib jawt pulls in libawt_lwawt.dylib,
+  # which crashes on load into the JVM. To avoid this, we just use libjvm.
+  set(JAVA_BINDING_LIBRARIES /Library/Java/JavaVirtualMachines/jdk1.8.0_20.jdk/Contents/Home/jre/lib/server/libjvm.dylib)
+else()
+  set(JAVA_BINDING_LIBRARIES ${JNI_LIBRARIES})
+endif()
   include_directories(${JAVA_INCLUDE_PATH} ${JAVA_INCLUDE_PATH2} ${BINDINGS})
-  set(JAVA_OUT_PATH ${LIBRARY_OUTPUT_PATH}/java/org/kipr/kovan)
+  set(JAVA_BASE_PATH ${CMAKE_BINARY_DIR}/java)
+  set(JAVA_EXTRAS_PATH ${BINDINGS}/java/org/kipr/kovan)
+  set(JAVA_OUT_PATH ${JAVA_BASE_PATH}/org/kipr/kovan)
+  set(JAVA_BIN_PATH ${CMAKE_BINARY_DIR}/java_bin)
   file(REMOVE_RECURSE ${JAVA_OUT_PATH})
   file(MAKE_DIRECTORY ${JAVA_OUT_PATH})
-  add_custom_command(COMMAND ${SWIG_EXECUTABLE} -Wall -java -package org.kipr.kovan -c++ -I${INCLUDE} -outdir ${JAVA_OUT_PATH} -o ${CMAKE_BINARY_DIR}/kovan_wrap_java.cxx ${BINDINGS}/kovan.i
-    DEPENDS ${SWIG_SOURCES}
-    OUTPUT ${CMAKE_BINARY_DIR}/kovan_wrap_java.cxx)
+  file(REMOVE_RECURSE ${JAVA_BIN_PATH})
+  file(MAKE_DIRECTORY ${JAVA_BIN_PATH})
+  add_custom_target(swig_java
+    COMMAND ${SWIG_EXECUTABLE} -Wall -java -package org.kipr.kovan -c++ -outdir ${JAVA_OUT_PATH} -o ${CMAKE_BINARY_DIR}/kovan_wrap_java.cxx ${BINDINGS}/kovan.i
+    DEPENDS ${SWIG_SOURCES})
+  add_custom_target(java_compile
+    COMMAND ${Java_JAVAC_EXECUTABLE} -d ${JAVA_BIN_PATH} -cp ${JAVA_BIN_PATH} ${JAVA_OUT_PATH}/*.java ${JAVA_EXTRAS_PATH}/*.java
+    DEPENDS swig_java)
+  add_custom_target(kovan_jar ALL
+    COMMAND ${Java_JAR_EXECUTABLE} cf ${LIBRARY_OUTPUT_PATH}/libkovan.jar -C ${JAVA_BIN_PATH}/ .
+    DEPENDS swig_java java_compile)
 endif()
 
-add_library(kovan SHARED ${VI_SOURCES} ${VI_P_INCLUDES} ${OBJC_SOURCES} ${VF_INCLUDES} ${PIXELTOASTER_SOURCES} ${BINDINGS_SOURCES})
+add_library(kovan SHARED ${VI_SOURCES} ${VI_P_INCLUDES} ${OBJC_SOURCES} ${VF_INCLUDES} ${PIXELTOASTER_SOURCES})
+
+
+if(build_python)
+  add_library(kovan_python SHARED ${PYTHON_BINDING_SOURCES})
+  set_target_properties(kovan_python PROPERTIES PREFIX _ OUTPUT_NAME kovan SUFFIX .so)
+  target_link_libraries(kovan_python kovan ${PYTHON_BINDING_LIBRARIES})
+endif()
+
+if(build_java)
+  add_library(kovan_java SHARED ${JAVA_BINDING_SOURCES})
+  target_link_libraries(kovan_java kovan ${JAVA_BINDING_LIBRARIES})
+endif()
 
 if(WIN32)
   # TODO: Make sure these are current
@@ -198,10 +230,8 @@ if(WIN32)
   target_link_libraries(kovan d3d9)
   target_link_libraries(kovan ws2_32)
 else()
-  target_link_libraries(kovan pthread opencv_core opencv_highgui opencv_imgproc zbar avcodec avformat avutil z swscale bz2 OpenNI2)
+  target_link_libraries(kovan pthread opencv_core opencv_videoio opencv_imgproc zbar avcodec avformat avutil z swscale bz2 OpenNI2)
 endif()
-
-target_link_libraries(kovan ${BINDINGS_LIBRARIES})
 
 if(APPLE)
   find_library(OPENGL_LIBRARY OpenGL)

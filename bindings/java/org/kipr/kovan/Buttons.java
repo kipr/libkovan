@@ -1,3 +1,5 @@
+package org.kipr.kovan;
+
 public class Buttons
 {
   public static IdButton A = kovan.getA();

@@ -77,7 +77,9 @@ namespace depth
       *       image available yet.
       * \return DepthImage object
       */
+#ifndef SWIG
     virtual DepthImage *depthImage() const = 0;
+#endif
   };
 }
 
