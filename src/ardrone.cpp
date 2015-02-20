@@ -656,7 +656,7 @@ void DroneController::sendCommWatchdog()
 void DroneController::setActiveCamera(const ARDrone::Camera camera)
 {
 	m_mutex.lock();
-	m_cameraActivated = camera != ARDrone::None;
+	m_cameraActivated = camera != ARDrone::Off;
 	
 	if(!m_cameraActivated) {
 		if(m_video) m_video->end();
@@ -1285,7 +1285,7 @@ ARDrone *ARDrone::instance()
 ARDrone::ARDrone()
 	: m_controller(new DroneController),
 	m_emergencyStop(new Private::ARDroneEmergencyStop(this)),
-	m_activeCamera(ARDrone::None)
+	m_activeCamera(ARDrone::Off)
 {
 }
 
@@ -1346,7 +1346,7 @@ bool Camera::ARDroneInputProvider::next(cv::Mat &image)
 bool Camera::ARDroneInputProvider::close()
 {
 	if(!m_opened) return false;
-	ARDrone::instance()->setActiveCamera(ARDrone::None);
+	ARDrone::instance()->setActiveCamera(ARDrone::Off);
 	m_opened = false;
 	return true;
 }

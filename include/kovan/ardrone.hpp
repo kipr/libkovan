@@ -49,12 +49,7 @@ public:
 	
 	enum Camera
 	{
-#ifndef SWIG
-    None
-#else
-    Off
-#endif
-      = 0,
+    Off = 0,
 		Front,
 		Bottom
 	};
