@@ -82,10 +82,3 @@
 %include "camera.i"
 %include "create.i"
 %include "motor.i"
-
-#ifdef SWIGPYTHON
-%pythonbegin %{
-import sys, os
-sys.stdout = os.fdopen(sys.stdout.fileno(), 'w', 0)
-%}
-#endif
