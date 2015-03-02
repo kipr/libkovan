@@ -172,7 +172,7 @@ if(build_python)
   include_directories(${PYTHON_INCLUDE_DIR})
   add_custom_command(COMMAND ${SWIG_EXECUTABLE} -Wall -python -c++ -I${INCLUDE} -outdir ${LIBRARY_OUTPUT_PATH} -o ${CMAKE_BINARY_DIR}/kovan_wrap_py.cxx ${BINDINGS}/kovan.i
     DEPENDS ${SWIG_SOURCES}
-    OUTPUT ${CMAKE_BINARY_DIR}/kovan_wrap_py.cxx)
+    OUTPUT ${CMAKE_BINARY_DIR}/kovan_wrap_py.cxx ${LIBRARY_OUTPUT_PATH}/kovan.py)
 endif()
 
 option(build_java "Build java bindings" ON)
