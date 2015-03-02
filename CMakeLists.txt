@@ -238,7 +238,7 @@ if(WIN32)
 elseif(KOVAN)
   target_link_libraries(kovan pthread opencv_core opencv_highgui opencv_imgproc zbar avcodec avformat avutil z swscale bz2 OpenNI2)
 else()
-  target_link_libraries(kovan pthread opencv_core opencv_videoio opencv_imgproc zbar avcodec avformat avutil z swscale bz2 OpenNI2)
+  target_link_libraries(kovan pthread opencv_core opencv_highgui opencv_imgproc zbar avcodec avformat avutil z swscale bz2 OpenNI2)
 endif()
 
 if(APPLE)
